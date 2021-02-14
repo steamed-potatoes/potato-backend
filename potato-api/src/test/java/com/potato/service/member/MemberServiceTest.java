@@ -1,10 +1,8 @@
 package com.potato.service.member;
 
-import com.potato.domain.member.Member;
-import com.potato.domain.member.MemberCreator;
-import com.potato.domain.member.MemberMajor;
-import com.potato.domain.member.MemberRepository;
+import com.potato.domain.member.*;
 import com.potato.service.member.dto.request.CreateMemberRequest;
+import com.potato.service.member.dto.response.MemberInfoResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 public class MemberServiceTest {
@@ -75,6 +72,38 @@ public class MemberServiceTest {
         assertThat(member.getName()).isEqualTo(name);
         assertThat(member.getProfileUrl()).isEqualTo(profileUrl);
         assertThat(member.getMajor()).isEqualTo(major);
+    }
+
+    @Test
+    void 회원_정보를_불러온다() {
+        // given
+        String email = "will.seungho@gmail.com";
+        String name = "강승호";
+        String profileUrl = "http://profile.com";
+        MemberMajor major = MemberMajor.IT_ICT;
+
+        Member member = memberRepository.save(MemberCreator.create(email, name, profileUrl, major));
+
+        // when
+        MemberInfoResponse response = memberService.getMemberInfo(member.getId());
+
+        // then
+        assertThatMemberInfoResponse(response, email, name, profileUrl, major);
+    }
+
+    @Test
+    void 존재하지_않는_멤버의_회원정보를_불러오면_에러가_발생한다() {
+        // when & then
+        assertThatThrownBy(() -> {
+            memberService.getMemberInfo(999L);
+        }).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    private void assertThatMemberInfoResponse(MemberInfoResponse response, String email, String name, String profileUrl, MemberMajor major) {
+        assertThat(response.getEmail()).isEqualTo(email);
+        assertThat(response.getName()).isEqualTo(name);
+        assertThat(response.getProfileUrl()).isEqualTo(profileUrl);
+        assertThat(response.getMajor()).isEqualTo(major);
     }
 
 }

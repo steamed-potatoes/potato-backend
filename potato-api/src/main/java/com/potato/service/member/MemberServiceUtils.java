@@ -15,4 +15,12 @@ public class MemberServiceUtils {
         }
     }
 
+    public static Member findMemberById(MemberRepository memberRepository, Long memberId) {
+        Member member = memberRepository.findMemberById(memberId);
+        if (member == null) {
+            throw new IllegalArgumentException(String.format("해당 하는 회원 (%s) 은 없습니다", memberId));
+        }
+        return member;
+    }
+
 }

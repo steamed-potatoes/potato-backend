@@ -14,8 +14,18 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
     @Override
     public Member findMemberByEmail(String email) {
         return queryFactory.selectFrom(member)
-            .where(member.email.eq(email))
+            .where(
+                member.email.eq(email)
+            )
             .fetchOne();
+    }
+
+    @Override
+    public Member findMemberById(Long memberId) {
+        return queryFactory.selectFrom(member)
+            .where(
+                member.id.eq(memberId)
+            ).fetchOne();
     }
 
 }
