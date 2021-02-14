@@ -24,14 +24,28 @@ public class Member extends BaseTimeEntity {
     private String profileUrl;
 
     @Enumerated(EnumType.STRING)
+    private MemberMajor major;
+
+    @Enumerated(EnumType.STRING)
     private MemberProvider provider;
 
     @Builder
-    public Member(String email, String name, String profileUrl, MemberProvider provider) {
+    public Member(String email, String name, String profileUrl, MemberMajor major, MemberProvider provider) {
         this.email = email;
         this.name = name;
         this.profileUrl = profileUrl;
+        this.major = major;
         this.provider = provider;
+    }
+
+    public static Member newGoogleInstance(String email, String name, String profileUrl, MemberMajor major) {
+        return Member.builder()
+            .email(email)
+            .name(name)
+            .profileUrl(profileUrl)
+            .major(major)
+            .provider(MemberProvider.GOOGLE)
+            .build();
     }
 
 }

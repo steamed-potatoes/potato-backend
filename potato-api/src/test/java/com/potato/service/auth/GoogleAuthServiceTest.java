@@ -7,6 +7,7 @@ import com.potato.external.google.dto.response.GoogleAccessTokenResponse;
 import com.potato.external.google.dto.response.GoogleUserInfoResponse;
 import com.potato.service.auth.dto.request.AuthRequest;
 import com.potato.service.auth.dto.response.AuthResponse;
+import com.potato.tool.MockHttpSession;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +31,7 @@ public class GoogleAuthServiceTest {
 
     @BeforeEach
     void setUpGoogleAuthService() {
-        googleAuthService = new GoogleAuthService(new MockGoogleApiCaller(), memberRepository);
+        googleAuthService = new GoogleAuthService(new MockHttpSession(), new MockGoogleApiCaller(), memberRepository);
     }
 
     @Test

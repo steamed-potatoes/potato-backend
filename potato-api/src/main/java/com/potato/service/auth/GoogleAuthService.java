@@ -11,12 +11,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpSession;
+
+import static com.potato.config.session.SessionConstants.AUTH_SESSION;
+
 @RequiredArgsConstructor
 @Service
 public class GoogleAuthService {
 
+    private final HttpSession httpSession;
     private final GoogleApiCaller googleApiCaller;
-
     private final MemberRepository memberRepository;
 
     @Transactional(readOnly = true)
@@ -28,8 +32,8 @@ public class GoogleAuthService {
         if (findMember == null) {
             return AuthResponse.signUp(userInfoResponse.getEmail(), userInfoResponse.getName());
         }
-        // TODO 인증정보를 반환해야함.
-        return AuthResponse.login("token");
+        httpSession.setAttribute(AUTH_SESSION, findMember.getId());
+        return AuthResponse.login(httpSession.getId());
     }
 
 }

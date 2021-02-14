@@ -1,6 +1,10 @@
 package com.potato.domain.member;
 
-public final class MemberCreator {
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class MemberCreator {
 
     public static Member create(String email) {
         return Member.builder()

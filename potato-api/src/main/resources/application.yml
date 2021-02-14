@@ -6,3 +6,5 @@ spring:
     include:
       - domain
       - thirdparty
+  datasource:
+    data: classpath:schema/schema-session.sql
