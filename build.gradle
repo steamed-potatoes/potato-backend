@@ -1,6 +1,6 @@
 def javaProjects = [
-        project(':potato-api'),
-        project(':potato-domain')
+    project(':potato-api'),
+    project(':potato-domain')
 ]
 
 buildscript {
@@ -20,6 +20,7 @@ configure(javaProjects) {
     apply plugin: 'eclipse'
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'jacoco'
 
     group = 'com.potato'
     sourceCompatibility = '11'
@@ -45,7 +46,25 @@ configure(javaProjects) {
         }
     }
 
-    test {
-        useJUnitPlatform()
+    jacoco {
+        toolVersion = '0.8.5'
+        reportsDir = file("$buildDir/jacoco-report")
     }
+
+    jacocoTestReport {
+        reports {
+            html.enabled true
+            xml.enabled true
+            csv.enabled false
+        }
+    }
+
+    test {
+        jacoco {
+            destinationFile = file("$buildDir/jacoco/jacoco.exec")
+        }
+        useJUnitPlatform()
+        finalizedBy 'jacocoTestReport'
+    }
+
 }
