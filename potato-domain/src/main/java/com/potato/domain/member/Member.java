@@ -2,6 +2,7 @@ package com.potato.domain.member;
 
 import com.potato.domain.BaseTimeEntity;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -24,5 +25,13 @@ public class Member extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     private MemberProvider provider;
+
+    @Builder
+    public Member(String email, String name, String profileUrl, MemberProvider provider) {
+        this.email = email;
+        this.name = name;
+        this.profileUrl = profileUrl;
+        this.provider = provider;
+    }
 
 }
