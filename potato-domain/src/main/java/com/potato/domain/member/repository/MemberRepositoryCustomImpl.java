@@ -15,7 +15,7 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
     public Member findMemberByEmail(String email) {
         return queryFactory.selectFrom(member)
             .where(
-                member.email.eq(email)
+                member.email.email.eq(email)
             )
             .fetchOne();
     }

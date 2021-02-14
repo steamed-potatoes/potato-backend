@@ -17,7 +17,8 @@ public class Member extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String email;
+    @Embedded
+    private Email email;
 
     private String name;
 
@@ -31,7 +32,7 @@ public class Member extends BaseTimeEntity {
 
     @Builder
     public Member(String email, String name, String profileUrl, MemberMajor major, MemberProvider provider) {
-        this.email = email;
+        this.email = Email.of(email);
         this.name = name;
         this.profileUrl = profileUrl;
         this.major = major;
@@ -46,6 +47,10 @@ public class Member extends BaseTimeEntity {
             .major(major)
             .provider(MemberProvider.GOOGLE)
             .build();
+    }
+
+    public String getEmail() {
+        return this.email.getEmail();
     }
 
 }
