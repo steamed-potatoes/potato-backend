@@ -6,5 +6,6 @@ spring:
     include:
       - domain
       - thirdparty
+      - swagger
   datasource:
     data: classpath:schema/schema-session.sql
