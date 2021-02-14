@@ -42,4 +42,8 @@ public class MemberController {
         return ApiResponse.of(memberService.getMemberInfo(memberSession.getMemberId()));
     }
 
+    // TODO 나의 회원 정보를 수정하는 API
+
+    // TODO 특정 멤버의 정보를 조회하는 API
+
 }
