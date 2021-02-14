@@ -1,4 +1,4 @@
-package com.potato.config;
+package com.potato.config.webclient;
 
 import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
@@ -16,19 +16,16 @@ public class WebClientConfig {
 
     @Bean
     public WebClient webClient() {
-        final ReactorClientHttpConnector connector = new ReactorClientHttpConnector(
-            HttpClient.from(
-                TcpClient.create()
-                    .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 3000)
-                    .doOnConnected(conn ->
-                        conn.addHandler(new ReadTimeoutHandler(3000, TimeUnit.MILLISECONDS))
-                    )
-            )
-        );
-
         return WebClient.builder()
-            .clientConnector(connector)
-            .build();
+            .clientConnector(new ReactorClientHttpConnector(
+                HttpClient.from(
+                    TcpClient.create()
+                        .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 3000)
+                        .doOnConnected(conn ->
+                            conn.addHandler(new ReadTimeoutHandler(3000, TimeUnit.MILLISECONDS))
+                        )
+                )
+            )).build();
     }
 
 }
