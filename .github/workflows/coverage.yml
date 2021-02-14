@@ -1,0 +1,16 @@
+on:
+  push:
+    branches:
+      - feature/coverage
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout@v2
+        uses: actions/checkout@v2
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          name: potato-backend
+          fail_ci_if_error: true
