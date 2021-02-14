@@ -28,4 +28,4 @@ jobs:
         uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODE_COV_TOKEN }}
-          file: ./build/jacoco-report/test/jacocoTestReport.xml
+          file: potato-api/build/jacoco-report/test/jacocoTestReport.xml
