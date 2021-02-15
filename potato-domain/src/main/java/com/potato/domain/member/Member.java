@@ -51,6 +51,12 @@ public class Member extends BaseTimeEntity {
             .build();
     }
 
+    public void updateMemberInfo(String name, String profileUrl, MemberMajor major) {
+        this.name = name;
+        this.profileUrl = profileUrl;
+        this.major = major;
+    }
+
     public String getEmail() {
         return this.email.getEmail();
     }

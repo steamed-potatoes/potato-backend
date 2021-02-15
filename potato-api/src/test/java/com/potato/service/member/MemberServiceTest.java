@@ -2,6 +2,7 @@ package com.potato.service.member;
 
 import com.potato.domain.member.*;
 import com.potato.service.member.dto.request.CreateMemberRequest;
+import com.potato.service.member.dto.request.UpdateMemberRequest;
 import com.potato.service.member.dto.response.MemberInfoResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -104,6 +105,37 @@ public class MemberServiceTest {
         assertThat(response.getName()).isEqualTo(name);
         assertThat(response.getProfileUrl()).isEqualTo(profileUrl);
         assertThat(response.getMajor()).isEqualTo(major);
+    }
+
+    @Test
+    void 회원정보를_수정한다() {
+        // given
+        Member member = memberRepository.save(MemberCreator.create(
+            "123@gmail.com", "sunjo", "profile.com", MemberMajor.IT_ICT));
+
+        String name = "유순조";
+        String profileUrl = "http://profile.com";
+        MemberMajor major = MemberMajor.IT_ICT;
+
+        UpdateMemberRequest updateMemberRequest = UpdateMemberRequest.testBuilder()
+            .name(name)
+            .profileUrl(profileUrl)
+            .major(major)
+            .build();
+
+        // when
+        memberService.updateMemberInfo(updateMemberRequest, member.getId());
+
+        // then
+        List<Member> memberList = memberRepository.findAll();
+        assertThat(memberList).hasSize(1);
+        assertUpdateMemberInfo(memberList.get(0), name, profileUrl, major);
+    }
+
+    private void assertUpdateMemberInfo(Member member, String name, String profileUrl, MemberMajor major) {
+        assertThat(member.getName()).isEqualTo(name);
+        assertThat(member.getProfileUrl()).isEqualTo(profileUrl);
+        assertThat(member.getMajor()).isEqualTo(major);
     }
 
 }
