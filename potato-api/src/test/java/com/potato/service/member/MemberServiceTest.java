@@ -138,4 +138,22 @@ public class MemberServiceTest {
         assertThat(member.getMajor()).isEqualTo(major);
     }
 
+    @Test
+    void 특정_회원을_조회한다() {
+        //given
+        String email = "will.seungho@gmail.com";
+        String name = "강승호";
+        String profileUrl = "http://profile.com";
+        MemberMajor major = MemberMajor.IT_ICT;
+
+        Member member = memberRepository.save(MemberCreator.create(email, name, profileUrl, major));
+
+        //when
+        MemberInfoResponse response = memberService.getMemberOne(member.getId());
+
+        //then
+        List<Member> memberList = memberRepository.findAll();
+        assertThatMemberInfoResponse(response, email, name, profileUrl, major);
+    }
+
 }

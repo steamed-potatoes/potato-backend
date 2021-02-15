@@ -48,6 +48,13 @@ public class MemberController {
         return ApiResponse.of(memberService.updateMemberInfo(request, memberSession.getMemberId()));
     }
 
-    // TODO 특정 멤버의 정보를 조회하는 API
+    @Parameter(hidden = true, name = "memberSession", in = ParameterIn.QUERY)
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
+    @GetMapping("/api/v1/member/{targetId}")
+    public ApiResponse<MemberInfoResponse> getMemberOne(
+        @LoginMember MemberSession memberSession,
+        @PathVariable Long targetId) {
+        return ApiResponse.of(memberService.getMemberOne(targetId));
+    }
 
 }
