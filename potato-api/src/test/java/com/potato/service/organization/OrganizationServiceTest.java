@@ -1,6 +1,9 @@
 package com.potato.service.organization;
 
 import com.potato.domain.organization.*;
+import com.potato.exception.ConflictException;
+import com.potato.exception.ForbiddenException;
+import com.potato.exception.NotFoundException;
 import com.potato.service.MemberSetupTest;
 import com.potato.service.organization.dto.request.CreateOrganizationRequest;
 import com.potato.service.organization.dto.request.UpdateOrganizationInfoRequest;
@@ -74,7 +77,7 @@ class OrganizationServiceTest extends MemberSetupTest {
         // when & then
         assertThatThrownBy(() -> {
             organizationService.createOrganization(request, memberId);
-        }).isInstanceOf(IllegalArgumentException.class);
+        }).isInstanceOf(ConflictException.class);
     }
 
     @Test
@@ -138,7 +141,7 @@ class OrganizationServiceTest extends MemberSetupTest {
         // when & then
         assertThatThrownBy(() -> {
             organizationService.getSimpleOrganizationInfo("empty");
-        }).isInstanceOf(IllegalArgumentException.class);
+        }).isInstanceOf(NotFoundException.class);
     }
 
     @Test
@@ -212,7 +215,7 @@ class OrganizationServiceTest extends MemberSetupTest {
         // when & then
         assertThatThrownBy(() -> {
             organizationService.updateOrganizationInfo(subDomain, request, memberId);
-        }).isInstanceOf(IllegalArgumentException.class);
+        }).isInstanceOf(ForbiddenException.class);
     }
 
     @DisplayName("조직원이 아닌경우 조직의 정보를 수정할 수 없다")
@@ -232,7 +235,7 @@ class OrganizationServiceTest extends MemberSetupTest {
         // when & then
         assertThatThrownBy(() -> {
             organizationService.updateOrganizationInfo(subDomain, request, memberId);
-        }).isInstanceOf(IllegalArgumentException.class);
+        }).isInstanceOf(ForbiddenException.class);
     }
 
     private void assertOrganization(Organization organization, String subDomain, String name, String description, String profileUrl) {

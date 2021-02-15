@@ -1,6 +1,8 @@
 package com.potato.service.member;
 
 import com.potato.domain.member.*;
+import com.potato.exception.ConflictException;
+import com.potato.exception.NotFoundException;
 import com.potato.service.member.dto.request.CreateMemberRequest;
 import com.potato.service.member.dto.request.UpdateMemberRequest;
 import com.potato.service.member.dto.response.MemberInfoResponse;
@@ -65,7 +67,7 @@ public class MemberServiceTest {
         // when & then
         assertThatThrownBy(() -> {
             memberService.createMember(request);
-        }).isInstanceOf(IllegalArgumentException.class);
+        }).isInstanceOf(ConflictException.class);
     }
 
     private void assertMemberInfo(Member member, String email, String name, String profileUrl, MemberMajor major) {
@@ -97,7 +99,7 @@ public class MemberServiceTest {
         // when & then
         assertThatThrownBy(() -> {
             memberService.getMemberInfo(999L);
-        }).isInstanceOf(IllegalArgumentException.class);
+        }).isInstanceOf(NotFoundException.class);
     }
 
     private void assertThatMemberInfoResponse(MemberInfoResponse response, String email, String name, String profileUrl, MemberMajor major) {
@@ -161,7 +163,7 @@ public class MemberServiceTest {
         // when & then
         assertThatThrownBy(() -> {
             memberService.getMemberOne(999L);
-        }).isInstanceOf(IllegalArgumentException.class);
+        }).isInstanceOf(NotFoundException.class);
     }
 
 }

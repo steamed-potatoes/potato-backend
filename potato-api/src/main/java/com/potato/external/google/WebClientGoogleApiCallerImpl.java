@@ -1,5 +1,7 @@
 package com.potato.external.google;
 
+import com.potato.exception.BadGatewayException;
+import com.potato.exception.ValidationException;
 import com.potato.external.google.dto.component.GoogleAccessTokenComponent;
 import com.potato.external.google.dto.component.GoogleUserInfoComponent;
 import com.potato.external.google.dto.request.GoogleAccessTokenRequest;
@@ -29,8 +31,8 @@ public class WebClientGoogleApiCallerImpl implements GoogleApiCaller {
             .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .body(Mono.just(createGoogleAccessTokenRequest(code, redirectUri)), GoogleAccessTokenRequest.class)
             .retrieve()
-            .onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(IllegalArgumentException::new))
-            .onStatus(HttpStatus::is5xxServerError, clientResponse -> Mono.error(IllegalStateException::new))
+            .onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(new ValidationException(String.format("잘못된 입력이 들어왔습니다 (%s) (%s)", code, redirectUri))))
+            .onStatus(HttpStatus::is5xxServerError, clientResponse -> Mono.error(new BadGatewayException("구글 토큰 가져오는 중 에러가 발생하였습니다")))
             .bodyToMono(GoogleAccessTokenResponse.class)
             .block();
     }
@@ -51,8 +53,8 @@ public class WebClientGoogleApiCallerImpl implements GoogleApiCaller {
             .uri(googleUserInfoComponent.getUrl())
             .headers(headers -> headers.setBearerAuth(accessToken))
             .retrieve()
-            .onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(IllegalArgumentException::new))
-            .onStatus(HttpStatus::is5xxServerError, clientResponse -> Mono.error(IllegalStateException::new))
+            .onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(new ValidationException(String.format("잘못된 토큰이 들어왔습니다 (%s)", accessToken))))
+            .onStatus(HttpStatus::is5xxServerError, clientResponse -> Mono.error(new BadGatewayException("구글 유저 프로필 정보를 가져오는 중 에러가 발생하였습니다")))
             .bodyToMono(GoogleUserInfoResponse.class)
             .block();
     }

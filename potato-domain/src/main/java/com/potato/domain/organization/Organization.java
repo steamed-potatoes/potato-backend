@@ -1,6 +1,7 @@
 package com.potato.domain.organization;
 
 import com.potato.domain.BaseTimeEntity;
+import com.potato.exception.ForbiddenException;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -65,7 +66,7 @@ public class Organization extends BaseTimeEntity {
 
     public void validateAdminMember(Long memberId) {
         if (!isAdmin(memberId)) {
-            throw new IllegalArgumentException(String.format("멤버 (%s)는 조직(%s)의 관리자가 아닙니다"));
+            throw new ForbiddenException(String.format("멤버 (%s)는 조직(%s)의 관리자가 아닙니다", memberId, subDomain));
         }
     }
 

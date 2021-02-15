@@ -1,5 +1,6 @@
 package com.potato.domain.member;
 
+import com.potato.exception.ValidationException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,7 +27,7 @@ public class Email {
 
     private void verifyEmailFormat(String email) {
         if (!EMAIL_REGEX.matcher(email).matches()) {
-            throw new IllegalArgumentException(String.format("(%s)은 이메일 형식이 아닙니다", email));
+            throw new ValidationException(String.format("(%s)은 이메일 형식이 아닙니다", email));
         }
     }
 
