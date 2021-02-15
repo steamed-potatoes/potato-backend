@@ -30,7 +30,7 @@ public class GoogleAuthService {
 
         Member findMember = memberRepository.findMemberByEmail(userInfoResponse.getEmail());
         if (findMember == null) {
-            return AuthResponse.signUp(userInfoResponse.getEmail(), userInfoResponse.getName());
+            return AuthResponse.signUp(userInfoResponse.getEmail(), userInfoResponse.getName(), userInfoResponse.getPicture());
         }
         httpSession.setAttribute(AUTH_SESSION, findMember.getId());
         return AuthResponse.login(httpSession.getId());
