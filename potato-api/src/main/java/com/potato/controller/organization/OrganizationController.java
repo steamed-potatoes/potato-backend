@@ -8,8 +8,6 @@ import com.potato.service.organization.dto.request.CreateOrganizationRequest;
 import com.potato.service.organization.dto.request.UpdateOrganizationInfoRequest;
 import com.potato.service.organization.dto.response.OrganizationInfoResponse;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +21,6 @@ public class OrganizationController {
 
     private final OrganizationService organizationService;
 
-    @Parameter(hidden = true, name = "memberSession", in = ParameterIn.QUERY)
     @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     @PostMapping("/api/v1/organization")
     public ApiResponse<OrganizationInfoResponse> createOrganization(
@@ -41,7 +38,6 @@ public class OrganizationController {
         return ApiResponse.of(organizationService.getOrganizationsInfo());
     }
 
-    @Parameter(hidden = true, name = "memberSession", in = ParameterIn.QUERY)
     @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     @PutMapping("/api/v1/organization/{subDomain}")
     public ApiResponse<OrganizationInfoResponse> updateOrganizationInfo(
