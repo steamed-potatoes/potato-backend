@@ -57,8 +57,31 @@ public class Organization extends BaseTimeEntity {
             .build();
     }
 
+    public void updateInfo(String name, String description, String profileUrl) {
+        this.name = name;
+        this.description = description;
+        this.profileUrl = profileUrl;
+    }
+
+    public void validateAdminMember(Long memberId) {
+        if (!isAdmin(memberId)) {
+            throw new IllegalArgumentException(String.format("멤버 (%s)는 조직(%s)의 관리자가 아닙니다"));
+        }
+    }
+
     public void addAdmin(Long memberId) {
         OrganizationMemberMapper organizationMemberMapper = OrganizationMemberMapper.newAdmin(this, memberId);
+        this.organizationMemberMapperList.add(organizationMemberMapper);
+        this.membersCount++;
+    }
+
+    private boolean isAdmin(Long memberId) {
+        return this.organizationMemberMapperList.stream()
+            .anyMatch(organizationMemberMapper -> organizationMemberMapper.isAdmin(memberId));
+    }
+
+    public void addUser(Long memberId) {
+        OrganizationMemberMapper organizationMemberMapper = OrganizationMemberMapper.newUser(this, memberId);
         this.organizationMemberMapperList.add(organizationMemberMapper);
         this.membersCount++;
     }

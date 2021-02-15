@@ -3,8 +3,10 @@ package com.potato.service.organization;
 import com.potato.domain.organization.*;
 import com.potato.service.MemberSetupTest;
 import com.potato.service.organization.dto.request.CreateOrganizationRequest;
+import com.potato.service.organization.dto.request.UpdateOrganizationInfoRequest;
 import com.potato.service.organization.dto.response.OrganizationInfoResponse;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -56,13 +58,6 @@ class OrganizationServiceTest extends MemberSetupTest {
         List<Organization> organizationList = organizationRepository.findAll();
         assertThat(organizationList).hasSize(1);
         assertOrganization(organizationList.get(0), subDomain, name, description, profileUrl);
-    }
-
-    private void assertOrganization(Organization organization, String subDomain, String name, String description, String profileUrl) {
-        assertThat(organization.getSubDomain()).isEqualTo(subDomain);
-        assertThat(organization.getName()).isEqualTo(name);
-        assertThat(organization.getDescription()).isEqualTo(description);
-        assertThat(organization.getProfileUrl()).isEqualTo(profileUrl);
     }
 
     @Test
@@ -119,11 +114,6 @@ class OrganizationServiceTest extends MemberSetupTest {
         assertOrganizationMemberMapper(organizationMemberMapperList.get(0), memberId, OrganizationRole.ADMIN);
     }
 
-    private void assertOrganizationMemberMapper(OrganizationMemberMapper organizationMemberMapper, Long memberId, OrganizationRole role) {
-        assertThat(organizationMemberMapper.getMemberId()).isEqualTo(memberId);
-        assertThat(organizationMemberMapper.getRole()).isEqualTo(role);
-    }
-
     @Test
     void 서브도메인을_통해_특정_조직의_간단한_정보를_불러온다() {
         // given
@@ -141,17 +131,6 @@ class OrganizationServiceTest extends MemberSetupTest {
 
         // then
         assertOrganizationInfoResponse(response, organization.getId(), subDomain, name, description, profileUrl, category, organization.getMembersCount());
-    }
-
-    private void assertOrganizationInfoResponse(OrganizationInfoResponse response, Long id, String subDomain, String name,
-                                                String description, String profileUrl, OrganizationCategory category, int membersCount) {
-        assertThat(response.getId()).isEqualTo(id);
-        assertThat(response.getSubDomain()).isEqualTo(subDomain);
-        assertThat(response.getName()).isEqualTo(name);
-        assertThat(response.getDescription()).isEqualTo(description);
-        assertThat(response.getProfileUrl()).isEqualTo(profileUrl);
-        assertThat(response.getCategory()).isEqualTo(category);
-        assertThat(response.getMembersCount()).isEqualTo(membersCount);
     }
 
     @Test
@@ -186,6 +165,97 @@ class OrganizationServiceTest extends MemberSetupTest {
 
         // then
         assertThat(responses).isEmpty();
+    }
+
+    @Test
+    void 조직의_정보를_수정다() {
+        // given
+        String subDomain = "potato";
+        String name = "감자팀";
+        String description = "감자 화이팅";
+        String profileUrl = "http://localhost.com";
+
+        Organization organization = OrganizationCreator.create(subDomain);
+        organization.addAdmin(memberId);
+        organizationRepository.save(organization);
+
+        UpdateOrganizationInfoRequest request = UpdateOrganizationInfoRequest.testBuilder()
+            .name(name)
+            .description(description)
+            .profileUrl(profileUrl)
+            .build();
+
+        // when
+        organizationService.updateOrganizationInfo(subDomain, request, memberId);
+
+        // then
+        List<Organization> organizationList = organizationRepository.findAll();
+        assertThat(organizationList).hasSize(1);
+
+        assertOrganization(organizationList.get(0), subDomain, name, description, profileUrl);
+    }
+
+    @DisplayName("조직의 관리자가 아닌 유저는 조직의 정보를 수정할 수 없다")
+    @Test
+    void 조직의_관리자가_아니면_조직의_정보를_수정할_수_없다_1() {
+        // given
+        String subDomain = "potato";
+
+        Organization organization = OrganizationCreator.create(subDomain);
+        organization.addUser(memberId);
+        organizationRepository.save(organization);
+
+        UpdateOrganizationInfoRequest request = UpdateOrganizationInfoRequest.testBuilder()
+            .name("감자")
+            .build();
+
+        // when & then
+        assertThatThrownBy(() -> {
+            organizationService.updateOrganizationInfo(subDomain, request, memberId);
+        }).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @DisplayName("조직원이 아닌경우 조직의 정보를 수정할 수 없다")
+    @Test
+    void 조직의_관리자가_아니면_조직의_정보를_수정할_수_없다_2() {
+        // given
+        String subDomain = "potato";
+
+        Organization organization = OrganizationCreator.create(subDomain);
+        organization.addUser(memberId);
+        organizationRepository.save(organization);
+
+        UpdateOrganizationInfoRequest request = UpdateOrganizationInfoRequest.testBuilder()
+            .name("감자")
+            .build();
+
+        // when & then
+        assertThatThrownBy(() -> {
+            organizationService.updateOrganizationInfo(subDomain, request, memberId);
+        }).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    private void assertOrganization(Organization organization, String subDomain, String name, String description, String profileUrl) {
+        assertThat(organization.getSubDomain()).isEqualTo(subDomain);
+        assertThat(organization.getName()).isEqualTo(name);
+        assertThat(organization.getDescription()).isEqualTo(description);
+        assertThat(organization.getProfileUrl()).isEqualTo(profileUrl);
+    }
+
+    private void assertOrganizationMemberMapper(OrganizationMemberMapper organizationMemberMapper, Long memberId, OrganizationRole role) {
+        assertThat(organizationMemberMapper.getMemberId()).isEqualTo(memberId);
+        assertThat(organizationMemberMapper.getRole()).isEqualTo(role);
+    }
+
+    private void assertOrganizationInfoResponse(OrganizationInfoResponse response, Long id, String subDomain, String name,
+                                                String description, String profileUrl, OrganizationCategory category, int membersCount) {
+        assertThat(response.getId()).isEqualTo(id);
+        assertThat(response.getSubDomain()).isEqualTo(subDomain);
+        assertThat(response.getName()).isEqualTo(name);
+        assertThat(response.getDescription()).isEqualTo(description);
+        assertThat(response.getProfileUrl()).isEqualTo(profileUrl);
+        assertThat(response.getCategory()).isEqualTo(category);
+        assertThat(response.getMembersCount()).isEqualTo(membersCount);
     }
 
 }

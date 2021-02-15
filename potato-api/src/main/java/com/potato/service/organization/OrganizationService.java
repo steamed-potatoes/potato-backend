@@ -3,6 +3,7 @@ package com.potato.service.organization;
 import com.potato.domain.organization.Organization;
 import com.potato.domain.organization.OrganizationRepository;
 import com.potato.service.organization.dto.request.CreateOrganizationRequest;
+import com.potato.service.organization.dto.request.UpdateOrganizationInfoRequest;
 import com.potato.service.organization.dto.response.OrganizationInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,14 @@ public class OrganizationService {
         return organizationRepository.findAll().stream()
             .map(OrganizationInfoResponse::of)
             .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public OrganizationInfoResponse updateOrganizationInfo(String subDomain, UpdateOrganizationInfoRequest request, Long memberId) {
+        Organization organization = OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, subDomain);
+        organization.validateAdminMember(memberId);
+        organization.updateInfo(request.getName(), request.getDescription(), request.getProfileUrl());
+        return OrganizationInfoResponse.of(organization);
     }
 
 }

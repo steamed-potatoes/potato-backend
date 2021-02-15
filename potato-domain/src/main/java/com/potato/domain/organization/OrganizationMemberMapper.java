@@ -35,4 +35,12 @@ public class OrganizationMemberMapper extends BaseTimeEntity {
         return new OrganizationMemberMapper(organization, memberId, OrganizationRole.ADMIN);
     }
 
+    public boolean isAdmin(Long memberId) {
+        return this.memberId.equals(memberId) && this.role.equals(OrganizationRole.ADMIN);
+    }
+
+    public static OrganizationMemberMapper newUser(Organization organization, Long memberId) {
+        return new OrganizationMemberMapper(organization, memberId, OrganizationRole.USER);
+    }
+
 }
