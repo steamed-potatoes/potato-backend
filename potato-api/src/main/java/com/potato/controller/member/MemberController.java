@@ -7,10 +7,8 @@ import com.potato.service.member.MemberService;
 import com.potato.service.member.dto.request.CreateMemberRequest;
 import com.potato.service.member.dto.request.UpdateMemberRequest;
 import com.potato.service.member.dto.response.MemberInfoResponse;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,14 +32,12 @@ public class MemberController {
     }
 
     @Parameter(hidden = true, name = "memberSession", in = ParameterIn.QUERY) // Swagger 설정 (memberSession 안나오게)
-    @Operation(security = {@SecurityRequirement(name = "bearer-key")}) // Swagger 설정 (Bearer Token 입력)
     @GetMapping("/api/v1/member")
     public ApiResponse<MemberInfoResponse> getMyMemberInfo(@LoginMember MemberSession memberSession) {
         return ApiResponse.of(memberService.getMemberInfo(memberSession.getMemberId()));
     }
 
     @Parameter(hidden = true, name = "memberSession", in = ParameterIn.QUERY)
-    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     @PutMapping("/api/v1/member")
     public ApiResponse<MemberInfoResponse> updateMemberInfo(
         @Valid @RequestBody UpdateMemberRequest request, @LoginMember MemberSession memberSession) {
@@ -49,7 +45,6 @@ public class MemberController {
     }
 
     @Parameter(hidden = true, name = "memberSession", in = ParameterIn.QUERY)
-    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     @GetMapping("/api/v1/member/{targetId}")
     public ApiResponse<MemberInfoResponse> getMemberOne(
         @LoginMember MemberSession memberSession,

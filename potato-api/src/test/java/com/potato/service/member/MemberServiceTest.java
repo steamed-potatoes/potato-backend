@@ -156,4 +156,12 @@ public class MemberServiceTest {
         assertThatMemberInfoResponse(response, email, name, profileUrl, major);
     }
 
+    @Test
+    void 존재하지_않는_타겟멤버를_부를_경우() {
+        // when & then
+        assertThatThrownBy(() -> {
+            memberService.getMemberOne(999L);
+        }).isInstanceOf(IllegalArgumentException.class);
+    }
+
 }
