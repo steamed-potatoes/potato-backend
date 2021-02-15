@@ -25,4 +25,14 @@ public class OrganizationMemberMapper extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private OrganizationRole role;
 
+    private OrganizationMemberMapper(Organization organization, Long memberId, OrganizationRole role) {
+        this.organization = organization;
+        this.memberId = memberId;
+        this.role = role;
+    }
+
+    public static OrganizationMemberMapper newAdmin(Organization organization, Long memberId) {
+        return new OrganizationMemberMapper(organization, memberId, OrganizationRole.ADMIN);
+    }
+
 }
