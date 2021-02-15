@@ -34,4 +34,10 @@ public class MemberService {
         return MemberInfoResponse.of(member);
     }
 
+    @Transactional
+    public MemberInfoResponse getMemberOne(Long targetId) {
+        Member targetMember = MemberServiceUtils.findMemberById(memberRepository, targetId);
+        return MemberInfoResponse.of(targetMember);
+    }
+
 }
