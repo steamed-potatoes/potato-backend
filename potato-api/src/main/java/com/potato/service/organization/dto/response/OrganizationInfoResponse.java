@@ -1,0 +1,31 @@
+package com.potato.service.organization.dto.response;
+
+import com.potato.domain.organization.Organization;
+import com.potato.domain.organization.OrganizationCategory;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@Getter
+@RequiredArgsConstructor
+public class OrganizationInfoResponse {
+
+    private final Long id;
+
+    private final String subDomain;
+
+    private final String name;
+
+    private final String description;
+
+    private final String profileUrl;
+
+    private final int membersCount;
+
+    private final OrganizationCategory category;
+
+    public static OrganizationInfoResponse of(Organization organization) {
+        return new OrganizationInfoResponse(organization.getId(), organization.getSubDomain(), organization.getName(),
+            organization.getDescription(), organization.getProfileUrl(), organization.getMembersCount(), organization.getCategory());
+    }
+
+}

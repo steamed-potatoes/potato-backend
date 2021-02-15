@@ -1,0 +1,17 @@
+### 조직 생성 API
+POST {{host}}/api/v1/organization
+Content-Type: application/json
+Authorization: Bearer {{AUTHORIZATION}}
+
+{
+    "subDomain": "potato",
+    "name": "감자팀"
+}
+
+
+### 조직 조회 API
+GET {{host}}/api/v1/organization/potato
+
+
+### 조직 리스트 조회 API
+GET {{host}}/api/v1/organizations

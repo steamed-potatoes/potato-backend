@@ -15,4 +15,12 @@ public class OrganizationServiceUtils {
         }
     }
 
+    public static Organization findOrganizationBySubDomain(OrganizationRepository organizationRepository, String subDomain) {
+        Organization organization = organizationRepository.findOrganizationBySubDomain(subDomain);
+        if (organization == null) {
+            throw new IllegalArgumentException(String.format("이미 존재하는 Organization의 SubDomain(%s) 입니다.", subDomain));
+        }
+        return organization;
+    }
+
 }

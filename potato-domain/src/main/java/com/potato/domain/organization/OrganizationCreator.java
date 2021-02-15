@@ -14,4 +14,14 @@ public class OrganizationCreator {
             .build();
     }
 
+    public static Organization create(String subDomain, String name, String description, String profileUrl, OrganizationCategory category) {
+        return Organization.builder()
+            .subDomain(subDomain)
+            .name(name)
+            .description(description)
+            .profileUrl(profileUrl)
+            .category(category)
+            .build();
+    }
+
 }

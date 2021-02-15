@@ -3,11 +3,13 @@ package com.potato.service.organization;
 import com.potato.domain.organization.*;
 import com.potato.service.MemberSetupTest;
 import com.potato.service.organization.dto.request.CreateOrganizationRequest;
+import com.potato.service.organization.dto.response.OrganizationInfoResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -120,6 +122,70 @@ class OrganizationServiceTest extends MemberSetupTest {
     private void assertOrganizationMemberMapper(OrganizationMemberMapper organizationMemberMapper, Long memberId, OrganizationRole role) {
         assertThat(organizationMemberMapper.getMemberId()).isEqualTo(memberId);
         assertThat(organizationMemberMapper.getRole()).isEqualTo(role);
+    }
+
+    @Test
+    void 서브도메인을_통해_특정_조직의_간단한_정보를_불러온다() {
+        // given
+        String subDomain = "potato";
+        String name = "찐 감자";
+        String description = "개발 동아리 입니다";
+        String profileUrl = "http://image.com";
+        OrganizationCategory category = OrganizationCategory.NON_APPROVED_CIRCLE;
+
+        Organization organization = OrganizationCreator.create(subDomain, name, description, profileUrl, category);
+        organizationRepository.save(organization);
+
+        // when
+        OrganizationInfoResponse response = organizationService.getSimpleOrganizationInfo(subDomain);
+
+        // then
+        assertOrganizationInfoResponse(response, organization.getId(), subDomain, name, description, profileUrl, category, organization.getMembersCount());
+    }
+
+    private void assertOrganizationInfoResponse(OrganizationInfoResponse response, Long id, String subDomain, String name,
+                                                String description, String profileUrl, OrganizationCategory category, int membersCount) {
+        assertThat(response.getId()).isEqualTo(id);
+        assertThat(response.getSubDomain()).isEqualTo(subDomain);
+        assertThat(response.getName()).isEqualTo(name);
+        assertThat(response.getDescription()).isEqualTo(description);
+        assertThat(response.getProfileUrl()).isEqualTo(profileUrl);
+        assertThat(response.getCategory()).isEqualTo(category);
+        assertThat(response.getMembersCount()).isEqualTo(membersCount);
+    }
+
+    @Test
+    void 특정_조직을_조회시_해당하는_서브도메인이_없는경우() {
+        // when & then
+        assertThatThrownBy(() -> {
+            organizationService.getSimpleOrganizationInfo("empty");
+        }).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void 조직_리스트를_불러온다() {
+        // given
+        organizationRepository.saveAll(Arrays.asList(
+            OrganizationCreator.create("고예림"), OrganizationCreator.create("유순조"), OrganizationCreator.create("강승호")
+        ));
+
+        // when
+        List<OrganizationInfoResponse> responses = organizationService.getOrganizationsInfo();
+
+        // then
+        assertThat(responses).hasSize(3);
+        assertThat(responses.get(0).getSubDomain()).isEqualTo("고예림");
+        assertThat(responses.get(1).getSubDomain()).isEqualTo("유순조");
+        assertThat(responses.get(2).getSubDomain()).isEqualTo("강승호");
+    }
+
+    @Test
+    void 조직_리스트를_불러온다_아무_조직도_없다() {
+        // when
+        List<OrganizationInfoResponse> responses = organizationService.getOrganizationsInfo();
+
+        // then
+        assertThat(responses).isEmpty();
     }
 
 }
