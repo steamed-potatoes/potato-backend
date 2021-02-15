@@ -7,8 +7,6 @@ import com.potato.service.organization.OrganizationService;
 import com.potato.service.organization.dto.request.CreateOrganizationRequest;
 import com.potato.service.organization.dto.request.UpdateOrganizationInfoRequest;
 import com.potato.service.organization.dto.response.OrganizationInfoResponse;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +19,6 @@ public class OrganizationController {
 
     private final OrganizationService organizationService;
 
-    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     @PostMapping("/api/v1/organization")
     public ApiResponse<OrganizationInfoResponse> createOrganization(
         @Valid @RequestBody CreateOrganizationRequest request, @LoginMember MemberSession memberSession) {
@@ -38,7 +35,6 @@ public class OrganizationController {
         return ApiResponse.of(organizationService.getOrganizationsInfo());
     }
 
-    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     @PutMapping("/api/v1/organization/{subDomain}")
     public ApiResponse<OrganizationInfoResponse> updateOrganizationInfo(
         @PathVariable String subDomain, @RequestBody UpdateOrganizationInfoRequest request, @LoginMember MemberSession memberSession) {
