@@ -7,7 +7,7 @@ import com.potato.external.google.dto.response.GoogleAccessTokenResponse;
 import com.potato.external.google.dto.response.GoogleUserInfoResponse;
 import com.potato.service.auth.dto.request.AuthRequest;
 import com.potato.service.auth.dto.response.AuthResponse;
-import com.potato.tool.MockHttpSession;
+import com.potato.tool.StubHttpSession;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,7 +31,7 @@ public class GoogleAuthServiceTest {
 
     @BeforeEach
     void setUpGoogleAuthService() {
-        googleAuthService = new GoogleAuthService(new MockHttpSession(), new MockGoogleApiCaller(), memberRepository);
+        googleAuthService = new GoogleAuthService(new StubHttpSession(), new StubGoogleApiCaller(), memberRepository);
     }
 
     @Test
@@ -53,7 +53,7 @@ public class GoogleAuthServiceTest {
     }
 
     @Test
-    void 구_인증시_이미_존재하는_이메일의경우_로그인이_진행된다() {
+    void 구글_인증시_이미_존재하는_이메일의경우_로그인이_진행된다() {
         // given
         memberRepository.save(MemberCreator.create("will.seungho@gmail.com"));
 
@@ -71,7 +71,7 @@ public class GoogleAuthServiceTest {
         assertThat(response.getName()).isNull();
     }
 
-    private static class MockGoogleApiCaller implements GoogleApiCaller {
+    private static class StubGoogleApiCaller implements GoogleApiCaller {
 
         @Override
         public GoogleAccessTokenResponse getGoogleAccessToken(String code, String redirectUri) {

@@ -6,7 +6,7 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionContext;
 import java.util.Enumeration;
 
-public class MockHttpSession implements HttpSession {
+public class StubHttpSession implements HttpSession {
 
     @Override
     public long getCreationTime() {
