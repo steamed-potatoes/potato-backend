@@ -8,7 +8,7 @@ import com.potato.service.MemberSetupTest;
 import com.potato.service.organization.dto.request.CreateOrganizationRequest;
 import com.potato.service.organization.dto.request.UpdateOrganizationInfoRequest;
 import com.potato.service.organization.dto.response.OrganizationInfoResponse;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ class OrganizationServiceTest extends MemberSetupTest {
     @Autowired
     private OrganizationMemberMapperRepository organizationMemberMapperRepository;
 
-    @BeforeEach
+    @AfterEach
     void cleanUp() {
         super.cleanup();
         organizationMemberMapperRepository.deleteAllInBatch();
