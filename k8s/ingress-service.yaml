@@ -1,3 +1,4 @@
+# 차후 AWS 올리구 LoadBalancer 타입으로 바꿔야 함.
 apiVersion: v1
 kind: Service
 metadata:

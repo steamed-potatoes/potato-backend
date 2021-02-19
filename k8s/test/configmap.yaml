@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: potato-api-test-config
 data:
-  profiles: local
+  profiles: test
