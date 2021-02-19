@@ -5,6 +5,7 @@ import com.potato.exception.ConflictException;
 import com.potato.exception.ForbiddenException;
 import com.potato.exception.NotFoundException;
 import com.potato.service.MemberSetupTest;
+import com.potato.service.organization.dto.request.ApplyOrganizationMemberRequest;
 import com.potato.service.organization.dto.request.CreateOrganizationRequest;
 import com.potato.service.organization.dto.request.UpdateOrganizationInfoRequest;
 import com.potato.service.organization.dto.response.OrganizationInfoResponse;
@@ -236,6 +237,36 @@ class OrganizationServiceTest extends MemberSetupTest {
         assertThatThrownBy(() -> {
             organizationService.updateOrganizationInfo(subDomain, request, memberId);
         }).isInstanceOf(ForbiddenException.class);
+    }
+
+    @DisplayName("조직의 관리자가 아닌 경우 수락할 수 없다.")
+    @Test
+    void 조직_신청을_수락한다() {
+        //given
+        String subDomain = "potato";
+        Long targetMemberId = 20L;
+
+        Organization organization = OrganizationCreator.create(subDomain);
+        organization.addAdmin(memberId);
+        organizationRepository.save(organization);
+
+        OrganizationMemberMapper applyUser = OrganizationMemberMapper.newPending(organization, targetMemberId);
+        organizationMemberMapperRepository.save(applyUser);
+
+        ApplyOrganizationMemberRequest request = ApplyOrganizationMemberRequest.testBuilder()
+            .targetMemberId(applyUser.getMemberId())
+            .build();
+
+        //when
+        organizationService.applyOrganizationMember(subDomain, request, memberId);
+
+        //then
+        List<OrganizationMemberMapper> organizationMemberMapperList = organizationMemberMapperRepository.findAll();
+        assertOrganizationMemberMapper(organizationMemberMapperList.get(0), memberId, OrganizationRole.ADMIN);
+        assertOrganizationMemberMapper(organizationMemberMapperList.get(1), applyUser.getMemberId(), OrganizationRole.USER);
+
+
+
     }
 
     private void assertOrganization(Organization organization, String subDomain, String name, String description, String profileUrl) {
