@@ -5,7 +5,7 @@ import com.potato.exception.ConflictException;
 import com.potato.exception.ForbiddenException;
 import com.potato.exception.NotFoundException;
 import com.potato.service.MemberSetupTest;
-import com.potato.service.organization.dto.request.ApplyOrganizationMemberRequest;
+import com.potato.service.organization.dto.request.ManageOrganizationMemberRequest;
 import com.potato.service.organization.dto.request.CreateOrganizationRequest;
 import com.potato.service.organization.dto.request.UpdateOrganizationInfoRequest;
 import com.potato.service.organization.dto.response.OrganizationInfoResponse;
@@ -250,15 +250,20 @@ class OrganizationServiceTest extends MemberSetupTest {
         organization.addPending(targetMemberId);
         organizationRepository.save(organization);
 
-        ApplyOrganizationMemberRequest request = ApplyOrganizationMemberRequest.testBuilder()
+        ManageOrganizationMemberRequest request = ManageOrganizationMemberRequest.testBuilder()
             .targetMemberId(targetMemberId)
             .build();
 
         // when
-        organizationService.applyOrganizationMember(subDomain, request, memberId);
+        organizationService.approveOrganizationMember(subDomain, request, memberId);
 
         // then
+        List<Organization> organizationList = organizationRepository.findAll();
+        assertThat(organizationList).hasSize(1);
+        assertThat(organizationList.get(0).getMembersCount()).isEqualTo(2);
+
         List<OrganizationMemberMapper> organizationMemberMapperList = organizationMemberMapperRepository.findAll();
+        assertThat(organizationMemberMapperList).hasSize(2);
         assertOrganizationMemberMapper(organizationMemberMapperList.get(0), memberId, OrganizationRole.ADMIN);
         assertOrganizationMemberMapper(organizationMemberMapperList.get(1), targetMemberId, OrganizationRole.USER);
     }
@@ -273,13 +278,13 @@ class OrganizationServiceTest extends MemberSetupTest {
         organization.addAdmin(memberId);
         organizationRepository.save(organization);
 
-        ApplyOrganizationMemberRequest request = ApplyOrganizationMemberRequest.testBuilder()
+        ManageOrganizationMemberRequest request = ManageOrganizationMemberRequest.testBuilder()
             .targetMemberId(targetMemberId)
             .build();
 
         // when & then
         assertThatThrownBy(() -> {
-            organizationService.applyOrganizationMember(subDomain, request, memberId);
+            organizationService.approveOrganizationMember(subDomain, request, memberId);
         }).isInstanceOf(NotFoundException.class);
     }
 
@@ -294,13 +299,13 @@ class OrganizationServiceTest extends MemberSetupTest {
         organization.addUser(targetMemberId);
         organizationRepository.save(organization);
 
-        ApplyOrganizationMemberRequest request = ApplyOrganizationMemberRequest.testBuilder()
+        ManageOrganizationMemberRequest request = ManageOrganizationMemberRequest.testBuilder()
             .targetMemberId(targetMemberId)
             .build();
 
         // when & then
         assertThatThrownBy(() -> {
-            organizationService.applyOrganizationMember(subDomain, request, memberId);
+            organizationService.approveOrganizationMember(subDomain, request, memberId);
         }).isInstanceOf(NotFoundException.class);
     }
 
@@ -313,13 +318,61 @@ class OrganizationServiceTest extends MemberSetupTest {
         organization.addAdmin(memberId);
         organizationRepository.save(organization);
 
-        ApplyOrganizationMemberRequest request = ApplyOrganizationMemberRequest.testBuilder()
+        ManageOrganizationMemberRequest request = ManageOrganizationMemberRequest.testBuilder()
             .targetMemberId(memberId)
             .build();
 
         // when & then
         assertThatThrownBy(() -> {
-            organizationService.applyOrganizationMember(subDomain, request, memberId);
+            organizationService.approveOrganizationMember(subDomain, request, memberId);
+        }).isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
+    void 조직_신청한_유저를_관리자가_거절한다() {
+        //given
+        String subDomain = "potato";
+        Long targetMemberId = 20L;
+
+        Organization organization = OrganizationCreator.create(subDomain);
+        organization.addAdmin(memberId);
+        organization.addPending(targetMemberId);
+        organizationRepository.save(organization);
+
+        ManageOrganizationMemberRequest request = ManageOrganizationMemberRequest.testBuilder()
+            .targetMemberId(targetMemberId)
+            .build();
+
+        // when
+        organizationService.denyOrganizationMember(subDomain, request, memberId);
+
+        // then
+        List<Organization> organizationList = organizationRepository.findAll();
+        assertThat(organizationList).hasSize(1);
+        assertThat(organizationList.get(0).getMembersCount()).isEqualTo(1);
+
+        List<OrganizationMemberMapper> organizationMemberMapperList = organizationMemberMapperRepository.findAll();
+        assertThat(organizationMemberMapperList).hasSize(1);
+        assertOrganizationMemberMapper(organizationMemberMapperList.get(0), memberId, OrganizationRole.ADMIN);
+    }
+
+    @Test
+    void 조직_신청_거절시_조직에_신청을_하지_않은_멤버일_경우_에러가_발생한다() {
+        //given
+        String subDomain = "potato";
+        Long targetMemberId = 20L;
+
+        Organization organization = OrganizationCreator.create(subDomain);
+        organization.addAdmin(memberId);
+        organizationRepository.save(organization);
+
+        ManageOrganizationMemberRequest request = ManageOrganizationMemberRequest.testBuilder()
+            .targetMemberId(targetMemberId)
+            .build();
+
+        // when & then
+        assertThatThrownBy(() -> {
+            organizationService.denyOrganizationMember(subDomain, request, memberId);
         }).isInstanceOf(NotFoundException.class);
     }
 

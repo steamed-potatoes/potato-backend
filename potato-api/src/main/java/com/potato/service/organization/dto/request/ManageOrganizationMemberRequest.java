@@ -8,13 +8,13 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @NoArgsConstructor
-public class ApplyOrganizationMemberRequest {
+public class ManageOrganizationMemberRequest {
 
     @NotNull
     private Long targetMemberId;
 
     @Builder(builderMethodName = "testBuilder")
-    public ApplyOrganizationMemberRequest(@NotNull Long targetMemberId) {
+    public ManageOrganizationMemberRequest(@NotNull Long targetMemberId) {
         this.targetMemberId = targetMemberId;
     }
 

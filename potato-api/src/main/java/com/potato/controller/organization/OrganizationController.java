@@ -5,7 +5,7 @@ import com.potato.config.session.MemberSession;
 import com.potato.controller.ApiResponse;
 import com.potato.service.organization.OrganizationService;
 import com.potato.service.organization.dto.request.CreateOrganizationRequest;
-import com.potato.service.organization.dto.request.ApplyOrganizationMemberRequest;
+import com.potato.service.organization.dto.request.ManageOrganizationMemberRequest;
 import com.potato.service.organization.dto.request.UpdateOrganizationInfoRequest;
 import com.potato.service.organization.dto.response.OrganizationInfoResponse;
 import lombok.RequiredArgsConstructor;
@@ -42,10 +42,17 @@ public class OrganizationController {
         return ApiResponse.of(organizationService.updateOrganizationInfo(subDomain, request, memberSession.getMemberId()));
     }
 
-    @PostMapping("/api/v1/organization/apply/approval/{subDomain}")
-    public ApiResponse<String> applyOrganizationMember(
-        @PathVariable String subDomain, @RequestBody ApplyOrganizationMemberRequest request, @LoginMember MemberSession memberSession) {
-        organizationService.applyOrganizationMember(subDomain, request, memberSession.getMemberId());
+    @PutMapping("/api/v1/organization/approve/{subDomain}")
+    public ApiResponse<String> approveOrganizationMember(
+        @PathVariable String subDomain, @RequestBody ManageOrganizationMemberRequest request, @LoginMember MemberSession memberSession) {
+        organizationService.approveOrganizationMember(subDomain, request, memberSession.getMemberId());
+        return ApiResponse.OK;
+    }
+
+    @PutMapping("/api/v1/organization/deny/{subDomain}")
+    public ApiResponse<String> denyOrganizationMember(
+        @PathVariable String subDomain, @RequestBody ManageOrganizationMemberRequest request, @LoginMember MemberSession memberSession) {
+        organizationService.denyOrganizationMember(subDomain, request, memberSession.getMemberId());
         return ApiResponse.OK;
     }
 

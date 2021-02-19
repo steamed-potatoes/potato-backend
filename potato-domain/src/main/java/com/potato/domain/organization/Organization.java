@@ -96,6 +96,12 @@ public class Organization extends BaseTimeEntity {
     public void approveMember(Long memberId) {
         OrganizationMemberMapper organizationMemberMapper = findMember(memberId);
         organizationMemberMapper.approve();
+        this.membersCount++;
+    }
+
+    public void denyMember(Long memberId) {
+        OrganizationMemberMapper organizationMemberMapper = findMember(memberId);
+        organizationMemberMapperList.remove(organizationMemberMapper);
     }
 
     private OrganizationMemberMapper findMember(Long memberId) {
