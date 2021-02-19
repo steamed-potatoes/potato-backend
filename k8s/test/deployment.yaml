@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: potato-api-dev
+  name: potato-api-test
   labels:
-    app: potato-api-dev
-    env: dev
+    app: potato-api-test
+    env: test
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
-      app: potato-api-dev
-      env: dev
+      app: potato-api-test
+      env: test
   strategy:
     type: RollingUpdate
   template:
     metadata:
       labels:
-        app: potato-api-dev
-        env: dev
+        app: potato-api-test
+        env: test
     spec:
       containers:
         - name: node
@@ -26,5 +26,5 @@ spec:
             - name: SPRING_PROFILES_ACTIVE
               valueFrom:
                 configMapKeyRef:
-                  name: potato-api-dev-config
+                  name: potato-api-test-config
                   key: profiles

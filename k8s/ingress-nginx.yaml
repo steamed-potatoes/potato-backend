@@ -8,5 +8,5 @@ spec:
         paths:
           - path: /
             backend:
-              serviceName: potato-api
+              serviceName: potato-api-dev
               servicePort: 8080
