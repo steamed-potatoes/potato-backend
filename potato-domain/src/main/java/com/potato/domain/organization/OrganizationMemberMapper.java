@@ -43,8 +43,7 @@ public class OrganizationMemberMapper extends BaseTimeEntity {
         return new OrganizationMemberMapper(organization, memberId, OrganizationRole.USER);
     }
 
-    //조직 신청하는 API에서 만들것 같아서 미리 만듦
-    public static OrganizationMemberMapper pendingUser(Organization organization, Long memberId) {
+    public static OrganizationMemberMapper newPending(Organization organization, Long memberId) {
         return new OrganizationMemberMapper(organization, memberId, OrganizationRole.PENDING);
     }
 
@@ -52,12 +51,12 @@ public class OrganizationMemberMapper extends BaseTimeEntity {
         return this.memberId.equals(memberId) && this.role.equals(OrganizationRole.PENDING);
     }
 
-    //음.......이부분을 이런식으로만 바꿔주면 될것같은디
-    public void updateRole() {
+    public void approve() {
         this.role = OrganizationRole.USER;
     }
 
-    public boolean findMember(Long memberId) {
+    public boolean isSameMember(Long memberId) {
         return this.memberId.equals(memberId);
     }
+
 }

@@ -45,7 +45,8 @@ public class OrganizationController {
     @PostMapping("/api/v1/organization/apply/approval")
     public ApiResponse<String> applyOrganizationMember(
         @RequestBody ApplyOrganizationMemberRequest request, @LoginMember MemberSession memberSession) {
-        return ApiResponse.of(organizationService.applyOrganizationMember(request, memberSession.getMemberId()));
+        organizationService.applyOrganizationMember(request, memberSession.getMemberId());
+        return ApiResponse.OK;
     }
 
 }

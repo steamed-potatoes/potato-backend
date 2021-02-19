@@ -2,6 +2,7 @@ package com.potato.domain.organization;
 
 import com.potato.domain.BaseTimeEntity;
 import com.potato.exception.ForbiddenException;
+import com.potato.exception.NotFoundException;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +11,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -88,23 +88,28 @@ public class Organization extends BaseTimeEntity {
         this.membersCount++;
     }
 
-    public void validatePendingMember(Long memberId) {
+    public void approveMember(Long memberId) {
+        validatePendingMember(memberId);
+        OrganizationMemberMapper organizationMemberMapper = findMember(memberId);
+        organizationMemberMapper.approve();
+    }
+
+    private void validatePendingMember(Long memberId) {
         if (!isPending(memberId)) {
-            throw new ForbiddenException(String.format("멤버 (%s)는 조직(%s)의 가입신청자가 아닙니다", memberId, subDomain));
+            throw new ForbiddenException(String.format("멤버 (%s)는 조직 (%s)의 가입신청자가 아닙니다", memberId, subDomain));
         }
     }
 
-    public boolean isPending(Long memberId) {
+    private boolean isPending(Long memberId) {
         return this.organizationMemberMapperList.stream()
             .anyMatch(organizationMemberMapper -> organizationMemberMapper.isPending(memberId));
     }
 
-    public void updateRole(Long memberId) {
-        OrganizationMemberMapper organizationMemberMapper = organizationMemberMapperList.stream()
-            .filter(member -> memberId.equals(member.getMemberId()))
-            .findAny()
-            .orElse(null);
-        organizationMemberMapper.updateRole();
+    private OrganizationMemberMapper findMember(Long memberId) {
+        return organizationMemberMapperList.stream()
+            .filter(mapper -> mapper.isSameMember(memberId))
+            .findFirst()
+            .orElseThrow(() -> new NotFoundException(String.format("해당하는 멤버 (%s)는 그룹 (%s)에 신청 한 상태가 아닙니다", memberId, subDomain)));
     }
 
 }

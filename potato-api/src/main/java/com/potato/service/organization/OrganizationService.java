@@ -2,7 +2,6 @@ package com.potato.service.organization;
 
 import com.potato.domain.organization.Organization;
 import com.potato.domain.organization.OrganizationRepository;
-import com.potato.service.member.MemberServiceUtils;
 import com.potato.service.organization.dto.request.CreateOrganizationRequest;
 import com.potato.service.organization.dto.request.ApplyOrganizationMemberRequest;
 import com.potato.service.organization.dto.request.UpdateOrganizationInfoRequest;
@@ -50,12 +49,10 @@ public class OrganizationService {
     }
 
     @Transactional
-    public String applyOrganizationMember(ApplyOrganizationMemberRequest request, Long memberId) {
+    public void applyOrganizationMember(ApplyOrganizationMemberRequest request, Long memberId) {
         Organization organization = OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, request.getSubDomain());
         organization.validateAdminMember(memberId);
-        organization.validatePendingMember(request.getTargetMemberId());
-        organization.updateRole(request.getTargetMemberId());
-        return "ok";
+        organization.approveMember(request.getTargetMemberId());
     }
 
 }
