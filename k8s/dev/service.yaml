@@ -4,10 +4,12 @@ metadata:
   name: potato-api
   labels:
     app: potato-api
+    env: dev
 spec:
   type: ClusterIP
   selector:
     app: potato-api
+    env: dev
   ports:
     - port: 8080
       targetPort: 8080
