@@ -42,10 +42,10 @@ public class OrganizationController {
         return ApiResponse.of(organizationService.updateOrganizationInfo(subDomain, request, memberSession.getMemberId()));
     }
 
-    @PostMapping("/api/v1/organization/apply/approval")
+    @PostMapping("/api/v1/organization/apply/approval/{subDomain}")
     public ApiResponse<String> applyOrganizationMember(
-        @RequestBody ApplyOrganizationMemberRequest request, @LoginMember MemberSession memberSession) {
-        organizationService.applyOrganizationMember(request, memberSession.getMemberId());
+        @PathVariable String subDomain, @RequestBody ApplyOrganizationMemberRequest request, @LoginMember MemberSession memberSession) {
+        organizationService.applyOrganizationMember(subDomain, request, memberSession.getMemberId());
         return ApiResponse.OK;
     }
 

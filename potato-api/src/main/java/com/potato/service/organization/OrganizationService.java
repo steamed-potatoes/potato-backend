@@ -49,8 +49,8 @@ public class OrganizationService {
     }
 
     @Transactional
-    public void applyOrganizationMember(ApplyOrganizationMemberRequest request, Long memberId) {
-        Organization organization = OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, request.getSubDomain());
+    public void applyOrganizationMember(String subDomain, ApplyOrganizationMemberRequest request, Long memberId) {
+        Organization organization = OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, subDomain);
         organization.validateAdminMember(memberId);
         organization.approveMember(request.getTargetMemberId());
     }
