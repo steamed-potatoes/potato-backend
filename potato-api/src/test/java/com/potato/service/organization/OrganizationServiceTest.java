@@ -190,6 +190,7 @@ class OrganizationServiceTest extends MemberSetupTest {
 
     @Test
     void 이미_가입중인_유저일_경우() {
+        //given
         String subDomain = "potato";
         Long applyUserId = 10L;
 
@@ -202,8 +203,6 @@ class OrganizationServiceTest extends MemberSetupTest {
         assertThatThrownBy(
             () -> organizationService.applyOrganization(subDomain, applyUserId)
         ).isInstanceOf(ValidationException.class);
-
-
     }
 
 }
