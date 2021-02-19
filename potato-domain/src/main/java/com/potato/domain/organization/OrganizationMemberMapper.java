@@ -1,6 +1,7 @@
 package com.potato.domain.organization;
 
 import com.potato.domain.BaseTimeEntity;
+import com.potato.exception.ForbiddenException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -52,6 +53,9 @@ public class OrganizationMemberMapper extends BaseTimeEntity {
     }
 
     public void approve() {
+        if (!isPending(memberId)) {
+            throw new ForbiddenException(String.format("멤버 (%s)는 조직 (%s)의 가입신청자가 아닙니다", memberId, organization.getSubDomain()));
+        }
         this.role = OrganizationRole.USER;
     }
 

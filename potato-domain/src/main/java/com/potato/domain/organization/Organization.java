@@ -89,20 +89,8 @@ public class Organization extends BaseTimeEntity {
     }
 
     public void approveMember(Long memberId) {
-        validatePendingMember(memberId);
         OrganizationMemberMapper organizationMemberMapper = findMember(memberId);
         organizationMemberMapper.approve();
-    }
-
-    private void validatePendingMember(Long memberId) {
-        if (!isPending(memberId)) {
-            throw new ForbiddenException(String.format("멤버 (%s)는 조직 (%s)의 가입신청자가 아닙니다", memberId, subDomain));
-        }
-    }
-
-    private boolean isPending(Long memberId) {
-        return this.organizationMemberMapperList.stream()
-            .anyMatch(organizationMemberMapper -> organizationMemberMapper.isPending(memberId));
     }
 
     private OrganizationMemberMapper findMember(Long memberId) {
