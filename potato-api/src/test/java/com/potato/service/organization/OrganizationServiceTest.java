@@ -3,6 +3,7 @@ package com.potato.service.organization;
 import com.potato.domain.organization.*;
 import com.potato.exception.ConflictException;
 import com.potato.exception.NotFoundException;
+import com.potato.exception.ValidationException;
 import com.potato.service.MemberSetupTest;
 import com.potato.service.organization.dto.request.CreateOrganizationRequest;
 import com.potato.service.organization.dto.response.OrganizationInfoResponse;
@@ -166,6 +167,43 @@ class OrganizationServiceTest extends MemberSetupTest {
 
         // then
         assertThat(responses).isEmpty();
+    }
+
+    @Test
+    void 일반유저가_조직에_가입_신청을_한다() {
+        //given
+        String subDomain = "potato";
+        Long applyUserId = 10L;
+
+        Organization organization = OrganizationCreator.create(subDomain);
+        organization.addAdmin(memberId);
+        organizationRepository.save(organization);
+
+        //when
+        organizationService.applyOrganization(subDomain, applyUserId);
+
+        //then
+        List<OrganizationMemberMapper> organizationMemberMapperList = organizationMemberMapperRepository.findAll();
+        assertOrganizationMemberMapper(organizationMemberMapperList.get(0), memberId, OrganizationRole.ADMIN);
+        assertOrganizationMemberMapper(organizationMemberMapperList.get(1), applyUserId, OrganizationRole.PENDING);
+    }
+
+    @Test
+    void 이미_가입중인_유저일_경우() {
+        String subDomain = "potato";
+        Long applyUserId = 10L;
+
+        Organization organization = OrganizationCreator.create(subDomain);
+        organization.addAdmin(memberId);
+        organization.addUser(applyUserId);
+        organizationRepository.save(organization);
+
+        // when & then
+        assertThatThrownBy(
+            () -> organizationService.applyOrganization(subDomain, applyUserId)
+        ).isInstanceOf(ValidationException.class);
+
+
     }
 
 }

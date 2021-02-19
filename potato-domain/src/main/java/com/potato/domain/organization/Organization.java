@@ -3,6 +3,7 @@ package com.potato.domain.organization;
 import com.potato.domain.BaseTimeEntity;
 import com.potato.exception.ForbiddenException;
 import com.potato.exception.NotFoundException;
+import com.potato.exception.ValidationException;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -88,7 +89,23 @@ public class Organization extends BaseTimeEntity {
         this.membersCount++;
     }
 
+    private boolean isPending(Long memberId) {
+        return this.organizationMemberMapperList.stream()
+            .anyMatch(organizationMemberMapper -> organizationMemberMapper.isPending(memberId));
+    }
+
+    private boolean isUser(Long memberId) {
+        return this.organizationMemberMapperList.stream()
+            .anyMatch(organizationMemberMapper -> organizationMemberMapper.isUser(memberId));
+    }
+
     public void addPending(Long memberId) {
+        if (isPending(memberId)) {
+            throw new ValidationException("이미 조직에 가입신청중입니다.");
+        }
+        if (isUser(memberId)) {
+            throw new ValidationException("이미 조직에 가입이 되어 있습니다.");
+        }
         OrganizationMemberMapper organizationMemberMapper = OrganizationMemberMapper.newPending(this, memberId);
         this.organizationMemberMapperList.add(organizationMemberMapper);
     }
