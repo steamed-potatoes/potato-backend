@@ -78,9 +78,9 @@ public class OrganizationAdminServiceTest extends MemberSetupTest {
             .build();
 
         // when & then
-        assertThatThrownBy(() -> {
-            organizationAdminService.updateOrganizationInfo(subDomain, request, memberId);
-        }).isInstanceOf(ForbiddenException.class);
+        assertThatThrownBy(
+            () -> organizationAdminService.updateOrganizationInfo(subDomain, request, memberId)
+        ).isInstanceOf(ForbiddenException.class);
     }
 
     @DisplayName("조직원이 아닌경우 조직의 정보를 수정할 수 없다")
@@ -98,9 +98,9 @@ public class OrganizationAdminServiceTest extends MemberSetupTest {
             .build();
 
         // when & then
-        assertThatThrownBy(() -> {
-            organizationAdminService.updateOrganizationInfo(subDomain, request, memberId);
-        }).isInstanceOf(ForbiddenException.class);
+        assertThatThrownBy(
+            () -> organizationAdminService.updateOrganizationInfo(subDomain, request, memberId)
+        ).isInstanceOf(ForbiddenException.class);
     }
 
     @Test
@@ -147,9 +147,9 @@ public class OrganizationAdminServiceTest extends MemberSetupTest {
             .build();
 
         // when & then
-        assertThatThrownBy(() -> {
-            organizationAdminService.approveOrganizationMember(subDomain, request, memberId);
-        }).isInstanceOf(NotFoundException.class);
+        assertThatThrownBy(
+            () -> organizationAdminService.approveOrganizationMember(subDomain, request, memberId)
+        ).isInstanceOf(NotFoundException.class);
     }
 
     @Test
@@ -168,9 +168,9 @@ public class OrganizationAdminServiceTest extends MemberSetupTest {
             .build();
 
         // when & then
-        assertThatThrownBy(() -> {
-            organizationAdminService.approveOrganizationMember(subDomain, request, memberId);
-        }).isInstanceOf(NotFoundException.class);
+        assertThatThrownBy(
+            () -> organizationAdminService.approveOrganizationMember(subDomain, request, memberId)
+        ).isInstanceOf(NotFoundException.class);
     }
 
     @Test
@@ -187,9 +187,9 @@ public class OrganizationAdminServiceTest extends MemberSetupTest {
             .build();
 
         // when & then
-        assertThatThrownBy(() -> {
-            organizationAdminService.approveOrganizationMember(subDomain, request, memberId);
-        }).isInstanceOf(NotFoundException.class);
+        assertThatThrownBy(
+            () -> organizationAdminService.approveOrganizationMember(subDomain, request, memberId)
+        ).isInstanceOf(NotFoundException.class);
     }
 
     @Test
@@ -235,9 +235,9 @@ public class OrganizationAdminServiceTest extends MemberSetupTest {
             .build();
 
         // when & then
-        assertThatThrownBy(() -> {
-            organizationAdminService.denyOrganizationMember(subDomain, request, memberId);
-        }).isInstanceOf(NotFoundException.class);
+        assertThatThrownBy(
+            () -> organizationAdminService.denyOrganizationMember(subDomain, request, memberId)
+        ).isInstanceOf(NotFoundException.class);
     }
 
 }

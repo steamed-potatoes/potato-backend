@@ -37,7 +37,7 @@ public class Organization extends BaseTimeEntity {
     private String profileUrl;
 
     @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrganizationMemberMapper> organizationMemberMapperList = new ArrayList<>();
+    private final List<OrganizationMemberMapper> organizationMemberMapperList = new ArrayList<>();
 
     @Builder
     public Organization(String subDomain, String name, String description, OrganizationCategory category, String profileUrl) {

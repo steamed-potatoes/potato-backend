@@ -65,9 +65,9 @@ public class MemberServiceTest {
             .build();
 
         // when & then
-        assertThatThrownBy(() -> {
-            memberService.createMember(request);
-        }).isInstanceOf(ConflictException.class);
+        assertThatThrownBy(
+            () -> memberService.createMember(request)
+        ).isInstanceOf(ConflictException.class);
     }
 
     private void assertMemberInfo(Member member, String email, String name, String profileUrl, MemberMajor major) {
@@ -97,9 +97,9 @@ public class MemberServiceTest {
     @Test
     void 존재하지_않는_멤버의_회원정보를_불러오면_에러가_발생한다() {
         // when & then
-        assertThatThrownBy(() -> {
-            memberService.getMemberInfo(999L);
-        }).isInstanceOf(NotFoundException.class);
+        assertThatThrownBy(
+            () -> memberService.getMemberInfo(999L)
+        ).isInstanceOf(NotFoundException.class);
     }
 
     private void assertThatMemberInfoResponse(MemberInfoResponse response, String email, String name, String profileUrl, MemberMajor major) {
@@ -154,16 +154,15 @@ public class MemberServiceTest {
         MemberInfoResponse response = memberService.getMemberOne(member.getId());
 
         //then
-        List<Member> memberList = memberRepository.findAll();
         assertThatMemberInfoResponse(response, email, name, profileUrl, major);
     }
 
     @Test
     void 존재하지_않는_타겟멤버를_부를_경우() {
         // when & then
-        assertThatThrownBy(() -> {
-            memberService.getMemberOne(999L);
-        }).isInstanceOf(NotFoundException.class);
+        assertThatThrownBy(
+            () -> memberService.getMemberOne(999L)
+        ).isInstanceOf(NotFoundException.class);
     }
 
 }

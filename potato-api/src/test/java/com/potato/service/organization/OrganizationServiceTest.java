@@ -73,9 +73,9 @@ class OrganizationServiceTest extends MemberSetupTest {
             .build();
 
         // when & then
-        assertThatThrownBy(() -> {
-            organizationService.createOrganization(request, memberId);
-        }).isInstanceOf(ConflictException.class);
+        assertThatThrownBy(
+            () -> organizationService.createOrganization(request, memberId)
+        ).isInstanceOf(ConflictException.class);
     }
 
     @Test
@@ -137,9 +137,9 @@ class OrganizationServiceTest extends MemberSetupTest {
     @Test
     void 특정_조직을_조회시_해당하는_서브도메인이_없는경우() {
         // when & then
-        assertThatThrownBy(() -> {
-            organizationService.getSimpleOrganizationInfo("empty");
-        }).isInstanceOf(NotFoundException.class);
+        assertThatThrownBy(
+            () -> organizationService.getSimpleOrganizationInfo("empty")
+        ).isInstanceOf(NotFoundException.class);
     }
 
     @Test
