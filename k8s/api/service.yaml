@@ -5,11 +5,9 @@ metadata:
   labels:
     app: potato-api
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: potato-api
   ports:
     - port: 8080
       targetPort: 8080
-      protocol: TCP
-      nodePort: 30000
