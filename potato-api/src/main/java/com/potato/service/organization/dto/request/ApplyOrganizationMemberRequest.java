@@ -4,16 +4,17 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @NoArgsConstructor
 public class ApplyOrganizationMemberRequest {
 
+    @NotNull
     private Long targetMemberId;
 
     @Builder(builderMethodName = "testBuilder")
-    public ApplyOrganizationMemberRequest(@NotBlank Long targetMemberId) {
+    public ApplyOrganizationMemberRequest(@NotNull Long targetMemberId) {
         this.targetMemberId = targetMemberId;
     }
 

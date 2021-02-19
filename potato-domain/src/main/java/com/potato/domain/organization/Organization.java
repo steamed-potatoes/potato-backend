@@ -88,6 +88,11 @@ public class Organization extends BaseTimeEntity {
         this.membersCount++;
     }
 
+    public void addPending(Long memberId) {
+        OrganizationMemberMapper organizationMemberMapper = OrganizationMemberMapper.newPending(this, memberId);
+        this.organizationMemberMapperList.add(organizationMemberMapper);
+    }
+
     public void approveMember(Long memberId) {
         OrganizationMemberMapper organizationMemberMapper = findMember(memberId);
         organizationMemberMapper.approve();

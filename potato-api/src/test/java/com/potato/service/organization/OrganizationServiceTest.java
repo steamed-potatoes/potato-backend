@@ -239,9 +239,32 @@ class OrganizationServiceTest extends MemberSetupTest {
         }).isInstanceOf(ForbiddenException.class);
     }
 
-    @DisplayName("조직의 관리자가 아닌 경우 수락할 수 없다.")
     @Test
     void 조직_신청을_수락한다() {
+        // given
+        String subDomain = "potato";
+        Long targetMemberId = 20L;
+
+        Organization organization = OrganizationCreator.create(subDomain);
+        organization.addAdmin(memberId);
+        organization.addPending(targetMemberId);
+        organizationRepository.save(organization);
+
+        ApplyOrganizationMemberRequest request = ApplyOrganizationMemberRequest.testBuilder()
+            .targetMemberId(targetMemberId)
+            .build();
+
+        // when
+        organizationService.applyOrganizationMember(subDomain, request, memberId);
+
+        // then
+        List<OrganizationMemberMapper> organizationMemberMapperList = organizationMemberMapperRepository.findAll();
+        assertOrganizationMemberMapper(organizationMemberMapperList.get(0), memberId, OrganizationRole.ADMIN);
+        assertOrganizationMemberMapper(organizationMemberMapperList.get(1), targetMemberId, OrganizationRole.USER);
+    }
+
+    @Test
+    void 조직_신청_수락시_조직에_신청을_하지_않은_멤버일_경우_에러가_발생한다() {
         //given
         String subDomain = "potato";
         Long targetMemberId = 20L;
@@ -250,23 +273,54 @@ class OrganizationServiceTest extends MemberSetupTest {
         organization.addAdmin(memberId);
         organizationRepository.save(organization);
 
-        OrganizationMemberMapper applyUser = OrganizationMemberMapper.newPending(organization, targetMemberId);
-        organizationMemberMapperRepository.save(applyUser);
-
         ApplyOrganizationMemberRequest request = ApplyOrganizationMemberRequest.testBuilder()
-            .targetMemberId(applyUser.getMemberId())
+            .targetMemberId(targetMemberId)
             .build();
 
-        //when
-        organizationService.applyOrganizationMember(subDomain, request, memberId);
+        // when & then
+        assertThatThrownBy(() -> {
+            organizationService.applyOrganizationMember(subDomain, request, memberId);
+        }).isInstanceOf(NotFoundException.class);
+    }
 
-        //then
-        List<OrganizationMemberMapper> organizationMemberMapperList = organizationMemberMapperRepository.findAll();
-        assertOrganizationMemberMapper(organizationMemberMapperList.get(0), memberId, OrganizationRole.ADMIN);
-        assertOrganizationMemberMapper(organizationMemberMapperList.get(1), applyUser.getMemberId(), OrganizationRole.USER);
+    @Test
+    void 조직_신청_수락시_이미_조직에_유저로_참여하고_있는경우_에러가_발생한다() {
+        //given
+        String subDomain = "potato";
+        Long targetMemberId = 20L;
 
+        Organization organization = OrganizationCreator.create(subDomain);
+        organization.addAdmin(memberId);
+        organization.addUser(targetMemberId);
+        organizationRepository.save(organization);
 
+        ApplyOrganizationMemberRequest request = ApplyOrganizationMemberRequest.testBuilder()
+            .targetMemberId(targetMemberId)
+            .build();
 
+        // when & then
+        assertThatThrownBy(() -> {
+            organizationService.applyOrganizationMember(subDomain, request, memberId);
+        }).isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
+    void 조직_신청_수락시_이미_조직에_관리로_참여하고_있는경우_에러가_발생한다() {
+        //given
+        String subDomain = "potato";
+
+        Organization organization = OrganizationCreator.create(subDomain);
+        organization.addAdmin(memberId);
+        organizationRepository.save(organization);
+
+        ApplyOrganizationMemberRequest request = ApplyOrganizationMemberRequest.testBuilder()
+            .targetMemberId(memberId)
+            .build();
+
+        // when & then
+        assertThatThrownBy(() -> {
+            organizationService.applyOrganizationMember(subDomain, request, memberId);
+        }).isInstanceOf(NotFoundException.class);
     }
 
     private void assertOrganization(Organization organization, String subDomain, String name, String description, String profileUrl) {
