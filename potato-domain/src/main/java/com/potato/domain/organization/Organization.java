@@ -2,6 +2,7 @@ package com.potato.domain.organization;
 
 import com.potato.domain.BaseTimeEntity;
 import com.potato.exception.ForbiddenException;
+import com.potato.exception.NotFoundException;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -85,6 +86,23 @@ public class Organization extends BaseTimeEntity {
         OrganizationMemberMapper organizationMemberMapper = OrganizationMemberMapper.newUser(this, memberId);
         this.organizationMemberMapperList.add(organizationMemberMapper);
         this.membersCount++;
+    }
+
+    public void addPending(Long memberId) {
+        OrganizationMemberMapper organizationMemberMapper = OrganizationMemberMapper.newPending(this, memberId);
+        this.organizationMemberMapperList.add(organizationMemberMapper);
+    }
+
+    public void approveMember(Long memberId) {
+        OrganizationMemberMapper organizationMemberMapper = findMember(memberId);
+        organizationMemberMapper.approve();
+    }
+
+    private OrganizationMemberMapper findMember(Long memberId) {
+        return organizationMemberMapperList.stream()
+            .filter(mapper -> mapper.isSameMember(memberId))
+            .findFirst()
+            .orElseThrow(() -> new NotFoundException(String.format("해당하는 멤버 (%s)는 그룹 (%s)에 신청 한 상태가 아닙니다", memberId, subDomain)));
     }
 
 }

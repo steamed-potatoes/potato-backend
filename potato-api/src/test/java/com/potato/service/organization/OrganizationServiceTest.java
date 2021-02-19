@@ -5,6 +5,7 @@ import com.potato.exception.ConflictException;
 import com.potato.exception.ForbiddenException;
 import com.potato.exception.NotFoundException;
 import com.potato.service.MemberSetupTest;
+import com.potato.service.organization.dto.request.ApplyOrganizationMemberRequest;
 import com.potato.service.organization.dto.request.CreateOrganizationRequest;
 import com.potato.service.organization.dto.request.UpdateOrganizationInfoRequest;
 import com.potato.service.organization.dto.response.OrganizationInfoResponse;
@@ -236,6 +237,90 @@ class OrganizationServiceTest extends MemberSetupTest {
         assertThatThrownBy(() -> {
             organizationService.updateOrganizationInfo(subDomain, request, memberId);
         }).isInstanceOf(ForbiddenException.class);
+    }
+
+    @Test
+    void 조직_신청을_수락한다() {
+        // given
+        String subDomain = "potato";
+        Long targetMemberId = 20L;
+
+        Organization organization = OrganizationCreator.create(subDomain);
+        organization.addAdmin(memberId);
+        organization.addPending(targetMemberId);
+        organizationRepository.save(organization);
+
+        ApplyOrganizationMemberRequest request = ApplyOrganizationMemberRequest.testBuilder()
+            .targetMemberId(targetMemberId)
+            .build();
+
+        // when
+        organizationService.applyOrganizationMember(subDomain, request, memberId);
+
+        // then
+        List<OrganizationMemberMapper> organizationMemberMapperList = organizationMemberMapperRepository.findAll();
+        assertOrganizationMemberMapper(organizationMemberMapperList.get(0), memberId, OrganizationRole.ADMIN);
+        assertOrganizationMemberMapper(organizationMemberMapperList.get(1), targetMemberId, OrganizationRole.USER);
+    }
+
+    @Test
+    void 조직_신청_수락시_조직에_신청을_하지_않은_멤버일_경우_에러가_발생한다() {
+        //given
+        String subDomain = "potato";
+        Long targetMemberId = 20L;
+
+        Organization organization = OrganizationCreator.create(subDomain);
+        organization.addAdmin(memberId);
+        organizationRepository.save(organization);
+
+        ApplyOrganizationMemberRequest request = ApplyOrganizationMemberRequest.testBuilder()
+            .targetMemberId(targetMemberId)
+            .build();
+
+        // when & then
+        assertThatThrownBy(() -> {
+            organizationService.applyOrganizationMember(subDomain, request, memberId);
+        }).isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
+    void 조직_신청_수락시_이미_조직에_유저로_참여하고_있는경우_에러가_발생한다() {
+        //given
+        String subDomain = "potato";
+        Long targetMemberId = 20L;
+
+        Organization organization = OrganizationCreator.create(subDomain);
+        organization.addAdmin(memberId);
+        organization.addUser(targetMemberId);
+        organizationRepository.save(organization);
+
+        ApplyOrganizationMemberRequest request = ApplyOrganizationMemberRequest.testBuilder()
+            .targetMemberId(targetMemberId)
+            .build();
+
+        // when & then
+        assertThatThrownBy(() -> {
+            organizationService.applyOrganizationMember(subDomain, request, memberId);
+        }).isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
+    void 조직_신청_수락시_이미_조직에_관리로_참여하고_있는경우_에러가_발생한다() {
+        //given
+        String subDomain = "potato";
+
+        Organization organization = OrganizationCreator.create(subDomain);
+        organization.addAdmin(memberId);
+        organizationRepository.save(organization);
+
+        ApplyOrganizationMemberRequest request = ApplyOrganizationMemberRequest.testBuilder()
+            .targetMemberId(memberId)
+            .build();
+
+        // when & then
+        assertThatThrownBy(() -> {
+            organizationService.applyOrganizationMember(subDomain, request, memberId);
+        }).isInstanceOf(NotFoundException.class);
     }
 
     private void assertOrganization(Organization organization, String subDomain, String name, String description, String profileUrl) {

@@ -5,6 +5,7 @@ import com.potato.config.session.MemberSession;
 import com.potato.controller.ApiResponse;
 import com.potato.service.organization.OrganizationService;
 import com.potato.service.organization.dto.request.CreateOrganizationRequest;
+import com.potato.service.organization.dto.request.ApplyOrganizationMemberRequest;
 import com.potato.service.organization.dto.request.UpdateOrganizationInfoRequest;
 import com.potato.service.organization.dto.response.OrganizationInfoResponse;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,13 @@ public class OrganizationController {
     public ApiResponse<OrganizationInfoResponse> updateOrganizationInfo(
         @PathVariable String subDomain, @RequestBody UpdateOrganizationInfoRequest request, @LoginMember MemberSession memberSession) {
         return ApiResponse.of(organizationService.updateOrganizationInfo(subDomain, request, memberSession.getMemberId()));
+    }
+
+    @PostMapping("/api/v1/organization/apply/approval/{subDomain}")
+    public ApiResponse<String> applyOrganizationMember(
+        @PathVariable String subDomain, @RequestBody ApplyOrganizationMemberRequest request, @LoginMember MemberSession memberSession) {
+        organizationService.applyOrganizationMember(subDomain, request, memberSession.getMemberId());
+        return ApiResponse.OK;
     }
 
 }

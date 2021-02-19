@@ -1,6 +1,7 @@
 package com.potato.domain.organization;
 
 import com.potato.domain.BaseTimeEntity;
+import com.potato.exception.NotFoundException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,6 +42,25 @@ public class OrganizationMemberMapper extends BaseTimeEntity {
 
     public static OrganizationMemberMapper newUser(Organization organization, Long memberId) {
         return new OrganizationMemberMapper(organization, memberId, OrganizationRole.USER);
+    }
+
+    public static OrganizationMemberMapper newPending(Organization organization, Long memberId) {
+        return new OrganizationMemberMapper(organization, memberId, OrganizationRole.PENDING);
+    }
+
+    public boolean isPending(Long memberId) {
+        return this.memberId.equals(memberId) && this.role.equals(OrganizationRole.PENDING);
+    }
+
+    public void approve() {
+        if (!isPending(memberId)) {
+            throw new NotFoundException(String.format("멤버 (%s)는 조직 (%s)의 가입신청자가 아닙니다", memberId, organization.getSubDomain()));
+        }
+        this.role = OrganizationRole.USER;
+    }
+
+    public boolean isSameMember(Long memberId) {
+        return this.memberId.equals(memberId);
     }
 
 }
