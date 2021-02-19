@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RequiredArgsConstructor
 @RestController
 public class OrganizationAdminController {
@@ -21,20 +23,20 @@ public class OrganizationAdminController {
 
     @PutMapping("/api/v1/organization/admin/{subDomain}")
     public ApiResponse<OrganizationInfoResponse> updateOrganizationInfo(
-        @PathVariable String subDomain, @RequestBody UpdateOrganizationInfoRequest request, @LoginMember MemberSession memberSession) {
+        @PathVariable String subDomain, @Valid @RequestBody UpdateOrganizationInfoRequest request, @LoginMember MemberSession memberSession) {
         return ApiResponse.of(organizationAdminService.updateOrganizationInfo(subDomain, request, memberSession.getMemberId()));
     }
 
     @PutMapping("/api/v1/organization/admin/approve/{subDomain}")
     public ApiResponse<String> approveOrganizationMember(
-        @PathVariable String subDomain, @RequestBody ManageOrganizationMemberRequest request, @LoginMember MemberSession memberSession) {
+        @PathVariable String subDomain, @Valid @RequestBody ManageOrganizationMemberRequest request, @LoginMember MemberSession memberSession) {
         organizationAdminService.approveOrganizationMember(subDomain, request, memberSession.getMemberId());
         return ApiResponse.OK;
     }
 
     @PutMapping("/api/v1/organization/admin/deny/{subDomain}")
     public ApiResponse<String> denyOrganizationMember(
-        @PathVariable String subDomain, @RequestBody ManageOrganizationMemberRequest request, @LoginMember MemberSession memberSession) {
+        @PathVariable String subDomain, @Valid @RequestBody ManageOrganizationMemberRequest request, @LoginMember MemberSession memberSession) {
         organizationAdminService.denyOrganizationMember(subDomain, request, memberSession.getMemberId());
         return ApiResponse.OK;
     }
