@@ -2,15 +2,11 @@ package com.potato.service.organization;
 
 import com.potato.domain.organization.*;
 import com.potato.exception.ConflictException;
-import com.potato.exception.ForbiddenException;
 import com.potato.exception.NotFoundException;
 import com.potato.service.MemberSetupTest;
-import com.potato.service.organization.dto.request.ManageOrganizationMemberRequest;
 import com.potato.service.organization.dto.request.CreateOrganizationRequest;
-import com.potato.service.organization.dto.request.UpdateOrganizationInfoRequest;
 import com.potato.service.organization.dto.response.OrganizationInfoResponse;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.potato.service.organization.OrganizationServiceTestUtils.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -169,234 +166,6 @@ class OrganizationServiceTest extends MemberSetupTest {
 
         // then
         assertThat(responses).isEmpty();
-    }
-
-    @Test
-    void 조직의_정보를_수정다() {
-        // given
-        String subDomain = "potato";
-        String name = "감자팀";
-        String description = "감자 화이팅";
-        String profileUrl = "http://localhost.com";
-
-        Organization organization = OrganizationCreator.create(subDomain);
-        organization.addAdmin(memberId);
-        organizationRepository.save(organization);
-
-        UpdateOrganizationInfoRequest request = UpdateOrganizationInfoRequest.testBuilder()
-            .name(name)
-            .description(description)
-            .profileUrl(profileUrl)
-            .build();
-
-        // when
-        organizationService.updateOrganizationInfo(subDomain, request, memberId);
-
-        // then
-        List<Organization> organizationList = organizationRepository.findAll();
-        assertThat(organizationList).hasSize(1);
-
-        assertOrganization(organizationList.get(0), subDomain, name, description, profileUrl);
-    }
-
-    @DisplayName("조직의 관리자가 아닌 유저는 조직의 정보를 수정할 수 없다")
-    @Test
-    void 조직의_관리자가_아니면_조직의_정보를_수정할_수_없다_1() {
-        // given
-        String subDomain = "potato";
-
-        Organization organization = OrganizationCreator.create(subDomain);
-        organization.addUser(memberId);
-        organizationRepository.save(organization);
-
-        UpdateOrganizationInfoRequest request = UpdateOrganizationInfoRequest.testBuilder()
-            .name("감자")
-            .build();
-
-        // when & then
-        assertThatThrownBy(() -> {
-            organizationService.updateOrganizationInfo(subDomain, request, memberId);
-        }).isInstanceOf(ForbiddenException.class);
-    }
-
-    @DisplayName("조직원이 아닌경우 조직의 정보를 수정할 수 없다")
-    @Test
-    void 조직의_관리자가_아니면_조직의_정보를_수정할_수_없다_2() {
-        // given
-        String subDomain = "potato";
-
-        Organization organization = OrganizationCreator.create(subDomain);
-        organization.addUser(memberId);
-        organizationRepository.save(organization);
-
-        UpdateOrganizationInfoRequest request = UpdateOrganizationInfoRequest.testBuilder()
-            .name("감자")
-            .build();
-
-        // when & then
-        assertThatThrownBy(() -> {
-            organizationService.updateOrganizationInfo(subDomain, request, memberId);
-        }).isInstanceOf(ForbiddenException.class);
-    }
-
-    @Test
-    void 조직_신청을_수락한다() {
-        // given
-        String subDomain = "potato";
-        Long targetMemberId = 20L;
-
-        Organization organization = OrganizationCreator.create(subDomain);
-        organization.addAdmin(memberId);
-        organization.addPending(targetMemberId);
-        organizationRepository.save(organization);
-
-        ManageOrganizationMemberRequest request = ManageOrganizationMemberRequest.testBuilder()
-            .targetMemberId(targetMemberId)
-            .build();
-
-        // when
-        organizationService.approveOrganizationMember(subDomain, request, memberId);
-
-        // then
-        List<Organization> organizationList = organizationRepository.findAll();
-        assertThat(organizationList).hasSize(1);
-        assertThat(organizationList.get(0).getMembersCount()).isEqualTo(2);
-
-        List<OrganizationMemberMapper> organizationMemberMapperList = organizationMemberMapperRepository.findAll();
-        assertThat(organizationMemberMapperList).hasSize(2);
-        assertOrganizationMemberMapper(organizationMemberMapperList.get(0), memberId, OrganizationRole.ADMIN);
-        assertOrganizationMemberMapper(organizationMemberMapperList.get(1), targetMemberId, OrganizationRole.USER);
-    }
-
-    @Test
-    void 조직_신청_수락시_조직에_신청을_하지_않은_멤버일_경우_에러가_발생한다() {
-        //given
-        String subDomain = "potato";
-        Long targetMemberId = 20L;
-
-        Organization organization = OrganizationCreator.create(subDomain);
-        organization.addAdmin(memberId);
-        organizationRepository.save(organization);
-
-        ManageOrganizationMemberRequest request = ManageOrganizationMemberRequest.testBuilder()
-            .targetMemberId(targetMemberId)
-            .build();
-
-        // when & then
-        assertThatThrownBy(() -> {
-            organizationService.approveOrganizationMember(subDomain, request, memberId);
-        }).isInstanceOf(NotFoundException.class);
-    }
-
-    @Test
-    void 조직_신청_수락시_이미_조직에_유저로_참여하고_있는경우_에러가_발생한다() {
-        //given
-        String subDomain = "potato";
-        Long targetMemberId = 20L;
-
-        Organization organization = OrganizationCreator.create(subDomain);
-        organization.addAdmin(memberId);
-        organization.addUser(targetMemberId);
-        organizationRepository.save(organization);
-
-        ManageOrganizationMemberRequest request = ManageOrganizationMemberRequest.testBuilder()
-            .targetMemberId(targetMemberId)
-            .build();
-
-        // when & then
-        assertThatThrownBy(() -> {
-            organizationService.approveOrganizationMember(subDomain, request, memberId);
-        }).isInstanceOf(NotFoundException.class);
-    }
-
-    @Test
-    void 조직_신청_수락시_이미_조직에_관리로_참여하고_있는경우_에러가_발생한다() {
-        //given
-        String subDomain = "potato";
-
-        Organization organization = OrganizationCreator.create(subDomain);
-        organization.addAdmin(memberId);
-        organizationRepository.save(organization);
-
-        ManageOrganizationMemberRequest request = ManageOrganizationMemberRequest.testBuilder()
-            .targetMemberId(memberId)
-            .build();
-
-        // when & then
-        assertThatThrownBy(() -> {
-            organizationService.approveOrganizationMember(subDomain, request, memberId);
-        }).isInstanceOf(NotFoundException.class);
-    }
-
-    @Test
-    void 조직_신청한_유저를_관리자가_거절한다() {
-        //given
-        String subDomain = "potato";
-        Long targetMemberId = 20L;
-
-        Organization organization = OrganizationCreator.create(subDomain);
-        organization.addAdmin(memberId);
-        organization.addPending(targetMemberId);
-        organizationRepository.save(organization);
-
-        ManageOrganizationMemberRequest request = ManageOrganizationMemberRequest.testBuilder()
-            .targetMemberId(targetMemberId)
-            .build();
-
-        // when
-        organizationService.denyOrganizationMember(subDomain, request, memberId);
-
-        // then
-        List<Organization> organizationList = organizationRepository.findAll();
-        assertThat(organizationList).hasSize(1);
-        assertThat(organizationList.get(0).getMembersCount()).isEqualTo(1);
-
-        List<OrganizationMemberMapper> organizationMemberMapperList = organizationMemberMapperRepository.findAll();
-        assertThat(organizationMemberMapperList).hasSize(1);
-        assertOrganizationMemberMapper(organizationMemberMapperList.get(0), memberId, OrganizationRole.ADMIN);
-    }
-
-    @Test
-    void 조직_신청_거절시_조직에_신청을_하지_않은_멤버일_경우_에러가_발생한다() {
-        //given
-        String subDomain = "potato";
-        Long targetMemberId = 20L;
-
-        Organization organization = OrganizationCreator.create(subDomain);
-        organization.addAdmin(memberId);
-        organizationRepository.save(organization);
-
-        ManageOrganizationMemberRequest request = ManageOrganizationMemberRequest.testBuilder()
-            .targetMemberId(targetMemberId)
-            .build();
-
-        // when & then
-        assertThatThrownBy(() -> {
-            organizationService.denyOrganizationMember(subDomain, request, memberId);
-        }).isInstanceOf(NotFoundException.class);
-    }
-
-    private void assertOrganization(Organization organization, String subDomain, String name, String description, String profileUrl) {
-        assertThat(organization.getSubDomain()).isEqualTo(subDomain);
-        assertThat(organization.getName()).isEqualTo(name);
-        assertThat(organization.getDescription()).isEqualTo(description);
-        assertThat(organization.getProfileUrl()).isEqualTo(profileUrl);
-    }
-
-    private void assertOrganizationMemberMapper(OrganizationMemberMapper organizationMemberMapper, Long memberId, OrganizationRole role) {
-        assertThat(organizationMemberMapper.getMemberId()).isEqualTo(memberId);
-        assertThat(organizationMemberMapper.getRole()).isEqualTo(role);
-    }
-
-    private void assertOrganizationInfoResponse(OrganizationInfoResponse response, Long id, String subDomain, String name,
-                                                String description, String profileUrl, OrganizationCategory category, int membersCount) {
-        assertThat(response.getId()).isEqualTo(id);
-        assertThat(response.getSubDomain()).isEqualTo(subDomain);
-        assertThat(response.getName()).isEqualTo(name);
-        assertThat(response.getDescription()).isEqualTo(description);
-        assertThat(response.getProfileUrl()).isEqualTo(profileUrl);
-        assertThat(response.getCategory()).isEqualTo(category);
-        assertThat(response.getMembersCount()).isEqualTo(membersCount);
     }
 
 }
