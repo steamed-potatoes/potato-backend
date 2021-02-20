@@ -71,7 +71,7 @@ class GoogleAuthServiceTest {
 
         // then
         assertThat(response.getType()).isEqualTo(AuthResponse.AuthType.LOGIN);
-        assertThat(response.getToken()).isEqualTo("1");
+        assertThat(response.getToken()).isNotNull();
         assertThat(response.getEmail()).isNull();
         assertThat(response.getName()).isNull();
     }
