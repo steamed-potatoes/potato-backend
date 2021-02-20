@@ -5,6 +5,7 @@ import com.potato.config.session.MemberSession;
 import com.potato.controller.ApiResponse;
 import com.potato.service.organization.OrganizationService;
 import com.potato.service.organization.dto.request.CreateOrganizationRequest;
+import com.potato.service.organization.dto.response.OrganizationDetailInfoResponse;
 import com.potato.service.organization.dto.response.OrganizationInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -25,8 +26,8 @@ public class OrganizationController {
     }
 
     @GetMapping("/api/v1/organization/{subDomain}")
-    public ApiResponse<OrganizationInfoResponse> getSimpleOrganizationInfo(@PathVariable String subDomain) {
-        return ApiResponse.of(organizationService.getSimpleOrganizationInfo(subDomain));
+    public ApiResponse<OrganizationDetailInfoResponse> getDetailOrganizationInfo(@PathVariable String subDomain) {
+        return ApiResponse.of(organizationService.getDetailOrganizationInfo(subDomain));
     }
 
     @GetMapping("/api/v1/organization/list")

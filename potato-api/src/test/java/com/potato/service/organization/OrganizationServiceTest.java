@@ -5,6 +5,7 @@ import com.potato.exception.ConflictException;
 import com.potato.exception.NotFoundException;
 import com.potato.service.MemberSetupTest;
 import com.potato.service.organization.dto.request.CreateOrganizationRequest;
+import com.potato.service.organization.dto.response.OrganizationDetailInfoResponse;
 import com.potato.service.organization.dto.response.OrganizationInfoResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -128,7 +129,7 @@ class OrganizationServiceTest extends MemberSetupTest {
         organizationRepository.save(organization);
 
         // when
-        OrganizationInfoResponse response = organizationService.getSimpleOrganizationInfo(subDomain);
+        OrganizationDetailInfoResponse response = organizationService.getDetailOrganizationInfo(subDomain);
 
         // then
         assertOrganizationInfoResponse(response, organization.getId(), subDomain, name, description, profileUrl, category, organization.getMembersCount());
@@ -138,7 +139,7 @@ class OrganizationServiceTest extends MemberSetupTest {
     void 특정_조직을_조회시_해당하는_서브도메인이_없는경우() {
         // when & then
         assertThatThrownBy(
-            () -> organizationService.getSimpleOrganizationInfo("empty")
+            () -> organizationService.getDetailOrganizationInfo("empty")
         ).isInstanceOf(NotFoundException.class);
     }
 
@@ -166,6 +167,44 @@ class OrganizationServiceTest extends MemberSetupTest {
 
         // then
         assertThat(responses).isEmpty();
+    }
+
+    @Test
+    void 내가_속한_조직의_리스트를_모두_불러온다() {
+        // given
+        String subDomain1 = "subDomain1";
+        Organization organization1 = OrganizationCreator.create(subDomain1);
+        organization1.addAdmin(memberId);
+
+        String subDomain2 = "subDomain2";
+        Organization organization2 = OrganizationCreator.create(subDomain2);
+        organization2.addUser(memberId);
+
+        organizationRepository.saveAll(Arrays.asList(organization1, organization2));
+
+        // when
+        List<OrganizationInfoResponse> organizationInfoResponses = organizationService.getMyOrganizationsInfo(memberId);
+
+        // then
+        assertThat(organizationInfoResponses).hasSize(2);
+        assertThat(organizationInfoResponses.get(0).getSubDomain()).isEqualTo(subDomain1);
+        assertThat(organizationInfoResponses.get(1).getSubDomain()).isEqualTo(subDomain2);
+    }
+
+    @Test
+    void 내가_속한_조직의_리스트를_모두_불러올때_가입신청된_조직은_포함되지_않는다() {
+        // given
+        String subDomain = "subDomain1";
+        Organization organization = OrganizationCreator.create(subDomain);
+        organization.addPending(memberId);
+
+        organizationRepository.save(organization);
+
+        // when
+        List<OrganizationInfoResponse> organizationInfoResponses = organizationService.getMyOrganizationsInfo(memberId);
+
+        // then
+        assertThat(organizationInfoResponses).isEmpty();
     }
 
     @Test
