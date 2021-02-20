@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -122,6 +123,20 @@ public class Organization extends BaseTimeEntity {
             .filter(mapper -> mapper.isSameMember(memberId))
             .findFirst()
             .orElseThrow(() -> new NotFoundException(String.format("해당하는 멤버 (%s)는 그룹 (%s)에 신청 한 상태가 아닙니다", memberId, subDomain)));
+    }
+
+    public List<Long> getMemberIds() {
+        return this.organizationMemberMapperList.stream()
+            .map(OrganizationMemberMapper::getId)
+            .collect(Collectors.toList());
+    }
+
+    public OrganizationRole getRoleOfMember(Long memberId) {
+        OrganizationMemberMapper mapper = this.organizationMemberMapperList.stream()
+            .filter(organizationMemberMapper -> organizationMemberMapper.isSameMember(memberId))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException(String.format("역할이 없는 멤버 (%s)가 존재합니다", memberId)));
+        return mapper.getRole();
     }
 
 }

@@ -21,8 +21,10 @@ public class OrganizationMemberMapper extends BaseTimeEntity {
     @JoinColumn(name = "organization_id", nullable = false)
     private Organization organization;
 
+    @Column(nullable = false)
     private Long memberId;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private OrganizationRole role;
 
