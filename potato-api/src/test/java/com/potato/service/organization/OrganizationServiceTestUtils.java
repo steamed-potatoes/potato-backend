@@ -8,7 +8,7 @@ import com.potato.service.organization.dto.response.OrganizationInfoResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public final class OrganizationServiceTestUtils {
+final class OrganizationServiceTestUtils {
 
     static void assertOrganization(Organization organization, String subDomain, String name, String description, String profileUrl) {
         assertThat(organization.getSubDomain()).isEqualTo(subDomain);

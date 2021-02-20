@@ -16,7 +16,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
-public class MemberServiceTest {
+class MemberServiceTest {
 
     @Autowired
     private MemberService memberService;

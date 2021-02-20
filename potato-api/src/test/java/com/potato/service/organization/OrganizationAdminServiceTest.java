@@ -10,6 +10,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
@@ -18,7 +19,8 @@ import static com.potato.service.organization.OrganizationServiceTestUtils.asser
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-public class OrganizationAdminServiceTest extends MemberSetupTest {
+@SpringBootTest
+class OrganizationAdminServiceTest extends MemberSetupTest {
 
     @Autowired
     private OrganizationAdminService organizationAdminService;
@@ -107,7 +109,7 @@ public class OrganizationAdminServiceTest extends MemberSetupTest {
     void 조직_신청을_수락한다() {
         // given
         String subDomain = "potato";
-        Long targetMemberId = 20L;
+        Long targetMemberId = 100L;
 
         Organization organization = OrganizationCreator.create(subDomain);
         organization.addAdmin(memberId);
