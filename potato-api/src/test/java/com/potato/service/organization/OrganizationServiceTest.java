@@ -184,6 +184,7 @@ class OrganizationServiceTest extends MemberSetupTest {
 
         //then
         List<OrganizationMemberMapper> organizationMemberMapperList = organizationMemberMapperRepository.findAll();
+        assertThat(organizationMemberMapperList).hasSize(2);
         assertOrganizationMemberMapper(organizationMemberMapperList.get(0), memberId, OrganizationRole.ADMIN);
         assertOrganizationMemberMapper(organizationMemberMapperList.get(1), applyUserId, OrganizationRole.PENDING);
     }
@@ -195,14 +196,13 @@ class OrganizationServiceTest extends MemberSetupTest {
         Long applyUserId = 10L;
 
         Organization organization = OrganizationCreator.create(subDomain);
-        organization.addAdmin(memberId);
         organization.addUser(applyUserId);
         organizationRepository.save(organization);
 
         // when & then
         assertThatThrownBy(
             () -> organizationService.applyOrganization(subDomain, applyUserId)
-        ).isInstanceOf(ValidationException.class);
+        ).isInstanceOf(ConflictException.class);
     }
 
 }

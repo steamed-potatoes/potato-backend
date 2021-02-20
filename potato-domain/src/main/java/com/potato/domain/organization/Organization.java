@@ -1,6 +1,7 @@
 package com.potato.domain.organization;
 
 import com.potato.domain.BaseTimeEntity;
+import com.potato.exception.ConflictException;
 import com.potato.exception.ForbiddenException;
 import com.potato.exception.NotFoundException;
 import com.potato.exception.ValidationException;
@@ -101,13 +102,24 @@ public class Organization extends BaseTimeEntity {
 
     public void addPending(Long memberId) {
         if (isPending(memberId)) {
-            throw new ValidationException("이미 조직에 가입신청중입니다.");
+            throw new ConflictException(String.format("이미 조직(%s)에 가입신청 되어있는 유저 (%s)입니다.", subDomain, memberId));
         }
         if (isUser(memberId)) {
-            throw new ValidationException("이미 조직에 가입이 되어 있습니다.");
+            throw new ConflictException(String.format("이미 조직(%s)에 가입되어 있는 유저 (%s)입니다.", subDomain, memberId));
         }
+        if(isAdmin(memberId)) {
+            throw new ConflictException(String.format("이미 조직(%s)의 가입되어 있는 유저 (%s)입니다.", subDomain, memberId));
+        }
+//        validateOrganizationRole(memberId);
         OrganizationMemberMapper organizationMemberMapper = OrganizationMemberMapper.newPending(this, memberId);
         this.organizationMemberMapperList.add(organizationMemberMapper);
+    }
+
+    private void validateOrganizationRole(Long memberId) {
+        OrganizationMemberMapper mapper = findMember(memberId);
+        if (mapper != null) {
+            throw new ConflictException(String.format("이미 조직(%s)에 가입되거나 가입신청 한 유저(%s)입니다.", subDomain, memberId));
+        }
     }
 
     public void approveMember(Long memberId) {

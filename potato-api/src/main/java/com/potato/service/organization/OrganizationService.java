@@ -38,7 +38,7 @@ public class OrganizationService {
             .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
+    @Transactional()
     public void applyOrganization(String subDomain, Long memberId) {
         Organization organization = OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, subDomain);
         organization.addPending(memberId);
