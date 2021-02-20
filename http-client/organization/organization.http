@@ -15,3 +15,13 @@ GET {{host}}/api/v1/organization/potato
 
 ### 조직 리스트 조회 API
 GET {{host}}/api/v1/organization/list
+
+
+### 조직 리스트 조회 API
+GET {{host}}/api/v1/organization/list
+
+
+### 조직에 가입 신청을 하는 API
+POST {{host}}/api/v1/organization/apply/potato
+Content-Type: application/json
+Authorization: Bearer {{AUTHORIZATION}}

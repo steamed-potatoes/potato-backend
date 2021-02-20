@@ -6,8 +6,8 @@ import java.util.List;
 
 public interface OrganizationRepositoryCustom {
 
-	Organization findOrganizationBySubDomain(String subDomain);
+    Organization findOrganizationBySubDomain(String subDomain);
 
-	List<Organization> findAllByMemberId(Long memberId);
+    List<Organization> findAllByMemberId(Long memberId);
 
 }

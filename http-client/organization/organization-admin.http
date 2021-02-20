@@ -1,0 +1,19 @@
+### 조직의 정보를 변경하는 API
+PUT {{host}}/api/v1/organization/admin/potato
+Content-Type: application/json
+Authorization: Bearer {{AUTHORIZATION}}
+
+{
+    "name": "감자"
+}
+
+
+### 가입 신청을 수락 하는 API
+PUT {{host}}/api/v1/organization/admin/approve/potato
+Content-Type: application/json
+Authorization: Bearer {{AUTHORIZATION}}
+
+{
+    "targetMemberId": 2
+}
+
