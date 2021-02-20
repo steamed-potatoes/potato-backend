@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-public class MemberControllerTest extends AbstractControllerTest {
+class MemberControllerTest extends AbstractControllerTest {
 
     @Autowired
     private MemberController memberController;

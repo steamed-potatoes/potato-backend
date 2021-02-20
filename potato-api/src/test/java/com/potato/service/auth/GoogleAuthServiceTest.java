@@ -7,12 +7,13 @@ import com.potato.external.google.dto.response.GoogleAccessTokenResponse;
 import com.potato.external.google.dto.response.GoogleUserInfoResponse;
 import com.potato.service.auth.dto.request.AuthRequest;
 import com.potato.service.auth.dto.response.AuthResponse;
-import com.potato.tool.StubHttpSession;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import javax.servlet.http.HttpSession;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -29,9 +30,12 @@ class GoogleAuthServiceTest {
         memberRepository.deleteAll();
     }
 
+    @Autowired
+    private HttpSession httpSession;
+
     @BeforeEach
     void setUpGoogleAuthService() {
-        googleAuthService = new GoogleAuthService(new StubHttpSession(), new StubGoogleApiCaller(), memberRepository);
+        googleAuthService = new GoogleAuthService(httpSession, new StubGoogleApiCaller(), memberRepository);
     }
 
     @Test
@@ -67,6 +71,7 @@ class GoogleAuthServiceTest {
 
         // then
         assertThat(response.getType()).isEqualTo(AuthResponse.AuthType.LOGIN);
+        assertThat(response.getToken()).isEqualTo("1");
         assertThat(response.getEmail()).isNull();
         assertThat(response.getName()).isNull();
     }

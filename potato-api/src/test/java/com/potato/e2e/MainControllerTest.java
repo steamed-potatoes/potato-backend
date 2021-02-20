@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-public class MainControllerTest extends AbstractControllerTest {
+class MainControllerTest extends AbstractControllerTest {
 
     @Autowired
     private MainController mainController;
