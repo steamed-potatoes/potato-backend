@@ -3,7 +3,6 @@ package com.potato.service.organization;
 import com.potato.domain.organization.*;
 import com.potato.exception.ConflictException;
 import com.potato.exception.NotFoundException;
-import com.potato.exception.ValidationException;
 import com.potato.service.MemberSetupTest;
 import com.potato.service.organization.dto.request.CreateOrganizationRequest;
 import com.potato.service.organization.dto.response.OrganizationInfoResponse;
