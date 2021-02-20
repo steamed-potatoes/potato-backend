@@ -1,6 +1,7 @@
 package com.potato.domain.organization;
 
 import com.potato.domain.BaseTimeEntity;
+import com.potato.exception.ConflictException;
 import com.potato.exception.ForbiddenException;
 import com.potato.exception.NotFoundException;
 import lombok.AccessLevel;
@@ -89,8 +90,20 @@ public class Organization extends BaseTimeEntity {
     }
 
     public void addPending(Long memberId) {
+        validateOrganizationRole(memberId);
         OrganizationMemberMapper organizationMemberMapper = OrganizationMemberMapper.newPending(this, memberId);
         this.organizationMemberMapperList.add(organizationMemberMapper);
+    }
+
+    private void validateOrganizationRole(Long memberId) {
+        if (isAnyMatchMember(memberId)) {
+            throw new ConflictException(String.format("이미 조직(%s)에 가입되거나 가입신청 한 유저(%s)입니다.", subDomain, memberId));
+        }
+    }
+
+    private boolean isAnyMatchMember(Long memberId) {
+        return this.organizationMemberMapperList.stream()
+            .anyMatch(organizationMemberMapper -> organizationMemberMapper.isSameMember(memberId));
     }
 
     public void approveMember(Long memberId) {

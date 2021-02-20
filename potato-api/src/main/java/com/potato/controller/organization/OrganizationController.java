@@ -34,4 +34,10 @@ public class OrganizationController {
         return ApiResponse.of(organizationService.getOrganizationsInfo());
     }
 
+    @PostMapping("/api/v1/organization/apply/{subDomain}")
+    public ApiResponse<String> applyOrganization(@PathVariable String subDomain, @LoginMember MemberSession memberSession) {
+        organizationService.applyOrganization(subDomain, memberSession.getMemberId());
+        return ApiResponse.OK;
+    }
+
 }

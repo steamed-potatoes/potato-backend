@@ -38,4 +38,10 @@ public class OrganizationService {
             .collect(Collectors.toList());
     }
 
+    @Transactional()
+    public void applyOrganization(String subDomain, Long memberId) {
+        Organization organization = OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, subDomain);
+        organization.addPending(memberId);
+        organizationRepository.save(organization);
+    }
 }

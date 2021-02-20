@@ -168,4 +168,40 @@ class OrganizationServiceTest extends MemberSetupTest {
         assertThat(responses).isEmpty();
     }
 
+    @Test
+    void 일반유저가_조직에_가입_신청을_한다() {
+        //given
+        String subDomain = "potato";
+        Long applyUserId = 10L;
+
+        Organization organization = OrganizationCreator.create(subDomain);
+        organization.addAdmin(memberId);
+        organizationRepository.save(organization);
+
+        //when
+        organizationService.applyOrganization(subDomain, applyUserId);
+
+        //then
+        List<OrganizationMemberMapper> organizationMemberMapperList = organizationMemberMapperRepository.findAll();
+        assertThat(organizationMemberMapperList).hasSize(2);
+        assertOrganizationMemberMapper(organizationMemberMapperList.get(0), memberId, OrganizationRole.ADMIN);
+        assertOrganizationMemberMapper(organizationMemberMapperList.get(1), applyUserId, OrganizationRole.PENDING);
+    }
+
+    @Test
+    void 이미_가입중인_유저일_경우() {
+        //given
+        String subDomain = "potato";
+        Long applyUserId = 10L;
+
+        Organization organization = OrganizationCreator.create(subDomain);
+        organization.addUser(applyUserId);
+        organizationRepository.save(organization);
+
+        // when & then
+        assertThatThrownBy(
+            () -> organizationService.applyOrganization(subDomain, applyUserId)
+        ).isInstanceOf(ConflictException.class);
+    }
+
 }
