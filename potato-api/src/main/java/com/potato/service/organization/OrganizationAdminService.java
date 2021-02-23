@@ -18,7 +18,6 @@ public class OrganizationAdminService {
     @Transactional
     public OrganizationInfoResponse updateOrganizationInfo(String subDomain, UpdateOrganizationInfoRequest request, Long memberId) {
         Organization organization = OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, subDomain);
-        organization.validateAdminMember(memberId);
         organization.updateInfo(request.getName(), request.getDescription(), request.getProfileUrl());
         return OrganizationInfoResponse.of(organization);
     }
@@ -26,14 +25,12 @@ public class OrganizationAdminService {
     @Transactional
     public void approveOrganizationMember(String subDomain, ManageOrganizationMemberRequest request, Long memberId) {
         Organization organization = OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, subDomain);
-        organization.validateAdminMember(memberId);
         organization.approveMember(request.getTargetMemberId());
     }
 
     @Transactional
     public void denyOrganizationMember(String subDomain, ManageOrganizationMemberRequest request, Long memberId) {
         Organization organization = OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, subDomain);
-        organization.validateAdminMember(memberId);
         organization.denyMember(request.getTargetMemberId());
     }
 

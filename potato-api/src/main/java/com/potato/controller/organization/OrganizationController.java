@@ -2,7 +2,6 @@ package com.potato.controller.organization;
 
 import com.potato.config.argumentResolver.MemberId;
 import com.potato.config.interceptor.Auth;
-import com.potato.config.session.MemberSession;
 import com.potato.controller.ApiResponse;
 import com.potato.service.organization.OrganizationService;
 import com.potato.service.organization.dto.request.CreateOrganizationRequest;

@@ -12,7 +12,8 @@ public @interface Auth {
     Role role() default Role.USER;
 
     enum Role {
-        USER
+        USER,
+        ORGANIZATION_ADMIN
     }
 
 }

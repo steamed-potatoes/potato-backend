@@ -15,20 +15,22 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
+import static com.potato.config.interceptor.Auth.Role.ORGANIZATION_ADMIN;
+
 @RequiredArgsConstructor
 @RestController
 public class OrganizationAdminController {
 
     private final OrganizationAdminService organizationAdminService;
 
-    @Auth
+    @Auth(role = ORGANIZATION_ADMIN)
     @PutMapping("/api/v1/organization/admin/{subDomain}")
     public ApiResponse<OrganizationInfoResponse> updateOrganizationInfo(
         @PathVariable String subDomain, @Valid @RequestBody UpdateOrganizationInfoRequest request, @MemberId Long memberId) {
         return ApiResponse.of(organizationAdminService.updateOrganizationInfo(subDomain, request, memberId));
     }
 
-    @Auth
+    @Auth(role = ORGANIZATION_ADMIN)
     @PutMapping("/api/v1/organization/admin/approve/{subDomain}")
     public ApiResponse<String> approveOrganizationMember(
         @PathVariable String subDomain, @Valid @RequestBody ManageOrganizationMemberRequest request, @MemberId Long memberId) {
@@ -36,7 +38,7 @@ public class OrganizationAdminController {
         return ApiResponse.OK;
     }
 
-    @Auth
+    @Auth(role = ORGANIZATION_ADMIN)
     @PutMapping("/api/v1/organization/admin/deny/{subDomain}")
     public ApiResponse<String> denyOrganizationMember(
         @PathVariable String subDomain, @Valid @RequestBody ManageOrganizationMemberRequest request, @MemberId Long memberId) {

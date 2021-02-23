@@ -18,6 +18,7 @@ public class OrganizationRepositoryCustomImpl implements OrganizationRepositoryC
     @Override
     public Organization findOrganizationBySubDomain(String subDomain) {
         return queryFactory.selectFrom(organization)
+            .innerJoin(organization.organizationMemberMapperList, organizationMemberMapper).fetchJoin()
             .where(
                 organization.subDomain.eq(subDomain)
             ).fetchOne();
