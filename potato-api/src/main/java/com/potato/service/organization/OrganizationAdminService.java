@@ -16,20 +16,20 @@ public class OrganizationAdminService {
     private final OrganizationRepository organizationRepository;
 
     @Transactional
-    public OrganizationInfoResponse updateOrganizationInfo(String subDomain, UpdateOrganizationInfoRequest request, Long memberId) {
+    public OrganizationInfoResponse updateOrganizationInfo(String subDomain, UpdateOrganizationInfoRequest request) {
         Organization organization = OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, subDomain);
         organization.updateInfo(request.getName(), request.getDescription(), request.getProfileUrl());
         return OrganizationInfoResponse.of(organization);
     }
 
     @Transactional
-    public void approveOrganizationMember(String subDomain, ManageOrganizationMemberRequest request, Long memberId) {
+    public void approveOrganizationMember(String subDomain, ManageOrganizationMemberRequest request) {
         Organization organization = OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, subDomain);
         organization.approveMember(request.getTargetMemberId());
     }
 
     @Transactional
-    public void denyOrganizationMember(String subDomain, ManageOrganizationMemberRequest request, Long memberId) {
+    public void denyOrganizationMember(String subDomain, ManageOrganizationMemberRequest request) {
         Organization organization = OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, subDomain);
         organization.denyMember(request.getTargetMemberId());
     }
