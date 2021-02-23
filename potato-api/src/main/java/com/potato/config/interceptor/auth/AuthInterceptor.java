@@ -1,4 +1,4 @@
-package com.potato.config.interceptor;
+package com.potato.config.interceptor.auth;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -8,7 +8,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static com.potato.config.interceptor.Auth.Role.ORGANIZATION_ADMIN;
+import static com.potato.config.interceptor.auth.Auth.Role.ORGANIZATION_ADMIN;
 
 @RequiredArgsConstructor
 @Component

@@ -1,6 +1,6 @@
 package com.potato.controller.member;
 
-import com.potato.config.interceptor.Auth;
+import com.potato.config.interceptor.auth.Auth;
 import com.potato.config.argumentResolver.MemberId;
 import com.potato.config.session.MemberSession;
 import com.potato.controller.ApiResponse;

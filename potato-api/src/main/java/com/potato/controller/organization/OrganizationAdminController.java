@@ -1,6 +1,6 @@
 package com.potato.controller.organization;
 
-import com.potato.config.interceptor.Auth;
+import com.potato.config.interceptor.auth.Auth;
 import com.potato.controller.ApiResponse;
 import com.potato.service.organization.OrganizationAdminService;
 import com.potato.service.organization.dto.request.ManageOrganizationMemberRequest;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
-import static com.potato.config.interceptor.Auth.Role.ORGANIZATION_ADMIN;
+import static com.potato.config.interceptor.auth.Auth.Role.ORGANIZATION_ADMIN;
 
 @RequiredArgsConstructor
 @RestController

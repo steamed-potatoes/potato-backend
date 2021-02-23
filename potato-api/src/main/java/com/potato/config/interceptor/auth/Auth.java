@@ -1,4 +1,4 @@
-package com.potato.config.interceptor;
+package com.potato.config.interceptor.auth;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,6 +1,6 @@
 package com.potato.config.argumentResolver;
 
-import com.potato.config.interceptor.Auth;
+import com.potato.config.interceptor.auth.Auth;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;

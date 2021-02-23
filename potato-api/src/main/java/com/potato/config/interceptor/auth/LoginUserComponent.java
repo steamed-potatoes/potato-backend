@@ -1,4 +1,4 @@
-package com.potato.config.interceptor;
+package com.potato.config.interceptor.auth;
 
 import com.potato.config.session.MemberSession;
 import com.potato.config.session.SessionConstants;
