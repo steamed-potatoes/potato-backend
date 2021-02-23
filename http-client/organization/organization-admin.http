@@ -17,3 +17,12 @@ Authorization: Bearer {{AUTHORIZATION}}
     "targetMemberId": 2
 }
 
+### 가입 신청을 거절 하는 API
+PUT {{host}}/api/v1/organization/admin/deny/potato
+Content-Type: application/json
+Authorization: Bearer {{AUTHORIZATION}}
+
+{
+    "targetMemberId": 2
+}
+

@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class OrganizationServiceUtils {
 
-    public static void validateNotExistsOrganization(OrganizationRepository organizationRepository, String subDomain) {
+    static void validateNotExistsOrganization(OrganizationRepository organizationRepository, String subDomain) {
         Organization organization = organizationRepository.findOrganizationBySubDomain(subDomain);
         if (organization != null) {
             throw new ConflictException(String.format("이미 존재하는 Organization (%s) 입니다.", subDomain));

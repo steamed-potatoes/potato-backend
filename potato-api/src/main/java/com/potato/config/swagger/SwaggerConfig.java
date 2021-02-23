@@ -1,6 +1,6 @@
 package com.potato.config.swagger;
 
-import com.potato.config.argumentResolver.LoginMember;
+import com.potato.config.argumentResolver.MemberId;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
@@ -29,7 +29,7 @@ public class SwaggerConfig {
     }
 
     static {
-        SpringDocUtils.getConfig().addAnnotationsToIgnore(LoginMember.class);
+        SpringDocUtils.getConfig().addAnnotationsToIgnore(MemberId.class);
     }
 
 }

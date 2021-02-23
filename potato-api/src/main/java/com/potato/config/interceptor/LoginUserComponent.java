@@ -1,37 +1,30 @@
-package com.potato.config.argumentResolver;
+package com.potato.config.interceptor;
 
 import com.potato.config.session.MemberSession;
 import com.potato.config.session.SessionConstants;
 import com.potato.exception.UnAuthorizedException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.session.Session;
 import org.springframework.session.SessionRepository;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.support.WebDataBinderFactory;
-import org.springframework.web.context.request.NativeWebRequest;
-import org.springframework.web.method.support.HandlerMethodArgumentResolver;
-import org.springframework.web.method.support.ModelAndViewContainer;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RequiredArgsConstructor
 @Component
-public class LoginMemberResolver implements HandlerMethodArgumentResolver {
+public class LoginUserComponent {
 
     private final static String BEARER_TOKEN = "Bearer ";
 
-    private final SessionRepository sessionRepository;
+    private final SessionRepository<? extends Session> sessionRepository;
 
-    @Override
-    public boolean supportsParameter(MethodParameter parameter) {
-        boolean hasAnnotation = parameter.getParameterAnnotation(LoginMember.class) != null;
-        boolean isMatchType = parameter.getParameterType().equals(MemberSession.class);
-        return hasAnnotation && isMatchType;
+    public Long getMemberId(HttpServletRequest request) {
+        return getMemberSession(request).getMemberId();
     }
 
-    @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-        String header = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
+    private MemberSession getMemberSession(HttpServletRequest request) {
+        String header = request.getHeader(HttpHeaders.AUTHORIZATION);
         Session session = extractSessionFromHeader(header);
         return session.getAttribute(SessionConstants.AUTH_SESSION);
     }

@@ -1,13 +1,11 @@
 package com.potato.service.organization;
 
 import com.potato.domain.organization.*;
-import com.potato.exception.ForbiddenException;
 import com.potato.exception.NotFoundException;
 import com.potato.service.MemberSetupTest;
 import com.potato.service.organization.dto.request.ManageOrganizationMemberRequest;
 import com.potato.service.organization.dto.request.UpdateOrganizationInfoRequest;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -57,52 +55,12 @@ class OrganizationAdminServiceTest extends MemberSetupTest {
             .build();
 
         // when
-        organizationAdminService.updateOrganizationInfo(subDomain, request, memberId);
+        organizationAdminService.updateOrganizationInfo(subDomain, request);
 
         // then
         List<Organization> organizationList = organizationRepository.findAll();
         assertThat(organizationList).hasSize(1);
         assertOrganization(organizationList.get(0), subDomain, name, description, profileUrl);
-    }
-
-    @DisplayName("조직의 관리자가 아닌 유저는 조직의 정보를 수정할 수 없다")
-    @Test
-    void 조직의_관리자가_아니면_조직의_정보를_수정할_수_없다_1() {
-        // given
-        String subDomain = "potato";
-
-        Organization organization = OrganizationCreator.create(subDomain);
-        organization.addUser(memberId);
-        organizationRepository.save(organization);
-
-        UpdateOrganizationInfoRequest request = UpdateOrganizationInfoRequest.testBuilder()
-            .name("감자")
-            .build();
-
-        // when & then
-        assertThatThrownBy(
-            () -> organizationAdminService.updateOrganizationInfo(subDomain, request, memberId)
-        ).isInstanceOf(ForbiddenException.class);
-    }
-
-    @DisplayName("조직원이 아닌경우 조직의 정보를 수정할 수 없다")
-    @Test
-    void 조직의_관리자가_아니면_조직의_정보를_수정할_수_없다_2() {
-        // given
-        String subDomain = "potato";
-
-        Organization organization = OrganizationCreator.create(subDomain);
-        organization.addUser(memberId);
-        organizationRepository.save(organization);
-
-        UpdateOrganizationInfoRequest request = UpdateOrganizationInfoRequest.testBuilder()
-            .name("감자")
-            .build();
-
-        // when & then
-        assertThatThrownBy(
-            () -> organizationAdminService.updateOrganizationInfo(subDomain, request, memberId)
-        ).isInstanceOf(ForbiddenException.class);
     }
 
     @Test
@@ -121,7 +79,7 @@ class OrganizationAdminServiceTest extends MemberSetupTest {
             .build();
 
         // when
-        organizationAdminService.approveOrganizationMember(subDomain, request, memberId);
+        organizationAdminService.approveOrganizationMember(subDomain, request);
 
         // then
         List<Organization> organizationList = organizationRepository.findAll();
@@ -150,7 +108,7 @@ class OrganizationAdminServiceTest extends MemberSetupTest {
 
         // when & then
         assertThatThrownBy(
-            () -> organizationAdminService.approveOrganizationMember(subDomain, request, memberId)
+            () -> organizationAdminService.approveOrganizationMember(subDomain, request)
         ).isInstanceOf(NotFoundException.class);
     }
 
@@ -171,7 +129,7 @@ class OrganizationAdminServiceTest extends MemberSetupTest {
 
         // when & then
         assertThatThrownBy(
-            () -> organizationAdminService.approveOrganizationMember(subDomain, request, memberId)
+            () -> organizationAdminService.approveOrganizationMember(subDomain, request)
         ).isInstanceOf(NotFoundException.class);
     }
 
@@ -190,7 +148,7 @@ class OrganizationAdminServiceTest extends MemberSetupTest {
 
         // when & then
         assertThatThrownBy(
-            () -> organizationAdminService.approveOrganizationMember(subDomain, request, memberId)
+            () -> organizationAdminService.approveOrganizationMember(subDomain, request)
         ).isInstanceOf(NotFoundException.class);
     }
 
@@ -210,7 +168,7 @@ class OrganizationAdminServiceTest extends MemberSetupTest {
             .build();
 
         // when
-        organizationAdminService.denyOrganizationMember(subDomain, request, memberId);
+        organizationAdminService.denyOrganizationMember(subDomain, request);
 
         // then
         List<Organization> organizationList = organizationRepository.findAll();
@@ -238,7 +196,7 @@ class OrganizationAdminServiceTest extends MemberSetupTest {
 
         // when & then
         assertThatThrownBy(
-            () -> organizationAdminService.denyOrganizationMember(subDomain, request, memberId)
+            () -> organizationAdminService.denyOrganizationMember(subDomain, request)
         ).isInstanceOf(NotFoundException.class);
     }
 

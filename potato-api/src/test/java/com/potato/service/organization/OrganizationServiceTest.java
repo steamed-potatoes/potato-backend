@@ -66,7 +66,9 @@ class OrganizationServiceTest extends MemberSetupTest {
     void 조직_생성시_서브_도메인이_중복되면_에러가_발생한다() {
         // given
         String subDomain = "potato";
-        organizationRepository.save(OrganizationCreator.create(subDomain));
+        Organization organization = OrganizationCreator.create(subDomain);
+        organization.addAdmin(memberId);
+        organizationRepository.save(organization);
 
         CreateOrganizationRequest request = CreateOrganizationRequest.testBuilder()
             .subDomain(subDomain)
@@ -126,6 +128,7 @@ class OrganizationServiceTest extends MemberSetupTest {
         OrganizationCategory category = OrganizationCategory.NON_APPROVED_CIRCLE;
 
         Organization organization = OrganizationCreator.create(subDomain, name, description, profileUrl, category);
+        organization.addAdmin(memberId);
         organizationRepository.save(organization);
 
         // when
@@ -146,18 +149,21 @@ class OrganizationServiceTest extends MemberSetupTest {
     @Test
     void 조직_리스트를_불러온다() {
         // given
-        organizationRepository.saveAll(Arrays.asList(
-            OrganizationCreator.create("고예림"), OrganizationCreator.create("유순조"), OrganizationCreator.create("강승호")
-        ));
+        Organization organization1 = OrganizationCreator.create("고예림");
+        organization1.addAdmin(memberId);
+
+        Organization organization2 = OrganizationCreator.create("강승호");
+        organization2.addAdmin(memberId);
+
+        organizationRepository.saveAll(Arrays.asList(organization1, organization2));
 
         // when
         List<OrganizationInfoResponse> responses = organizationService.getOrganizationsInfo();
 
         // then
-        assertThat(responses).hasSize(3);
+        assertThat(responses).hasSize(2);
         assertThat(responses.get(0).getSubDomain()).isEqualTo("고예림");
-        assertThat(responses.get(1).getSubDomain()).isEqualTo("유순조");
-        assertThat(responses.get(2).getSubDomain()).isEqualTo("강승호");
+        assertThat(responses.get(1).getSubDomain()).isEqualTo("강승호");
     }
 
     @Test
@@ -228,7 +234,7 @@ class OrganizationServiceTest extends MemberSetupTest {
     }
 
     @Test
-    void 이미_가입중인_유저일_경우() {
+    void 조직에_가입신청을_하는데이미_가입중인_유저일_경우_에러가_발생한다() {
         //given
         String subDomain = "potato";
         Long applyUserId = 10L;
