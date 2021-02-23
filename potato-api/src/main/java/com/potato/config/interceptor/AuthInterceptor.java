@@ -1,39 +1,42 @@
-package com.potato.config.argumentResolver;
+package com.potato.config.interceptor;
 
 import com.potato.config.session.MemberSession;
 import com.potato.config.session.SessionConstants;
 import com.potato.exception.UnAuthorizedException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.session.Session;
 import org.springframework.session.SessionRepository;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.support.WebDataBinderFactory;
-import org.springframework.web.context.request.NativeWebRequest;
-import org.springframework.web.method.support.HandlerMethodArgumentResolver;
-import org.springframework.web.method.support.ModelAndViewContainer;
+import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @RequiredArgsConstructor
 @Component
-public class LoginMemberResolver implements HandlerMethodArgumentResolver {
+public class AuthInterceptor extends HandlerInterceptorAdapter {
 
     private final static String BEARER_TOKEN = "Bearer ";
 
-    private final SessionRepository sessionRepository;
+    private final SessionRepository<? extends Session> sessionRepository;
 
     @Override
-    public boolean supportsParameter(MethodParameter parameter) {
-        boolean hasAnnotation = parameter.getParameterAnnotation(LoginMember.class) != null;
-        boolean isMatchType = parameter.getParameterType().equals(MemberSession.class);
-        return hasAnnotation && isMatchType;
-    }
-
-    @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-        String header = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        if (!(handler instanceof HandlerMethod)) {
+            return true;
+        }
+        HandlerMethod handlerMethod = (HandlerMethod) handler;
+        Auth auth = handlerMethod.getMethodAnnotation(Auth.class);
+        if (auth == null) {
+            return true;
+        }
+        String header = request.getHeader(HttpHeaders.AUTHORIZATION);
         Session session = extractSessionFromHeader(header);
-        return session.getAttribute(SessionConstants.AUTH_SESSION);
+        MemberSession memberSession = session.getAttribute(SessionConstants.AUTH_SESSION);
+        request.setAttribute("memberId", memberSession.getMemberId());
+        return true;
     }
 
     private Session extractSessionFromHeader(String header) {

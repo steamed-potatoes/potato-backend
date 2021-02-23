@@ -1,6 +1,7 @@
 package com.potato.controller.organization;
 
-import com.potato.config.argumentResolver.LoginMember;
+import com.potato.config.argumentResolver.MemberId;
+import com.potato.config.interceptor.Auth;
 import com.potato.config.session.MemberSession;
 import com.potato.controller.ApiResponse;
 import com.potato.service.organization.OrganizationService;
@@ -19,10 +20,11 @@ public class OrganizationController {
 
     private final OrganizationService organizationService;
 
+    @Auth
     @PostMapping("/api/v1/organization")
     public ApiResponse<OrganizationInfoResponse> createOrganization(
-        @Valid @RequestBody CreateOrganizationRequest request, @LoginMember MemberSession memberSession) {
-        return ApiResponse.of(organizationService.createOrganization(request, memberSession.getMemberId()));
+        @Valid @RequestBody CreateOrganizationRequest request, @MemberId Long memberId) {
+        return ApiResponse.of(organizationService.createOrganization(request, memberId));
     }
 
     @GetMapping("/api/v1/organization/{subDomain}")
@@ -35,14 +37,16 @@ public class OrganizationController {
         return ApiResponse.of(organizationService.getOrganizationsInfo());
     }
 
+    @Auth
     @GetMapping("/api/v1/organization/my")
-    public ApiResponse<List<OrganizationInfoResponse>> getMyOrganizations(@LoginMember MemberSession memberSession) {
-        return ApiResponse.of(organizationService.getMyOrganizationsInfo(memberSession.getMemberId()));
+    public ApiResponse<List<OrganizationInfoResponse>> getMyOrganizations(@MemberId Long memberId) {
+        return ApiResponse.of(organizationService.getMyOrganizationsInfo(memberId));
     }
 
+    @Auth
     @PostMapping("/api/v1/organization/apply/{subDomain}")
-    public ApiResponse<String> applyOrganization(@PathVariable String subDomain, @LoginMember MemberSession memberSession) {
-        organizationService.applyOrganization(subDomain, memberSession.getMemberId());
+    public ApiResponse<String> applyOrganization(@PathVariable String subDomain, @MemberId Long memberId) {
+        organizationService.applyOrganization(subDomain, memberId);
         return ApiResponse.OK;
     }
 

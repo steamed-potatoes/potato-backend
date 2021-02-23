@@ -1,6 +1,7 @@
 package com.potato.controller.member;
 
-import com.potato.config.argumentResolver.LoginMember;
+import com.potato.config.interceptor.Auth;
+import com.potato.config.argumentResolver.MemberId;
 import com.potato.config.session.MemberSession;
 import com.potato.controller.ApiResponse;
 import com.potato.service.member.MemberService;
@@ -29,21 +30,22 @@ public class MemberController {
         return ApiResponse.of(httpSession.getId());
     }
 
+    @Auth
     @GetMapping("/api/v1/member")
-    public ApiResponse<MemberInfoResponse> getMyMemberInfo(@LoginMember MemberSession memberSession) {
-        return ApiResponse.of(memberService.getMemberInfo(memberSession.getMemberId()));
+    public ApiResponse<MemberInfoResponse> getMyMemberInfo(@MemberId Long memberId) {
+        return ApiResponse.of(memberService.getMemberInfo(memberId));
     }
 
+    @Auth
     @PutMapping("/api/v1/member")
     public ApiResponse<MemberInfoResponse> updateMemberInfo(
-        @Valid @RequestBody UpdateMemberRequest request, @LoginMember MemberSession memberSession) {
-        return ApiResponse.of(memberService.updateMemberInfo(request, memberSession.getMemberId()));
+        @Valid @RequestBody UpdateMemberRequest request, @MemberId Long memberId) {
+        return ApiResponse.of(memberService.updateMemberInfo(request, memberId));
     }
 
+    @Auth
     @GetMapping("/api/v1/member/{targetId}")
-    public ApiResponse<MemberInfoResponse> getMemberOne(
-        @LoginMember MemberSession memberSession,
-        @PathVariable Long targetId) {
+    public ApiResponse<MemberInfoResponse> getMemberOne(@PathVariable Long targetId) {
         return ApiResponse.of(memberService.getMemberOne(targetId));
     }
 
