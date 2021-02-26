@@ -1,7 +1,9 @@
 package com.potato.domain.board;
 
 import com.potato.domain.BaseTimeEntity;
+import com.potato.domain.organization.OrganizationCategory;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -37,5 +39,30 @@ public class Board extends BaseTimeEntity {
 
     @Column(nullable = false)
     private Long organizationId;
+
+    @Builder
+    public Board(Visible visible, String title, String content, String imageUrl, Category category, Long memberId, Long organizationId) {
+        this.visible = visible;
+        this.title = title;
+        this.content = content;
+        this.imageUrl = imageUrl;
+        this.category = category;
+        this.memberId = memberId;
+        this.organizationId = organizationId;
+    }
+
+    public static Board instance(Visible visible, String title, String content, String imageUrl, Category category, Long memberId, Long organizationId) {
+        return Board.builder()
+            .visible(visible)
+            .title(title)
+            .content(content)
+            .imageUrl(imageUrl)
+            .category(category)
+            .memberId(memberId)
+            .organizationId(organizationId)
+            .build();
+    }
+
+
 
 }
