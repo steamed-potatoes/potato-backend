@@ -1,10 +1,11 @@
 package com.potato.service.auth.dto.response;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class AuthResponse {
 
     private final AuthType type;
