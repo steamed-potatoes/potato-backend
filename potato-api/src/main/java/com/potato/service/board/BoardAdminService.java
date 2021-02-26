@@ -21,8 +21,7 @@ public class BoardAdminService {
     @Transactional
     public BoardInfoResponse createBoard(String subDomain, CreateBoardRequest request, Long memberId) {
         Organization organization = OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, subDomain);
-        Board board = request.toEntity(organization.getId(), memberId);
-        boardRepository.save(board);
+        Board board = boardRepository.save(request.toEntity(organization.getId(), memberId));
         return BoardInfoResponse.of(board);
     }
 
