@@ -17,10 +17,9 @@ public class BoardService {
 
     @Transactional(readOnly = true)
     public List<BoardInfoResponse> getBoards() {
-        List<BoardInfoResponse> boards = boardRepository.findAll().stream()
+        return boardRepository.findAll().stream()
             .map(BoardInfoResponse::of)
             .collect(Collectors.toList());
-        return boards;
     }
 
 }
