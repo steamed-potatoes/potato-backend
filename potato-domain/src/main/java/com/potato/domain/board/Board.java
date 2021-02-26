@@ -24,6 +24,9 @@ public class Board extends BaseTimeEntity {
     @Column(nullable = false)
     private String title;
 
+    @Column(nullable = false)
+    private String content;
+
     private String imageUrl;
 
     @Enumerated(EnumType.STRING)
