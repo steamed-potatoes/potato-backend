@@ -6,8 +6,10 @@ import com.potato.domain.board.Visible;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import static lombok.AccessLevel.*;
+
 @Getter
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = PRIVATE)
 public class BoardInfoResponse {
 
     private final Visible visible;
@@ -23,4 +25,5 @@ public class BoardInfoResponse {
     public static BoardInfoResponse of(Board board) {
         return new BoardInfoResponse(board.getVisible(), board.getTitle(), board.getContent(), board.getImageUrl(), board.getCategory());
     }
+
 }

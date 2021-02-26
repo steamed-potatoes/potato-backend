@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
-public class BoardServiceTest extends MemberSetupTest {
+public class BoardAdminServiceTest extends MemberSetupTest {
 
     @Autowired
     private BoardAdminService boardAdminService;
@@ -36,10 +36,43 @@ public class BoardServiceTest extends MemberSetupTest {
     @AfterEach
     void cleanUp() {
         boardRepository.deleteAll();
+        organizationRepository.deleteAll();
     }
 
     @Test
     void 어드민이_게시글을_생성한다() {
+        //given
+        String subDomain = "감자";
+
+        Visible visible = Visible.PUBLIC;
+        String title = "감자모집";
+        String content = "감자인원을 모집합니다.";
+        String imageUrl = "123";
+        Category category = Category.RECRUIT;
+
+        CreateBoardRequest request = CreateBoardRequest.testBuilder()
+            .visible(visible)
+            .title(title)
+            .content(content)
+            .imageUrl(imageUrl)
+            .category(category)
+            .build();
+
+        Organization organization = OrganizationCreator.create(subDomain, "감자", "스터디입니다.", "123", OrganizationCategory.NON_APPROVED_CIRCLE);
+        organization.addAdmin(memberId);
+        organizationRepository.save(organization);
+
+        //when
+        boardAdminService.createBoard(subDomain, request, memberId);
+
+        //then
+        List<Board> boardList = boardRepository.findAll();
+        assertThat(boardList).hasSize(1);
+        assertBoard(boardList.get(0), visible, title, content, imageUrl, category);
+    }
+
+    @Test
+    void 조직이_없을_경우() {
         //given
         String subDomain = "감자";
         String title = "감자모집";
@@ -54,47 +87,18 @@ public class BoardServiceTest extends MemberSetupTest {
             .category(Category.RECRUIT)
             .build();
 
-        Organization organization = OrganizationCreator.create(subDomain, "감자", "스터디입니다.", "123", OrganizationCategory.NON_APPROVED_CIRCLE);
-        organization.addAdmin(memberId);
-        organizationRepository.save(organization);
-
-        //when
-        boardAdminService.createBoard(subDomain, request, memberId);
-
-        //then
-        List<Board> boardList = boardRepository.findAll();
-        assertThat(boardList).hasSize(1);
-        assertBoard(boardList.get(0), title, content, imageUrl);
+        // when & then
+        assertThatThrownBy(
+            () -> boardAdminService.createBoard(subDomain, request, memberId)
+        ).isInstanceOf(NotFoundException.class);
     }
 
-//    @Test
-//    void 조직이_없을_경우() {
-//        //given
-//        String subDomain = "감자";
-//        String title = "감자모집";
-//        String content = "감자인원을 모집합니다.";
-//        String imageUrl = "123";
-//
-//        CreateBoardRequest request = CreateBoardRequest.testBuilder()
-//            .visible(Visible.PUBLIC)
-//            .title(title)
-//            .content(content)
-//            .imageUrl(imageUrl)
-//            .category(Category.RECRUIT)
-//            .build();
-//
-//        // when & then
-//        assertThatThrownBy(
-//            () -> boardAdminService.createBoard(subDomain, request, memberId)
-//        ).isInstanceOf(NotFoundException.class);
-//    }
-
-    private void assertBoard(Board board, String title, String content, String imageUrl) {
-        assertThat(board.getVisible()).isEqualTo(Visible.PUBLIC);
+    private void assertBoard(Board board, Visible visible, String title, String content, String imageUrl, Category category) {
+        assertThat(board.getVisible()).isEqualTo(visible);
         assertThat(board.getTitle()).isEqualTo(title);
         assertThat(board.getContent()).isEqualTo(content);
         assertThat(board.getImageUrl()).isEqualTo(imageUrl);
-        assertThat(board.getCategory()).isEqualTo(Category.RECRUIT);
+        assertThat(board.getCategory()).isEqualTo(category);
     }
 
 }

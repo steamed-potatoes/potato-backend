@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 
+import static lombok.AccessLevel.PRIVATE;
+
 @Getter
 @NoArgsConstructor
 public class CreateBoardRequest {
@@ -21,7 +23,6 @@ public class CreateBoardRequest {
 
     @NotBlank
     private String content;
-
 
     private String imageUrl;
 
@@ -39,4 +40,5 @@ public class CreateBoardRequest {
     public Board toEntity(Long organizationId, Long memberId) {
         return Board.instance(visible, title, content, imageUrl, category, memberId, organizationId);
     }
+
 }

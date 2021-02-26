@@ -23,7 +23,7 @@ public class BoardAdminController {
     @Auth(role = Auth.Role.ORGANIZATION_ADMIN)
     @PostMapping("/api/v1/board/{subDomain}")
     public ApiResponse<BoardInfoResponse> createBoard(@PathVariable String subDomain, @Valid @RequestBody CreateBoardRequest request, @MemberId Long memberId) {
-        BoardInfoResponse response = boardAdminService.createBoard(subDomain, request, memberId);
-        return ApiResponse.of(response);
+        return ApiResponse.of(boardAdminService.createBoard(subDomain, request, memberId));
     }
+
 }
