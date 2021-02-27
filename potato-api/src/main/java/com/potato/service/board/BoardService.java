@@ -1,5 +1,7 @@
 package com.potato.service.board;
 
+import com.potato.controller.ApiResponse;
+import com.potato.domain.board.Board;
 import com.potato.domain.board.BoardRepository;
 import com.potato.service.board.dto.response.BoardInfoResponse;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,10 @@ public class BoardService {
         return boardRepository.findAll().stream()
             .map(BoardInfoResponse::of)
             .collect(Collectors.toList());
+    }
+
+    public BoardInfoResponse getDetailBoard(Long boardId) {
+        return BoardInfoResponse.of(BoardServiceUtils.findBoardById(boardRepository, boardId));
     }
 
 }
