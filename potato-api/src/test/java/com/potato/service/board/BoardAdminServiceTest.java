@@ -35,6 +35,7 @@ public class BoardAdminServiceTest extends MemberSetupTest {
 
     @AfterEach
     void cleanUp() {
+        super.cleanup();
         boardRepository.deleteAll();
         organizationRepository.deleteAll();
     }

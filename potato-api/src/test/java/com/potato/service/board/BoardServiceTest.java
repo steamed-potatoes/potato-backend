@@ -26,6 +26,7 @@ public class BoardServiceTest extends MemberSetupTest {
 
     @AfterEach
     void cleanUp() {
+        super.cleanup();
         boardRepository.deleteAll();
     }
 
@@ -50,7 +51,7 @@ public class BoardServiceTest extends MemberSetupTest {
     }
 
     @Test
-    void 게시글이_없다() {
+    void 게시글이_없을_경우_빈리스트를_반환한다() {
         //when
         List<BoardInfoResponse> boards = boardService.getBoards();
 
