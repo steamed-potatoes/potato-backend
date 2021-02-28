@@ -18,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
+import static com.potato.service.board.BoardServiceTestUtils.assertBoard;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -35,6 +36,7 @@ public class BoardAdminServiceTest extends MemberSetupTest {
 
     @AfterEach
     void cleanUp() {
+        super.cleanup();
         boardRepository.deleteAll();
         organizationRepository.deleteAll();
     }
@@ -91,14 +93,6 @@ public class BoardAdminServiceTest extends MemberSetupTest {
         assertThatThrownBy(
             () -> boardAdminService.createBoard(subDomain, request, memberId)
         ).isInstanceOf(NotFoundException.class);
-    }
-
-    private void assertBoard(Board board, Visible visible, String title, String content, String imageUrl, Category category) {
-        assertThat(board.getVisible()).isEqualTo(visible);
-        assertThat(board.getTitle()).isEqualTo(title);
-        assertThat(board.getContent()).isEqualTo(content);
-        assertThat(board.getImageUrl()).isEqualTo(imageUrl);
-        assertThat(board.getCategory()).isEqualTo(category);
     }
 
 }

@@ -12,6 +12,8 @@ import static lombok.AccessLevel.*;
 @RequiredArgsConstructor(access = PRIVATE)
 public class BoardInfoResponse {
 
+    private final Long id;
+
     private final Visible visible;
 
     private final String title;
@@ -23,7 +25,7 @@ public class BoardInfoResponse {
     private final Category category;
 
     public static BoardInfoResponse of(Board board) {
-        return new BoardInfoResponse(board.getVisible(), board.getTitle(), board.getContent(), board.getImageUrl(), board.getCategory());
+        return new BoardInfoResponse(board.getId(), board.getVisible(), board.getTitle(), board.getContent(), board.getImageUrl(), board.getCategory());
     }
 
 }
