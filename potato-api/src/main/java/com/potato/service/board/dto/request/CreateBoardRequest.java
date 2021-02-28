@@ -8,14 +8,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
-
-import static lombok.AccessLevel.PRIVATE;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @NoArgsConstructor
 public class CreateBoardRequest {
 
-    @NotBlank
+    @NotNull
     private Visible visible;
 
     @NotBlank
@@ -26,6 +25,7 @@ public class CreateBoardRequest {
 
     private String imageUrl;
 
+    @NotNull
     private Category category;
 
     @Builder(builderMethodName = "testBuilder")
@@ -38,7 +38,7 @@ public class CreateBoardRequest {
     }
 
     public Board toEntity(Long organizationId, Long memberId) {
-        return Board.instance(visible, title, content, imageUrl, category, memberId, organizationId);
+        return Board.newInstance(visible, title, content, imageUrl, category, memberId, organizationId);
     }
 
 }

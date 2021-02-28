@@ -30,15 +30,16 @@ public class Board extends BaseTimeEntity {
     private Visible visible;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Category category;
+
+    @Column(nullable = false)
     private String title;
 
     @Column(nullable = false)
     private String content;
 
     private String imageUrl;
-
-    @Enumerated(EnumType.STRING)
-    private Category category;
 
     @Builder
     public Board(Visible visible, String title, String content, String imageUrl, Category category, Long memberId, Long organizationId) {
@@ -51,7 +52,7 @@ public class Board extends BaseTimeEntity {
         this.organizationId = organizationId;
     }
 
-    public static Board instance(Visible visible, String title, String content, String imageUrl, Category category, Long memberId, Long organizationId) {
+    public static Board newInstance(Visible visible, String title, String content, String imageUrl, Category category, Long memberId, Long organizationId) {
         return Board.builder()
             .visible(visible)
             .title(title)

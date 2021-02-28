@@ -7,10 +7,10 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class BoardServiceUtils {
+class BoardServiceUtils {
 
-    public static Board findBoardById(BoardRepository boardRepository, Long boardId) {
-        Board board = boardRepository.findBoardById(boardId);
+    static Board findPublicBoardById(BoardRepository boardRepository, Long boardId) {
+        Board board = boardRepository.findPublicBoardById(boardId);
         if (board == null) {
             throw new NotFoundException("존재하지 않는 게시물입니다.");
         }
