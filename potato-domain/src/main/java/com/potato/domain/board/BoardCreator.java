@@ -30,4 +30,16 @@ public class BoardCreator {
             .build();
     }
 
+    public static Board createPrivate(String title) {
+        return Board.builder()
+            .visible(Visible.PRIVATE)
+            .title(title)
+            .content("content")
+            .imageUrl("imageUrl")
+            .category(Category.RECRUIT)
+            .memberId(1L)
+            .organizationId(1L)
+            .build();
+    }
+
 }
