@@ -25,13 +25,13 @@ public class OrganizationAdminService {
     @Transactional
     public void approveOrganizationMember(String subDomain, ManageOrganizationMemberRequest request) {
         Organization organization = OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, subDomain);
-        organization.approveMember(request.getTargetMemberId());
+        organization.approvePendingMember(request.getTargetMemberId());
     }
 
     @Transactional
     public void denyOrganizationMember(String subDomain, ManageOrganizationMemberRequest request) {
         Organization organization = OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, subDomain);
-        organization.denyMember(request.getTargetMemberId());
+        organization.denyPendingMember(request.getTargetMemberId());
     }
 
 }

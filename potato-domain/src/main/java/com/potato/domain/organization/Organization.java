@@ -107,20 +107,20 @@ public class Organization extends BaseTimeEntity {
             .anyMatch(organizationMemberMapper -> organizationMemberMapper.isSameMember(memberId));
     }
 
-    public void approveMember(Long memberId) {
-        OrganizationMemberMapper organizationMemberMapper = findMember(memberId);
+    public void approvePendingMember(Long memberId) {
+        OrganizationMemberMapper organizationMemberMapper = findPendingMember(memberId);
         organizationMemberMapper.approve();
         this.membersCount++;
     }
 
-    public void denyMember(Long memberId) {
-        OrganizationMemberMapper organizationMemberMapper = findMember(memberId);
+    public void denyPendingMember(Long memberId) {
+        OrganizationMemberMapper organizationMemberMapper = findPendingMember(memberId);
         organizationMemberMapperList.remove(organizationMemberMapper);
     }
 
-    private OrganizationMemberMapper findMember(Long memberId) {
+    private OrganizationMemberMapper findPendingMember(Long memberId) {
         return organizationMemberMapperList.stream()
-            .filter(mapper -> mapper.isSameMember(memberId))
+            .filter(mapper -> mapper.isPending(memberId))
             .findFirst()
             .orElseThrow(() -> new NotFoundException(String.format("해당하는 멤버 (%s)는 그룹 (%s)에 신청 한 상태가 아닙니다", memberId, subDomain)));
     }
