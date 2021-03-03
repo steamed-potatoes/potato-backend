@@ -24,8 +24,10 @@ public class BoardInfoResponse {
 
     private final Category category;
 
+    private final int likesCount;
+
     public static BoardInfoResponse of(Board board) {
-        return new BoardInfoResponse(board.getId(), board.getVisible(), board.getTitle(), board.getContent(), board.getImageUrl(), board.getCategory());
+        return new BoardInfoResponse(board.getId(), board.getVisible(), board.getTitle(), board.getContent(), board.getImageUrl(), board.getCategory(), board.getLikesCount());
     }
 
 }

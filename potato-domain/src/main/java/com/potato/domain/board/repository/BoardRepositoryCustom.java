@@ -14,4 +14,6 @@ public interface BoardRepositoryCustom {
 
     Board findBoardByIdAndSubDomain(Long boardId, String subDomain);
 
+    Board findFetchBoardById(Long boardId);
+
 }

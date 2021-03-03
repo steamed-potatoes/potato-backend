@@ -1,5 +1,6 @@
 package com.potato.service.board;
 
+import com.potato.domain.board.Board;
 import com.potato.domain.board.BoardRepository;
 import com.potato.service.board.dto.response.BoardInfoResponse;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +36,18 @@ public class BoardService {
     @Transactional(readOnly = true)
     public BoardInfoResponse getDetailBoard(Long boardId) {
         return BoardInfoResponse.of(BoardServiceUtils.findPublicBoardById(boardRepository, boardId));
+    }
+
+    @Transactional
+    public void addBoardLike(Long boardId, Long memberId) {
+        Board board = BoardServiceUtils.findFetchBoardById(boardRepository, boardId);
+        board.addLike(memberId);
+    }
+
+    @Transactional
+    public void cancelBoardLike(Long boardId, Long memberId) {
+        Board board = BoardServiceUtils.findFetchBoardById(boardRepository, boardId);
+        board.cancelLike(memberId);
     }
 
 }
