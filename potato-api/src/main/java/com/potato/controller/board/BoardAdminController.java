@@ -5,6 +5,7 @@ import com.potato.config.interceptor.auth.Auth;
 import com.potato.controller.ApiResponse;
 import com.potato.service.board.BoardAdminService;
 import com.potato.service.board.dto.request.CreateBoardRequest;
+import com.potato.service.board.dto.request.UpdateBoardRequest;
 import com.potato.service.board.dto.response.BoardInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -26,9 +27,9 @@ public class BoardAdminController {
     }
 
     @Auth(role = ORGANIZATION_ADMIN)
-    @PutMapping("/api/v1/board/{boardId}")
-    public ApiResponse<BoardInfoResponse> updatePublicBoard(@PathVariable Long boardId,@Valid @RequestBody CreateBoardRequest request) {
-        return ApiResponse.of(boardAdminService.updatePublicBoard(boardId, request));
+    @PutMapping("/api/v1/board/{subDomain}/{boardId}")
+    public ApiResponse<BoardInfoResponse> updatePublicBoard(@PathVariable String subDomain, @PathVariable Long boardId, @Valid @RequestBody UpdateBoardRequest request) {
+        return ApiResponse.of(boardAdminService.updateBoard(subDomain, boardId, request));
     }
 
 }

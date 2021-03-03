@@ -12,7 +12,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-public class BoardRepositoryTest {
+class BoardRepositoryTest {
 
     @Autowired
     private BoardRepository boardRepository;
@@ -34,9 +34,9 @@ public class BoardRepositoryTest {
     @Test
     void findPublicBoardsOrderByIdDesc_가장_최신의_게시물_3개를_가져온다() {
         // given
-        Board board1 = BoardCreator.create("게시물1");
-        Board board2 = BoardCreator.create("게시물2");
-        Board board3 = BoardCreator.create("게시물3");
+        Board board1 = BoardCreator.create("subDomain", 1L, "게시물1");
+        Board board2 = BoardCreator.create("subDomain", 1L, "게시물2");
+        Board board3 = BoardCreator.create("subDomain", 1L, "게시물3");
         boardRepository.saveAll(Arrays.asList(board1, board2, board3));
 
         // when
@@ -52,7 +52,7 @@ public class BoardRepositoryTest {
     @Test
     void findPublicBoardsOrderByIdDesc_비공개_게시물은_조회되지_않는다() {
         // given
-        boardRepository.saveAll(Collections.singletonList(BoardCreator.createPrivate("비공개 게시물")));
+        boardRepository.saveAll(Collections.singletonList(BoardCreator.createPrivate("subDomain", 1L, "비공개 게시물")));
 
         // when
         List<Board> boardList = boardRepository.findPublicBoardsOrderByIdDesc(1);
@@ -64,11 +64,11 @@ public class BoardRepositoryTest {
     @Test
     void findPublicBoardsLessThanOrderByIdDescLimit_id_가_4보다_작은_게시물_3개를_불러온다() {
         // given
-        Board board1 = BoardCreator.create("게시물1");
-        Board board2 = BoardCreator.create("게시물2");
-        Board board3 = BoardCreator.create("게시물3");
-        Board board4 = BoardCreator.create("게시물4");
-        Board board5 = BoardCreator.create("게시물5");
+        Board board1 = BoardCreator.create("subDomain", 1L, "게시물1");
+        Board board2 = BoardCreator.create("subDomain", 1L, "게시물2");
+        Board board3 = BoardCreator.create("subDomain", 1L, "게시물3");
+        Board board4 = BoardCreator.create("subDomain", 1L, "게시물4");
+        Board board5 = BoardCreator.create("subDomain", 1L, "게시물5");
         boardRepository.saveAll(Arrays.asList(board1, board2, board3, board4, board5));
 
         // when
@@ -84,11 +84,11 @@ public class BoardRepositoryTest {
     @Test
     void findPublicBoardsLessThanOrderByIdDescLimit_가_4보다_작은_게시물_3개를_불러올때_해당하는_게시물이_3개보다_적을때_그_수만큼_조회한다() {
         // given
-        Board board1 = BoardCreator.create("게시물1");
-        Board board2 = BoardCreator.create("게시물2");
-        Board board3 = BoardCreator.create("게시물3");
-        Board board4 = BoardCreator.create("게시물4");
-        Board board5 = BoardCreator.create("게시물5");
+        Board board1 = BoardCreator.create("subDomain", 1L, "게시물1");
+        Board board2 = BoardCreator.create("subDomain", 1L, "게시물2");
+        Board board3 = BoardCreator.create("subDomain", 1L, "게시물3");
+        Board board4 = BoardCreator.create("subDomain", 1L, "게시물4");
+        Board board5 = BoardCreator.create("subDomain", 1L, "게시물5");
         boardRepository.saveAll(Arrays.asList(board1, board2, board3, board4, board5));
 
         // when
@@ -104,7 +104,7 @@ public class BoardRepositoryTest {
     @Test
     void findPublicBoardsLessThanOrderByIdDescLimit_비공개_게시물은_포함되지_않는다() {
         // given
-        boardRepository.saveAll(Collections.singletonList(BoardCreator.createPrivate("비공개 게시물")));
+        boardRepository.saveAll(Collections.singletonList(BoardCreator.createPrivate("subDomain", 1L, "비공개 게시물")));
 
         // when
         List<Board> boardList = boardRepository.findPublicBoardsLessThanOrderByIdDescLimit(10000L, 1);

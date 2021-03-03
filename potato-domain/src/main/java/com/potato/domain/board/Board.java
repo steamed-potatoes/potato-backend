@@ -1,7 +1,6 @@
 package com.potato.domain.board;
 
 import com.potato.domain.BaseTimeEntity;
-import com.potato.domain.organization.OrganizationCategory;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,7 +22,7 @@ public class Board extends BaseTimeEntity {
     private Long memberId;
 
     @Column(nullable = false)
-    private Long organizationId;
+    private String subDomain;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -42,29 +41,29 @@ public class Board extends BaseTimeEntity {
     private String imageUrl;
 
     @Builder
-    public Board(Visible visible, String title, String content, String imageUrl, Category category, Long memberId, Long organizationId) {
+    public Board(String subDomain, Long memberId, Visible visible, String title, String content, String imageUrl, Category category) {
+        this.memberId = memberId;
+        this.subDomain = subDomain;
         this.visible = visible;
         this.title = title;
         this.content = content;
         this.imageUrl = imageUrl;
         this.category = category;
-        this.memberId = memberId;
-        this.organizationId = organizationId;
     }
 
-    public static Board newInstance(Visible visible, String title, String content, String imageUrl, Category category, Long memberId, Long organizationId) {
+    public static Board newInstance(String subDomain, Long memberId, Visible visible, String title, String content, String imageUrl, Category category) {
         return Board.builder()
+            .subDomain(subDomain)
+            .memberId(memberId)
             .visible(visible)
             .title(title)
             .content(content)
             .imageUrl(imageUrl)
             .category(category)
-            .memberId(memberId)
-            .organizationId(organizationId)
             .build();
     }
 
-    public void updateBoardInfo(Visible visible,String title, String content, String imageUrl, Category category) {
+    public void updateBoardInfo(Visible visible, String title, String content, String imageUrl, Category category) {
         this.visible = visible;
         this.title = title;
         this.content = content;

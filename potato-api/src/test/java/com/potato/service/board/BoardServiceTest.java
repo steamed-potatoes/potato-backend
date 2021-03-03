@@ -1,8 +1,8 @@
 package com.potato.service.board;
 
+import com.potato.OrganizationMemberSetUpTest;
 import com.potato.domain.board.*;
 import com.potato.exception.NotFoundException;
-import com.potato.service.MemberSetupTest;
 import com.potato.service.board.dto.response.BoardInfoResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
-public class BoardServiceTest extends MemberSetupTest {
+class BoardServiceTest extends OrganizationMemberSetUpTest {
 
     @Autowired
     private BoardService boardService;
@@ -36,9 +36,9 @@ public class BoardServiceTest extends MemberSetupTest {
     @Test
     void 가장_최신의_게시물_3개를_불러온다() {
         //given
-        Board board1 = BoardCreator.create("게시물1");
-        Board board2 = BoardCreator.create("게시물2");
-        Board board3 = BoardCreator.create("게시물3");
+        Board board1 = BoardCreator.create(subDomain, memberId, "게시물1");
+        Board board2 = BoardCreator.create(subDomain, memberId, "게시물2");
+        Board board3 = BoardCreator.create(subDomain, memberId, "게시물3");
 
         boardRepository.saveAll(Arrays.asList(board1, board2, board3));
 
@@ -65,11 +65,11 @@ public class BoardServiceTest extends MemberSetupTest {
     @Test
     void 게시물_스크롤_페이지네이션_조회_기능_1() {
         //given
-        Board board1 = BoardCreator.create("게시물1");
-        Board board2 = BoardCreator.create("게시물2");
-        Board board3 = BoardCreator.create("게시물3");
-        Board board4 = BoardCreator.create("게시물4");
-        Board board5 = BoardCreator.create("게시물5");
+        Board board1 = BoardCreator.create(subDomain, memberId, "게시물1");
+        Board board2 = BoardCreator.create(subDomain, memberId, "게시물2");
+        Board board3 = BoardCreator.create(subDomain, memberId, "게시물3");
+        Board board4 = BoardCreator.create(subDomain, memberId, "게시물4");
+        Board board5 = BoardCreator.create(subDomain, memberId, "게시물5");
 
         boardRepository.saveAll(Arrays.asList(board1, board2, board3, board4, board5));
 
@@ -87,11 +87,11 @@ public class BoardServiceTest extends MemberSetupTest {
     @Test
     void 게시물_스크롤_페이지네이션_조회_기능_2() {
         //given
-        Board board1 = BoardCreator.create("게시물1");
-        Board board2 = BoardCreator.create("게시물2");
-        Board board3 = BoardCreator.create("게시물3");
-        Board board4 = BoardCreator.create("게시물4");
-        Board board5 = BoardCreator.create("게시물5");
+        Board board1 = BoardCreator.create(subDomain, memberId, "게시물1");
+        Board board2 = BoardCreator.create(subDomain, memberId, "게시물2");
+        Board board3 = BoardCreator.create(subDomain, memberId, "게시물3");
+        Board board4 = BoardCreator.create(subDomain, memberId, "게시물4");
+        Board board5 = BoardCreator.create(subDomain, memberId, "게시물5");
 
         boardRepository.saveAll(Arrays.asList(board1, board2, board3, board4, board5));
 
@@ -109,11 +109,11 @@ public class BoardServiceTest extends MemberSetupTest {
     @Test
     void 게시물_스크롤_페이지네이션_조회_기능_3() {
         //given
-        Board board1 = BoardCreator.create("게시물1");
-        Board board2 = BoardCreator.create("게시물2");
-        Board board3 = BoardCreator.create("게시물3");
-        Board board4 = BoardCreator.create("게시물4");
-        Board board5 = BoardCreator.create("게시물5");
+        Board board1 = BoardCreator.create(subDomain, memberId, "게시물1");
+        Board board2 = BoardCreator.create(subDomain, memberId, "게시물2");
+        Board board3 = BoardCreator.create(subDomain, memberId, "게시물3");
+        Board board4 = BoardCreator.create(subDomain, memberId, "게시물4");
+        Board board5 = BoardCreator.create(subDomain, memberId, "게시물5");
 
         boardRepository.saveAll(Arrays.asList(board1, board2, board3, board4, board5));
 
@@ -129,7 +129,7 @@ public class BoardServiceTest extends MemberSetupTest {
     @Test
     void 게시물_스크롤_페이지네이션_조회_기능_더이상_게시물이_존재하지_않을경우() {
         //given
-        Board board1 = BoardCreator.create("게시물1");
+        Board board1 = BoardCreator.create(subDomain, memberId, "게시물1");
         boardRepository.saveAll(Collections.singletonList(board1));
 
         //when
@@ -142,7 +142,7 @@ public class BoardServiceTest extends MemberSetupTest {
     @Test
     void 조직내의_비공개_게시물은_전체_조회시_포함되지_않는다() {
         // given
-        boardRepository.save(BoardCreator.createPrivate("비공개 게시물"));
+        boardRepository.save(BoardCreator.createPrivate(subDomain, memberId, "비공개 게시물"));
 
         // when
         List<BoardInfoResponse> responses = boardService.retrievePublicLatestBoardList(0L, 3);
@@ -158,7 +158,7 @@ public class BoardServiceTest extends MemberSetupTest {
         String content = "게시글1입니다.";
         String imageUrl = "123";
 
-        Board board = BoardCreator.create(title, content, imageUrl);
+        Board board = BoardCreator.create(subDomain, memberId, title, content, imageUrl);
 
         boardRepository.save(board);
 
@@ -180,13 +180,11 @@ public class BoardServiceTest extends MemberSetupTest {
     @Test
     void 특정_게시물을_자세히_조회할때_비공개_일경우_조회되지_않는다() {
         // given
-        Board board = BoardCreator.createPrivate("비공개 게시물");
+        Board board = BoardCreator.createPrivate(subDomain, memberId, "비공개 게시물");
         boardRepository.save(board);
 
         // when & then
-        assertThatThrownBy(() -> {
-            BoardInfoResponse response = boardService.getDetailBoard(board.getId());
-        }).isInstanceOf(NotFoundException.class);
+        assertThatThrownBy(() -> boardService.getDetailBoard(board.getId())).isInstanceOf(NotFoundException.class);
     }
 
 }

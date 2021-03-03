@@ -47,4 +47,13 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom {
             .fetch();
     }
 
+    @Override
+    public Board findBoardByIdAndSubDomain(Long boardId, String subDomain) {
+        return queryFactory.selectFrom(board)
+            .where(
+                board.id.eq(boardId),
+                board.subDomain.eq(subDomain)
+            ).fetchOne();
+    }
+
 }
