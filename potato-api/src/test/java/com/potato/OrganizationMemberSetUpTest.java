@@ -20,7 +20,7 @@ public abstract class OrganizationMemberSetUpTest {
     private OrganizationRepository organizationRepository;
 
     protected Long memberId;
-    protected String subDomain = "subDomain";
+    protected final String subDomain = "subDomain";
 
     @BeforeEach
     void setUp() {

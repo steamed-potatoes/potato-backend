@@ -17,7 +17,7 @@ class BoardServiceUtils {
         return board;
     }
 
-    public static Board findPublicBoardBySubDomainAndId(BoardRepository boardRepository, String subDomain, Long boardId) {
+    public static Board findBoardBySubDomainAndId(BoardRepository boardRepository, String subDomain, Long boardId) {
         Board board = boardRepository.findBoardByIdAndSubDomain(boardId, subDomain);
         if (board == null) {
             throw new NotFoundException("존재하지 않는 게시물입니다.");

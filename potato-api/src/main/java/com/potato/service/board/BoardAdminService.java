@@ -28,9 +28,9 @@ public class BoardAdminService {
 
     @Transactional
     public BoardInfoResponse updateBoard(String subDomain, Long boardId, UpdateBoardRequest request) {
-        Board findPublicBoard = BoardServiceUtils.findPublicBoardBySubDomainAndId(boardRepository, subDomain, boardId);
-        findPublicBoard.updateBoardInfo(request.getVisible(), request.getTitle(), request.getContent(), request.getImageUrl(), request.getCategory());
-        return BoardInfoResponse.of(findPublicBoard);
+        Board board = BoardServiceUtils.findBoardBySubDomainAndId(boardRepository, subDomain, boardId);
+        board.updateBoardInfo(request.getVisible(), request.getTitle(), request.getContent(), request.getImageUrl(), request.getCategory());
+        return BoardInfoResponse.of(board);
     }
 
 }
