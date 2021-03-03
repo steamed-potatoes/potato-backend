@@ -46,7 +46,7 @@ public class MemberController {
     @Auth
     @GetMapping("/api/v1/member/{targetId}")
     public ApiResponse<MemberInfoResponse> getMemberOne(@PathVariable Long targetId) {
-        return ApiResponse.of(memberService.getMemberOne(targetId));
+        return ApiResponse.of(memberService.getMemberInfo(targetId));
     }
 
 }

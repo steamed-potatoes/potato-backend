@@ -7,7 +7,7 @@ import com.potato.service.board.dto.response.BoardInfoResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class BoardServiceTestUtils {
+final class BoardServiceTestUtils {
 
     static void assertBoard(Board board, Visible visible, String title, String content, String imageUrl, Category category) {
         assertThat(board.getVisible()).isEqualTo(visible);

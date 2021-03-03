@@ -1,6 +1,6 @@
 package com.potato.service.board;
 
-import com.potato.OrganizationMemberSetUpTest;
+import com.potato.service.OrganizationMemberSetUpTest;
 import com.potato.domain.board.*;
 import com.potato.exception.NotFoundException;
 import com.potato.service.board.dto.request.CreateBoardRequest;

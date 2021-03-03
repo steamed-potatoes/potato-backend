@@ -1,4 +1,4 @@
-package com.potato;
+package com.potato.service;
 
 import com.potato.domain.member.Member;
 import com.potato.domain.member.MemberCreator;
