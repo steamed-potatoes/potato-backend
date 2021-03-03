@@ -25,4 +25,12 @@ class BoardServiceUtils {
         return board;
     }
 
+    public static Board findFetchBoardById(BoardRepository boardRepository, Long boardId) {
+        Board board = boardRepository.findFetchBoardById(boardId);
+        if (board == null) {
+            throw new NotFoundException("존재하지 않는 게시물입니다.");
+        }
+        return board;
+    }
+
 }

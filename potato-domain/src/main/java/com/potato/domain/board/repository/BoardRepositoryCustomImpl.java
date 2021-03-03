@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 import static com.potato.domain.board.QBoard.*;
+import static com.potato.domain.board.QBoardLike.boardLike;
 
 @RequiredArgsConstructor
 public class BoardRepositoryCustomImpl implements BoardRepositoryCustom {
@@ -54,6 +55,16 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom {
                 board.id.eq(boardId),
                 board.subDomain.eq(subDomain)
             ).fetchOne();
+    }
+
+    @Override
+    public Board findFetchBoardById(Long boardId) {
+        return queryFactory.selectFrom(board)
+            .leftJoin(board.boardLikeList, boardLike).fetchJoin()
+            .where(
+                board.id.eq(boardId)
+            )
+            .fetchOne();
     }
 
 }
