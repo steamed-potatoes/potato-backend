@@ -18,6 +18,7 @@ public class BoardAdminService {
 
     private final BoardRepository boardRepository;
     private final OrganizationRepository organizationRepository;
+    private final DeletedBoardService deletedBoardService;
 
     @Transactional
     public BoardInfoResponse createBoard(String subDomain, CreateBoardRequest request, Long memberId) {
@@ -31,6 +32,13 @@ public class BoardAdminService {
         Board board = BoardServiceUtils.findBoardBySubDomainAndId(boardRepository, subDomain, boardId);
         board.updateBoardInfo(request.getVisible(), request.getTitle(), request.getContent(), request.getImageUrl(), request.getCategory());
         return BoardInfoResponse.of(board);
+    }
+
+    @Transactional
+    public void deleteBoard(String subDomain, Long boardId) {
+        Board board = BoardServiceUtils.findBoardBySubDomainAndId(boardRepository, subDomain, boardId);
+        deletedBoardService.backUpBoard(board);
+        boardRepository.delete(board);
     }
 
 }
