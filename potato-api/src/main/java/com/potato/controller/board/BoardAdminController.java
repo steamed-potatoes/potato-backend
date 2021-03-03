@@ -35,4 +35,12 @@ public class BoardAdminController {
         return ApiResponse.of(boardAdminService.updateBoard(subDomain, boardId, request));
     }
 
+    @Operation(summary = "그룹의 관리자가 그룹의 게시물을 삭제하는 API", description = "Bearer 토큰이 필요합니다")
+    @Auth(role = ORGANIZATION_ADMIN)
+    @DeleteMapping("/api/v1/board/{subDomain}/{boardId}")
+    public ApiResponse<String> deleteBoard(@PathVariable String subDomain, @PathVariable Long boardId) {
+        boardAdminService.deleteBoard(subDomain, boardId);
+        return ApiResponse.OK;
+    }
+
 }
