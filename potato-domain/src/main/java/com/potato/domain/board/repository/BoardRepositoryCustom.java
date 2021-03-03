@@ -12,4 +12,6 @@ public interface BoardRepositoryCustom {
 
     List<Board> findPublicBoardsLessThanOrderByIdDescLimit(Long lastBoardId, int size);
 
+    Board findBoardByIdAndSubDomain(Long boardId, String subDomain);
+
 }
