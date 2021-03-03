@@ -63,4 +63,12 @@ public class OrganizationController {
         return ApiResponse.OK;
     }
 
+    @Operation(summary = "특정 그룹에서 탈퇴하는 API", description = "Bearer 토큰이 필요합니다")
+    @Auth
+    @DeleteMapping("/api/v1/organization/leave/{subDomain}")
+    public ApiResponse<String> leaveFromOrganization(@PathVariable String subDomain, @MemberId Long memberId) {
+        organizationService.leaveFromOrganization(subDomain, memberId);
+        return ApiResponse.OK;
+    }
+
 }

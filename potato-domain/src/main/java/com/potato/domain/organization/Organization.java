@@ -69,7 +69,7 @@ public class Organization extends BaseTimeEntity {
 
     public void validateAdminMember(Long memberId) {
         if (!isAdmin(memberId)) {
-            throw new ForbiddenException(String.format("멤버 (%s)는 조직(%s)의 관리자가 아닙니다", memberId, subDomain));
+            throw new ForbiddenException(String.format("멤버 (%s)는 조직 (%s)의 관리자가 아닙니다", memberId, subDomain));
         }
     }
 
@@ -91,15 +91,11 @@ public class Organization extends BaseTimeEntity {
     }
 
     public void addPending(Long memberId) {
-        validateOrganizationRole(memberId);
-        OrganizationMemberMapper organizationMemberMapper = OrganizationMemberMapper.newPending(this, memberId);
-        this.organizationMemberMapperList.add(organizationMemberMapper);
-    }
-
-    private void validateOrganizationRole(Long memberId) {
         if (isAnyMatchMember(memberId)) {
             throw new ConflictException(String.format("이미 조직(%s)에 가입되거나 가입신청 한 유저(%s)입니다.", subDomain, memberId));
         }
+        OrganizationMemberMapper organizationMemberMapper = OrganizationMemberMapper.newPending(this, memberId);
+        this.organizationMemberMapperList.add(organizationMemberMapper);
     }
 
     private boolean isAnyMatchMember(Long memberId) {
@@ -109,7 +105,7 @@ public class Organization extends BaseTimeEntity {
 
     public void approvePendingMember(Long memberId) {
         OrganizationMemberMapper organizationMemberMapper = findPendingMember(memberId);
-        organizationMemberMapper.approve();
+        organizationMemberMapper.approveToUser();
         this.membersCount++;
     }
 
@@ -125,6 +121,20 @@ public class Organization extends BaseTimeEntity {
             .orElseThrow(() -> new NotFoundException(String.format("해당하는 멤버 (%s)는 그룹 (%s)에 신청 한 상태가 아닙니다", memberId, subDomain)));
     }
 
+    public void removeUser(Long memberId) {
+        OrganizationMemberMapper organizationMemberMapper = findMember(memberId);
+        organizationMemberMapper.validateCanRemove(memberId);
+        organizationMemberMapperList.remove(organizationMemberMapper);
+        this.membersCount--;
+    }
+
+    private OrganizationMemberMapper findMember(Long memberId) {
+        return organizationMemberMapperList.stream()
+            .filter(mapper -> mapper.isOrganizationMember(memberId))
+            .findFirst()
+            .orElseThrow(() -> new NotFoundException(String.format("해당하는 멤버 (%s)는 그룹 (%s)의 소속 멤버가 아닙니다.", memberId, subDomain)));
+    }
+
     public List<Long> getMemberIds() {
         return this.organizationMemberMapperList.stream()
             .map(OrganizationMemberMapper::getId)
@@ -132,11 +142,7 @@ public class Organization extends BaseTimeEntity {
     }
 
     public OrganizationRole getRoleOfMember(Long memberId) {
-        OrganizationMemberMapper mapper = this.organizationMemberMapperList.stream()
-            .filter(organizationMemberMapper -> organizationMemberMapper.isSameMember(memberId))
-            .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException(String.format("역할이 없는 멤버 (%s)가 존재합니다", memberId)));
-        return mapper.getRole();
+        return findMember(memberId).getRole();
     }
 
 }

@@ -63,4 +63,10 @@ public class OrganizationService {
         organization.denyPendingMember(memberId);
     }
 
+    @Transactional
+    public void leaveFromOrganization(String subDomain, Long memberId) {
+        Organization organization = OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, subDomain);
+        organization.removeUser(memberId);
+    }
+
 }

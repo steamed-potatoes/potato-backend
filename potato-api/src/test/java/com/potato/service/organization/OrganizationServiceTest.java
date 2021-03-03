@@ -2,6 +2,7 @@ package com.potato.service.organization;
 
 import com.potato.domain.organization.*;
 import com.potato.exception.ConflictException;
+import com.potato.exception.ForbiddenException;
 import com.potato.exception.NotFoundException;
 import com.potato.service.MemberSetupTest;
 import com.potato.service.organization.dto.request.CreateOrganizationRequest;
@@ -286,6 +287,38 @@ class OrganizationServiceTest extends MemberSetupTest {
 
         // when & then
         assertThatThrownBy(() -> organizationService.cancelJoiningOrganization(subDomain, memberId)).isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
+    void 그룹의_일반_유저가_그룹에서_탈퇴한다() {
+        // given
+        String subDomain = "potato";
+        Organization organization = OrganizationCreator.create(subDomain);
+        organization.addUser(memberId);
+        organizationRepository.save(organization);
+
+        // when
+        organizationService.leaveFromOrganization(subDomain, memberId);
+
+        // then
+        List<Organization> organizationList = organizationRepository.findAll();
+        assertThat(organizationList).hasSize(1);
+        assertThat(organizationList.get(0).getMembersCount()).isEqualTo(0);
+
+        List<OrganizationMemberMapper> organizationMemberMapperList = organizationMemberMapperRepository.findAll();
+        assertThat(organizationMemberMapperList).isEmpty();
+    }
+
+    @Test
+    void 그룹의_관리자는_그룹에서_탈퇴할수_없다() {
+        // given
+        String subDomain = "potato";
+        Organization organization = OrganizationCreator.create(subDomain);
+        organization.addAdmin(memberId);
+        organizationRepository.save(organization);
+
+        // when & then
+        assertThatThrownBy(() -> organizationService.leaveFromOrganization(subDomain, memberId)).isInstanceOf(ForbiddenException.class);
     }
 
 }
