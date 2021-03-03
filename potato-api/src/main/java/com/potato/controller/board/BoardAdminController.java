@@ -5,7 +5,6 @@ import com.potato.config.interceptor.auth.Auth;
 import com.potato.controller.ApiResponse;
 import com.potato.service.board.BoardAdminService;
 import com.potato.service.board.dto.request.CreateBoardRequest;
-import com.potato.service.board.dto.request.UpdateBoardRequest;
 import com.potato.service.board.dto.response.BoardInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

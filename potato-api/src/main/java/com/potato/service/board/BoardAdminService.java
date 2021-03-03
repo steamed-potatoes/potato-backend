@@ -5,7 +5,6 @@ import com.potato.domain.board.BoardRepository;
 import com.potato.domain.organization.Organization;
 import com.potato.domain.organization.OrganizationRepository;
 import com.potato.service.board.dto.request.CreateBoardRequest;
-import com.potato.service.board.dto.request.UpdateBoardRequest;
 import com.potato.service.board.dto.response.BoardInfoResponse;
 import com.potato.service.organization.OrganizationServiceUtils;
 import lombok.RequiredArgsConstructor;
