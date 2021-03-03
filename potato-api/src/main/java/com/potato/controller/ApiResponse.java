@@ -9,7 +9,7 @@ public class ApiResponse<T> {
 
     public static final ApiResponse<String> OK = new ApiResponse<>("", "", "OK");
 
-    private final String httpCode;
+    private final String code;
     private final String message;
     private final T data;
 

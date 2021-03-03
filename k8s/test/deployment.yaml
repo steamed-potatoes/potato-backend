@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: potato-api-test
+  labels:
+    app: potato-api-test
+    env: test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: potato-api-test
+      env: test
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: potato-api-test
+        env: test
+    spec:
+      containers:
+        - name: node
+          image: ghcr.io/steamed-potatoes/potato-backend
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              valueFrom:
+                configMapKeyRef:
+                  name: potato-api-test-config
+                  key: profiles
