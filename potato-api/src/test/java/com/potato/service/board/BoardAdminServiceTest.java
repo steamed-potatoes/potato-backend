@@ -1,9 +1,6 @@
 package com.potato.service.board;
 
-import com.potato.domain.board.Board;
-import com.potato.domain.board.BoardRepository;
-import com.potato.domain.board.Category;
-import com.potato.domain.board.Visible;
+import com.potato.domain.board.*;
 import com.potato.domain.organization.Organization;
 import com.potato.domain.organization.OrganizationCategory;
 import com.potato.domain.organization.OrganizationCreator;
@@ -11,6 +8,8 @@ import com.potato.domain.organization.OrganizationRepository;
 import com.potato.exception.NotFoundException;
 import com.potato.service.MemberSetupTest;
 import com.potato.service.board.dto.request.CreateBoardRequest;
+import com.potato.service.board.dto.request.UpdateBoardRequest;
+import com.potato.service.board.dto.response.BoardInfoResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 
 import static com.potato.service.board.BoardServiceTestUtils.assertBoard;
+import static com.potato.service.board.BoardServiceTestUtils.assertBoardInfo;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -92,6 +92,52 @@ public class BoardAdminServiceTest extends MemberSetupTest {
         // when & then
         assertThatThrownBy(
             () -> boardAdminService.createBoard(subDomain, request, memberId)
+        ).isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
+    void 퍼블릭_게시글을_변경한다() {
+        //given
+        Board board = BoardCreator.create("title", "content", "imageUrl");
+        boardRepository.save(board);
+
+        String updateTitle = "updateTitle";
+        String updateContent = "updateContent";
+        String updateImageUrl = "updateImageUrl";
+
+        CreateBoardRequest request = CreateBoardRequest.testBuilder()
+            .visible(board.getVisible())
+            .title(updateTitle)
+            .content(updateContent)
+            .imageUrl(updateImageUrl)
+            .category(board.getCategory())
+            .build();
+
+        //when
+        BoardInfoResponse response = boardAdminService.updatePublicBoard(board.getId(), request);
+
+        //then
+        assertBoardInfo(response, board.getVisible(), updateTitle, updateContent, updateImageUrl, board.getCategory());
+    }
+
+    @Test
+    void 게시글이_퍼블릭게시글이_존재하지_않을경우() {
+        //given
+        String updateTitle = "updateTitle";
+        String updateContent = "updateContent";
+        String updateImageUrl = "updateImageUrl";
+
+        CreateBoardRequest request = CreateBoardRequest.testBuilder()
+            .visible(Visible.PUBLIC)
+            .title(updateTitle)
+            .content(updateContent)
+            .imageUrl(updateImageUrl)
+            .category(Category.RECRUIT)
+            .build();
+
+        //when & then
+        assertThatThrownBy(
+            () -> boardAdminService.updatePublicBoard(1L, request)
         ).isInstanceOf(NotFoundException.class);
     }
 

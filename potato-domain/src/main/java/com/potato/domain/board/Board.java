@@ -64,4 +64,12 @@ public class Board extends BaseTimeEntity {
             .build();
     }
 
+    public void updateBoardInfo(Visible visible,String title, String content, String imageUrl, Category category) {
+        this.visible = visible;
+        this.title = title;
+        this.content = content;
+        this.imageUrl = imageUrl;
+        this.category = category;
+    }
+
 }
