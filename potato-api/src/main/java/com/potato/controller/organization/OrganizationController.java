@@ -49,9 +49,25 @@ public class OrganizationController {
 
     @Operation(summary = "특정 그룹에 가입신청을 하는 API", description = "Bearer 토큰이 필요합니다")
     @Auth
-    @PostMapping("/api/v1/organization/apply/{subDomain}")
-    public ApiResponse<String> applyOrganization(@PathVariable String subDomain, @MemberId Long memberId) {
-        organizationService.applyOrganization(subDomain, memberId);
+    @PostMapping("/api/v1/organization/join/apply{subDomain}")
+    public ApiResponse<String> applyJoiningOrganization(@PathVariable String subDomain, @MemberId Long memberId) {
+        organizationService.applyJoiningOrganization(subDomain, memberId);
+        return ApiResponse.OK;
+    }
+
+    @Operation(summary = "특정 그룹에 가입신청을 취소 하는 API", description = "Bearer 토큰이 필요합니다")
+    @Auth
+    @PutMapping("/api/v1/organization/join/cancel/{subDomain}")
+    public ApiResponse<String> cancelJoiningOrganization(@PathVariable String subDomain, @MemberId Long memberId) {
+        organizationService.cancelJoiningOrganization(subDomain, memberId);
+        return ApiResponse.OK;
+    }
+
+    @Operation(summary = "특정 그룹에서 탈퇴하는 API", description = "Bearer 토큰이 필요합니다")
+    @Auth
+    @DeleteMapping("/api/v1/organization/leave/{subDomain}")
+    public ApiResponse<String> leaveFromOrganization(@PathVariable String subDomain, @MemberId Long memberId) {
+        organizationService.leaveFromOrganization(subDomain, memberId);
         return ApiResponse.OK;
     }
 

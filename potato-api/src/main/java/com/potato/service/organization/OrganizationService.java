@@ -52,10 +52,21 @@ public class OrganizationService {
     }
 
     @Transactional()
-    public void applyOrganization(String subDomain, Long memberId) {
+    public void applyJoiningOrganization(String subDomain, Long memberId) {
         Organization organization = OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, subDomain);
         organization.addPending(memberId);
-        organizationRepository.save(organization);
+    }
+
+    @Transactional
+    public void cancelJoiningOrganization(String subDomain, Long memberId) {
+        Organization organization = OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, subDomain);
+        organization.denyPendingMember(memberId);
+    }
+
+    @Transactional
+    public void leaveFromOrganization(String subDomain, Long memberId) {
+        Organization organization = OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, subDomain);
+        organization.removeUser(memberId);
     }
 
 }
