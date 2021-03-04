@@ -7,6 +7,7 @@ import com.potato.domain.comment.BoardComment;
 import com.potato.domain.comment.BoardCommentCreator;
 import com.potato.domain.comment.BoardCommentRepository;
 import com.potato.exception.ForbiddenException;
+import com.potato.exception.NotFoundException;
 import com.potato.service.OrganizationMemberSetUpTest;
 import com.potato.service.comment.dto.request.AddBoardCommentRequest;
 import com.potato.service.comment.dto.response.BoardCommentResponse;
@@ -133,6 +134,51 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
 
         // when & then
         assertThatThrownBy(() -> boardCommentService.retrieveBoardCommentList(privateBoard.getId(), 100L)).isInstanceOf(ForbiddenException.class);
+    }
+
+    @Test
+    void 작성한_댓글을_삭제한다() {
+        // given
+        boardRepository.save(board);
+        BoardComment comment = BoardCommentCreator.createRootComment(board.getId(), memberId, "댓글");
+        boardCommentRepository.save(comment);
+
+        // when
+        boardCommentService.deleteBoardComment(comment.getId(), memberId);
+
+        // then
+        List<BoardComment> boardCommentList = boardCommentRepository.findAll();
+        assertThat(boardCommentList).hasSize(1);
+        assertBoardComment(boardCommentList.get(0), board.getId(), memberId, comment.getContent(), 0);
+        assertThat(boardCommentList.get(0).isDeleted()).isTrue();
+    }
+
+    @Test
+    void 내가_작성하지_않은_댓글을_삭제할_수_없다() {
+        // given
+        boardRepository.save(board);
+        BoardComment comment = BoardCommentCreator.createRootComment(board.getId(), memberId, "댓글");
+        boardCommentRepository.save(comment);
+
+        // when & then
+        assertThatThrownBy(() -> boardCommentService.deleteBoardComment(comment.getId(), 999L)).isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
+    void 삭제된_댓글은_작성자가_보이지않고_삭제된_메시지가_보인다() {
+        // given
+        boardRepository.save(board);
+        BoardComment comment = BoardCommentCreator.createRootComment(board.getId(), memberId, "댓글");
+        comment.delete();
+        boardCommentRepository.save(comment);
+
+        // when
+        List<BoardCommentResponse> responses = boardCommentService.retrieveBoardCommentList(board.getId(), memberId);
+
+        // then
+        assertThat(responses).hasSize(1);
+        assertThat(responses.get(0).getContent()).isNotEqualTo(comment.getContent());
+        assertThat(responses.get(0).getMemberId()).isNull();
     }
 
     private void assertBoardCommentResponse(BoardCommentResponse response, String content) {

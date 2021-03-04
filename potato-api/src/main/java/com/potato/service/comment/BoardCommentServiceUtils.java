@@ -17,4 +17,12 @@ class BoardCommentServiceUtils {
         return boardComment;
     }
 
+    public static BoardComment findBoardCommentByIdAndMemberId(BoardCommentRepository boardCommentRepository, Long boardCommentId, Long memberId) {
+        BoardComment boardComment = boardCommentRepository.findBoardCommentByIdAndMemberId(boardCommentId, memberId);
+        if (boardComment == null) {
+            throw new NotFoundException(String.format("멤버 (%s)가 작성한 id(%s)를 가진 댓글이 없습니다", memberId, boardCommentId));
+        }
+        return boardComment;
+    }
+
 }
