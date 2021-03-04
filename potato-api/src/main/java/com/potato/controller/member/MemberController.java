@@ -42,8 +42,7 @@ public class MemberController {
     @Operation(summary = "내 정보를 수정하는 API", description = "Bearer 토큰이 필요합니다")
     @Auth
     @PutMapping("/api/v1/member")
-    public ApiResponse<MemberInfoResponse> updateMemberInfo(
-        @Valid @RequestBody UpdateMemberRequest request, @MemberId Long memberId) {
+    public ApiResponse<MemberInfoResponse> updateMemberInfo(@Valid @RequestBody UpdateMemberRequest request, @MemberId Long memberId) {
         return ApiResponse.of(memberService.updateMemberInfo(request, memberId));
     }
 
