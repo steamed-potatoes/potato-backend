@@ -31,16 +31,16 @@ public class BoardController {
         return ApiResponse.of(boardService.getDetailBoard(boardId));
     }
 
-    @Auth(role = USER)
     @Operation(summary = "게시물의 좋아요를 추가하는 API", description = "Bearer 토큰이 필요합니다")
+    @Auth(role = USER)
     @PostMapping("/api/v1/board/like/{boardId}")
     public ApiResponse<String> addBoardLike(@PathVariable Long boardId, @MemberId Long memberId) {
         boardService.addBoardLike(boardId, memberId);
         return ApiResponse.OK;
     }
 
-    @Auth(role = USER)
     @Operation(summary = "게시물의 좋아요를 취소하는 API", description = "Bearer 토큰이 필요합니다")
+    @Auth(role = USER)
     @DeleteMapping("/api/v1/board/like/{boardId}")
     public ApiResponse<String> cancelBoardLike(@PathVariable Long boardId, @MemberId Long memberId) {
         boardService.cancelBoardLike(boardId, memberId);

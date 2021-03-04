@@ -91,16 +91,27 @@ public class Organization extends BaseTimeEntity {
     }
 
     public void addPending(Long memberId) {
-        if (isAnyMatchMember(memberId)) {
+        if (isMemberOrPendingInOrganization(memberId)) {
             throw new ConflictException(String.format("이미 조직(%s)에 가입되거나 가입신청 한 유저(%s)입니다.", subDomain, memberId));
         }
         OrganizationMemberMapper organizationMemberMapper = OrganizationMemberMapper.newPending(this, memberId);
         this.organizationMemberMapperList.add(organizationMemberMapper);
     }
 
-    private boolean isAnyMatchMember(Long memberId) {
+    private boolean isMemberOrPendingInOrganization(Long memberId) {
         return this.organizationMemberMapperList.stream()
             .anyMatch(organizationMemberMapper -> organizationMemberMapper.isSameMember(memberId));
+    }
+
+    public void validateIsMemberInOrganization(Long memberId) {
+        if (!isMemberInOrganization(memberId)) {
+            throw new ForbiddenException(String.format("해당하는 멤버 (%s)는 그룹 (%s)의 소속이 아닙니다", memberId, this.subDomain));
+        }
+    }
+
+    private boolean isMemberInOrganization(Long memberId) {
+        return this.organizationMemberMapperList.stream()
+            .anyMatch(organizationMemberMapper -> organizationMemberMapper.isMemberInOrganization(memberId));
     }
 
     public void approvePendingMember(Long memberId) {
@@ -130,7 +141,7 @@ public class Organization extends BaseTimeEntity {
 
     private OrganizationMemberMapper findMember(Long memberId) {
         return organizationMemberMapperList.stream()
-            .filter(mapper -> mapper.isOrganizationMember(memberId))
+            .filter(mapper -> mapper.isMemberInOrganization(memberId))
             .findFirst()
             .orElseThrow(() -> new NotFoundException(String.format("해당하는 멤버 (%s)는 그룹 (%s)의 소속 멤버가 아닙니다.", memberId, subDomain)));
     }

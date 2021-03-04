@@ -47,7 +47,7 @@ public class OrganizationMemberMapper extends BaseTimeEntity {
         return new OrganizationMemberMapper(organization, memberId, OrganizationRole.USER);
     }
 
-    private boolean isUser(Long memberId) {
+    boolean isUser(Long memberId) {
         return this.memberId.equals(memberId) && this.role.equals(OrganizationRole.USER);
     }
 
@@ -59,6 +59,10 @@ public class OrganizationMemberMapper extends BaseTimeEntity {
         return this.memberId.equals(memberId) && this.role.equals(OrganizationRole.PENDING);
     }
 
+    boolean isMemberInOrganization(Long memberId) {
+        return isAdmin(memberId) || isUser(memberId);
+    }
+
     void approveToUser() {
         if (!isPending(memberId)) {
             throw new NotFoundException(String.format("멤버 (%s)는 조직 (%s)의 가입신청자가 아닙니다", memberId, organization.getSubDomain()));
@@ -66,18 +70,14 @@ public class OrganizationMemberMapper extends BaseTimeEntity {
         this.role = OrganizationRole.USER;
     }
 
-    boolean isSameMember(Long memberId) {
-        return this.memberId.equals(memberId);
-    }
-
-    public boolean isOrganizationMember(Long memberId) {
-        return isAdmin(memberId) || isUser(memberId);
-    }
-
     void validateCanRemove(Long memberId) {
         if (isAdmin(memberId)) {
             throw new ForbiddenException(String.format("그룹 (%s)의 관리자 (%s)는 그룹에서 탈퇴할 수 없습니다", this.organization.getSubDomain(), memberId));
         }
+    }
+
+    boolean isSameMember(Long memberId) {
+        return this.memberId.equals(memberId);
     }
 
 }

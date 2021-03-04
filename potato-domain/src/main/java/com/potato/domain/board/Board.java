@@ -108,4 +108,8 @@ public class Board extends BaseTimeEntity {
             .orElseThrow(() -> new NotFoundException(String.format("멤버 (%s)는 게시물 (%s)에 좋아요를 누른 적이 없습니다", memberId, this.id)));
     }
 
+    public boolean isPrivate() {
+        return this.visible.equals(Visible.PRIVATE);
+    }
+
 }
