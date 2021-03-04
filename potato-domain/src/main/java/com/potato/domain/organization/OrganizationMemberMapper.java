@@ -1,6 +1,7 @@
 package com.potato.domain.organization;
 
 import com.potato.domain.BaseTimeEntity;
+import com.potato.exception.ForbiddenException;
 import com.potato.exception.NotFoundException;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -38,10 +39,6 @@ public class OrganizationMemberMapper extends BaseTimeEntity {
         return new OrganizationMemberMapper(organization, memberId, OrganizationRole.ADMIN);
     }
 
-    boolean isAdmin(Long memberId) {
-        return this.memberId.equals(memberId) && this.role.equals(OrganizationRole.ADMIN);
-    }
-
     static OrganizationMemberMapper newUser(Organization organization, Long memberId) {
         return new OrganizationMemberMapper(organization, memberId, OrganizationRole.USER);
     }
@@ -50,15 +47,33 @@ public class OrganizationMemberMapper extends BaseTimeEntity {
         return new OrganizationMemberMapper(organization, memberId, OrganizationRole.PENDING);
     }
 
+    boolean isAdmin(Long memberId) {
+        return this.memberId.equals(memberId) && this.role.equals(OrganizationRole.ADMIN);
+    }
+
+    boolean isUser(Long memberId) {
+        return this.memberId.equals(memberId) && this.role.equals(OrganizationRole.USER);
+    }
+
     boolean isPending(Long memberId) {
         return this.memberId.equals(memberId) && this.role.equals(OrganizationRole.PENDING);
     }
 
-    void approve() {
+    boolean isBelongToOrganization(Long memberId) {
+        return isAdmin(memberId) || isUser(memberId);
+    }
+
+    void approveToUser() {
         if (!isPending(memberId)) {
             throw new NotFoundException(String.format("멤버 (%s)는 조직 (%s)의 가입신청자가 아닙니다", memberId, organization.getSubDomain()));
         }
         this.role = OrganizationRole.USER;
+    }
+
+    void validateCanRemove(Long memberId) {
+        if (isAdmin(memberId)) {
+            throw new ForbiddenException(String.format("그룹 (%s)의 관리자 (%s)는 그룹에서 탈퇴할 수 없습니다", this.organization.getSubDomain(), memberId));
+        }
     }
 
     boolean isSameMember(Long memberId) {

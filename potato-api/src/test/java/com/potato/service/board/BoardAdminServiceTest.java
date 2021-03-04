@@ -13,8 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
-import static com.potato.service.board.BoardServiceTestUtils.assertBoard;
-import static com.potato.service.board.BoardServiceTestUtils.assertBoardInfo;
+import static com.potato.service.board.BoardServiceTestUtils.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -27,10 +26,14 @@ class BoardAdminServiceTest extends OrganizationMemberSetUpTest {
     @Autowired
     private BoardRepository boardRepository;
 
+    @Autowired
+    private DeletedBoardRepository deletedBoardRepository;
+
     @AfterEach
     void cleanUp() {
         super.cleanup();
         boardRepository.deleteAll();
+        deletedBoardRepository.deleteAll();
     }
 
     @Test
@@ -145,6 +148,41 @@ class BoardAdminServiceTest extends OrganizationMemberSetUpTest {
         assertThatThrownBy(
             () -> boardAdminService.updateBoard(subDomain, 999L, request)
         ).isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
+    void 게시물을_삭제하면_삭제되고_동시에_백업된다() {
+        // given
+        Board board = BoardCreator.create(subDomain, memberId, "게시물");
+        boardRepository.save(board);
+
+        // when
+        boardAdminService.deleteBoard(subDomain, board.getId());
+
+        // then
+        List<Board> boardList = boardRepository.findAll();
+        assertThat(boardList).isEmpty();
+
+        List<DeletedBoard> deletedBoards = deletedBoardRepository.findAll();
+        assertThat(deletedBoards).hasSize(1);
+        assertDeletedBoard(deletedBoards.get(0), board.getId(), board.getSubDomain(), board.getMemberId(), board.getTitle(),
+            board.getContent(), board.getCategory(), board.getImageUrl(), board.getVisible(), board.getCreatedDateTime());
+    }
+
+    @Test
+    void 해당하는_게시물이_없으면_게시물을_삭제되지_않는다() {
+        // when & then
+        assertThatThrownBy(() -> boardAdminService.deleteBoard(subDomain, 999L)).isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
+    void 해당하는_그룹의_것이_아닐경우_삭제되지_않는다() {
+        // given
+        Board board = BoardCreator.create(subDomain, memberId, "게시물");
+        boardRepository.save(board);
+
+        // when & then
+        assertThatThrownBy(() -> boardAdminService.deleteBoard("another-subDomain", board.getId())).isInstanceOf(NotFoundException.class);
     }
 
 }

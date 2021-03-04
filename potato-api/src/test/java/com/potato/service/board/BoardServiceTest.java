@@ -1,5 +1,7 @@
 package com.potato.service.board;
 
+import com.potato.exception.ConflictException;
+import com.potato.exception.ForbiddenException;
 import com.potato.service.OrganizationMemberSetUpTest;
 import com.potato.domain.board.*;
 import com.potato.exception.NotFoundException;
@@ -27,10 +29,14 @@ class BoardServiceTest extends OrganizationMemberSetUpTest {
     @Autowired
     private BoardRepository boardRepository;
 
+    @Autowired
+    private BoardLikeRepository boardLikeRepository;
+
     @AfterEach
     void cleanUp() {
         super.cleanup();
-        boardRepository.deleteAll();
+        boardLikeRepository.deleteAllInBatch();
+        boardRepository.deleteAllInBatch();
     }
 
     @Test
@@ -185,6 +191,94 @@ class BoardServiceTest extends OrganizationMemberSetUpTest {
 
         // when & then
         assertThatThrownBy(() -> boardService.getDetailBoard(board.getId())).isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
+    void 내가_게시한_게시물에_좋아요를_누른다() {
+        // given
+        Board board = BoardCreator.create(subDomain, memberId, "비공개 게시물");
+        boardRepository.save(board);
+
+        // when
+        boardService.addBoardLike(board.getId(), 100L);
+
+        // then
+        List<Board> boardList = boardRepository.findAll();
+        assertThat(boardList).hasSize(1);
+        assertThat(boardList.get(0).getLikesCount()).isEqualTo(1);
+
+        List<BoardLike> boardLikeList = boardLikeRepository.findAll();
+        assertThat(boardLikeList).hasSize(1);
+        assertThat(boardLikeList.get(0).getMemberId()).isEqualTo(100L);
+    }
+
+    @Test
+    void 이미_해당_게시물에_좋아요를_누르면_더이상_누를수_없다() {
+        // given
+        Board board = BoardCreator.create(subDomain, memberId, "비공개 게시물");
+        board.addLike(memberId);
+        boardRepository.save(board);
+
+        // when & then
+        assertThatThrownBy(() -> boardService.addBoardLike(board.getId(), memberId)).isInstanceOf(ConflictException.class);
+    }
+
+    @Test
+    void 내가_속하지_않은_조직의_공개된_게시물을_좋아요_누를수_있다() {
+        // given
+        Board board = BoardCreator.create(subDomain, memberId, "비공개 게시물");
+        boardRepository.save(board);
+
+        // when
+        boardService.addBoardLike(board.getId(), 100L);
+
+        // then
+        List<Board> boardList = boardRepository.findAll();
+        assertThat(boardList).hasSize(1);
+        assertThat(boardList.get(0).getLikesCount()).isEqualTo(1);
+
+        List<BoardLike> boardLikeList = boardLikeRepository.findAll();
+        assertThat(boardLikeList).hasSize(1);
+        assertThat(boardLikeList.get(0).getMemberId()).isEqualTo(100L);
+    }
+
+    @Test
+    void 내가_속하지_않은_조직의_비공개_게시물을_좋아요_누를수_없다() {
+        // given
+        Board board = BoardCreator.createPrivate(subDomain, memberId, "비공개 게시물");
+        boardRepository.save(board);
+
+        // when & then
+        assertThatThrownBy(() -> boardService.addBoardLike(board.getId(), 100L)).isInstanceOf(ForbiddenException.class);
+    }
+
+    @Test
+    void 게시물에_누른_좋아요를_취소한다() {
+        // given
+        Board board = BoardCreator.create(subDomain, memberId, "비공개 게시물");
+        board.addLike(memberId);
+        boardRepository.save(board);
+
+        // when
+        boardService.cancelBoardLike(board.getId(), memberId);
+
+        // then
+        List<Board> boardList = boardRepository.findAll();
+        assertThat(boardList).hasSize(1);
+        assertThat(boardList.get(0).getLikesCount()).isEqualTo(0);
+
+        List<BoardLike> boardLikeList = boardLikeRepository.findAll();
+        assertThat(boardLikeList).isEmpty();
+    }
+
+    @Test
+    void 게시물에_누르지_않은_좋아요를_취소하면_에러가_발생() {
+        // given
+        Board board = BoardCreator.create(subDomain, memberId, "비공개 게시물");
+        boardRepository.save(board);
+
+        // when & then
+        assertThatThrownBy(() -> boardService.cancelBoardLike(board.getId(), memberId)).isInstanceOf(NotFoundException.class);
     }
 
 }

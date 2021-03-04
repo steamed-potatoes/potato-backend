@@ -17,14 +17,15 @@ public class MemberInOrganizationResponse {
 
     private final String name;
 
-    private final MemberMajor major;
+    private final String major;
 
     private final String profileUrl;
 
     private final OrganizationRole role;
 
     static MemberInOrganizationResponse of(Member member, OrganizationRole role) {
-        return new MemberInOrganizationResponse(member.getId(), member.getEmail(), member.getName(), member.getMajor(), member.getProfileUrl(), role);
+        return new MemberInOrganizationResponse(member.getId(), member.getEmail(), member.getName(),
+            member.getMajor().getName(), member.getProfileUrl(), role);
     }
 
 }
