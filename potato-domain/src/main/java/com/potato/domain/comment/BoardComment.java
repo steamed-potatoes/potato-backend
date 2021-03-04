@@ -19,8 +19,10 @@ public class BoardComment extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private Long boardId;
 
+    @Column(nullable = false)
     private Long memberId;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -30,6 +32,7 @@ public class BoardComment extends BaseTimeEntity {
     @OneToMany(mappedBy = "parentComment", cascade = CascadeType.PERSIST)
     private final List<BoardComment> childComments = new ArrayList<>();
 
+    @Column(nullable = false)
     private String content;
 
     private int depth;
