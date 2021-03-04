@@ -1,7 +1,6 @@
 package com.potato.service.organization.dto.response;
 
 import com.potato.domain.member.Member;
-import com.potato.domain.member.MemberMajor;
 import com.potato.domain.organization.OrganizationRole;
 import lombok.AccessLevel;
 import lombok.Getter;

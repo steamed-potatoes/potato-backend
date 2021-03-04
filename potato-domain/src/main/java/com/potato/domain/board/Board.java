@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
