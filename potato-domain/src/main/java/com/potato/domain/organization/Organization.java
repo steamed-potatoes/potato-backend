@@ -1,6 +1,7 @@
 package com.potato.domain.organization;
 
 import com.potato.domain.BaseTimeEntity;
+import com.potato.domain.follow.Follow;
 import com.potato.exception.ConflictException;
 import com.potato.exception.ForbiddenException;
 import com.potato.exception.NotFoundException;
@@ -38,8 +39,13 @@ public class Organization extends BaseTimeEntity {
 
     private String profileUrl;
 
+    private int followCount;
+
     @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<OrganizationMemberMapper> organizationMemberMapperList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<Follow> followList = new ArrayList<>();
 
     @Builder
     public Organization(String subDomain, String name, String description, OrganizationCategory category, String profileUrl) {
@@ -49,6 +55,7 @@ public class Organization extends BaseTimeEntity {
         this.category = category;
         this.profileUrl = profileUrl;
         this.membersCount = 0;
+        this.followCount = 0;
     }
 
     public static Organization defaultInstance(String subDomain, String name, String description, String profileUrl) {
@@ -158,6 +165,13 @@ public class Organization extends BaseTimeEntity {
 
     public OrganizationRole getRoleOfMember(Long memberId) {
         return findMember(memberId).getRole();
+    }
+
+    public void addFollow(Long memberId) {
+        Follow follow = Follow.newFollow(this, memberId);
+        this.followList.add(follow);
+        this.followCount++;
+//        return follow;
     }
 
 }

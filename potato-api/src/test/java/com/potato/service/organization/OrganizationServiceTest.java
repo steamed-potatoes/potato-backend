@@ -1,11 +1,13 @@
 package com.potato.service.organization;
 
+import com.potato.domain.follow.Follow;
 import com.potato.domain.organization.*;
 import com.potato.exception.ConflictException;
 import com.potato.exception.ForbiddenException;
 import com.potato.exception.NotFoundException;
 import com.potato.service.MemberSetupTest;
 import com.potato.service.organization.dto.request.CreateOrganizationRequest;
+import com.potato.service.organization.dto.request.FollowRequest;
 import com.potato.service.organization.dto.response.OrganizationDetailInfoResponse;
 import com.potato.service.organization.dto.response.OrganizationInfoResponse;
 import org.junit.jupiter.api.AfterEach;
@@ -31,6 +33,9 @@ class OrganizationServiceTest extends MemberSetupTest {
 
     @Autowired
     private OrganizationMemberMapperRepository organizationMemberMapperRepository;
+
+    @Autowired
+    private FollowRepository followRepository;
 
     @AfterEach
     void cleanUp() {
@@ -319,6 +324,27 @@ class OrganizationServiceTest extends MemberSetupTest {
 
         // when & then
         assertThatThrownBy(() -> organizationService.leaveFromOrganization(subDomain, memberId)).isInstanceOf(ForbiddenException.class);
+    }
+
+    @Test
+    void 그룹을_팔로우한다() {
+        //given
+        String subDomain = "감자";
+
+        FollowRequest request = FollowRequest.testBuilder()
+            .subDomain(subDomain)
+            .build();
+
+        Organization organization = OrganizationCreator.create(subDomain);
+        organization.addAdmin(memberId);
+        organizationRepository.save(organization);
+
+        //when
+        organizationService.followOrganization(request, memberId);
+
+        //then
+        List<Follow> followList = followRepository.findAll();
+        assertThat(followList).hasSize(1);
     }
 
 }
