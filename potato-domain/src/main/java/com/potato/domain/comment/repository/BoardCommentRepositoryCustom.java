@@ -10,4 +10,6 @@ public interface BoardCommentRepositoryCustom {
 
     List<BoardComment> findRootCommentByBoardId(Long boardId);
 
+    BoardComment findBoardCommentByIdAndMemberId(Long boardCommentId, Long memberId);
+
 }

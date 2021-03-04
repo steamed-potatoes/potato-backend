@@ -42,4 +42,10 @@ public class BoardCommentService {
             .collect(Collectors.toList());
     }
 
+    @Transactional
+    public void deleteBoardComment(Long boardCommentId, Long memberId) {
+        BoardComment comment = BoardCommentServiceUtils.findBoardCommentByIdAndMemberId(boardCommentRepository, boardCommentId, memberId);
+        comment.delete();
+    }
+
 }
