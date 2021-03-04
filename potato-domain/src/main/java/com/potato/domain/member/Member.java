@@ -1,12 +1,15 @@
 package com.potato.domain.member;
 
 import com.potato.domain.BaseTimeEntity;
+import com.potato.domain.follow.Follow;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -31,6 +34,9 @@ public class Member extends BaseTimeEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private MemberProvider provider;
+
+    @OneToMany(mappedBy = "follow")
+    private List<Follow> followList = new ArrayList<>();
 
     @Builder
     public Member(String email, String name, String profileUrl, MemberMajor major, MemberProvider provider) {
