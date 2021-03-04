@@ -11,11 +11,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.potato.service.board.BoardServiceTestUtils.assertBoard;
-import static com.potato.service.board.BoardServiceTestUtils.assertBoardInfo;
+import static com.potato.service.board.BoardServiceTestUtils.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -169,19 +167,6 @@ class BoardAdminServiceTest extends OrganizationMemberSetUpTest {
         assertThat(deletedBoards).hasSize(1);
         assertDeletedBoard(deletedBoards.get(0), board.getId(), board.getSubDomain(), board.getMemberId(), board.getTitle(),
             board.getContent(), board.getCategory(), board.getImageUrl(), board.getVisible(), board.getCreatedDateTime());
-    }
-
-    private void assertDeletedBoard(DeletedBoard deletedBoard, Long backUpId, String subDomain, Long memberId, String title,
-                                    String content, Category category, String imageUrl, Visible visible, LocalDateTime createdDateTime) {
-        assertThat(deletedBoard.getBackUpId()).isEqualTo(backUpId);
-        assertThat(deletedBoard.getSubDomain()).isEqualTo(subDomain);
-        assertThat(deletedBoard.getMemberId()).isEqualTo(memberId);
-        assertThat(deletedBoard.getTitle()).isEqualTo(title);
-        assertThat(deletedBoard.getContent()).isEqualTo(content);
-        assertThat(deletedBoard.getCategory()).isEqualTo(category);
-        assertThat(deletedBoard.getImageUrl()).isEqualTo(imageUrl);
-        assertThat(deletedBoard.getVisible()).isEqualTo(visible);
-        assertThat(deletedBoard.getBackUpCreatedDateTime()).isEqualTo(createdDateTime);
     }
 
     @Test

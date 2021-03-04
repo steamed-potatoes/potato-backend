@@ -39,27 +39,27 @@ public class OrganizationMemberMapper extends BaseTimeEntity {
         return new OrganizationMemberMapper(organization, memberId, OrganizationRole.ADMIN);
     }
 
-    boolean isAdmin(Long memberId) {
-        return this.memberId.equals(memberId) && this.role.equals(OrganizationRole.ADMIN);
-    }
-
     static OrganizationMemberMapper newUser(Organization organization, Long memberId) {
         return new OrganizationMemberMapper(organization, memberId, OrganizationRole.USER);
-    }
-
-    boolean isUser(Long memberId) {
-        return this.memberId.equals(memberId) && this.role.equals(OrganizationRole.USER);
     }
 
     static OrganizationMemberMapper newPending(Organization organization, Long memberId) {
         return new OrganizationMemberMapper(organization, memberId, OrganizationRole.PENDING);
     }
 
+    boolean isAdmin(Long memberId) {
+        return this.memberId.equals(memberId) && this.role.equals(OrganizationRole.ADMIN);
+    }
+
+    boolean isUser(Long memberId) {
+        return this.memberId.equals(memberId) && this.role.equals(OrganizationRole.USER);
+    }
+
     boolean isPending(Long memberId) {
         return this.memberId.equals(memberId) && this.role.equals(OrganizationRole.PENDING);
     }
 
-    boolean isMemberInOrganization(Long memberId) {
+    boolean isBelongToOrganization(Long memberId) {
         return isAdmin(memberId) || isUser(memberId);
     }
 

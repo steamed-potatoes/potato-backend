@@ -67,21 +67,10 @@ public class Organization extends BaseTimeEntity {
         this.profileUrl = profileUrl;
     }
 
-    public void validateAdminMember(Long memberId) {
-        if (!isAdmin(memberId)) {
-            throw new ForbiddenException(String.format("멤버 (%s)는 조직 (%s)의 관리자가 아닙니다", memberId, subDomain));
-        }
-    }
-
     public void addAdmin(Long memberId) {
         OrganizationMemberMapper organizationMemberMapper = OrganizationMemberMapper.newAdmin(this, memberId);
         this.organizationMemberMapperList.add(organizationMemberMapper);
         this.membersCount++;
-    }
-
-    private boolean isAdmin(Long memberId) {
-        return this.organizationMemberMapperList.stream()
-            .anyMatch(organizationMemberMapper -> organizationMemberMapper.isAdmin(memberId));
     }
 
     public void addUser(Long memberId) {
@@ -91,11 +80,44 @@ public class Organization extends BaseTimeEntity {
     }
 
     public void addPending(Long memberId) {
+        validateIsMemberOrPendingInOrganization(memberId);
+        OrganizationMemberMapper organizationMemberMapper = OrganizationMemberMapper.newPending(this, memberId);
+        this.organizationMemberMapperList.add(organizationMemberMapper);
+    }
+
+    public void approvePendingMember(Long memberId) {
+        OrganizationMemberMapper organizationMemberMapper = findPendingMember(memberId);
+        organizationMemberMapper.approveToUser();
+        this.membersCount++;
+    }
+
+    public void denyPendingMember(Long memberId) {
+        OrganizationMemberMapper organizationMemberMapper = findPendingMember(memberId);
+        organizationMemberMapperList.remove(organizationMemberMapper);
+    }
+
+    public void removeUser(Long memberId) {
+        OrganizationMemberMapper organizationMemberMapper = findMember(memberId);
+        organizationMemberMapper.validateCanRemove(memberId);
+        organizationMemberMapperList.remove(organizationMemberMapper);
+        this.membersCount--;
+    }
+
+    public void validateAdminMember(Long memberId) {
+        if (!isAdmin(memberId)) {
+            throw new ForbiddenException(String.format("멤버 (%s)는 조직 (%s)의 관리자가 아닙니다", memberId, subDomain));
+        }
+    }
+
+    private boolean isAdmin(Long memberId) {
+        return this.organizationMemberMapperList.stream()
+            .anyMatch(organizationMemberMapper -> organizationMemberMapper.isAdmin(memberId));
+    }
+
+    private void validateIsMemberOrPendingInOrganization(Long memberId) {
         if (isMemberOrPendingInOrganization(memberId)) {
             throw new ConflictException(String.format("이미 조직(%s)에 가입되거나 가입신청 한 유저(%s)입니다.", subDomain, memberId));
         }
-        OrganizationMemberMapper organizationMemberMapper = OrganizationMemberMapper.newPending(this, memberId);
-        this.organizationMemberMapperList.add(organizationMemberMapper);
     }
 
     private boolean isMemberOrPendingInOrganization(Long memberId) {
@@ -111,18 +133,7 @@ public class Organization extends BaseTimeEntity {
 
     private boolean isMemberInOrganization(Long memberId) {
         return this.organizationMemberMapperList.stream()
-            .anyMatch(organizationMemberMapper -> organizationMemberMapper.isMemberInOrganization(memberId));
-    }
-
-    public void approvePendingMember(Long memberId) {
-        OrganizationMemberMapper organizationMemberMapper = findPendingMember(memberId);
-        organizationMemberMapper.approveToUser();
-        this.membersCount++;
-    }
-
-    public void denyPendingMember(Long memberId) {
-        OrganizationMemberMapper organizationMemberMapper = findPendingMember(memberId);
-        organizationMemberMapperList.remove(organizationMemberMapper);
+            .anyMatch(organizationMemberMapper -> organizationMemberMapper.isBelongToOrganization(memberId));
     }
 
     private OrganizationMemberMapper findPendingMember(Long memberId) {
@@ -132,16 +143,9 @@ public class Organization extends BaseTimeEntity {
             .orElseThrow(() -> new NotFoundException(String.format("해당하는 멤버 (%s)는 그룹 (%s)에 신청 한 상태가 아닙니다", memberId, subDomain)));
     }
 
-    public void removeUser(Long memberId) {
-        OrganizationMemberMapper organizationMemberMapper = findMember(memberId);
-        organizationMemberMapper.validateCanRemove(memberId);
-        organizationMemberMapperList.remove(organizationMemberMapper);
-        this.membersCount--;
-    }
-
     private OrganizationMemberMapper findMember(Long memberId) {
         return organizationMemberMapperList.stream()
-            .filter(mapper -> mapper.isMemberInOrganization(memberId))
+            .filter(mapper -> mapper.isBelongToOrganization(memberId))
             .findFirst()
             .orElseThrow(() -> new NotFoundException(String.format("해당하는 멤버 (%s)는 그룹 (%s)의 소속 멤버가 아닙니다.", memberId, subDomain)));
     }
