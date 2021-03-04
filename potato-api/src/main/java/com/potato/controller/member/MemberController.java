@@ -53,4 +53,10 @@ public class MemberController {
         return ApiResponse.of(memberService.getMemberInfo(targetId));
     }
 
+    @Operation(summary = "특정 조직을 팔로우하는 API", description = "Bearer 토큰이 필요합니다.")
+    @Auth
+    @PostMapping("/api/v1/member/follow")
+    public void followOrganization() {
+    }
+
 }
