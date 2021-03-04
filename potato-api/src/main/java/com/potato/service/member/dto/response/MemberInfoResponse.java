@@ -20,7 +20,7 @@ public class MemberInfoResponse {
     private final String major;
 
     public static MemberInfoResponse of(Member member) {
-        return new MemberInfoResponse(member.getId(), member.getEmail(), member.getName(), member.getProfileUrl(), member.getMajor().getName());
+        return new MemberInfoResponse(member.getId(), member.getEmail(), member.getName(), member.getProfileUrl(), member.getMajorName());
     }
 
 }

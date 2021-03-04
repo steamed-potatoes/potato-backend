@@ -61,4 +61,11 @@ public class Member extends BaseTimeEntity {
         return this.email.getEmail();
     }
 
+    public String getMajorName() {
+        if (this.major == null) {
+            return null;
+        }
+        return this.major.getName();
+    }
+
 }

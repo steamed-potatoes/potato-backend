@@ -25,7 +25,7 @@ public class MemberInOrganizationResponse {
 
     static MemberInOrganizationResponse of(Member member, OrganizationRole role) {
         return new MemberInOrganizationResponse(member.getId(), member.getEmail(), member.getName(),
-            member.getMajor().getName(), member.getProfileUrl(), role);
+            member.getMajorName(), member.getProfileUrl(), role);
     }
 
 }
