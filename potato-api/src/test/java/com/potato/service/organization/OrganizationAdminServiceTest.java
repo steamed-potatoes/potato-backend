@@ -1,6 +1,7 @@
 package com.potato.service.organization;
 
 import com.potato.domain.organization.*;
+import com.potato.exception.ForbiddenException;
 import com.potato.exception.NotFoundException;
 import com.potato.service.MemberSetupTest;
 import com.potato.service.organization.dto.request.ManageOrganizationMemberRequest;
@@ -198,6 +199,43 @@ class OrganizationAdminServiceTest extends MemberSetupTest {
         assertThatThrownBy(
             () -> organizationAdminService.denyOrganizationMember(subDomain, request)
         ).isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
+    void 그룹의_관리자가_일반_유저를_강퇴시킨다() {
+        //given
+        String subDomain = "potato";
+        Long targetMemberId = 20L;
+        Organization organization = OrganizationCreator.create(subDomain);
+        organization.addAdmin(memberId);
+        organization.addUser(targetMemberId);
+        organizationRepository.save(organization);
+
+        // when
+        organizationAdminService.kickOffOrganizationUserByAdmin(subDomain, targetMemberId);
+
+        // then
+        List<Organization> organizationList = organizationRepository.findAll();
+        assertThat(organizationList).hasSize(1);
+        assertThat(organizationList.get(0).getMembersCount()).isEqualTo(1);
+
+        List<OrganizationMemberMapper> organizationMemberMapperList = organizationMemberMapperRepository.findAll();
+        assertThat(organizationMemberMapperList).hasSize(1);
+        assertOrganizationMemberMapper(organizationMemberMapperList.get(0), memberId, OrganizationRole.ADMIN);
+    }
+
+    @Test
+    void 그룹의_관리자가_관리자를_강퇴시킬_수없다() {
+        //given
+        String subDomain = "potato";
+        Long targetMemberId = 20L;
+        Organization organization = OrganizationCreator.create(subDomain);
+        organization.addAdmin(memberId);
+        organization.addAdmin(targetMemberId);
+        organizationRepository.save(organization);
+
+        // when & then
+        assertThatThrownBy(() -> organizationAdminService.kickOffOrganizationUserByAdmin(subDomain, targetMemberId)).isInstanceOf(ForbiddenException.class);
     }
 
 }

@@ -34,4 +34,10 @@ public class OrganizationAdminService {
         organization.denyPendingMember(request.getTargetMemberId());
     }
 
+    @Transactional
+    public void kickOffOrganizationUserByAdmin(String subDomain, Long targetMemberId) {
+        Organization organization = OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, subDomain);
+        organization.removeUser(targetMemberId);
+    }
+
 }
