@@ -6,6 +6,7 @@ import com.potato.domain.board.BoardRepository;
 import com.potato.domain.comment.BoardComment;
 import com.potato.domain.comment.BoardCommentCreator;
 import com.potato.domain.comment.BoardCommentRepository;
+import com.potato.exception.ForbiddenException;
 import com.potato.service.OrganizationMemberSetUpTest;
 import com.potato.service.comment.dto.request.AddBoardCommentRequest;
 import com.potato.service.comment.dto.response.BoardCommentResponse;
@@ -19,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
@@ -43,12 +45,13 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
 
     @BeforeEach
     void setUpBoard() {
-        board = boardRepository.save(BoardCreator.create(subDomain, memberId, "게시물"));
+        board = BoardCreator.create(subDomain, memberId, "게시물");
     }
 
     @Test
     void 가장_최상위의_댓글을_작성한다() {
         // given
+        boardRepository.save(board);
         String content = "부모 댓글";
         AddBoardCommentRequest request = AddBoardCommentRequest.testInstance(board.getId(), null, content);
 
@@ -63,8 +66,20 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
     }
 
     @Test
+    void 그룹에게만_허용된_게시물에_그룹원이_아닌사람은_댓글을_달지_못한다() {
+        // given
+        Board privateBoard = boardRepository.save(BoardCreator.createPrivate(subDomain, memberId, "비공개 게시물"));
+        String content = "부모 댓글";
+        AddBoardCommentRequest request = AddBoardCommentRequest.testInstance(privateBoard.getId(), null, content);
+
+        // when & then
+        assertThatThrownBy(() -> boardCommentService.addBoardComment(request, 100L)).isInstanceOf(ForbiddenException.class);
+    }
+
+    @Test
     void 최상위_댓글_하위에_자식_댓글을_추가한다() {
         // given
+        boardRepository.save(board);
         String content = "자식 댓글";
         BoardComment rootComment = BoardCommentCreator.createRootComment(board.getId(), memberId, "부모 댓글");
         boardCommentRepository.save(rootComment);
@@ -87,6 +102,7 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
     @Test
     void 특정_게시물의_댓글들을_불러온다() {
         // given
+        boardRepository.save(board);
         BoardComment rootComment1 = BoardCommentCreator.createRootComment(board.getId(), memberId, "부모 댓글1");
         rootComment1.addChildComment(memberId, "자식 댓글1-1");
         rootComment1.addChildComment(memberId, "자식 댓글1-2");
@@ -95,7 +111,7 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
         boardCommentRepository.saveAll(Arrays.asList(rootComment1, rootComment2));
 
         // when
-        List<BoardCommentResponse> responses = boardCommentService.retrieveBoardCommentList(board.getId());
+        List<BoardCommentResponse> responses = boardCommentService.retrieveBoardCommentList(board.getId(), memberId);
 
         // then
         assertThat(responses).hasSize(2);
@@ -108,6 +124,15 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
 
         assertThat(responses.get(1).getChildren()).hasSize(1);
         assertBoardCommentResponse(responses.get(1).getChildren().get(0), "자식 댓글2-1");
+    }
+
+    @Test
+    void 그룹에게만_허용된_게시물에_그룹원이_아닌사람은_댓글을_읽지_못한다() {
+        // given
+        Board privateBoard = boardRepository.save(BoardCreator.createPrivate(subDomain, memberId, "비공개 게시물"));
+
+        // when & then
+        assertThatThrownBy(() -> boardCommentService.retrieveBoardCommentList(privateBoard.getId(), 100L)).isInstanceOf(ForbiddenException.class);
     }
 
     private void assertBoardCommentResponse(BoardCommentResponse response, String content) {

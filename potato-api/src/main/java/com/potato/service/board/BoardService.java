@@ -2,7 +2,6 @@ package com.potato.service.board;
 
 import com.potato.domain.board.Board;
 import com.potato.domain.board.BoardRepository;
-import com.potato.domain.organization.Organization;
 import com.potato.domain.organization.OrganizationRepository;
 import com.potato.service.board.dto.response.BoardInfoResponse;
 import com.potato.service.organization.OrganizationServiceUtils;
@@ -46,8 +45,7 @@ public class BoardService {
     public void addBoardLike(Long boardId, Long memberId) {
         Board board = BoardServiceUtils.findFetchBoardById(boardRepository, boardId);
         if (board.isPrivate()) {
-            Organization organization = OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, board.getSubDomain());
-            organization.validateIsMemberInOrganization(memberId);
+            OrganizationServiceUtils.validateHasAuthority(organizationRepository, board.getSubDomain(), memberId);
         }
         board.addLike(memberId);
     }

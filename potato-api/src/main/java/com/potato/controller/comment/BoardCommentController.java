@@ -28,9 +28,10 @@ public class BoardCommentController {
         return ApiResponse.OK;
     }
 
+    @Auth(role = USER)
     @GetMapping("/api/v1/board/comment/list")
-    public List<BoardCommentResponse> retrieveCommentsInBoard(@RequestParam Long boardId) {
-        return boardCommentService.retrieveBoardCommentList(boardId);
+    public List<BoardCommentResponse> retrieveCommentsInBoard(@RequestParam Long boardId, @MemberId Long memberId) {
+        return boardCommentService.retrieveBoardCommentList(boardId, memberId);
     }
 
 }

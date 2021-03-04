@@ -25,4 +25,9 @@ public class OrganizationServiceUtils {
         return organization;
     }
 
+    public static void validateHasAuthority(OrganizationRepository organizationRepository, String subDomain, Long memberId) {
+        Organization organization = OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, subDomain);
+        organization.validateIsMemberInOrganization(memberId);
+    }
+
 }

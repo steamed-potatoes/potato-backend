@@ -1,7 +1,10 @@
 package com.potato.service.comment;
 
+import com.potato.domain.board.BoardRepository;
 import com.potato.domain.comment.BoardComment;
 import com.potato.domain.comment.BoardCommentRepository;
+import com.potato.domain.organization.OrganizationRepository;
+import com.potato.service.board.BoardServiceUtils;
 import com.potato.service.comment.dto.request.AddBoardCommentRequest;
 import com.potato.service.comment.dto.response.BoardCommentResponse;
 import lombok.RequiredArgsConstructor;
@@ -16,10 +19,12 @@ import java.util.stream.Collectors;
 public class BoardCommentService {
 
     private final BoardCommentRepository boardCommentRepository;
+    private final BoardRepository boardRepository;
+    private final OrganizationRepository organizationRepository;
 
     @Transactional
     public void addBoardComment(AddBoardCommentRequest request, Long memberId) {
-        // TODO 해당 게시물이 존재하는지, 비공개 인지 비공개면 그 내부 그룹원들만 할 수 있게끔 추가.
+        BoardServiceUtils.validateHasAuthority(boardRepository, organizationRepository, request.getBoardId(), memberId);
         if (!request.hasParentComment()) {
             BoardComment boardComment = BoardCommentServiceUtils.findBoardCommentById(boardCommentRepository, request.getParentCommentId());
             boardComment.addChildComment(memberId, request.getContent());
@@ -29,7 +34,8 @@ public class BoardCommentService {
     }
 
     @Transactional(readOnly = true)
-    public List<BoardCommentResponse> retrieveBoardCommentList(Long boardId) {
+    public List<BoardCommentResponse> retrieveBoardCommentList(Long boardId, Long memberId) {
+        BoardServiceUtils.validateHasAuthority(boardRepository, organizationRepository, boardId, memberId);
         List<BoardComment> rootComments = boardCommentRepository.findRootCommentByBoardId(boardId);
         return rootComments.stream()
             .map(BoardCommentResponse::of)
