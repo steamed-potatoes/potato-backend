@@ -1,0 +1,63 @@
+name: Deploying Production Server
+
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout@v2
+        uses: actions/checkout@v2
+
+      - name: Create secret properties
+        env:
+          GOOGLE_AUTH_CLIENT_ID: ${{secrets.GOOGLE_AUTH_CLIENT_ID}}
+          GOOGLE_AUTH_CLIENT_SECRET: ${{secrets.GOOGLE_AUTH_CLIENT_SECRET}}
+          GOOGLE_AUTH_GRANT_TYPE: ${{secrets.GOOGLE_AUTH_GRANT_TYPE}}
+          GOOGLE_AUTH_URL: ${{secrets.GOOGLE_AUTH_URL}}
+          GOOGLE_PROFILE_URL: ${{secrets.GOOGLE_PROFILE_URL}}
+
+          RESOURCE_PWD: potato-api/src/main/resources
+        run: |
+          echo -e "google.auth.client_id=$GOOGLE_AUTH_CLIENT_ID\ngoogle.auth.client_secret=$GOOGLE_AUTH_CLIENT_SECRET\ngoogle.auth.grant_type=$GOOGLE_AUTH_GRANT_TYPE\ngoogle.auth.url=$GOOGLE_AUTH_URL\ngoogle.profile.url=$GOOGLE_PROFILE_URL" > $RESOURCE_PWD/application-thirdparty.properties
+
+      - name: Get Semantic Versioning
+        id: docker-image-version
+        run: |
+          VERSION=`cat ./version.txt`
+          GIT_COMMIT_MSG=`git show -s`
+
+          echo "::set-output name=version::$VERSION"
+          echo "::set-output name=git-commit-msg::$GIT_COMMIT_MSG"
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GIT_TOKEN }}
+
+      - name: Build, Push image to Github Container Registry
+        env:
+          DOCKER_REGISTRY: ghcr.io/steamed-potatoes
+          DOCKER_REPOSITORY: potato-backend
+          IMAGE_TAG: ${{ steps.docker-image-version.outputs.version }}
+        run: |
+          docker build -t $DOCKER_REGISTRY/$DOCKER_REPOSITORY:$IMAGE_TAG .
+          docker tag $DOCKER_REGISTRY/$DOCKER_REPOSITORY:$IMAGE_TAG $DOCKER_REGISTRY/$DOCKER_REPOSITORY:latest
+          docker push $DOCKER_REGISTRY/$DOCKER_REPOSITORY:$IMAGE_TAG
+          docker push $DOCKER_REGISTRY/$DOCKER_REPOSITORY:latest
+
+      - name: Create Release
+        id: create-release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+        with:
+          tag_name: ${{ steps.docker-image-version.outputs.version }}
+          release_name: Release ${{ steps.docker-image-version.outputs.version }}
+          body: ${{ steps.docker-image-version.outputs.git-commit-msg }}
+          draft: false
+          prerelease: false
