@@ -30,7 +30,7 @@ public class BoardCommentController {
         return ApiResponse.OK;
     }
 
-    @Operation(summary = "게시물의 댓글 리스트를 조회한다.", description = "Bearer 토큰이 필요합니다")
+    @Operation(summary = "게시물의 댓글 리스트를 조회합니다.", description = "Bearer 토큰이 필요합니다")
     @Auth(role = USER)
     @GetMapping("/api/v1/board/comment/list")
     public List<BoardCommentResponse> retrieveCommentsInBoard(@RequestParam Long boardId, @MemberId Long memberId) {
