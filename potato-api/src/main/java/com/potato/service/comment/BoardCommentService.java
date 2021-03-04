@@ -1,0 +1,39 @@
+package com.potato.service.comment;
+
+import com.potato.domain.comment.BoardComment;
+import com.potato.domain.comment.BoardCommentRepository;
+import com.potato.service.comment.dto.request.AddBoardCommentRequest;
+import com.potato.service.comment.dto.response.BoardCommentResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@RequiredArgsConstructor
+@Service
+public class BoardCommentService {
+
+    private final BoardCommentRepository boardCommentRepository;
+
+    @Transactional
+    public void addBoardComment(AddBoardCommentRequest request, Long memberId) {
+        // TODO 해당 게시물이 존재하는지, 비공개 인지 비공개면 그 내부 그룹원들만 할 수 있게끔 추가.
+        if (!request.hasParentComment()) {
+            BoardComment boardComment = BoardCommentServiceUtils.findBoardCommentById(boardCommentRepository, request.getParentCommentId());
+            boardComment.addChildComment(memberId, request.getContent());
+            return;
+        }
+        boardCommentRepository.save(BoardComment.newRootComment(request.getBoardId(), memberId, request.getContent()));
+    }
+
+    @Transactional(readOnly = true)
+    public List<BoardCommentResponse> retrieveBoardCommentList(Long boardId) {
+        List<BoardComment> rootComments = boardCommentRepository.findRootCommentByBoardId(boardId);
+        return rootComments.stream()
+            .map(BoardCommentResponse::of)
+            .collect(Collectors.toList());
+    }
+
+}
