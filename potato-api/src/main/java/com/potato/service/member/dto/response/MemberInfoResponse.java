@@ -1,7 +1,6 @@
 package com.potato.service.member.dto.response;
 
 import com.potato.domain.member.Member;
-import com.potato.domain.member.MemberMajor;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -18,10 +17,10 @@ public class MemberInfoResponse {
 
     private final String profileUrl;
 
-    private final MemberMajor major;
+    private final String major;
 
     public static MemberInfoResponse of(Member member) {
-        return new MemberInfoResponse(member.getId(), member.getEmail(), member.getName(), member.getProfileUrl(), member.getMajor());
+        return new MemberInfoResponse(member.getId(), member.getEmail(), member.getName(), member.getProfileUrl(), member.getMajor().getName());
     }
 
 }

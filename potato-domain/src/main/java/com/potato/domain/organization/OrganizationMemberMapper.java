@@ -39,24 +39,28 @@ public class OrganizationMemberMapper extends BaseTimeEntity {
         return new OrganizationMemberMapper(organization, memberId, OrganizationRole.ADMIN);
     }
 
-    boolean isAdmin(Long memberId) {
-        return this.memberId.equals(memberId) && this.role.equals(OrganizationRole.ADMIN);
-    }
-
     static OrganizationMemberMapper newUser(Organization organization, Long memberId) {
         return new OrganizationMemberMapper(organization, memberId, OrganizationRole.USER);
-    }
-
-    private boolean isUser(Long memberId) {
-        return this.memberId.equals(memberId) && this.role.equals(OrganizationRole.USER);
     }
 
     static OrganizationMemberMapper newPending(Organization organization, Long memberId) {
         return new OrganizationMemberMapper(organization, memberId, OrganizationRole.PENDING);
     }
 
+    boolean isAdmin(Long memberId) {
+        return this.memberId.equals(memberId) && this.role.equals(OrganizationRole.ADMIN);
+    }
+
+    boolean isUser(Long memberId) {
+        return this.memberId.equals(memberId) && this.role.equals(OrganizationRole.USER);
+    }
+
     boolean isPending(Long memberId) {
         return this.memberId.equals(memberId) && this.role.equals(OrganizationRole.PENDING);
+    }
+
+    boolean isBelongToOrganization(Long memberId) {
+        return isAdmin(memberId) || isUser(memberId);
     }
 
     void approveToUser() {
@@ -66,18 +70,14 @@ public class OrganizationMemberMapper extends BaseTimeEntity {
         this.role = OrganizationRole.USER;
     }
 
-    boolean isSameMember(Long memberId) {
-        return this.memberId.equals(memberId);
-    }
-
-    public boolean isOrganizationMember(Long memberId) {
-        return isAdmin(memberId) || isUser(memberId);
-    }
-
     void validateCanRemove(Long memberId) {
         if (isAdmin(memberId)) {
             throw new ForbiddenException(String.format("그룹 (%s)의 관리자 (%s)는 그룹에서 탈퇴할 수 없습니다", this.organization.getSubDomain(), memberId));
         }
+    }
+
+    boolean isSameMember(Long memberId) {
+        return this.memberId.equals(memberId);
     }
 
 }

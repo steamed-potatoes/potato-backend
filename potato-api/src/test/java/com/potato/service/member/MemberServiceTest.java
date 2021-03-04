@@ -70,13 +70,6 @@ class MemberServiceTest {
         ).isInstanceOf(ConflictException.class);
     }
 
-    private void assertMemberInfo(Member member, String email, String name, String profileUrl, MemberMajor major) {
-        assertThat(member.getEmail()).isEqualTo(email);
-        assertThat(member.getName()).isEqualTo(name);
-        assertThat(member.getProfileUrl()).isEqualTo(profileUrl);
-        assertThat(member.getMajor()).isEqualTo(major);
-    }
-
     @Test
     void 회원_정보를_불러온다() {
         // given
@@ -102,13 +95,6 @@ class MemberServiceTest {
         ).isInstanceOf(NotFoundException.class);
     }
 
-    private void assertThatMemberInfoResponse(MemberInfoResponse response, String email, String name, String profileUrl, MemberMajor major) {
-        assertThat(response.getEmail()).isEqualTo(email);
-        assertThat(response.getName()).isEqualTo(name);
-        assertThat(response.getProfileUrl()).isEqualTo(profileUrl);
-        assertThat(response.getMajor()).isEqualTo(major);
-    }
-
     @Test
     void 회원정보를_수정한다() {
         // given
@@ -131,13 +117,21 @@ class MemberServiceTest {
         // then
         List<Member> memberList = memberRepository.findAll();
         assertThat(memberList).hasSize(1);
-        assertUpdateMemberInfo(memberList.get(0), name, profileUrl, major);
+        assertMemberInfo(memberList.get(0), member.getEmail(), name, profileUrl, major);
     }
 
-    private void assertUpdateMemberInfo(Member member, String name, String profileUrl, MemberMajor major) {
+    private void assertMemberInfo(Member member, String email, String name, String profileUrl, MemberMajor major) {
+        assertThat(member.getEmail()).isEqualTo(email);
         assertThat(member.getName()).isEqualTo(name);
         assertThat(member.getProfileUrl()).isEqualTo(profileUrl);
         assertThat(member.getMajor()).isEqualTo(major);
+    }
+
+    private void assertThatMemberInfoResponse(MemberInfoResponse response, String email, String name, String profileUrl, MemberMajor major) {
+        assertThat(response.getEmail()).isEqualTo(email);
+        assertThat(response.getName()).isEqualTo(name);
+        assertThat(response.getProfileUrl()).isEqualTo(profileUrl);
+        assertThat(response.getMajor()).isEqualTo(major.getName());
     }
 
 }

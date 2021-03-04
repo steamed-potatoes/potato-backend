@@ -1,6 +1,7 @@
 package com.potato.service.board;
 
 import com.potato.exception.ConflictException;
+import com.potato.exception.ForbiddenException;
 import com.potato.service.OrganizationMemberSetUpTest;
 import com.potato.domain.board.*;
 import com.potato.exception.NotFoundException;
@@ -193,7 +194,7 @@ class BoardServiceTest extends OrganizationMemberSetUpTest {
     }
 
     @Test
-    void 게시물에_좋아요를_누른다() {
+    void 내가_게시한_게시물에_좋아요를_누른다() {
         // given
         Board board = BoardCreator.create(subDomain, memberId, "비공개 게시물");
         boardRepository.save(board);
@@ -220,6 +221,35 @@ class BoardServiceTest extends OrganizationMemberSetUpTest {
 
         // when & then
         assertThatThrownBy(() -> boardService.addBoardLike(board.getId(), memberId)).isInstanceOf(ConflictException.class);
+    }
+
+    @Test
+    void 내가_속하지_않은_조직의_공개된_게시물을_좋아요_누를수_있다() {
+        // given
+        Board board = BoardCreator.create(subDomain, memberId, "비공개 게시물");
+        boardRepository.save(board);
+
+        // when
+        boardService.addBoardLike(board.getId(), 100L);
+
+        // then
+        List<Board> boardList = boardRepository.findAll();
+        assertThat(boardList).hasSize(1);
+        assertThat(boardList.get(0).getLikesCount()).isEqualTo(1);
+
+        List<BoardLike> boardLikeList = boardLikeRepository.findAll();
+        assertThat(boardLikeList).hasSize(1);
+        assertThat(boardLikeList.get(0).getMemberId()).isEqualTo(100L);
+    }
+
+    @Test
+    void 내가_속하지_않은_조직의_비공개_게시물을_좋아요_누를수_없다() {
+        // given
+        Board board = BoardCreator.createPrivate(subDomain, memberId, "비공개 게시물");
+        boardRepository.save(board);
+
+        // when & then
+        assertThatThrownBy(() -> boardService.addBoardLike(board.getId(), 100L)).isInstanceOf(ForbiddenException.class);
     }
 
     @Test
