@@ -32,25 +32,28 @@ public class BoardComment extends BaseTimeEntity {
 
     private String content;
 
+    private int depth;
+
     private boolean isDeleted;
 
-    private BoardComment(BoardComment parentComment, Long boardId, Long memberId, String content) {
+    private BoardComment(BoardComment parentComment, Long boardId, Long memberId, String content, int depth) {
         this.parentComment = parentComment;
         this.boardId = boardId;
         this.memberId = memberId;
         this.content = content;
+        this.depth = depth;
         this.isDeleted = false;
     }
 
     public static BoardComment newRootComment(Long boardId, Long memberId, String content) {
-        return new BoardComment(null, boardId, memberId, content);
+        return new BoardComment(null, boardId, memberId, content, 0);
     }
 
     public void addChildComment(Long memberId, String content) {
         if (!this.isRootComment()) {
             throw new ValidationException(String.format("댓글은 2 depth 까지 가능합니다. memberId: (%s) content: (%s)", memberId, content));
         }
-        this.childComments.add(new BoardComment(this, this.boardId, memberId, content));
+        this.childComments.add(new BoardComment(this, this.boardId, memberId, content, this.depth + 1));
     }
 
     public boolean isRootComment() {

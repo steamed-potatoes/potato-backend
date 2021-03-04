@@ -58,7 +58,7 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
         // then
         List<BoardComment> boardCommentList = boardCommentRepository.findAll();
         assertThat(boardCommentList).hasSize(1);
-        assertBoardComment(boardCommentList.get(0), board.getId(), memberId, content);
+        assertBoardComment(boardCommentList.get(0), board.getId(), memberId, content, 0);
         assertThat(boardCommentList.get(0).getParentComment()).isNull();
     }
 
@@ -77,10 +77,10 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
         // then
         List<BoardComment> boardCommentList = boardCommentRepository.findAll();
         assertThat(boardCommentList).hasSize(2);
-        assertBoardComment(boardCommentList.get(0), board.getId(), memberId, "부모 댓글");
+        assertBoardComment(boardCommentList.get(0), board.getId(), memberId, "부모 댓글", 0);
         assertThat(boardCommentList.get(0).getParentComment()).isNull();
 
-        assertBoardComment(boardCommentList.get(1), board.getId(), memberId, content);
+        assertBoardComment(boardCommentList.get(1), board.getId(), memberId, content, 1);
         assertThat(boardCommentList.get(1).getParentComment().getId()).isEqualTo(boardCommentList.get(0).getId());
     }
 
@@ -114,10 +114,11 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
         assertThat(response.getContent()).isEqualTo(content);
     }
 
-    private void assertBoardComment(BoardComment boardComment, Long boardId, Long memberId, String content) {
+    private void assertBoardComment(BoardComment boardComment, Long boardId, Long memberId, String content, int depth) {
         assertThat(boardComment.getBoardId()).isEqualTo(boardId);
         assertThat(boardComment.getMemberId()).isEqualTo(memberId);
         assertThat(boardComment.getContent()).isEqualTo(content);
+        assertThat(boardComment.getDepth()).isEqualTo(depth);
     }
 
 }
