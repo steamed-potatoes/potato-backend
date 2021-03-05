@@ -1,7 +1,6 @@
-package com.potato.domain.follow;
+package com.potato.domain.organization;
 
 import com.potato.domain.BaseTimeEntity;
-import com.potato.domain.organization.Organization;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,7 +9,7 @@ import javax.persistence.*;
 @Getter
 @Entity
 @NoArgsConstructor
-public class Follow extends BaseTimeEntity {
+public class OrganizationFollower extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,13 +22,13 @@ public class Follow extends BaseTimeEntity {
     @JoinColumn(name = "organization_id", nullable = false)
     private Organization organization;
 
-    private Follow(Organization organization, Long memberId) {
+    private OrganizationFollower(Organization organization, Long memberId) {
         this.memberId = memberId;
         this.organization = organization;
     }
 
-    public static Follow newFollow(Organization organization, Long memberId) {
-        return new Follow(organization, memberId);
+    public static OrganizationFollower newFollow(Organization organization, Long memberId) {
+        return new OrganizationFollower(organization, memberId);
     }
 
 }

@@ -1,6 +1,6 @@
 package com.potato.service.organization;
 
-import com.potato.domain.follow.Follow;
+import com.potato.domain.organization.OrganizationFollower;
 import com.potato.domain.organization.*;
 import com.potato.exception.ConflictException;
 import com.potato.exception.ForbiddenException;
@@ -332,9 +332,7 @@ class OrganizationServiceTest extends MemberSetupTest {
         //given
         String subDomain = "감자";
 
-        FollowRequest request = FollowRequest.testBuilder()
-            .subDomain(subDomain)
-            .build();
+        FollowRequest request = FollowRequest.testInstance(subDomain);
 
         Organization organization = OrganizationCreator.create(subDomain);
         organization.addAdmin(memberId);
@@ -344,8 +342,23 @@ class OrganizationServiceTest extends MemberSetupTest {
         organizationService.followOrganization(request, memberId);
 
         //then
-        List<Follow> followList = followRepository.findAll();
-        assertThat(followList).hasSize(1);
+        List<OrganizationFollower> organizationFollowerList = followRepository.findAll();
+        assertThat(organizationFollowerList).hasSize(1);
+        assertThat(organizationFollowerList.get(0).getMemberId()).isEqualTo(memberId);
+        assertThat(organizationFollowerList.get(0).getOrganization().getId()).isEqualTo(organization.getId());
+    }
+
+    @Test
+    void 없는_조직을_팔로우한다() {
+        //given
+        String subDomain = "감자";
+
+        FollowRequest request = FollowRequest.testInstance(subDomain);
+
+        //when & then
+        assertThatThrownBy(
+            () -> organizationService.followOrganization(request, memberId)
+        ).isInstanceOf(NotFoundException.class);
     }
 
 }

@@ -15,9 +15,12 @@ public class FollowRequest {
     @NotBlank
     private String subDomain;
 
-    @Builder(builderMethodName = "testBuilder")
     public FollowRequest(@NotBlank String subDomain) {
         this.subDomain = subDomain;
+    }
+
+    public static FollowRequest testInstance(String subDomain) {
+        return new FollowRequest(subDomain);
     }
 
 }

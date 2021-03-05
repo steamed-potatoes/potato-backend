@@ -1,15 +1,12 @@
 package com.potato.domain.member;
 
 import com.potato.domain.BaseTimeEntity;
-import com.potato.domain.follow.Follow;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
