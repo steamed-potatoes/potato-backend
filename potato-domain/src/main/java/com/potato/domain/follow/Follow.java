@@ -1,12 +1,13 @@
 package com.potato.domain.follow;
 
 import com.potato.domain.BaseTimeEntity;
-import com.potato.domain.member.Member;
 import com.potato.domain.organization.Organization;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+@Getter
 @Entity
 @NoArgsConstructor
 public class Follow extends BaseTimeEntity {
