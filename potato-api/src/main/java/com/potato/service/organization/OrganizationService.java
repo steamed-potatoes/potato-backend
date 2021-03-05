@@ -47,4 +47,10 @@ public class OrganizationService {
         organization.addFollow(memberId);
     }
 
+    @Transactional
+    public void followRemoveOrganization(String subDomain, Long memberId) {
+        Organization organization = OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, subDomain);
+        organization.removeFollow(memberId, organization);
+    }
+
 }

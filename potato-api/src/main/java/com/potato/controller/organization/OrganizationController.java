@@ -60,4 +60,12 @@ public class OrganizationController {
         return ApiResponse.OK;
     }
 
+    @Operation(summary = "특정 조직을 팔로우 취소하는 API", description = "Bearer 토큰이 필요합니다.")
+    @Auth
+    @DeleteMapping("/api/v1/organization/follow/{subDomain}")
+    public ApiResponse<String> followRemoveOrganization(@PathVariable String subDomain, @MemberId Long memberId) {
+        organizationService.followRemoveOrganization(subDomain, memberId);
+        return ApiResponse.OK;
+    }
+
 }

@@ -14,11 +14,15 @@ public class MemberSetupTest {
     private MemberRepository memberRepository;
 
     protected Long memberId;
+    protected Long userMemberId;
 
     @BeforeEach
     void setUp() {
         Member member = memberRepository.save(MemberCreator.create("will.seungho@gmail.com"));
         memberId = member.getId();
+
+        Member userMember = memberRepository.save(MemberCreator.create("tnswh2023@naver.com"));
+        userMemberId = userMember.getId();
     }
 
     protected void cleanup() {

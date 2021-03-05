@@ -261,4 +261,50 @@ class OrganizationServiceTest extends MemberSetupTest {
         ).isInstanceOf(NotFoundException.class);
     }
 
+    @Test
+    void 특정_그룹_팔로우를_취소한다() {
+        //given
+        String subDomain = "감자";
+
+        Organization organization = OrganizationCreator.create(subDomain);
+        organization.addAdmin(memberId);
+        organization.addFollow(userMemberId);
+        organizationRepository.save(organization);
+
+        //when
+        organizationService.followRemoveOrganization(subDomain, userMemberId);
+
+        //then
+        List<OrganizationFollower> followerList = organizationFollowerRepository.findAll();
+        List<Organization> organizationList = organizationRepository.findAll();
+        assertThat(followerList).hasSize(0);
+        assertThat(organizationList.get(0).getFollowersCount()).isEqualTo(0);
+    }
+
+    @Test
+    void 팔로우_취소하려는데_팔로우가_안되어있는_유저일_경우() {
+        //given
+        String subDomain = "감자";
+
+        Organization organization = OrganizationCreator.create(subDomain);
+        organization.addAdmin(memberId);
+        organizationRepository.save(organization);
+
+        //when & then
+        assertThatThrownBy(
+            () -> organizationService.followRemoveOrganization(subDomain, userMemberId)
+        ).isInstanceOf(NotFoundException.class).hasMessage(String.format("해당하는 조직(%s)에 팔로우한 멤버(%s)가 없습니다.", subDomain, userMemberId));
+    }
+
+    @Test
+    void 팔로우_취소하려는_조직이_존재하지_않을_경우() {
+        //given
+        String subDomain = "감자";
+
+        //when & then
+        assertThatThrownBy(
+            () -> organizationService.followRemoveOrganization(subDomain, userMemberId)
+        ).isInstanceOf(NotFoundException.class);
+    }
+
 }
