@@ -30,7 +30,7 @@ public class OrganizationController {
 
     @Operation(summary = "특정 그룹에 가입신청을 하는 API", description = "Bearer 토큰이 필요합니다")
     @Auth
-    @PostMapping("/api/v1/organization/join/apply{subDomain}")
+    @PostMapping("/api/v1/organization/join/apply/{subDomain}")
     public ApiResponse<String> applyJoiningOrganization(@PathVariable String subDomain, @MemberId Long memberId) {
         organizationService.applyJoiningOrganization(subDomain, memberId);
         return ApiResponse.OK;
@@ -54,7 +54,7 @@ public class OrganizationController {
 
     @Operation(summary = "특정 조직을 팔로우하는 API", description = "Bearer 토큰이 필요합니다.")
     @Auth
-    @PostMapping("/api/v1/member/follow")
+    @PostMapping("/api/v1/organization/follow")
     public ApiResponse<String> followOrganization(@Valid @RequestBody FollowRequest request, @MemberId Long memberId) {
         organizationService.followOrganization(request, memberId);
         return ApiResponse.OK;
