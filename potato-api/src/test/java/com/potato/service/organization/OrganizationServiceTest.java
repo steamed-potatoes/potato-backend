@@ -328,7 +328,7 @@ class OrganizationServiceTest extends MemberSetupTest {
     }
 
     @Test
-    void 그룹을_팔로우한다() {
+    void 특정_그룹을_팔로우하면_정상적으로_처리된다() {
         //given
         String subDomain = "감자";
 
@@ -349,11 +349,9 @@ class OrganizationServiceTest extends MemberSetupTest {
     }
 
     @Test
-    void 없는_조직을_팔로우한다() {
+    void 없는_조직을_팔로우하면_에러가_발생한다() {
         //given
-        String subDomain = "감자";
-
-        FollowRequest request = FollowRequest.testInstance(subDomain);
+        FollowRequest request = FollowRequest.testInstance("감자");
 
         //when & then
         assertThatThrownBy(
