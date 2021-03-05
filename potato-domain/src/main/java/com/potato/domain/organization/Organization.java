@@ -171,4 +171,17 @@ public class Organization extends BaseTimeEntity {
         this.followersCount++;
     }
 
+    public void unFollow(Long memberId, Organization organization) {
+        OrganizationFollower followMember = this.findFollowMember(memberId, organization);
+        organizationFollowerList.remove(followMember);
+        followersCount--;
+    }
+
+    public OrganizationFollower findFollowMember(Long memberId, Organization organization) {
+        return this.organizationFollowerList.stream()
+            .filter(mapper -> mapper.isSameMember(memberId, organization))
+            .findFirst()
+            .orElseThrow(() -> new NotFoundException(String.format("해당하는 조직(%s)에 팔로우한 멤버(%s)가 없습니다.", subDomain, memberId)));
+    }
+
 }

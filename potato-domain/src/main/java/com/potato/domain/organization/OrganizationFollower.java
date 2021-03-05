@@ -31,4 +31,8 @@ public class OrganizationFollower extends BaseTimeEntity {
         return new OrganizationFollower(organization, memberId);
     }
 
+    public boolean isSameMember(Long memberId, Organization organization) {
+        return this.memberId.equals(memberId) && this.organization.equals(organization);
+    }
+
 }

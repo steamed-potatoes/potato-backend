@@ -5,7 +5,6 @@ import com.potato.config.interceptor.auth.Auth;
 import com.potato.controller.ApiResponse;
 import com.potato.service.organization.OrganizationService;
 import com.potato.service.organization.dto.request.CreateOrganizationRequest;
-import com.potato.service.organization.dto.request.FollowRequest;
 import com.potato.service.organization.dto.response.OrganizationInfoResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -54,9 +53,17 @@ public class OrganizationController {
 
     @Operation(summary = "특정 조직을 팔로우하는 API", description = "Bearer 토큰이 필요합니다.")
     @Auth
-    @PostMapping("/api/v1/organization/follow")
-    public ApiResponse<String> followOrganization(@Valid @RequestBody FollowRequest request, @MemberId Long memberId) {
-        organizationService.followOrganization(request, memberId);
+    @PostMapping("/api/v1/organization/follow/{subDomain}")
+    public ApiResponse<String> followOrganization(@PathVariable String subDomain, @MemberId Long memberId) {
+        organizationService.followOrganization(subDomain, memberId);
+        return ApiResponse.OK;
+    }
+
+    @Operation(summary = "특정 조직을 팔로우 취소하는 API", description = "Bearer 토큰이 필요합니다.")
+    @Auth
+    @DeleteMapping("/api/v1/organization/follow/{subDomain}")
+    public ApiResponse<String> unFollowOrganization(@PathVariable String subDomain, @MemberId Long memberId) {
+        organizationService.unFollowOrganization(subDomain, memberId);
         return ApiResponse.OK;
     }
 
