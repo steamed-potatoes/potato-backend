@@ -171,7 +171,7 @@ public class Organization extends BaseTimeEntity {
         this.followersCount++;
     }
 
-    public void removeFollow(Long memberId, Organization organization) {
+    public void unFollow(Long memberId, Organization organization) {
         OrganizationFollower followMember = this.findFollowMember(memberId, organization);
         organizationFollowerList.remove(followMember);
         followersCount--;

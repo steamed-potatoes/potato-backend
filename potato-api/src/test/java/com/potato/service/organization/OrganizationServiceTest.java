@@ -9,7 +9,6 @@ import com.potato.exception.ForbiddenException;
 import com.potato.exception.NotFoundException;
 import com.potato.service.MemberSetupTest;
 import com.potato.service.organization.dto.request.CreateOrganizationRequest;
-import com.potato.service.organization.dto.request.FollowRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -233,14 +232,12 @@ class OrganizationServiceTest extends MemberSetupTest {
     @Test
     void 특정_그룹을_팔로우하면_정상적으로_처리된다() {
         //given
-        FollowRequest request = FollowRequest.testInstance(subDomain);
-
         Organization organization = OrganizationCreator.create(subDomain);
         organization.addAdmin(memberId);
         organizationRepository.save(organization);
 
         //when
-        organizationService.followOrganization(request, memberId);
+        organizationService.followOrganization(subDomain, memberId);
 
         //then
         List<OrganizationFollower> organizationFollowerList = organizationFollowerRepository.findAll();
@@ -252,11 +249,9 @@ class OrganizationServiceTest extends MemberSetupTest {
     @Test
     void 없는_조직을_팔로우하면_에러가_발생한다() {
         //given
-        FollowRequest request = FollowRequest.testInstance("업는 그룹");
-
         //when & then
         assertThatThrownBy(
-            () -> organizationService.followOrganization(request, memberId)
+            () -> organizationService.followOrganization(subDomain, memberId)
         ).isInstanceOf(NotFoundException.class);
     }
 
@@ -269,7 +264,7 @@ class OrganizationServiceTest extends MemberSetupTest {
         organizationRepository.save(organization);
 
         //when
-        organizationService.followRemoveOrganization(subDomain, memberId);
+        organizationService.unFollowOrganization(subDomain, memberId);
 
         //then
         List<OrganizationFollower> followerList = organizationFollowerRepository.findAll();
@@ -288,7 +283,7 @@ class OrganizationServiceTest extends MemberSetupTest {
 
         //when & then
         assertThatThrownBy(
-            () -> organizationService.followRemoveOrganization(subDomain, targetMemberId)
+            () -> organizationService.unFollowOrganization(subDomain, targetMemberId)
         ).isInstanceOf(NotFoundException.class).hasMessage(String.format("해당하는 조직(%s)에 팔로우한 멤버(%s)가 없습니다.", subDomain, targetMemberId));
     }
 
@@ -296,7 +291,7 @@ class OrganizationServiceTest extends MemberSetupTest {
     void 팔로우_취소하려는_조직이_존재하지_않을_경우() {
         //when & then
         assertThatThrownBy(
-            () -> organizationService.followRemoveOrganization(subDomain, memberId)
+            () -> organizationService.unFollowOrganization(subDomain, memberId)
         ).isInstanceOf(NotFoundException.class);
     }
 

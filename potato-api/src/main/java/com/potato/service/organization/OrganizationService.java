@@ -3,7 +3,6 @@ package com.potato.service.organization;
 import com.potato.domain.organization.Organization;
 import com.potato.domain.organization.OrganizationRepository;
 import com.potato.service.organization.dto.request.CreateOrganizationRequest;
-import com.potato.service.organization.dto.request.FollowRequest;
 import com.potato.service.organization.dto.response.OrganizationInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -42,15 +41,15 @@ public class OrganizationService {
     }
 
     @Transactional
-    public void followOrganization(FollowRequest request, Long memberId) {
-        Organization organization = OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, request.getSubDomain());
+    public void followOrganization(String subDomain, Long memberId) {
+        Organization organization = OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, subDomain);
         organization.addFollow(memberId);
     }
 
     @Transactional
-    public void followRemoveOrganization(String subDomain, Long memberId) {
+    public void unFollowOrganization(String subDomain, Long memberId) {
         Organization organization = OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, subDomain);
-        organization.removeFollow(memberId, organization);
+        organization.unFollow(memberId, organization);
     }
 
 }
