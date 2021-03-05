@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+import static com.potato.config.interceptor.auth.Auth.Role.ORGANIZATION_MEMBER;
+
 @RequiredArgsConstructor
 @RestController
 public class OrganizationController {
@@ -64,7 +66,7 @@ public class OrganizationController {
     }
 
     @Operation(summary = "특정 그룹에서 탈퇴하는 API", description = "Bearer 토큰이 필요합니다")
-    @Auth
+    @Auth(role = ORGANIZATION_MEMBER)
     @DeleteMapping("/api/v1/organization/leave/{subDomain}")
     public ApiResponse<String> leaveFromOrganization(@PathVariable String subDomain, @MemberId Long memberId) {
         organizationService.leaveFromOrganization(subDomain, memberId);
