@@ -38,8 +38,13 @@ public class Organization extends BaseTimeEntity {
 
     private String profileUrl;
 
+    private int followCount;
+
     @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<OrganizationMemberMapper> organizationMemberMapperList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<OrganizationFollower> organizationFollowerList = new ArrayList<>();
 
     @Builder
     public Organization(String subDomain, String name, String description, OrganizationCategory category, String profileUrl) {
@@ -49,6 +54,7 @@ public class Organization extends BaseTimeEntity {
         this.category = category;
         this.profileUrl = profileUrl;
         this.membersCount = 0;
+        this.followCount = 0;
     }
 
     public static Organization defaultInstance(String subDomain, String name, String description, String profileUrl) {
@@ -158,6 +164,12 @@ public class Organization extends BaseTimeEntity {
 
     public OrganizationRole getRoleOfMember(Long memberId) {
         return findMember(memberId).getRole();
+    }
+
+    public void addFollow(Long memberId) {
+        OrganizationFollower organizationFollower = OrganizationFollower.newFollow(this, memberId);
+        this.organizationFollowerList.add(organizationFollower);
+        this.followCount++;
     }
 
 }

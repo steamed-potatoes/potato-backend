@@ -38,7 +38,6 @@ final class BoardServiceTestUtils {
         assertThat(deletedBoard.getCategory()).isEqualTo(category);
         assertThat(deletedBoard.getImageUrl()).isEqualTo(imageUrl);
         assertThat(deletedBoard.getVisible()).isEqualTo(visible);
-        assertThat(deletedBoard.getBackUpCreatedDateTime()).isEqualTo(createdDateTime);
     }
 
 }

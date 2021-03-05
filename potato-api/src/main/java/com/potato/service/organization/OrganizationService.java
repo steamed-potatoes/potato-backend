@@ -5,6 +5,7 @@ import com.potato.domain.member.MemberRepository;
 import com.potato.domain.organization.Organization;
 import com.potato.domain.organization.OrganizationRepository;
 import com.potato.service.organization.dto.request.CreateOrganizationRequest;
+import com.potato.service.organization.dto.request.FollowRequest;
 import com.potato.service.organization.dto.response.OrganizationDetailInfoResponse;
 import com.potato.service.organization.dto.response.OrganizationInfoResponse;
 import lombok.RequiredArgsConstructor;
@@ -67,6 +68,12 @@ public class OrganizationService {
     public void leaveFromOrganization(String subDomain, Long memberId) {
         Organization organization = OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, subDomain);
         organization.removeUser(memberId);
+    }
+
+    @Transactional
+    public void followOrganization(FollowRequest request, Long memberId) {
+        Organization organization = OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, request.getSubDomain());
+        organization.addFollow(memberId);
     }
 
 }

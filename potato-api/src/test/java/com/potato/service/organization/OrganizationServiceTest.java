@@ -1,11 +1,13 @@
 package com.potato.service.organization;
 
+import com.potato.domain.organization.OrganizationFollower;
 import com.potato.domain.organization.*;
 import com.potato.exception.ConflictException;
 import com.potato.exception.ForbiddenException;
 import com.potato.exception.NotFoundException;
 import com.potato.service.MemberSetupTest;
 import com.potato.service.organization.dto.request.CreateOrganizationRequest;
+import com.potato.service.organization.dto.request.FollowRequest;
 import com.potato.service.organization.dto.response.OrganizationDetailInfoResponse;
 import com.potato.service.organization.dto.response.OrganizationInfoResponse;
 import org.junit.jupiter.api.AfterEach;
@@ -32,10 +34,14 @@ class OrganizationServiceTest extends MemberSetupTest {
     @Autowired
     private OrganizationMemberMapperRepository organizationMemberMapperRepository;
 
+    @Autowired
+    private FollowRepository followRepository;
+
     @AfterEach
     void cleanUp() {
         super.cleanup();
         organizationMemberMapperRepository.deleteAllInBatch();
+        followRepository.deleteAllInBatch();
         organizationRepository.deleteAllInBatch();
     }
 
@@ -319,6 +325,40 @@ class OrganizationServiceTest extends MemberSetupTest {
 
         // when & then
         assertThatThrownBy(() -> organizationService.leaveFromOrganization(subDomain, memberId)).isInstanceOf(ForbiddenException.class);
+    }
+
+    @Test
+    void 그룹을_팔로우한다() {
+        //given
+        String subDomain = "감자";
+
+        FollowRequest request = FollowRequest.testInstance(subDomain);
+
+        Organization organization = OrganizationCreator.create(subDomain);
+        organization.addAdmin(memberId);
+        organizationRepository.save(organization);
+
+        //when
+        organizationService.followOrganization(request, memberId);
+
+        //then
+        List<OrganizationFollower> organizationFollowerList = followRepository.findAll();
+        assertThat(organizationFollowerList).hasSize(1);
+        assertThat(organizationFollowerList.get(0).getMemberId()).isEqualTo(memberId);
+        assertThat(organizationFollowerList.get(0).getOrganization().getId()).isEqualTo(organization.getId());
+    }
+
+    @Test
+    void 없는_조직을_팔로우한다() {
+        //given
+        String subDomain = "감자";
+
+        FollowRequest request = FollowRequest.testInstance(subDomain);
+
+        //when & then
+        assertThatThrownBy(
+            () -> organizationService.followOrganization(request, memberId)
+        ).isInstanceOf(NotFoundException.class);
     }
 
 }
