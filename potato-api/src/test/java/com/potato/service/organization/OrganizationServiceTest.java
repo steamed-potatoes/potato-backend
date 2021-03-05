@@ -35,13 +35,13 @@ class OrganizationServiceTest extends MemberSetupTest {
     private OrganizationMemberMapperRepository organizationMemberMapperRepository;
 
     @Autowired
-    private FollowRepository followRepository;
+    private OrganizationFollowerRepository organizationFollowerRepository;
 
     @AfterEach
     void cleanUp() {
         super.cleanup();
         organizationMemberMapperRepository.deleteAllInBatch();
-        followRepository.deleteAllInBatch();
+        organizationFollowerRepository.deleteAllInBatch();
         organizationRepository.deleteAllInBatch();
     }
 
@@ -342,7 +342,7 @@ class OrganizationServiceTest extends MemberSetupTest {
         organizationService.followOrganization(request, memberId);
 
         //then
-        List<OrganizationFollower> organizationFollowerList = followRepository.findAll();
+        List<OrganizationFollower> organizationFollowerList = organizationFollowerRepository.findAll();
         assertThat(organizationFollowerList).hasSize(1);
         assertThat(organizationFollowerList.get(0).getMemberId()).isEqualTo(memberId);
         assertThat(organizationFollowerList.get(0).getOrganization().getId()).isEqualTo(organization.getId());

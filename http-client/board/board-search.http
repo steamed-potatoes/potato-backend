@@ -1,0 +1,6 @@
+### 그룹 리스트를 스크롤 페이지네이션 기반으로 불러오는 API
+GET {{host}}/api/v1/board/list?lastBoardId=0&size=5
+
+
+### 그룹 게시물을 조회하는 API
+GET {{host}}/api/v1/board/1

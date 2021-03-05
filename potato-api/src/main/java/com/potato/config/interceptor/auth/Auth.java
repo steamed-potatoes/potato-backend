@@ -13,6 +13,7 @@ public @interface Auth {
 
     enum Role {
         USER,
+        ORGANIZATION_MEMBER,
         ORGANIZATION_ADMIN
     }
 

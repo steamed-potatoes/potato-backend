@@ -9,13 +9,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import static com.potato.config.interceptor.auth.Auth.Role.ORGANIZATION_ADMIN;
+import static com.potato.config.interceptor.auth.Auth.Role.ORGANIZATION_MEMBER;
 
 @RequiredArgsConstructor
 @Component
 public class AuthInterceptor extends HandlerInterceptorAdapter {
 
     private final LoginUserComponent loginUserComponent;
-    private final OrganizationAdminComponent organizationAdminComponent;
+    private final OrganizationComponent organizationComponent;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
@@ -31,8 +32,14 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
         Long memberId = loginUserComponent.getMemberId(request);
         request.setAttribute("memberId", memberId);
 
+        // 그룹의 관리자인지 확인
         if (auth.role().compareTo(ORGANIZATION_ADMIN) == 0) {
-            organizationAdminComponent.validateOrganizationAdmin(request, memberId);
+            organizationComponent.validateOrganizationAdmin(request, memberId);
+        }
+
+        // 그룹에 속해있는 멤버인지 확인 (관리자 or 일반 멤버)
+        if (auth.role().compareTo(ORGANIZATION_MEMBER) == 0) {
+            organizationComponent.validateOrganizationMember(request, memberId);
         }
         return true;
     }

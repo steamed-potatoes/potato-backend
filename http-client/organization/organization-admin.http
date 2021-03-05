@@ -26,3 +26,7 @@ Authorization: Bearer {{AUTHORIZATION}}
     "targetMemberId": 2
 }
 
+
+### 관리자가 일반 멤버를 강퇴시키는 API
+DELETE {{host}}/api/v1/organization/admin/kick/potato?targetMemberId=2
+Authorization: Bearer {{AUTHORIZATION}}
