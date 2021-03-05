@@ -45,13 +45,12 @@ class OrganizationServiceTest extends MemberSetupTest {
     }
 
     private Long targetMemberId;
-    private String subDomain;
+    private String subDomain = "potato";
 
     @BeforeEach
     void setUpMember() {
         Member targetMember = memberRepository.save(MemberCreator.create("tnswh2023@naver.com"));
         targetMemberId = targetMember.getId();
-        subDomain = "potato";
     }
 
     @Test

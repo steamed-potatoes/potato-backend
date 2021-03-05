@@ -1,5 +1,7 @@
 package com.potato.service.organization;
 
+import com.potato.domain.member.Member;
+import com.potato.domain.member.MemberCreator;
 import com.potato.domain.organization.*;
 import com.potato.exception.ForbiddenException;
 import com.potato.exception.NotFoundException;
@@ -7,6 +9,7 @@ import com.potato.service.MemberSetupTest;
 import com.potato.service.organization.dto.request.ManageOrganizationMemberRequest;
 import com.potato.service.organization.dto.request.UpdateOrganizationInfoRequest;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,14 +36,21 @@ class OrganizationAdminServiceTest extends MemberSetupTest {
     @AfterEach
     void cleanUp() {
         super.cleanup();
-        organizationMemberMapperRepository.deleteAllInBatch();
-        organizationRepository.deleteAllInBatch();
+        organizationRepository.deleteAll();
+    }
+
+    private String subDomain = "potato";
+    private Long targetMemberId;
+
+    @BeforeEach
+    void setUpMember() {
+        Member targetMember = memberRepository.save(MemberCreator.create("target@gmail.com"));
+        targetMemberId = targetMember.getId();
     }
 
     @Test
-    void 조직의_정보를_수정다() {
+    void 조직의_정보를_수정한다() {
         // given
-        String subDomain = "potato";
         String name = "감자팀";
         String description = "감자 화이팅";
         String profileUrl = "http://localhost.com";
@@ -67,9 +77,6 @@ class OrganizationAdminServiceTest extends MemberSetupTest {
     @Test
     void 조직_신청을_수락한다() {
         // given
-        String subDomain = "potato";
-        Long targetMemberId = 100L;
-
         Organization organization = OrganizationCreator.create(subDomain);
         organization.addAdmin(memberId);
         organization.addPending(targetMemberId);
@@ -96,9 +103,6 @@ class OrganizationAdminServiceTest extends MemberSetupTest {
     @Test
     void 조직_신청_수락시_조직에_신청을_하지_않은_멤버일_경우_에러가_발생한다() {
         //given
-        String subDomain = "potato";
-        Long targetMemberId = 20L;
-
         Organization organization = OrganizationCreator.create(subDomain);
         organization.addAdmin(memberId);
         organizationRepository.save(organization);
@@ -116,9 +120,6 @@ class OrganizationAdminServiceTest extends MemberSetupTest {
     @Test
     void 조직_신청_수락시_이미_조직에_유저로_참여하고_있는경우_에러가_발생한다() {
         //given
-        String subDomain = "potato";
-        Long targetMemberId = 20L;
-
         Organization organization = OrganizationCreator.create(subDomain);
         organization.addAdmin(memberId);
         organization.addUser(targetMemberId);
@@ -137,8 +138,6 @@ class OrganizationAdminServiceTest extends MemberSetupTest {
     @Test
     void 조직_신청_수락시_이미_조직에_관리로_참여하고_있는경우_에러가_발생한다() {
         //given
-        String subDomain = "potato";
-
         Organization organization = OrganizationCreator.create(subDomain);
         organization.addAdmin(memberId);
         organizationRepository.save(organization);
@@ -156,9 +155,6 @@ class OrganizationAdminServiceTest extends MemberSetupTest {
     @Test
     void 조직_신청한_유저를_관리자가_거절한다() {
         //given
-        String subDomain = "potato";
-        Long targetMemberId = 20L;
-
         Organization organization = OrganizationCreator.create(subDomain);
         organization.addAdmin(memberId);
         organization.addPending(targetMemberId);
@@ -184,9 +180,6 @@ class OrganizationAdminServiceTest extends MemberSetupTest {
     @Test
     void 조직_신청_거절시_조직에_신청을_하지_않은_멤버일_경우_에러가_발생한다() {
         //given
-        String subDomain = "potato";
-        Long targetMemberId = 20L;
-
         Organization organization = OrganizationCreator.create(subDomain);
         organization.addAdmin(memberId);
         organizationRepository.save(organization);
@@ -204,8 +197,6 @@ class OrganizationAdminServiceTest extends MemberSetupTest {
     @Test
     void 그룹의_관리자가_일반_유저를_강퇴시킨다() {
         //given
-        String subDomain = "potato";
-        Long targetMemberId = 20L;
         Organization organization = OrganizationCreator.create(subDomain);
         organization.addAdmin(memberId);
         organization.addUser(targetMemberId);
@@ -227,8 +218,6 @@ class OrganizationAdminServiceTest extends MemberSetupTest {
     @Test
     void 그룹의_관리자가_관리자를_강퇴시킬_수없다() {
         //given
-        String subDomain = "potato";
-        Long targetMemberId = 20L;
         Organization organization = OrganizationCreator.create(subDomain);
         organization.addAdmin(memberId);
         organization.addAdmin(targetMemberId);

@@ -32,10 +32,11 @@ class OrganizationRetrieveServiceTest extends MemberSetupTest {
         organizationRepository.deleteAll();
     }
 
+    private String subDomain = "potato";
+
     @Test
     void 서브도메인을_통해_특정_조직의_간단한_정보를_불러온다() {
         // given
-        String subDomain = "potato";
         String name = "찐 감자";
         String description = "개발 동아리 입니다";
         String profileUrl = "http://image.com";
@@ -53,20 +54,20 @@ class OrganizationRetrieveServiceTest extends MemberSetupTest {
     }
 
     @Test
-    void 특정_조직을_조회시_해당하는_서브도메인이_없는경우() {
+    void 특정_그룹을_조회시_해당하는_그룹이_없는경우() {
         // when & then
         assertThatThrownBy(
-            () -> organizationRetrieveService.getDetailOrganizationInfo("empty")
+            () -> organizationRetrieveService.getDetailOrganizationInfo(subDomain)
         ).isInstanceOf(NotFoundException.class);
     }
 
     @Test
     void 조직_리스트를_불러온다() {
         // given
-        Organization organization1 = OrganizationCreator.create("고예림");
+        Organization organization1 = OrganizationCreator.create(subDomain);
         organization1.addAdmin(memberId);
 
-        Organization organization2 = OrganizationCreator.create("강승호");
+        Organization organization2 = OrganizationCreator.create("subDomain2");
         organization2.addAdmin(memberId);
 
         organizationRepository.saveAll(Arrays.asList(organization1, organization2));
@@ -76,8 +77,8 @@ class OrganizationRetrieveServiceTest extends MemberSetupTest {
 
         // then
         assertThat(responses).hasSize(2);
-        assertThat(responses.get(0).getSubDomain()).isEqualTo("고예림");
-        assertThat(responses.get(1).getSubDomain()).isEqualTo("강승호");
+        assertThat(responses.get(0).getSubDomain()).isEqualTo(organization1.getSubDomain());
+        assertThat(responses.get(1).getSubDomain()).isEqualTo(organization2.getSubDomain());
     }
 
     @Test
@@ -92,8 +93,7 @@ class OrganizationRetrieveServiceTest extends MemberSetupTest {
     @Test
     void 내가_속한_조직의_리스트를_모두_불러온다() {
         // given
-        String subDomain1 = "subDomain1";
-        Organization organization1 = OrganizationCreator.create(subDomain1);
+        Organization organization1 = OrganizationCreator.create(subDomain);
         organization1.addAdmin(memberId);
 
         String subDomain2 = "subDomain2";
@@ -107,14 +107,13 @@ class OrganizationRetrieveServiceTest extends MemberSetupTest {
 
         // then
         assertThat(organizationInfoResponses).hasSize(2);
-        assertThat(organizationInfoResponses.get(0).getSubDomain()).isEqualTo(subDomain1);
+        assertThat(organizationInfoResponses.get(0).getSubDomain()).isEqualTo(subDomain);
         assertThat(organizationInfoResponses.get(1).getSubDomain()).isEqualTo(subDomain2);
     }
 
     @Test
     void 내가_속한_조직의_리스트를_모두_불러올때_가입신청된_조직은_포함되지_않는다() {
         // given
-        String subDomain = "subDomain1";
         Organization organization = OrganizationCreator.create(subDomain);
         organization.addPending(memberId);
 
