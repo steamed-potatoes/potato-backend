@@ -17,3 +17,20 @@ client.global.set("AUTHORIZATION", response.body["data"])
 GET {{host}}/api/v1/member
 Content-Type: application/json
 Authorization: Bearer {{AUTHORIZATION}}
+
+
+### 내 정보를 수정하는 API
+PUT {{host}}/api/v1/member
+Content-Type: application/json
+Authorization: Bearer {{AUTHORIZATION}}
+
+{
+    "name": "will",
+    "profileUrl": null,
+    "major": "IT_ICT"
+}
+
+
+### 특정 회원의 정보를 불러오는 API
+GET {{host}}/api/v1/member/2
+Authorization: Bearer {{AUTHORIZATION}}

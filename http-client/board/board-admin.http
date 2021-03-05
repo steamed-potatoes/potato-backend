@@ -1,0 +1,25 @@
+### 그룹 게시물을 등록하는 API
+POST {{host}}/api/v1/board/potato
+Content-Type: application/json
+Authorization: Bearer {{AUTHORIZATION}}
+
+{
+  "visible": "PUBLIC",
+  "title": "게시물",
+  "content": "몰라몰",
+  "imageUrl": "string",
+  "category": "RECRUIT"
+}
+
+### 게시물 정보를 수정하는 API
+PUT {{host}}/api/v1/board/potato/1
+Content-Type: application/json
+Authorization: Bearer {{AUTHORIZATION}}
+
+{
+    "visible": "PUBLIC",
+    "title": "변경 후 제목",
+    "content": "변경 후 내용",
+    "imageUrl": "string",
+    "category": "RECRUIT"
+}
