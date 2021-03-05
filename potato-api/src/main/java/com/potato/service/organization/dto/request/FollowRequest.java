@@ -1,8 +1,5 @@
 package com.potato.service.organization.dto.request;
 
-import com.potato.domain.organization.FollowRepository;
-import com.potato.domain.organization.Organization;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
