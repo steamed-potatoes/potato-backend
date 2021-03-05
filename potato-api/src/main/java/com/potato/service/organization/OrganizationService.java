@@ -1,9 +1,7 @@
 package com.potato.service.organization;
 
-import com.potato.domain.follow.Follow;
 import com.potato.domain.member.Member;
 import com.potato.domain.member.MemberRepository;
-import com.potato.domain.organization.FollowRepository;
 import com.potato.domain.organization.Organization;
 import com.potato.domain.organization.OrganizationRepository;
 import com.potato.service.organization.dto.request.CreateOrganizationRequest;
@@ -23,7 +21,6 @@ public class OrganizationService {
 
     private final OrganizationRepository organizationRepository;
     private final MemberRepository memberRepository;
-    private final FollowRepository followRepository;
 
     @Transactional
     public OrganizationInfoResponse createOrganization(CreateOrganizationRequest request, Long memberId) {
@@ -77,8 +74,6 @@ public class OrganizationService {
     public void followOrganization(FollowRequest request, Long memberId) {
         Organization organization = OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, request.getSubDomain());
         organization.addFollow(memberId);
-        organizationRepository.save(organization);
-//        followRepository.save(follow);
     }
 
 }

@@ -35,9 +35,6 @@ public class Member extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private MemberProvider provider;
 
-    @OneToMany(mappedBy = "follow")
-    private List<Follow> followList = new ArrayList<>();
-
     @Builder
     public Member(String email, String name, String profileUrl, MemberMajor major, MemberProvider provider) {
         this.email = Email.of(email);

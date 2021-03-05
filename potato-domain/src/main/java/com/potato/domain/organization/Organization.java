@@ -171,7 +171,6 @@ public class Organization extends BaseTimeEntity {
         Follow follow = Follow.newFollow(this, memberId);
         this.followList.add(follow);
         this.followCount++;
-//        return follow;
     }
 
 }

@@ -42,6 +42,7 @@ class OrganizationServiceTest extends MemberSetupTest {
         super.cleanup();
         organizationMemberMapperRepository.deleteAllInBatch();
         organizationRepository.deleteAllInBatch();
+        followRepository.deleteAllInBatch();
     }
 
     @Test
