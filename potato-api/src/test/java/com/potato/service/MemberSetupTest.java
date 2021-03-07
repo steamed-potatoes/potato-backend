@@ -11,7 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class MemberSetupTest {
 
     @Autowired
-    private MemberRepository memberRepository;
+    protected MemberRepository memberRepository;
 
     protected Long memberId;
 

@@ -1,25 +1,18 @@
 package com.potato.service.organization;
 
-import com.potato.domain.member.Member;
-import com.potato.domain.member.MemberRepository;
 import com.potato.domain.organization.Organization;
 import com.potato.domain.organization.OrganizationRepository;
 import com.potato.service.organization.dto.request.CreateOrganizationRequest;
-import com.potato.service.organization.dto.response.OrganizationDetailInfoResponse;
 import com.potato.service.organization.dto.response.OrganizationInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class OrganizationService {
 
     private final OrganizationRepository organizationRepository;
-    private final MemberRepository memberRepository;
 
     @Transactional
     public OrganizationInfoResponse createOrganization(CreateOrganizationRequest request, Long memberId) {
@@ -27,28 +20,6 @@ public class OrganizationService {
         Organization organization = request.toEntity();
         organization.addAdmin(memberId);
         return OrganizationInfoResponse.of(organizationRepository.save(organization));
-    }
-
-    @Transactional(readOnly = true)
-    public OrganizationDetailInfoResponse getDetailOrganizationInfo(String subDomain) {
-        Organization organization = OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, subDomain);
-        List<Member> memberList = memberRepository.findAllById(organization.getMemberIds());
-        return OrganizationDetailInfoResponse.of(organization, memberList);
-    }
-
-    @Transactional(readOnly = true)
-    public List<OrganizationInfoResponse> getMyOrganizationsInfo(Long memberId) {
-        List<Organization> organizations = organizationRepository.findAllByMemberId(memberId);
-        return organizations.stream()
-            .map(OrganizationInfoResponse::of)
-            .collect(Collectors.toList());
-    }
-
-    @Transactional(readOnly = true)
-    public List<OrganizationInfoResponse> getOrganizationsInfo() {
-        return organizationRepository.findAll().stream()
-            .map(OrganizationInfoResponse::of)
-            .collect(Collectors.toList());
     }
 
     @Transactional()
@@ -67,6 +38,18 @@ public class OrganizationService {
     public void leaveFromOrganization(String subDomain, Long memberId) {
         Organization organization = OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, subDomain);
         organization.removeUser(memberId);
+    }
+
+    @Transactional
+    public void followOrganization(String subDomain, Long memberId) {
+        Organization organization = OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, subDomain);
+        organization.addFollow(memberId);
+    }
+
+    @Transactional
+    public void unFollowOrganization(String subDomain, Long memberId) {
+        Organization organization = OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, subDomain);
+        organization.unFollow(memberId, organization);
     }
 
 }

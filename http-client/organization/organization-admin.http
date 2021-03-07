@@ -1,5 +1,5 @@
 ### 조직의 정보를 변경하는 API
-PUT {{host}}/api/v1/organization/admin/potato
+PUT {{host}}/api/v1/organization/potato
 Content-Type: application/json
 Authorization: Bearer {{AUTHORIZATION}}
 
@@ -9,7 +9,7 @@ Authorization: Bearer {{AUTHORIZATION}}
 
 
 ### 가입 신청을 수락 하는 API
-PUT {{host}}/api/v1/organization/admin/approve/potato
+PUT {{host}}/api/v1/organization/join/approve/potato
 Content-Type: application/json
 Authorization: Bearer {{AUTHORIZATION}}
 
@@ -18,7 +18,7 @@ Authorization: Bearer {{AUTHORIZATION}}
 }
 
 ### 가입 신청을 거절 하는 API
-PUT {{host}}/api/v1/organization/admin/deny/potato
+PUT {{host}}/api/v1/organization/join/deny/potato
 Content-Type: application/json
 Authorization: Bearer {{AUTHORIZATION}}
 
@@ -26,3 +26,7 @@ Authorization: Bearer {{AUTHORIZATION}}
     "targetMemberId": 2
 }
 
+
+### 관리자가 일반 멤버를 강퇴시키는 API
+DELETE {{host}}/api/v1/organization/kick/potato?targetMemberId=2
+Authorization: Bearer {{AUTHORIZATION}}

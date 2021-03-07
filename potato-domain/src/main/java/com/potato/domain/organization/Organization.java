@@ -38,8 +38,13 @@ public class Organization extends BaseTimeEntity {
 
     private String profileUrl;
 
+    private int followersCount;
+
     @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<OrganizationMemberMapper> organizationMemberMapperList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<OrganizationFollower> organizationFollowerList = new ArrayList<>();
 
     @Builder
     public Organization(String subDomain, String name, String description, OrganizationCategory category, String profileUrl) {
@@ -49,6 +54,7 @@ public class Organization extends BaseTimeEntity {
         this.category = category;
         this.profileUrl = profileUrl;
         this.membersCount = 0;
+        this.followersCount = 0;
     }
 
     public static Organization defaultInstance(String subDomain, String name, String description, String profileUrl) {
@@ -158,6 +164,24 @@ public class Organization extends BaseTimeEntity {
 
     public OrganizationRole getRoleOfMember(Long memberId) {
         return findMember(memberId).getRole();
+    }
+
+    public void addFollow(Long memberId) {
+        this.organizationFollowerList.add(OrganizationFollower.newFollow(this, memberId));
+        this.followersCount++;
+    }
+
+    public void unFollow(Long memberId, Organization organization) {
+        OrganizationFollower followMember = this.findFollowMember(memberId, organization);
+        organizationFollowerList.remove(followMember);
+        followersCount--;
+    }
+
+    public OrganizationFollower findFollowMember(Long memberId, Organization organization) {
+        return this.organizationFollowerList.stream()
+            .filter(mapper -> mapper.isSameMember(memberId, organization))
+            .findFirst()
+            .orElseThrow(() -> new NotFoundException(String.format("해당하는 조직(%s)에 팔로우한 멤버(%s)가 없습니다.", subDomain, memberId)));
     }
 
 }
