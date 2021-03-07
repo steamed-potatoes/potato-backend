@@ -4,9 +4,11 @@ import com.potato.domain.organization.Organization;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.validation.constraints.NotBlank;
 
+@ToString
 @Getter
 @NoArgsConstructor
 public class CreateOrganizationRequest {

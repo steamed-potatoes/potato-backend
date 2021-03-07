@@ -5,9 +5,11 @@ import com.potato.domain.member.MemberMajor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.validation.constraints.NotBlank;
 
+@ToString
 @Getter
 @NoArgsConstructor
 public class CreateMemberRequest {

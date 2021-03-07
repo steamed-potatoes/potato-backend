@@ -5,10 +5,12 @@ import com.potato.domain.board.Visible;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+@ToString
 @Getter
 @NoArgsConstructor
 public class UpdateBoardRequest {

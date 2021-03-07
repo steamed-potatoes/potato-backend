@@ -5,9 +5,11 @@ import com.potato.domain.board.Category;
 import com.potato.domain.board.Visible;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 import static lombok.AccessLevel.*;
 
+@ToString
 @Getter
 @RequiredArgsConstructor(access = PRIVATE)
 public class BoardInfoResponse {
