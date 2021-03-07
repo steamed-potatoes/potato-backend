@@ -4,7 +4,9 @@ import com.potato.domain.member.Member;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
+@ToString
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class MemberInfoResponse {

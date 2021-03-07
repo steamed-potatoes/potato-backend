@@ -2,9 +2,11 @@ package com.potato.service.board.dto.request;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.validation.constraints.Min;
 
+@ToString
 @Getter
 @NoArgsConstructor
 public class RetrievePublicLatestBoardsRequest {
