@@ -18,10 +18,10 @@ public class OrganizationFollowMemberResponse {
 
     private final String profileUrl;
 
-    private final MemberMajor major;
+    private final String majorName;
 
     public static OrganizationFollowMemberResponse of(Member member) {
-        return new OrganizationFollowMemberResponse(member.getId(), member.getEmail(), member.getName(), member.getProfileUrl(), member.getMajor());
+        return new OrganizationFollowMemberResponse(member.getId(), member.getEmail(), member.getName(), member.getProfileUrl(), member.getMajorName());
     }
 
 }
