@@ -184,4 +184,10 @@ public class Organization extends BaseTimeEntity {
             .orElseThrow(() -> new NotFoundException(String.format("해당하는 조직(%s)에 팔로우한 멤버(%s)가 없습니다.", subDomain, memberId)));
     }
 
+    public List<Long> getFollowIds() {
+        return this.organizationFollowerList.stream()
+            .map(OrganizationFollower::getMemberId)
+            .collect(Collectors.toList());
+    }
+
 }
