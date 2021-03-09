@@ -43,8 +43,7 @@ public class MemberService {
 
     @Transactional(readOnly = true)
     public List<OrganizationInfoResponse> getOrganizationFollower(Long memberId) {
-        Member member = MemberServiceUtils.findMemberById(memberRepository, memberId);
-        List<Organization> organizationList = organizationRepository.findAllByFollowMemberId(member.getId());
+        List<Organization> organizationList = organizationRepository.findAllByFollowMemberId(memberId);
         return organizationList.stream()
             .map(OrganizationInfoResponse::of)
             .collect(Collectors.toList());
