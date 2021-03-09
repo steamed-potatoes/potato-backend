@@ -46,7 +46,7 @@ public class MemberService {
         Member member = MemberServiceUtils.findMemberById(memberRepository, memberId);
         List<Organization> organizationList = organizationRepository.findAllByFollowMemberId(member.getId());
         return organizationList.stream()
-            .map(organization -> OrganizationInfoResponse.of(organization))
+            .map(OrganizationInfoResponse::of)
             .collect(Collectors.toList());
     }
 

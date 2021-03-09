@@ -153,4 +153,18 @@ class OrganizationRetrieveServiceTest extends MemberSetupTest {
         assertOrganizationFollowMemberResponse(responses.get(1), followingMember2.getId(), followingEmail2);
     }
 
+    @Test
+    void 그룹을_팔로우한_유저가_없을경우_빈배열을_반환한다() {
+        //given
+        Organization organization = OrganizationCreator.create(subDomain);
+        organization.addAdmin(memberId);
+        organizationRepository.save(organization);
+
+        //when
+        List<OrganizationFollowMemberResponse> responses = organizationRetrieveService.getOrganizationFollowMember(subDomain);
+
+        //then
+        assertThat(responses).isEmpty();
+    }
+
 }

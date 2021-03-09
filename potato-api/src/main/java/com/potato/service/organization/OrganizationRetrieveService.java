@@ -51,7 +51,7 @@ public class OrganizationRetrieveService {
         Organization organization = OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, subDomain);
         List<Member> followMemberList = memberRepository.findAllById(organization.getFollowIds());
         return followMemberList.stream()
-            .map(member -> OrganizationFollowMemberResponse.of(member))
+            .map(OrganizationFollowMemberResponse::of)
             .collect(Collectors.toList());
     }
 
