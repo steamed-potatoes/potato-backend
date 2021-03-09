@@ -10,4 +10,6 @@ public interface OrganizationRepositoryCustom {
 
     List<Organization> findAllByMemberId(Long memberId);
 
+    List<Organization> findAllByFollowMemberId(Long memberId);
+
 }

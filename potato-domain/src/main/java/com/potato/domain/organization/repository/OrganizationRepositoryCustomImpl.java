@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 import static com.potato.domain.organization.QOrganization.organization;
+import static com.potato.domain.organization.QOrganizationFollower.organizationFollower;
 import static com.potato.domain.organization.QOrganizationMemberMapper.organizationMemberMapper;
 
 @RequiredArgsConstructor
@@ -31,6 +32,15 @@ public class OrganizationRepositoryCustomImpl implements OrganizationRepositoryC
             .where(
                 organizationMemberMapper.memberId.eq(memberId),
                 organizationMemberMapper.role.ne(OrganizationRole.PENDING)
+            ).fetch();
+    }
+
+    @Override
+    public List<Organization> findAllByFollowMemberId(Long memberId) {
+        return queryFactory.selectFrom(organization)
+            .innerJoin(organization.organizationFollowerList, organizationFollower).fetchJoin()
+            .where(
+                organizationFollower.memberId.eq(memberId)
             ).fetch();
     }
 

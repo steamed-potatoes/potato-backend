@@ -1,16 +1,21 @@
 package com.potato.service.member;
 
 import com.potato.domain.member.*;
+import com.potato.domain.organization.Organization;
+import com.potato.domain.organization.OrganizationCreator;
+import com.potato.domain.organization.OrganizationRepository;
 import com.potato.exception.ConflictException;
 import com.potato.exception.NotFoundException;
 import com.potato.service.member.dto.request.CreateMemberRequest;
 import com.potato.service.member.dto.request.UpdateMemberRequest;
 import com.potato.service.member.dto.response.MemberInfoResponse;
+import com.potato.service.organization.dto.response.OrganizationInfoResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
@@ -24,9 +29,13 @@ class MemberServiceTest {
     @Autowired
     private MemberRepository memberRepository;
 
+    @Autowired
+    private OrganizationRepository organizationRepository;
+
     @AfterEach
     void cleanUp() {
         memberRepository.deleteAll();
+        organizationRepository.deleteAll();
     }
 
     @Test
@@ -118,6 +127,40 @@ class MemberServiceTest {
         List<Member> memberList = memberRepository.findAll();
         assertThat(memberList).hasSize(1);
         assertMemberInfo(memberList.get(0), member.getEmail(), name, profileUrl, major);
+    }
+
+    @Test
+    void 멤버가_팔로우한_조직들을_가져온다() {
+        //given
+        Member member = MemberCreator.create("tnswh2023@naver.com");
+        memberRepository.save(member);
+
+        Organization organization1 = OrganizationCreator.create("감자1");
+        Organization organization2 = OrganizationCreator.create("감자2");
+
+        organization1.addFollow(member.getId());
+        organization2.addFollow(member.getId());
+        organizationRepository.saveAll(Arrays.asList(organization1, organization2));
+
+        //when
+        List<OrganizationInfoResponse> responses = memberService.getOrganizationFollower(member.getId());
+
+        //then
+        assertThat(responses.get(0).getSubDomain()).isEqualTo("감자1");
+        assertThat(responses.get(1).getSubDomain()).isEqualTo("감자2");
+    }
+
+    @Test
+    void 멤버가_팔로우한_조직이_없을_경우_빈배열을_반환한다() {
+        //given
+        Member member = MemberCreator.create("tnswh2023@naver.com");
+        memberRepository.save(member);
+
+        //when
+        List<OrganizationInfoResponse> responses = memberService.getOrganizationFollower(member.getId());
+
+        //then
+        assertThat(responses).isEmpty();
     }
 
     private void assertMemberInfo(Member member, String email, String name, String profileUrl, MemberMajor major) {
