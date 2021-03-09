@@ -5,6 +5,7 @@ import com.potato.config.interceptor.auth.Auth;
 import com.potato.controller.ApiResponse;
 import com.potato.service.organization.OrganizationRetrieveService;
 import com.potato.service.organization.dto.response.OrganizationDetailInfoResponse;
+import com.potato.service.organization.dto.response.OrganizationFollowMemberResponse;
 import com.potato.service.organization.dto.response.OrganizationInfoResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +36,12 @@ public class OrganizationRetrieveController {
     @GetMapping("/api/v1/organization/my")
     public ApiResponse<List<OrganizationInfoResponse>> getMyOrganizations(@MemberId Long memberId) {
         return ApiResponse.of(organizationRetrieveService.getMyOrganizationsInfo(memberId));
+    }
+
+    @Operation(summary = "그룹을 팔로우한 멤버 리스트를 불러오는 API")
+    @GetMapping("/api/v1/organization/follow/{subDomain}")
+    public ApiResponse<List<OrganizationFollowMemberResponse>> getOrganizationFollowMember(@PathVariable String subDomain) {
+        return ApiResponse.of(organizationRetrieveService.getOrganizationFollowMember(subDomain));
     }
 
 }

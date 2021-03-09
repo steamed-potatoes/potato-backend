@@ -1,11 +1,15 @@
 package com.potato.service.organization;
 
+import com.potato.domain.member.Member;
+import com.potato.domain.member.MemberCreator;
 import com.potato.domain.organization.*;
 import com.potato.exception.NotFoundException;
 import com.potato.service.MemberSetupTest;
 import com.potato.service.organization.dto.response.OrganizationDetailInfoResponse;
+import com.potato.service.organization.dto.response.OrganizationFollowMemberResponse;
 import com.potato.service.organization.dto.response.OrganizationInfoResponse;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.potato.service.organization.OrganizationServiceTestUtils.assertOrganizationFollowMemberResponse;
 import static com.potato.service.organization.OrganizationServiceTestUtils.assertOrganizationInfoResponse;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -124,6 +129,29 @@ class OrganizationRetrieveServiceTest extends MemberSetupTest {
 
         // then
         assertThat(organizationInfoResponses).isEmpty();
+    }
+
+    @Test
+    void 그룹을_팔로우한_유저들_불러오기() {
+        //given
+        String followingEmail1 = "tnswh1@gmail.com";
+        String followingEmail2 = "tnswh2@gmail.com";
+        Member followingMember1 = memberRepository.save(MemberCreator.create(followingEmail1));
+        Member followingMember2 = memberRepository.save(MemberCreator.create(followingEmail2));
+
+        Organization organization = OrganizationCreator.create(subDomain);
+        organization.addAdmin(memberId);
+        organization.addFollow(followingMember1.getId());
+        organization.addFollow(followingMember2.getId());
+        organizationRepository.save(organization);
+
+        //when
+        List<OrganizationFollowMemberResponse> responses = organizationRetrieveService.getOrganizationFollowMember(subDomain);
+        System.out.println("getName = " + responses.get(0).getName());
+
+        //then
+        assertOrganizationFollowMemberResponse(responses.get(0), followingMember1.getId(), followingEmail1);
+        assertOrganizationFollowMemberResponse(responses.get(1), followingMember2.getId(), followingEmail2);
     }
 
 }

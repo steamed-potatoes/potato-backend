@@ -1,10 +1,12 @@
 package com.potato.service.organization;
 
+import com.potato.domain.member.MemberMajor;
 import com.potato.domain.organization.Organization;
 import com.potato.domain.organization.OrganizationCategory;
 import com.potato.domain.organization.OrganizationMemberMapper;
 import com.potato.domain.organization.OrganizationRole;
 import com.potato.service.organization.dto.response.OrganizationDetailInfoResponse;
+import com.potato.service.organization.dto.response.OrganizationFollowMemberResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -31,6 +33,11 @@ final class OrganizationServiceTestUtils {
         assertThat(response.getProfileUrl()).isEqualTo(profileUrl);
         assertThat(response.getCategory()).isEqualTo(category);
         assertThat(response.getMembersCount()).isEqualTo(membersCount);
+    }
+
+    static void assertOrganizationFollowMemberResponse(OrganizationFollowMemberResponse response, Long id, String email) {
+        assertThat(response.getId()).isEqualTo(id);
+        assertThat(response.getEmail()).isEqualTo(email);
     }
 
 }
