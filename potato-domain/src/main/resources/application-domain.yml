@@ -8,7 +8,7 @@ spring:
 
 ---
 spring:
-  profiles: local
+  profiles: local, dev
   h2:
     console:
       enabled: true
