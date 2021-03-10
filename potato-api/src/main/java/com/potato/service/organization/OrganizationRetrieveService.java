@@ -3,8 +3,6 @@ package com.potato.service.organization;
 import com.potato.domain.member.Member;
 import com.potato.domain.member.MemberRepository;
 import com.potato.domain.organization.Organization;
-import com.potato.domain.organization.OrganizationFollower;
-import com.potato.domain.organization.OrganizationFollowerRepository;
 import com.potato.domain.organization.OrganizationRepository;
 import com.potato.service.organization.dto.response.OrganizationDetailInfoResponse;
 import com.potato.service.organization.dto.response.OrganizationFollowMemberResponse;
@@ -22,7 +20,6 @@ public class OrganizationRetrieveService {
 
     private final OrganizationRepository organizationRepository;
     private final MemberRepository memberRepository;
-    private final OrganizationFollowerRepository organizationFollowerRepository;
 
     @Transactional(readOnly = true)
     public OrganizationDetailInfoResponse getDetailOrganizationInfo(String subDomain) {

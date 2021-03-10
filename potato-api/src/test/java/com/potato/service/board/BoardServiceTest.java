@@ -6,7 +6,6 @@ import com.potato.service.OrganizationMemberSetUpTest;
 import com.potato.domain.board.*;
 import com.potato.exception.NotFoundException;
 import com.potato.service.board.dto.response.BoardDetailInfoResponse;
-import com.potato.service.board.dto.response.BoardInfoResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -50,19 +49,19 @@ class BoardServiceTest extends OrganizationMemberSetUpTest {
         boardRepository.saveAll(Arrays.asList(board1, board2, board3));
 
         //when
-        List<BoardInfoResponse> responses = boardService.retrievePublicLatestBoardList(0L, 3);
+        List<BoardDetailInfoResponse> responses = boardService.retrievePublicLatestBoardList(0L, 3);
 
         //then
         assertThat(responses.size()).isEqualTo(3);
-        assertThat(responses.get(0).getTitle()).isEqualTo(board3.getTitle());
-        assertThat(responses.get(1).getTitle()).isEqualTo(board2.getTitle());
-        assertThat(responses.get(2).getTitle()).isEqualTo(board1.getTitle());
+        assertBoardDetailInfo(responses.get(0), board3.getTitle(), memberId);
+        assertBoardDetailInfo(responses.get(1), board2.getTitle(), memberId);
+        assertBoardDetailInfo(responses.get(2), board1.getTitle(), memberId);
     }
 
     @Test
     void 가장_최신의_게시물_3개를_불러올때_게시글이_없을_경우_빈리스트를_반환한다() {
         //when
-        List<BoardInfoResponse> boards = boardService.retrievePublicLatestBoardList(0L, 2);
+        List<BoardDetailInfoResponse> boards = boardService.retrievePublicLatestBoardList(0L, 2);
 
         //then
         assertThat(boards).isEmpty();
@@ -81,13 +80,13 @@ class BoardServiceTest extends OrganizationMemberSetUpTest {
         boardRepository.saveAll(Arrays.asList(board1, board2, board3, board4, board5));
 
         //when
-        List<BoardInfoResponse> responses = boardService.retrievePublicLatestBoardList(board4.getId(), 3);
+        List<BoardDetailInfoResponse> responses = boardService.retrievePublicLatestBoardList(board4.getId(), 3);
 
         //then
         assertThat(responses.size()).isEqualTo(3);
-        assertThat(responses.get(0).getTitle()).isEqualTo(board3.getTitle());
-        assertThat(responses.get(1).getTitle()).isEqualTo(board2.getTitle());
-        assertThat(responses.get(2).getTitle()).isEqualTo(board1.getTitle());
+        assertBoardDetailInfo(responses.get(0), board3.getTitle(), memberId);
+        assertBoardDetailInfo(responses.get(1), board2.getTitle(), memberId);
+        assertBoardDetailInfo(responses.get(2), board1.getTitle(), memberId);
     }
 
     @DisplayName("게시물 5 이후로부터 3개를 조회했으니 [4,3,2] 가 조회되어야 한다")
@@ -103,13 +102,13 @@ class BoardServiceTest extends OrganizationMemberSetUpTest {
         boardRepository.saveAll(Arrays.asList(board1, board2, board3, board4, board5));
 
         //when
-        List<BoardInfoResponse> responses = boardService.retrievePublicLatestBoardList(board5.getId(), 3);
+        List<BoardDetailInfoResponse> responses = boardService.retrievePublicLatestBoardList(board5.getId(), 3);
 
         //then
         assertThat(responses.size()).isEqualTo(3);
-        assertThat(responses.get(0).getTitle()).isEqualTo(board4.getTitle());
-        assertThat(responses.get(1).getTitle()).isEqualTo(board3.getTitle());
-        assertThat(responses.get(2).getTitle()).isEqualTo(board2.getTitle());
+        assertBoardDetailInfo(responses.get(0), board4.getTitle(), memberId);
+        assertBoardDetailInfo(responses.get(1), board3.getTitle(), memberId);
+        assertBoardDetailInfo(responses.get(2), board2.getTitle(), memberId);
     }
 
     @DisplayName("게시물 5 이후로부터 2개를 조회했으니 [4,3] 가 조회되어야 한다")
@@ -125,12 +124,12 @@ class BoardServiceTest extends OrganizationMemberSetUpTest {
         boardRepository.saveAll(Arrays.asList(board1, board2, board3, board4, board5));
 
         //when
-        List<BoardInfoResponse> responses = boardService.retrievePublicLatestBoardList(board5.getId(), 2);
+        List<BoardDetailInfoResponse> responses = boardService.retrievePublicLatestBoardList(board5.getId(), 2);
 
         //then
         assertThat(responses.size()).isEqualTo(2);
-        assertThat(responses.get(0).getTitle()).isEqualTo(board4.getTitle());
-        assertThat(responses.get(1).getTitle()).isEqualTo(board3.getTitle());
+        assertBoardDetailInfo(responses.get(0), board4.getTitle(), memberId);
+        assertBoardDetailInfo(responses.get(1), board3.getTitle(), memberId);
     }
 
     @Test
@@ -140,7 +139,7 @@ class BoardServiceTest extends OrganizationMemberSetUpTest {
         boardRepository.saveAll(Collections.singletonList(board1));
 
         //when
-        List<BoardInfoResponse> responses = boardService.retrievePublicLatestBoardList(board1.getId(), 3);
+        List<BoardDetailInfoResponse> responses = boardService.retrievePublicLatestBoardList(board1.getId(), 3);
 
         //then
         assertThat(responses).isEmpty();
@@ -152,7 +151,7 @@ class BoardServiceTest extends OrganizationMemberSetUpTest {
         boardRepository.save(BoardCreator.createPrivate(subDomain, memberId, "비공개 게시물"));
 
         // when
-        List<BoardInfoResponse> responses = boardService.retrievePublicLatestBoardList(0L, 3);
+        List<BoardDetailInfoResponse> responses = boardService.retrievePublicLatestBoardList(0L, 3);
 
         // then
         assertThat(responses).isEmpty();
@@ -281,6 +280,11 @@ class BoardServiceTest extends OrganizationMemberSetUpTest {
 
         // when & then
         assertThatThrownBy(() -> boardService.cancelBoardLike(board.getId(), memberId)).isInstanceOf(NotFoundException.class);
+    }
+
+    private void assertBoardDetailInfo(BoardDetailInfoResponse response, String title, Long memberId) {
+        assertThat(response.getBoard().getTitle()).isEqualTo(title);
+        assertThat(response.getCreator().getId()).isEqualTo(memberId);
     }
 
 }
