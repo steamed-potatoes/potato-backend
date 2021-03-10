@@ -3,6 +3,9 @@ package com.potato.domain.comment;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+/**
+ * Test Helper Class
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BoardCommentCreator {
 

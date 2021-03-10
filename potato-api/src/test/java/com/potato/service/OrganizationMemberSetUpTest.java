@@ -14,10 +14,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 public abstract class OrganizationMemberSetUpTest {
 
     @Autowired
-    private MemberRepository memberRepository;
+    protected MemberRepository memberRepository;
 
     @Autowired
-    private OrganizationRepository organizationRepository;
+    protected OrganizationRepository organizationRepository;
 
     protected Long memberId;
     protected final String subDomain = "subDomain";
