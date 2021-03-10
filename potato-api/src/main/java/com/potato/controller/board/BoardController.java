@@ -5,6 +5,7 @@ import com.potato.config.interceptor.auth.Auth;
 import com.potato.controller.ApiResponse;
 import com.potato.service.board.BoardService;
 import com.potato.service.board.dto.request.RetrievePublicLatestBoardsRequest;
+import com.potato.service.board.dto.response.BoardDetailInfoResponse;
 import com.potato.service.board.dto.response.BoardInfoResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,7 @@ public class BoardController {
 
     @Operation(summary = "특정 그룹의 게시물을 조회하는 API", description = "전체 공개된 게시물만 확인할 수 있습니다")
     @GetMapping("/api/v1/board/{boardId}")
-    public ApiResponse<BoardInfoResponse> getDetailBoard(@PathVariable Long boardId) {
+    public ApiResponse<BoardDetailInfoResponse> getDetailBoard(@PathVariable Long boardId) {
         return ApiResponse.of(boardService.getDetailBoard(boardId));
     }
 

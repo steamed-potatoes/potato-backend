@@ -8,7 +8,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-class MemberServiceUtils {
+public class MemberServiceUtils {
 
     static void validateNonExistsMember(MemberRepository memberRepository, String email) {
         Member member = memberRepository.findMemberByEmail(email);
@@ -17,7 +17,7 @@ class MemberServiceUtils {
         }
     }
 
-    static Member findMemberById(MemberRepository memberRepository, Long memberId) {
+    public static Member findMemberById(MemberRepository memberRepository, Long memberId) {
         Member member = memberRepository.findMemberById(memberId);
         if (member == null) {
             throw new NotFoundException(String.format("해당 하는 회원 (%s) 은 없습니다", memberId));

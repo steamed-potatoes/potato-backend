@@ -2,8 +2,12 @@ package com.potato.service.board;
 
 import com.potato.domain.board.Board;
 import com.potato.domain.board.BoardRepository;
+import com.potato.domain.member.Member;
+import com.potato.domain.member.MemberRepository;
 import com.potato.domain.organization.OrganizationRepository;
+import com.potato.service.board.dto.response.BoardDetailInfoResponse;
 import com.potato.service.board.dto.response.BoardInfoResponse;
+import com.potato.service.member.MemberServiceUtils;
 import com.potato.service.organization.OrganizationServiceUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +22,7 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final OrganizationRepository organizationRepository;
+    private final MemberRepository memberRepository;
 
     @Transactional(readOnly = true)
     public List<BoardInfoResponse> retrievePublicLatestBoardList(Long lastBoardId, int size) {
@@ -37,8 +42,10 @@ public class BoardService {
     }
 
     @Transactional(readOnly = true)
-    public BoardInfoResponse getDetailBoard(Long boardId) {
-        return BoardInfoResponse.of(BoardServiceUtils.findPublicBoardById(boardRepository, boardId));
+    public BoardDetailInfoResponse getDetailBoard(Long boardId) {
+        Board board = BoardServiceUtils.findPublicBoardById(boardRepository, boardId);
+        Member member = MemberServiceUtils.findMemberById(memberRepository, board.getMemberId());
+        return BoardDetailInfoResponse.of(board, member);
     }
 
     @Transactional

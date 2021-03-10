@@ -6,8 +6,6 @@ import com.potato.domain.board.DeletedBoard;
 import com.potato.domain.board.Visible;
 import com.potato.service.board.dto.response.BoardInfoResponse;
 
-import java.time.LocalDateTime;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 final class BoardServiceTestUtils {
@@ -29,7 +27,7 @@ final class BoardServiceTestUtils {
     }
 
     static void assertDeletedBoard(DeletedBoard deletedBoard, Long backUpId, String subDomain, Long memberId, String title,
-                                   String content, Category category, String imageUrl, Visible visible, LocalDateTime createdDateTime) {
+                                   String content, Category category, String imageUrl, Visible visible) {
         assertThat(deletedBoard.getBackUpId()).isEqualTo(backUpId);
         assertThat(deletedBoard.getSubDomain()).isEqualTo(subDomain);
         assertThat(deletedBoard.getMemberId()).isEqualTo(memberId);

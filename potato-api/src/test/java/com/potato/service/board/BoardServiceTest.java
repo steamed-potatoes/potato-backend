@@ -5,6 +5,7 @@ import com.potato.exception.ForbiddenException;
 import com.potato.service.OrganizationMemberSetUpTest;
 import com.potato.domain.board.*;
 import com.potato.exception.NotFoundException;
+import com.potato.service.board.dto.response.BoardDetailInfoResponse;
 import com.potato.service.board.dto.response.BoardInfoResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -169,10 +170,11 @@ class BoardServiceTest extends OrganizationMemberSetUpTest {
         boardRepository.save(board);
 
         //when
-        BoardInfoResponse response = boardService.getDetailBoard(board.getId());
+        BoardDetailInfoResponse response = boardService.getDetailBoard(board.getId());
 
         //then
-        assertBoardInfo(response, Visible.PUBLIC, title, content, imageUrl, Category.RECRUIT);
+        assertBoardInfo(response.getBoard(), Visible.PUBLIC, title, content, imageUrl, Category.RECRUIT);
+        assertThat(response.getCreator().getId()).isEqualTo(memberId);
     }
 
     @Test

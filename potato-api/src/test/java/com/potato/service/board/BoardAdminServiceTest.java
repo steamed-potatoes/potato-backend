@@ -166,7 +166,7 @@ class BoardAdminServiceTest extends OrganizationMemberSetUpTest {
         List<DeletedBoard> deletedBoards = deletedBoardRepository.findAll();
         assertThat(deletedBoards).hasSize(1);
         assertDeletedBoard(deletedBoards.get(0), board.getId(), board.getSubDomain(), board.getMemberId(), board.getTitle(),
-            board.getContent(), board.getCategory(), board.getImageUrl(), board.getVisible(), board.getCreatedDateTime());
+            board.getContent(), board.getCategory(), board.getImageUrl(), board.getVisible());
     }
 
     @Test
