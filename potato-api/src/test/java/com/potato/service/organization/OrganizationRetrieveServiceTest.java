@@ -5,8 +5,8 @@ import com.potato.domain.member.MemberCreator;
 import com.potato.domain.organization.*;
 import com.potato.exception.NotFoundException;
 import com.potato.service.MemberSetupTest;
-import com.potato.service.organization.dto.response.OrganizationDetailInfoResponse;
-import com.potato.service.organization.dto.response.OrganizationFollowMemberResponse;
+import com.potato.service.member.dto.response.MemberInfoResponse;
+import com.potato.service.organization.dto.response.OrganizationWithMembersInfoResponse;
 import com.potato.service.organization.dto.response.OrganizationInfoResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -16,7 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.potato.service.organization.OrganizationServiceTestUtils.assertOrganizationFollowMemberResponse;
+import static com.potato.service.member.MemberServiceTestUtils.assertMemberInfoResponse;
 import static com.potato.service.organization.OrganizationServiceTestUtils.assertOrganizationInfoResponse;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -51,10 +51,10 @@ class OrganizationRetrieveServiceTest extends MemberSetupTest {
         organizationRepository.save(organization);
 
         // when
-        OrganizationDetailInfoResponse response = organizationRetrieveService.getDetailOrganizationInfo(subDomain);
+        OrganizationWithMembersInfoResponse response = organizationRetrieveService.getDetailOrganizationInfo(subDomain);
 
         // then
-        assertOrganizationInfoResponse(response, organization.getId(), subDomain, name, description, profileUrl, category, organization.getMembersCount());
+        assertOrganizationInfoResponse(response.getOrganization(), organization.getId(), subDomain, name, description, profileUrl, category, organization.getMembersCount());
     }
 
     @Test
@@ -81,8 +81,8 @@ class OrganizationRetrieveServiceTest extends MemberSetupTest {
 
         // then
         assertThat(responses).hasSize(2);
-        assertThat(responses.get(0).getSubDomain()).isEqualTo(organization1.getSubDomain());
-        assertThat(responses.get(1).getSubDomain()).isEqualTo(organization2.getSubDomain());
+        assertOrganizationInfoResponse(responses.get(0), organization1.getSubDomain());
+        assertOrganizationInfoResponse(responses.get(1), organization2.getSubDomain());
     }
 
     @Test
@@ -111,8 +111,8 @@ class OrganizationRetrieveServiceTest extends MemberSetupTest {
 
         // then
         assertThat(organizationInfoResponses).hasSize(2);
-        assertThat(organizationInfoResponses.get(0).getSubDomain()).isEqualTo(subDomain);
-        assertThat(organizationInfoResponses.get(1).getSubDomain()).isEqualTo(subDomain2);
+        assertOrganizationInfoResponse(organizationInfoResponses.get(0), subDomain);
+        assertOrganizationInfoResponse(organizationInfoResponses.get(1), subDomain2);
     }
 
     @Test
@@ -145,11 +145,11 @@ class OrganizationRetrieveServiceTest extends MemberSetupTest {
         organizationRepository.save(organization);
 
         //when
-        List<OrganizationFollowMemberResponse> responses = organizationRetrieveService.getOrganizationFollowMember(subDomain);
+        List<MemberInfoResponse> responses = organizationRetrieveService.getOrganizationFollowMember(subDomain);
 
         //then
-        assertOrganizationFollowMemberResponse(responses.get(0), followingMember1.getId(), followingEmail1);
-        assertOrganizationFollowMemberResponse(responses.get(1), followingMember2.getId(), followingEmail2);
+        assertMemberInfoResponse(responses.get(0), followingEmail1, followingMember1.getName(), followingMember1.getProfileUrl(), followingMember1.getMajor());
+        assertMemberInfoResponse(responses.get(1), followingEmail2, followingMember2.getName(), followingMember2.getProfileUrl(), followingMember2.getMajor());
     }
 
     @Test
@@ -160,7 +160,7 @@ class OrganizationRetrieveServiceTest extends MemberSetupTest {
         organizationRepository.save(organization);
 
         //when
-        List<OrganizationFollowMemberResponse> responses = organizationRetrieveService.getOrganizationFollowMember(subDomain);
+        List<MemberInfoResponse> responses = organizationRetrieveService.getOrganizationFollowMember(subDomain);
 
         //then
         assertThat(responses).isEmpty();

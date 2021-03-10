@@ -110,7 +110,7 @@ class BoardAdminServiceTest extends OrganizationMemberSetUpTest {
         assertThat(boardList).hasSize(1);
         assertBoard(boardList.get(0), board.getVisible(), updateTitle, updateContent, updateImageUrl, updateCategory);
 
-        assertBoardInfo(response, board.getVisible(), updateTitle, updateContent, updateImageUrl, board.getCategory());
+        assertBoardInfoResponse(response, board.getVisible(), updateTitle, updateContent, updateImageUrl, board.getCategory());
     }
 
     @Test

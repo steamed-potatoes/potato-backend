@@ -12,14 +12,14 @@ import static lombok.AccessLevel.PRIVATE;
 @ToString
 @Getter
 @RequiredArgsConstructor(access = PRIVATE)
-public class BoardDetailInfoResponse {
+public class BoardWithCreatorInfoResponse {
 
     private final BoardInfoResponse board;
 
     private final MemberInfoResponse creator;
 
-    public static BoardDetailInfoResponse of(Board board, Member member) {
-        return new BoardDetailInfoResponse(BoardInfoResponse.of(board), MemberInfoResponse.of(member));
+    public static BoardWithCreatorInfoResponse of(Board board, Member member) {
+        return new BoardWithCreatorInfoResponse(BoardInfoResponse.of(board), MemberInfoResponse.of(member));
     }
 
 }

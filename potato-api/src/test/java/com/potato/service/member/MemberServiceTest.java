@@ -18,6 +18,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.potato.service.member.MemberServiceTestUtils.assertMemberInfo;
+import static com.potato.service.member.MemberServiceTestUtils.assertMemberInfoResponse;
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
@@ -93,7 +95,7 @@ class MemberServiceTest {
         MemberInfoResponse response = memberService.getMemberInfo(member.getId());
 
         // then
-        assertThatMemberInfoResponse(response, email, name, profileUrl, major);
+        assertMemberInfoResponse(response, email, name, profileUrl, major);
     }
 
     @Test
@@ -161,20 +163,6 @@ class MemberServiceTest {
 
         //then
         assertThat(responses).isEmpty();
-    }
-
-    private void assertMemberInfo(Member member, String email, String name, String profileUrl, MemberMajor major) {
-        assertThat(member.getEmail()).isEqualTo(email);
-        assertThat(member.getName()).isEqualTo(name);
-        assertThat(member.getProfileUrl()).isEqualTo(profileUrl);
-        assertThat(member.getMajor()).isEqualTo(major);
-    }
-
-    private void assertThatMemberInfoResponse(MemberInfoResponse response, String email, String name, String profileUrl, MemberMajor major) {
-        assertThat(response.getEmail()).isEqualTo(email);
-        assertThat(response.getName()).isEqualTo(name);
-        assertThat(response.getProfileUrl()).isEqualTo(profileUrl);
-        assertThat(response.getMajor()).isEqualTo(major.getName());
     }
 
 }

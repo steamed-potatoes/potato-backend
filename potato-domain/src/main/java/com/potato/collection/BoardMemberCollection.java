@@ -1,4 +1,4 @@
-package com.potato.domain.board.collection;
+package com.potato.collection;
 
 import com.potato.domain.board.Board;
 import com.potato.domain.member.Member;
@@ -10,7 +10,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class BoardMemberCollection {
+public final class BoardMemberCollection {
 
     private final Map<Long, Member> memberMap = new HashMap<>();
 

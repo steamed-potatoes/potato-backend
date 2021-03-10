@@ -4,8 +4,7 @@ import com.potato.domain.organization.Organization;
 import com.potato.domain.organization.OrganizationCategory;
 import com.potato.domain.organization.OrganizationMemberMapper;
 import com.potato.domain.organization.OrganizationRole;
-import com.potato.service.organization.dto.response.OrganizationDetailInfoResponse;
-import com.potato.service.organization.dto.response.OrganizationFollowMemberResponse;
+import com.potato.service.organization.dto.response.OrganizationInfoResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,7 +22,7 @@ final class OrganizationServiceTestUtils {
         assertThat(organizationMemberMapper.getRole()).isEqualTo(role);
     }
 
-    static void assertOrganizationInfoResponse(OrganizationDetailInfoResponse response, Long id, String subDomain, String name,
+    static void assertOrganizationInfoResponse(OrganizationInfoResponse response, Long id, String subDomain, String name,
                                                String description, String profileUrl, OrganizationCategory category, int membersCount) {
         assertThat(response.getId()).isEqualTo(id);
         assertThat(response.getSubDomain()).isEqualTo(subDomain);
@@ -34,9 +33,8 @@ final class OrganizationServiceTestUtils {
         assertThat(response.getMembersCount()).isEqualTo(membersCount);
     }
 
-    static void assertOrganizationFollowMemberResponse(OrganizationFollowMemberResponse response, Long id, String email) {
-        assertThat(response.getId()).isEqualTo(id);
-        assertThat(response.getEmail()).isEqualTo(email);
+    static void assertOrganizationInfoResponse(OrganizationInfoResponse organizationInfoResponse, String subDomain) {
+        assertThat(organizationInfoResponse.getSubDomain()).isEqualTo(subDomain);
     }
 
 }
