@@ -45,7 +45,7 @@ class OrganizationServiceTest extends MemberSetupTest {
     }
 
     private Long targetMemberId;
-    private String subDomain = "potato";
+    private final String subDomain = "potato";
 
     @BeforeEach
     void setUpMember() {

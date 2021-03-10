@@ -9,7 +9,6 @@ import com.potato.service.organization.dto.response.OrganizationDetailInfoRespon
 import com.potato.service.organization.dto.response.OrganizationFollowMemberResponse;
 import com.potato.service.organization.dto.response.OrganizationInfoResponse;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -37,7 +36,7 @@ class OrganizationRetrieveServiceTest extends MemberSetupTest {
         organizationRepository.deleteAll();
     }
 
-    private String subDomain = "potato";
+    private final String subDomain = "potato";
 
     @Test
     void 서브도메인을_통해_특정_조직의_간단한_정보를_불러온다() {

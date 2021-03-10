@@ -6,7 +6,6 @@ import com.potato.controller.ApiResponse;
 import com.potato.service.board.BoardService;
 import com.potato.service.board.dto.request.RetrievePublicLatestBoardsRequest;
 import com.potato.service.board.dto.response.BoardDetailInfoResponse;
-import com.potato.service.board.dto.response.BoardInfoResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +21,7 @@ public class BoardController {
 
     @Operation(summary = "그룹 게시물 리스트를 스크롤 방식으로 조회하는 API", description = "lastBoardId=가장 마지막에 보여지는 게시물의 id, size=몇 개의 게시물을 받아올 것인지")
     @GetMapping("/api/v1/board/list")
-    public ApiResponse<List<BoardInfoResponse>> retrievePublicLatestBoardList(@Valid RetrievePublicLatestBoardsRequest request) {
+    public ApiResponse<List<BoardDetailInfoResponse>> retrievePublicLatestBoardList(@Valid RetrievePublicLatestBoardsRequest request) {
         return ApiResponse.of(boardService.retrievePublicLatestBoardList(request.getLastBoardId(), request.getSize()));
     }
 

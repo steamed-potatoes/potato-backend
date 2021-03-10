@@ -1,6 +1,5 @@
 package com.potato.service.organization;
 
-import com.potato.domain.member.MemberMajor;
 import com.potato.domain.organization.Organization;
 import com.potato.domain.organization.OrganizationCategory;
 import com.potato.domain.organization.OrganizationMemberMapper;
