@@ -1,18 +1,25 @@
 package com.potato.service.member;
 
 import com.potato.domain.member.*;
+import com.potato.domain.organization.Organization;
+import com.potato.domain.organization.OrganizationCreator;
+import com.potato.domain.organization.OrganizationRepository;
 import com.potato.exception.ConflictException;
 import com.potato.exception.NotFoundException;
 import com.potato.service.member.dto.request.CreateMemberRequest;
 import com.potato.service.member.dto.request.UpdateMemberRequest;
 import com.potato.service.member.dto.response.MemberInfoResponse;
+import com.potato.service.organization.dto.response.OrganizationInfoResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Arrays;
 import java.util.List;
 
+import static com.potato.service.member.MemberServiceTestUtils.assertMemberInfo;
+import static com.potato.service.member.MemberServiceTestUtils.assertMemberInfoResponse;
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
@@ -24,9 +31,13 @@ class MemberServiceTest {
     @Autowired
     private MemberRepository memberRepository;
 
+    @Autowired
+    private OrganizationRepository organizationRepository;
+
     @AfterEach
     void cleanUp() {
         memberRepository.deleteAll();
+        organizationRepository.deleteAll();
     }
 
     @Test
@@ -84,7 +95,7 @@ class MemberServiceTest {
         MemberInfoResponse response = memberService.getMemberInfo(member.getId());
 
         // then
-        assertThatMemberInfoResponse(response, email, name, profileUrl, major);
+        assertMemberInfoResponse(response, email, name, profileUrl, major);
     }
 
     @Test
@@ -120,18 +131,38 @@ class MemberServiceTest {
         assertMemberInfo(memberList.get(0), member.getEmail(), name, profileUrl, major);
     }
 
-    private void assertMemberInfo(Member member, String email, String name, String profileUrl, MemberMajor major) {
-        assertThat(member.getEmail()).isEqualTo(email);
-        assertThat(member.getName()).isEqualTo(name);
-        assertThat(member.getProfileUrl()).isEqualTo(profileUrl);
-        assertThat(member.getMajor()).isEqualTo(major);
+    @Test
+    void 멤버가_팔로우한_조직들을_가져온다() {
+        //given
+        Member member = MemberCreator.create("tnswh2023@naver.com");
+        memberRepository.save(member);
+
+        Organization organization1 = OrganizationCreator.create("감자1");
+        Organization organization2 = OrganizationCreator.create("감자2");
+
+        organization1.addFollow(member.getId());
+        organization2.addFollow(member.getId());
+        organizationRepository.saveAll(Arrays.asList(organization1, organization2));
+
+        //when
+        List<OrganizationInfoResponse> responses = memberService.getOrganizationFollower(member.getId());
+
+        //then
+        assertThat(responses.get(0).getSubDomain()).isEqualTo("감자1");
+        assertThat(responses.get(1).getSubDomain()).isEqualTo("감자2");
     }
 
-    private void assertThatMemberInfoResponse(MemberInfoResponse response, String email, String name, String profileUrl, MemberMajor major) {
-        assertThat(response.getEmail()).isEqualTo(email);
-        assertThat(response.getName()).isEqualTo(name);
-        assertThat(response.getProfileUrl()).isEqualTo(profileUrl);
-        assertThat(response.getMajor()).isEqualTo(major.getName());
+    @Test
+    void 멤버가_팔로우한_조직이_없을_경우_빈배열을_반환한다() {
+        //given
+        Member member = MemberCreator.create("tnswh2023@naver.com");
+        memberRepository.save(member);
+
+        //when
+        List<OrganizationInfoResponse> responses = memberService.getOrganizationFollower(member.getId());
+
+        //then
+        assertThat(responses).isEmpty();
     }
 
 }

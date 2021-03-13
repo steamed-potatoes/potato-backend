@@ -1,5 +1,6 @@
 package com.potato.service.auth;
 
+import com.potato.config.session.MemberSession;
 import com.potato.domain.member.Member;
 import com.potato.domain.member.MemberRepository;
 import com.potato.external.google.GoogleApiCaller;
@@ -32,7 +33,7 @@ public class GoogleAuthService {
         if (findMember == null) {
             return AuthResponse.signUp(userInfoResponse.getEmail(), userInfoResponse.getName(), userInfoResponse.getPicture());
         }
-        httpSession.setAttribute(AUTH_SESSION, findMember.getId());
+        httpSession.setAttribute(AUTH_SESSION, MemberSession.of(findMember.getId()));
         return AuthResponse.login(httpSession.getId());
     }
 

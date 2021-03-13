@@ -39,7 +39,7 @@ class OrganizationAdminServiceTest extends MemberSetupTest {
         organizationRepository.deleteAll();
     }
 
-    private String subDomain = "potato";
+    private final String subDomain = "potato";
     private Long targetMemberId;
 
     @BeforeEach

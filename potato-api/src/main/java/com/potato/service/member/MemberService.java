@@ -2,18 +2,25 @@ package com.potato.service.member;
 
 import com.potato.domain.member.Member;
 import com.potato.domain.member.MemberRepository;
+import com.potato.domain.organization.Organization;
+import com.potato.domain.organization.OrganizationRepository;
 import com.potato.service.member.dto.request.CreateMemberRequest;
 import com.potato.service.member.dto.request.UpdateMemberRequest;
 import com.potato.service.member.dto.response.MemberInfoResponse;
+import com.potato.service.organization.dto.response.OrganizationInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final OrganizationRepository organizationRepository;
 
     @Transactional
     public Long createMember(CreateMemberRequest request) {
@@ -32,6 +39,14 @@ public class MemberService {
         Member member = MemberServiceUtils.findMemberById(memberRepository, memberId);
         member.updateMemberInfo(request.getName(), request.getProfileUrl(), request.getMajor());
         return MemberInfoResponse.of(member);
+    }
+
+    @Transactional(readOnly = true)
+    public List<OrganizationInfoResponse> getOrganizationFollower(Long memberId) {
+        List<Organization> organizationList = organizationRepository.findAllByFollowMemberId(memberId);
+        return organizationList.stream()
+            .map(OrganizationInfoResponse::of)
+            .collect(Collectors.toList());
     }
 
 }

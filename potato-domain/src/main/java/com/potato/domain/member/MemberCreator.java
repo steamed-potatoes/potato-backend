@@ -3,14 +3,19 @@ package com.potato.domain.member;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+/**
+ * Test Helper Class
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class MemberCreator {
 
     public static Member create(String email) {
         return Member.builder()
             .email(email)
-            .name("멤버")
+            .name("테스트 유저")
+            .profileUrl("http://profile.com")
             .provider(MemberProvider.GOOGLE)
+            .major(MemberMajor.IT_ICT)
             .build();
     }
 
@@ -21,6 +26,7 @@ public class MemberCreator {
             .profileUrl(profileUrl)
             .major(major)
             .provider(MemberProvider.GOOGLE)
+            .major(MemberMajor.IT_ICT)
             .build();
     }
 

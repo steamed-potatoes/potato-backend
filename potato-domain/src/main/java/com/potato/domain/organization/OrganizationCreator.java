@@ -3,6 +3,9 @@ package com.potato.domain.organization;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+/**
+ * Test Helper Class
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class OrganizationCreator {
 

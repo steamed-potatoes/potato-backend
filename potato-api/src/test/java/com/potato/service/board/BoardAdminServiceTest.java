@@ -110,7 +110,7 @@ class BoardAdminServiceTest extends OrganizationMemberSetUpTest {
         assertThat(boardList).hasSize(1);
         assertBoard(boardList.get(0), board.getVisible(), updateTitle, updateContent, updateImageUrl, updateCategory);
 
-        assertBoardInfo(response, board.getVisible(), updateTitle, updateContent, updateImageUrl, board.getCategory());
+        assertBoardInfoResponse(response, board.getVisible(), updateTitle, updateContent, updateImageUrl, board.getCategory());
     }
 
     @Test
@@ -166,7 +166,7 @@ class BoardAdminServiceTest extends OrganizationMemberSetUpTest {
         List<DeletedBoard> deletedBoards = deletedBoardRepository.findAll();
         assertThat(deletedBoards).hasSize(1);
         assertDeletedBoard(deletedBoards.get(0), board.getId(), board.getSubDomain(), board.getMemberId(), board.getTitle(),
-            board.getContent(), board.getCategory(), board.getImageUrl(), board.getVisible(), board.getCreatedDateTime());
+            board.getContent(), board.getCategory(), board.getImageUrl(), board.getVisible());
     }
 
     @Test

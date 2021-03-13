@@ -3,8 +3,9 @@ package com.potato.controller.organization;
 import com.potato.config.argumentResolver.MemberId;
 import com.potato.config.interceptor.auth.Auth;
 import com.potato.controller.ApiResponse;
+import com.potato.service.member.dto.response.MemberInfoResponse;
 import com.potato.service.organization.OrganizationRetrieveService;
-import com.potato.service.organization.dto.response.OrganizationDetailInfoResponse;
+import com.potato.service.organization.dto.response.OrganizationWithMembersInfoResponse;
 import com.potato.service.organization.dto.response.OrganizationInfoResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ public class OrganizationRetrieveController {
 
     @Operation(summary = "특정 그룹의 정보를 조회하는 API", description = "해당하는 그룹의 subDomain")
     @GetMapping("/api/v1/organization/{subDomain}")
-    public ApiResponse<OrganizationDetailInfoResponse> getDetailOrganizationInfo(@PathVariable String subDomain) {
+    public ApiResponse<OrganizationWithMembersInfoResponse> getDetailOrganizationInfo(@PathVariable String subDomain) {
         return ApiResponse.of(organizationRetrieveService.getDetailOrganizationInfo(subDomain));
     }
 
@@ -35,6 +36,12 @@ public class OrganizationRetrieveController {
     @GetMapping("/api/v1/organization/my")
     public ApiResponse<List<OrganizationInfoResponse>> getMyOrganizations(@MemberId Long memberId) {
         return ApiResponse.of(organizationRetrieveService.getMyOrganizationsInfo(memberId));
+    }
+
+    @Operation(summary = "그룹을 팔로우한 멤버 리스트를 불러오는 API")
+    @GetMapping("/api/v1/organization/follow/{subDomain}")
+    public ApiResponse<List<MemberInfoResponse>> getOrganizationFollowMember(@PathVariable String subDomain) {
+        return ApiResponse.of(organizationRetrieveService.getOrganizationFollowMember(subDomain));
     }
 
 }
