@@ -42,4 +42,20 @@ public class OrganizationBoard extends BaseTimeEntity {
         this.type = type;
     }
 
+    public String getTitle() {
+        return this.board.getTitle();
+    }
+
+    public Long getMemberId() {
+        return this.board.getMemberId();
+    }
+
+    public LocalDateTime getStartDateTime() {
+        return this.board.getStartDateTime();
+    }
+
+    public LocalDateTime getEndDateTime() {
+        return this.getEndDateTime();
+    }
+
 }

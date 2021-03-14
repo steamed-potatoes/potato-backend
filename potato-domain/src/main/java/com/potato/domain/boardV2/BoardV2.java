@@ -1,8 +1,6 @@
 package com.potato.domain.boardV2;
 
 import com.potato.domain.BaseTimeEntity;
-import com.potato.domain.boardV2.admin.AdminBoard;
-import com.potato.domain.boardV2.organization.OrganizationBoard;
 import com.potato.domain.common.DateTimeInterval;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -44,6 +42,14 @@ public class BoardV2 extends BaseTimeEntity {
             .startDateTime(startDateTime)
             .endDateTime(endDateTime)
             .build();
+    }
+
+    public LocalDateTime getStartDateTime() {
+        return this.dateTimeInterval.getStartDateTime();
+    }
+
+    public LocalDateTime getEndDateTime() {
+        return this.dateTimeInterval.getEndDateTime();
     }
 
 }
