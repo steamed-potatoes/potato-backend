@@ -1,7 +1,7 @@
 package com.potato.domain.boardV2.admin;
 
 import com.potato.domain.BaseTimeEntity;
-import com.potato.domain.boardV2.Board;
+import com.potato.domain.boardV2.BoardV2;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,8 +17,10 @@ public class AdminBoard extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "board_id", nullable = false)
-    private Board board;
+    private BoardV2 board;
+
+    private String content;
 
 }
