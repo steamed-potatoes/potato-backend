@@ -11,7 +11,7 @@ public interface OrganizationBoardRepositoryCustom {
 
     OrganizationBoard findOrganizationBoardById(Long id);
 
-    OrganizationBoard findOrganizationBoardByIdAndSubDomain(Long organizationBoardId, String subDomain);
+	OrganizationBoard findOrganizationBoardByIdAndSubDomain(Long organizationBoardId, String subDomain);
 
     List<OrganizationBoard> findBoardsOrderByDesc(int size);
 
