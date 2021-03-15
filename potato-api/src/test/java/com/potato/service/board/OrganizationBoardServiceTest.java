@@ -269,7 +269,8 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
     private void assertDeletedBoardOrganization(DeleteOrganizationBoard deletedBoard, Long backUpId, String subDomain, OrganizationBoardType type) {
         assertThat(deletedBoard.getBackUpId()).isEqualTo(backUpId);
         assertThat(deletedBoard.getSubDomain()).isEqualTo(subDomain);
-        assertThat(deletedBoard.getOrganizationBoardType()).isEqualTo(OrganizationBoardType.RECRUIT);
+        assertThat(deletedBoard.getOrganizationBoardType()).isEqualTo(type);
+        assertThat(deletedBoard.getDeletedMemberId()).isEqualTo(memberId);
     }
 
 }
