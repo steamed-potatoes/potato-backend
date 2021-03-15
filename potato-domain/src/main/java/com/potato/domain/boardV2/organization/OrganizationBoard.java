@@ -55,7 +55,7 @@ public class OrganizationBoard extends BaseTimeEntity {
     }
 
     public LocalDateTime getEndDateTime() {
-        return this.getEndDateTime();
+        return this.board.getEndDateTime();
     }
 
 }
