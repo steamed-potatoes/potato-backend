@@ -39,7 +39,7 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GIT_TOKEN }}
 
-      - name: Build, Push image to Github Container Registry
+      - name: potato api build
         env:
           DOCKER_REGISTRY: ghcr.io/steamed-potatoes
           DOCKER_REPOSITORY: potato-backend
