@@ -5,9 +5,11 @@ import com.potato.domain.boardV2.organization.OrganizationBoardType;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
+@ToString
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class OrganizationBoardInfoResponse {

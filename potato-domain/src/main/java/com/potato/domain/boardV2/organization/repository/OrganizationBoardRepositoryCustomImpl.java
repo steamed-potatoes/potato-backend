@@ -21,4 +21,14 @@ public class OrganizationBoardRepositoryCustomImpl implements OrganizationBoardR
             ).fetchOne();
     }
 
+    @Override
+    public OrganizationBoard findOrganizationBoardByIdAndSubDomain(Long organizationBoardId, String subDomain) {
+        return queryFactory.selectFrom(organizationBoard)
+            .innerJoin(organizationBoard.board, boardV2).fetchJoin()
+            .where(
+                organizationBoard.id.eq(organizationBoardId),
+                organizationBoard.subDomain.eq(subDomain)
+            ).fetchOne();
+    }
+
 }
