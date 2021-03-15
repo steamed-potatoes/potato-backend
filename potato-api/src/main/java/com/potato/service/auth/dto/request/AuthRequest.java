@@ -1,6 +1,5 @@
 package com.potato.service.auth.dto.request;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -18,10 +17,13 @@ public class AuthRequest {
     @NotBlank
     private String redirectUri;
 
-    @Builder(builderMethodName = "testBuilder")
-    public AuthRequest(@NotBlank String code, @NotBlank String redirectUri) {
+    private AuthRequest(@NotBlank String code, @NotBlank String redirectUri) {
         this.code = code;
         this.redirectUri = redirectUri;
+    }
+
+    public static AuthRequest testInstance(String code, String redirectUri) {
+        return new AuthRequest(code, redirectUri);
     }
 
 }
