@@ -28,12 +28,14 @@ public class OrganizationBoardInfoResponse {
 
     private final String imageUrl;
 
+    private final int likesCount;
+
     private final OrganizationBoardType type;
 
     public static OrganizationBoardInfoResponse of(OrganizationBoard organizationBoard) {
         return new OrganizationBoardInfoResponse(organizationBoard.getId(), organizationBoard.getSubDomain(), organizationBoard.getTitle(),
             organizationBoard.getStartDateTime(), organizationBoard.getEndDateTime(), organizationBoard.getContent(),
-            organizationBoard.getImageUrl(), organizationBoard.getType());
+            organizationBoard.getImageUrl(), organizationBoard.getLikesCount(), organizationBoard.getType());
     }
 
 }

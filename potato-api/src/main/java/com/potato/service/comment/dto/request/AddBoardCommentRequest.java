@@ -15,7 +15,6 @@ public class AddBoardCommentRequest {
     @NotNull
     private Long organizationBoardId;
 
-    @NotNull
     private Long parentCommentId;
 
     @NotBlank

@@ -1,9 +1,0 @@
-###  게시물에 좋아요를 추가하는 API
-POST {{host}}/api/v1/board/like/1
-Content-Type: application/json
-Authorization: Bearer {{AUTHORIZATION}}
-
-
-### 게시물에 좋아요 누른거 취소하는 API
-DELETE {{host}}/api/v1/board/like/1
-Authorization: Bearer {{AUTHORIZATION}}

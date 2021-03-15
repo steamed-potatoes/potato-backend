@@ -60,7 +60,7 @@ public class OrganizationBoardController {
     @Operation(summary = "게시물의 좋아요를 취소하는 API", description = "Bearer 토큰이 필요합니다")
     @Auth
     @DeleteMapping("/api/v2/organization/board/like")
-    public ApiResponse<String> cancelLikeOrganizationBoard(@Valid @RequestBody LikeOrganizationBoardRequest request, @MemberId Long memberId) {
+    public ApiResponse<String> cancelLikeOrganizationBoard(@Valid LikeOrganizationBoardRequest request, @MemberId Long memberId) {
         organizationBoardService.cancelOrganizationBoardLike(request.getOrganizationBoardId(), memberId);
         return ApiResponse.OK;
     }
