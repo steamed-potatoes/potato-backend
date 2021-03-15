@@ -33,6 +33,8 @@ public class DeleteOrganizationBoard extends BaseTimeEntity {
     @JoinColumn(name = "board_id", nullable = false)
     private DeleteBoard board;
 
+    private Long deletedMemberId;
+
     private String content;
 
     private String imageUrl;
@@ -42,7 +44,7 @@ public class DeleteOrganizationBoard extends BaseTimeEntity {
 
     @Builder
     public DeleteOrganizationBoard(Long backUpId, String subDomain, Long memberId, OrganizationBoardType organizationBoardType, String title,
-                                   String content, String imageUrl, LocalDateTime startDateTime, LocalDateTime endDateTime, LocalDateTime backUpCreatedDateTime) {
+                                   String content, String imageUrl, LocalDateTime startDateTime, LocalDateTime endDateTime, LocalDateTime backUpCreatedDateTime, Long deletedMemberId) {
         this.backUpId = backUpId;
         this.board = DeleteBoard.of(memberId, title, startDateTime, endDateTime);
         this.subDomain = subDomain;
@@ -50,12 +52,14 @@ public class DeleteOrganizationBoard extends BaseTimeEntity {
         this.content = content;
         this.imageUrl = imageUrl;
         this.backUpCreatedDateTime = backUpCreatedDateTime;
+        this.deletedMemberId = deletedMemberId;
     }
 
     public static DeleteOrganizationBoard newBackUpInstance(OrganizationBoard organizationBoard, Long memberId) {
         return DeleteOrganizationBoard.builder()
             .backUpId(organizationBoard.getId())
-            .memberId(memberId)
+            .deletedMemberId(memberId)
+            .memberId(organizationBoard.getMemberId())
             .subDomain(organizationBoard.getSubDomain())
             .organizationBoardType(organizationBoard.getType())
             .title(organizationBoard.getTitle())
