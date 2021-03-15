@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-public class DateTimeIntervalTest {
+class DateTimeIntervalTest {
 
     @Test
     void 시작날짜가_종료날짜보다_이전인_경우_정상() {
