@@ -1,23 +1,22 @@
 ### 게시물에 댓글 추가하는 API
-POST {{host}}/api/v1/board/comment
+POST {{host}}/api/v2/board/comment
 Content-Type: application/json
 Authorization: Bearer {{AUTHORIZATION}}
 
 {
-    "boardId": 1,
+    "organizationBoardId": 1,
     "parentCommentId": null,
     "content": "댓글"
 }
 
 
-
 ### 댓글에 대댓글을 추가하는 API
-POST {{host}}/api/v1/board/comment
+POST {{host}}/api/v2/board/comment
 Content-Type: application/json
 Authorization: Bearer {{AUTHORIZATION}}
 
 {
-    "boardId": 1,
+    "organizationBoardId": 1,
     "parentCommentId": 1,
     "content": "대댓글"
 }
@@ -25,11 +24,11 @@ Authorization: Bearer {{AUTHORIZATION}}
 
 
 ### 댓글을 삭제한다.
-DELETE {{host}}/api/v1/board/comment?boardCommentId=1
+DELETE {{host}}/api/v2/board/comment?boardCommentId=1
 Authorization: Bearer {{AUTHORIZATION}}
 
 
 
 ### 해당 게시물의 댓글 리스트를 불러옵니다
-GET {{host}}/api/v1/board/comment/list?boardId=1
+GET {{host}}/api/v2/board/comment/list?organizationBoardId=1
 Authorization: Bearer {{AUTHORIZATION}}

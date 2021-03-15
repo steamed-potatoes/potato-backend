@@ -1,8 +1,18 @@
 version: "3"
 services:
-  dev:
-    build: .
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile_api
     ports:
       - 8080:8080
+    environment:
+      - "SPRING_PROFILES_ACTIVE=local"
+  admin:
+    build:
+      context: .
+      dockerfile: Dockerfile_admin
+    ports:
+      - 9000:9000
     environment:
       - "SPRING_PROFILES_ACTIVE=local"

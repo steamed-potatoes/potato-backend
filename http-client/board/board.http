@@ -1,0 +1,44 @@
+### 그룹 게시물을 등록하는 API
+POST {{host}}/api/v2/organization/board/potato
+Content-Type: application/json
+Authorization: Bearer {{AUTHORIZATION}}
+
+{
+    "title": "감자 신규 회원 모집",
+    "content": "감지 동아리에서 신규 회원을 모집합니다",
+    "startDateTime": "2021-03-01T00:00:00",
+    "endDateTime": "2021-03-08T11:59:59",
+    "imageUrl": "http://image.url",
+    "type": "RECRUIT"
+}
+
+### 특정 그룹의 게시물을 조회하는 API
+GET {{host}}/api/v2/organization/board?organizationBoardId=1
+
+### 그룹 게시물 정보를 변경하는 API
+PUT {{host}}/api/v2/organization/board/potato
+Content-Type: application/json
+Authorization: Bearer {{AUTHORIZATION}}
+
+{
+    "organizationBoardId": 1,
+    "title": "감자 신규 회원 모집 - 변경사항",
+    "content": "감지 동아리에서 신규 회원을 모집합니다 - 변경",
+    "startDateTime": "2021-03-05T00:00:00",
+    "endDateTime": "2021-03-13T11:59:59",
+    "imageUrl": "http://image.url",
+    "type": "RECRUIT"
+}
+
+### 게시물의 좋아요를 추가하는 API
+PUT {{host}}/api/v2/organization/board/like
+Content-Type: application/json
+Authorization: Bearer {{AUTHORIZATION}}
+
+{
+    "organizationBoardId": 1
+}
+
+### 게시물의 좋아요를 취소하는 API
+DELETE {{host}}/api/v2/organization/board/like?organizationBoardId=1
+Authorization: Bearer {{AUTHORIZATION}}

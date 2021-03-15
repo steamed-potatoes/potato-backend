@@ -1,4 +1,5 @@
 def javaProjects = [
+    project(':potato-admin'),
     project(':potato-api'),
     project(':potato-domain')
 ]
