@@ -23,6 +23,7 @@ public class OrganizationBoardService {
     private final OrganizationBoardRepository organizationBoardRepository;
     private final OrganizationRepository organizationRepository;
     private final MemberRepository memberRepository;
+    private final DeleteOrganizationBoardService deleteOrganizationBoardService;
 
     @Transactional
     public OrganizationBoardInfoResponse createBoard(String subDomain, CreateOrganizationBoardRequest request, Long memberId) {
@@ -54,6 +55,13 @@ public class OrganizationBoardService {
     public void cancelOrganizationBoardLike(Long organizationBoardId, Long memberId) {
         OrganizationBoard organizationBoard = OrganizationBoardServiceUtils.findOrganizationBoardById(organizationBoardRepository, organizationBoardId);
         organizationBoard.cancelLike(memberId);
+    }
+
+    @Transactional
+    public void deleteOrganizationBoard(String subDomain, Long organizationBoardId, Long memberId) {
+        OrganizationBoard organizationBoard = OrganizationBoardServiceUtils.findOrganizationBoardByIdAndSubDomain(organizationBoardRepository, subDomain, organizationBoardId);
+        deleteOrganizationBoardService.backUpOrganizationBoard(organizationBoard);
+        organizationBoardRepository.delete(organizationBoard);
     }
 
 }
