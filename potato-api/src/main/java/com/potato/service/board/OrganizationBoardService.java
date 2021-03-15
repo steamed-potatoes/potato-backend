@@ -60,7 +60,7 @@ public class OrganizationBoardService {
     @Transactional
     public void deleteOrganizationBoard(String subDomain, Long organizationBoardId, Long memberId) {
         OrganizationBoard organizationBoard = OrganizationBoardServiceUtils.findOrganizationBoardByIdAndSubDomain(organizationBoardRepository, subDomain, organizationBoardId);
-        deleteOrganizationBoardService.backUpOrganizationBoard(organizationBoard);
+        deleteOrganizationBoardService.backUpOrganizationBoard(organizationBoard, memberId);
         organizationBoardRepository.delete(organizationBoard);
     }
 

@@ -2,6 +2,8 @@ package com.potato.service.board;
 
 import com.potato.domain.board.Board;
 import com.potato.domain.board.BoardRepository;
+import com.potato.domain.board.DeleteBoard;
+import com.potato.domain.board.DeleteBoardReposiory;
 import com.potato.domain.board.organization.*;
 import com.potato.exception.ConflictException;
 import com.potato.exception.NotFoundException;
@@ -36,6 +38,9 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
 
     @Autowired
     private DeleteOrganizationBoardRepository deleteOrganizationBoardRepository;
+
+    @Autowired
+    private DeleteBoardReposiory deleteBoardReposiory;
 
     @AfterEach
     void cleanUp() {
@@ -209,8 +214,11 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
 
         List<DeleteOrganizationBoard> deleteOrganizationBoardList = deleteOrganizationBoardRepository.findAll();
         assertThat(deleteOrganizationBoardList).hasSize(1);
-        assertDeletedBoard(deleteOrganizationBoardList.get(0), organizationBoard.getId(),organizationBoard.getSubDomain(), organizationBoard.getTitle(),
-            organizationBoard.getStartDateTime(), organizationBoard.getEndDateTime());
+        assertDeletedBoardOrganization(deleteOrganizationBoardList.get(0), organizationBoard.getId(),organizationBoard.getSubDomain(), organizationBoard.getType());
+
+        List<DeleteBoard> deleteBoardList = deleteBoardReposiory.findAll();
+        assertThat(deleteBoardList).hasSize(1);
+        assertDeletedBoard(deleteBoardList.get(0), organizationBoard.getTitle(), organizationBoard.getMemberId(), organizationBoard.getStartDateTime(), organizationBoard.getEndDateTime());
     }
 
     @Test
@@ -238,12 +246,18 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
         assertThat(organizationBoardLike.getMemberId()).isEqualTo(memberId);
     }
 
-
     private void assertBoard(Board board, String title, Long memberId, LocalDateTime startDateTime, LocalDateTime endDateTime) {
         assertThat(board.getTitle()).isEqualTo(title);
         assertThat(board.getMemberId()).isEqualTo(memberId);
         assertThat(board.getStartDateTime()).isEqualTo(startDateTime);
         assertThat(board.getEndDateTime()).isEqualTo(endDateTime);
+    }
+
+    private void assertDeletedBoard(DeleteBoard deleteBoard, String title, Long memberId, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        assertThat(deleteBoard.getTitle()).isEqualTo(title);
+        assertThat(deleteBoard.getMemberId()).isEqualTo(memberId);
+        assertThat(deleteBoard.getStartDateTime()).isEqualTo(startDateTime);
+        assertThat(deleteBoard.getEndDateTime()).isEqualTo(endDateTime);
     }
 
     private void assertOrganizationBoard(OrganizationBoard organizationBoard, String content, OrganizationBoardType type, String subDomain) {
@@ -252,12 +266,10 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
         assertThat(organizationBoard.getSubDomain()).isEqualTo(subDomain);
     }
 
-    private void assertDeletedBoard(DeleteOrganizationBoard deletedBoard, Long backUpId, String subDomain, String title, LocalDateTime startTime, LocalDateTime endTime) {
+    private void assertDeletedBoardOrganization(DeleteOrganizationBoard deletedBoard, Long backUpId, String subDomain, OrganizationBoardType type) {
         assertThat(deletedBoard.getBackUpId()).isEqualTo(backUpId);
         assertThat(deletedBoard.getSubDomain()).isEqualTo(subDomain);
-        assertThat(deletedBoard.getTitle()).isEqualTo(title);
-        assertThat(deletedBoard.getDateTimeInterval().getStartDateTime()).isEqualTo(startTime);
-        assertThat(deletedBoard.getDateTimeInterval().getEndDateTime()).isEqualTo(endTime);
+        assertThat(deletedBoard.getOrganizationBoardType()).isEqualTo(OrganizationBoardType.RECRUIT);
     }
 
 }
