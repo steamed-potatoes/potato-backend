@@ -14,8 +14,8 @@ public class DeleteOrganizationBoardService {
     private final DeleteOrganizationBoardRepository deleteOrganizationBoardRepository;
 
     @Transactional
-    public void backUpOrganizationBoard(OrganizationBoard organizationBoard) {
-        deleteOrganizationBoardRepository.save(DeleteOrganizationBoard.newBackUpInstance(organizationBoard));
+    public void backUpOrganizationBoard(OrganizationBoard organizationBoard, Long memberId) {
+        deleteOrganizationBoardRepository.save(DeleteOrganizationBoard.newBackUpInstance(organizationBoard, memberId));
     }
 
 }

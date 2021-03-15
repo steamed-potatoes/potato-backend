@@ -4,6 +4,7 @@ import com.potato.config.argumentResolver.MemberId;
 import com.potato.config.interceptor.auth.Auth;
 import com.potato.controller.ApiResponse;
 import com.potato.service.board.OrganizationBoardService;
+import com.potato.service.board.dto.request.DeleteOrganizationBoardRequest;
 import com.potato.service.board.dto.request.LikeOrganizationBoardRequest;
 import com.potato.service.board.dto.request.CreateOrganizationBoardRequest;
 import com.potato.service.board.dto.request.UpdateOrganizationBoardRequest;
@@ -49,9 +50,11 @@ public class OrganizationBoardController {
 
     @Operation(summary = "그룹의 관리자가 그룹의 게시물을 삭제하는 API", description = "Bearer 토큰이 필요합니다")
     @Auth(role = ORGANIZATION_ADMIN)
-    @DeleteMapping("/api/v2/organization/board/{subDomain}/{organizationBoardId}")
-    public void deleteOrganizationBoard(@PathVariable String subDomain, @PathVariable Long organizationBoardId, @MemberId Long memberId) {
-        organizationBoardService.deleteOrganizationBoard(subDomain, organizationBoardId, memberId);
+    @DeleteMapping("/api/v2/organization/board/{subDomain}")
+    public ApiResponse<String> deleteOrganizationBoard(
+        @PathVariable String subDomain, @Valid @RequestBody DeleteOrganizationBoardRequest request, @MemberId Long memberId) {
+        organizationBoardService.deleteOrganizationBoard(subDomain, request.getOrganizationBoardId(), memberId);
+        return ApiResponse.OK;
     }
 
     @Operation(summary = "게시물의 좋아요를 추가하는 API", description = "Bearer 토큰이 필요합니다")
