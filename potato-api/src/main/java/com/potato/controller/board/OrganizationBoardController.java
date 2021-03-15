@@ -47,7 +47,12 @@ public class OrganizationBoardController {
         return ApiResponse.of(organizationBoardService.updateBoard(subDomain, request, memberId));
     }
 
-    // TODO: 그룹의 관리자가 그룹의 게시물을 삭제하는 API
+    @Operation(summary = "그룹의 관리자가 그룹의 게시물을 삭제하는 API", description = "Bearer 토큰이 필요합니다")
+    @Auth(role = ORGANIZATION_ADMIN)
+    @DeleteMapping("/api/v2/organization/board/{subDomain}/{organizationBoardId}")
+    public void deleteOrganizationBoard(@PathVariable String subDomain, @PathVariable Long organizationBoardId, @MemberId Long memberId) {
+        organizationBoardService.deleteOrganizationBoard(subDomain, organizationBoardId, memberId);
+    }
 
     @Operation(summary = "게시물의 좋아요를 추가하는 API", description = "Bearer 토큰이 필요합니다")
     @Auth

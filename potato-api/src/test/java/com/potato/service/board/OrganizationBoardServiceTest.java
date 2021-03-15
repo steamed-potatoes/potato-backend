@@ -34,12 +34,16 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
     @Autowired
     private OrganizationBoardLikeRepository organizationBoardLikeRepository;
 
+    @Autowired
+    private DeleteOrganizationBoardRepository deleteOrganizationBoardRepository;
+
     @AfterEach
     void cleanUp() {
         super.cleanup();
         organizationBoardLikeRepository.deleteAllInBatch();
         organizationBoardRepository.deleteAllInBatch();
         boardRepository.deleteAllInBatch();
+        deleteOrganizationBoardRepository.deleteAll();
     }
 
     @Test
@@ -190,6 +194,45 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
         assertThatThrownBy(() -> organizationBoardService.cancelOrganizationBoardLike(organizationBoard.getId(), memberId)).isInstanceOf(NotFoundException.class);
     }
 
+    @Test
+    void 그룹_관리자가_게시물을_삭제하면_백업이_되고_삭제된다() {
+        //given
+        OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, memberId, "게시글", OrganizationBoardType.RECRUIT);
+        organizationBoardRepository.save(organizationBoard);
+
+        //when
+        organizationBoardService.deleteOrganizationBoard(subDomain, organizationBoard.getId(), memberId);
+
+        //then
+        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findAll();
+        assertThat(organizationBoardList).isEmpty();
+
+        List<DeleteOrganizationBoard> deleteOrganizationBoardList = deleteOrganizationBoardRepository.findAll();
+        assertThat(deleteOrganizationBoardList).hasSize(1);
+        assertDeletedBoard(deleteOrganizationBoardList.get(0), organizationBoard.getId(),organizationBoard.getSubDomain(), organizationBoard.getTitle(),
+            organizationBoard.getStartDateTime(), organizationBoard.getEndDateTime());
+    }
+
+    @Test
+    void 해당하는_그룹_게시글이_아닐경우_삭제되지_않고_애러뜬다() {
+        //given
+        OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, memberId, "title", OrganizationBoardType.RECRUIT);
+        organizationBoardRepository.save(organizationBoard);
+
+        //when & then
+        assertThatThrownBy(
+            () -> organizationBoardService.deleteOrganizationBoard("another-subDomain", organizationBoard.getId(), memberId)
+        ).isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
+    void 게시물이_없으면_삭제되지_않는다() {
+        //when & then
+        assertThatThrownBy(
+            () -> organizationBoardService.deleteOrganizationBoard(subDomain, 999L, memberId)
+        ).isInstanceOf(NotFoundException.class);
+    }
+
     private void assertOrganizationBoardLike(OrganizationBoardLike organizationBoardLike, Long id, Long memberId) {
         assertThat(organizationBoardLike.getOrganizationBoard().getId()).isEqualTo(id);
         assertThat(organizationBoardLike.getMemberId()).isEqualTo(memberId);
@@ -207,6 +250,14 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
         assertThat(organizationBoard.getContent()).isEqualTo(content);
         assertThat(organizationBoard.getType()).isEqualTo(type);
         assertThat(organizationBoard.getSubDomain()).isEqualTo(subDomain);
+    }
+
+    private void assertDeletedBoard(DeleteOrganizationBoard deletedBoard, Long backUpId, String subDomain, String title, LocalDateTime startTime, LocalDateTime endTime) {
+        assertThat(deletedBoard.getBackUpId()).isEqualTo(backUpId);
+        assertThat(deletedBoard.getSubDomain()).isEqualTo(subDomain);
+        assertThat(deletedBoard.getTitle()).isEqualTo(title);
+        assertThat(deletedBoard.getDateTimeInterval().getStartDateTime()).isEqualTo(startTime);
+        assertThat(deletedBoard.getDateTimeInterval().getEndDateTime()).isEqualTo(endTime);
     }
 
 }
