@@ -16,6 +16,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RequiredArgsConstructor
 @Service
 public class OrganizationBoardService {
@@ -62,6 +65,23 @@ public class OrganizationBoardService {
         OrganizationBoard organizationBoard = OrganizationBoardServiceUtils.findOrganizationBoardByIdAndSubDomain(organizationBoardRepository, subDomain, organizationBoardId);
         deleteOrganizationBoardService.backUpOrganizationBoard(organizationBoard, memberId);
         organizationBoardRepository.delete(organizationBoard);
+    }
+
+    @Transactional
+    public List<OrganizationBoardInfoResponse> retrieveLatestOrganizationBoardList(long lastOrganizationBoardId, int size) {
+        return lastOrganizationBoardId == 0 ? getLatestOrganizationBoards(size) : getLatestOrganizationBoardsLessThanId(lastOrganizationBoardId, size);
+    }
+
+    private List<OrganizationBoardInfoResponse> getLatestOrganizationBoards(int size) {
+        return organizationBoardRepository.findBoardsOrderByDesc(size).stream()
+            .map(OrganizationBoardInfoResponse::of).collect(Collectors.toList());
+    }
+
+    private List<OrganizationBoardInfoResponse> getLatestOrganizationBoardsLessThanId(long lastOrganizationBoardId, int size) {
+        return organizationBoardRepository.findBoardsLessThanOrderByIdDescLimit(lastOrganizationBoardId, size)
+            .stream()
+            .map(OrganizationBoardInfoResponse::of)
+            .collect(Collectors.toList());
     }
 
 }

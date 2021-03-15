@@ -4,6 +4,8 @@ import com.potato.domain.board.organization.OrganizationBoard;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -34,6 +36,25 @@ public class OrganizationBoardRepositoryCustomImpl implements OrganizationBoardR
                 organizationBoard.id.eq(organizationBoardId),
                 organizationBoard.subDomain.eq(subDomain)
             ).fetchOne();
+    }
+
+    @Override
+    public List<OrganizationBoard> findBoardsOrderByDesc(int size) {
+        return queryFactory.selectFrom(organizationBoard)
+            .orderBy(board.id.desc())
+            .limit(size)
+            .fetch();
+    }
+
+    @Override
+    public List<OrganizationBoard> findBoardsLessThanOrderByIdDescLimit(long lastOrganizationBoardId, int size) {
+        return queryFactory.selectFrom(organizationBoard)
+            .where(
+                board.id.lt(lastOrganizationBoardId)
+            )
+            .orderBy(board.id.desc())
+            .limit(size)
+            .fetch();
     }
 
     @Override
