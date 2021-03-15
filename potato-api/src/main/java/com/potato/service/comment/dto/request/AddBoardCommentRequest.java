@@ -4,25 +4,31 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 @ToString
 @Getter
 @NoArgsConstructor
 public class AddBoardCommentRequest {
 
-    private Long boardId;
+    @NotNull
+    private Long organizationBoardId;
 
+    @NotNull
     private Long parentCommentId;
 
+    @NotBlank
     private String content;
 
-    private AddBoardCommentRequest(Long boardId, Long parentCommentId, String content) {
-        this.boardId = boardId;
+    private AddBoardCommentRequest(Long organizationBoardId, Long parentCommentId, String content) {
+        this.organizationBoardId = organizationBoardId;
         this.parentCommentId = parentCommentId;
         this.content = content;
     }
 
-    public static AddBoardCommentRequest testInstance(Long boardId, Long parentCommentId, String content) {
-        return new AddBoardCommentRequest(boardId, parentCommentId, content);
+    public static AddBoardCommentRequest testInstance(Long organizationBoardId, Long parentCommentId, String content) {
+        return new AddBoardCommentRequest(organizationBoardId, parentCommentId, content);
     }
 
     public boolean hasParentComment() {

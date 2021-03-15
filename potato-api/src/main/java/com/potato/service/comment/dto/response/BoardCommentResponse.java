@@ -42,11 +42,11 @@ public class BoardCommentResponse {
     }
 
     private static BoardCommentResponse inActiveComment(BoardComment comment) {
-        return new BoardCommentResponse(comment.getId(), comment.getBoardId(), null, "삭제된 메시지입니다");
+        return new BoardCommentResponse(comment.getId(), comment.getOrganizationBoardId(), null, "삭제된 메시지입니다");
     }
 
     private static BoardCommentResponse activeComment(BoardComment comment) {
-        return new BoardCommentResponse(comment.getId(), comment.getBoardId(), comment.getMemberId(), comment.getContent());
+        return new BoardCommentResponse(comment.getId(), comment.getOrganizationBoardId(), comment.getMemberId(), comment.getContent());
     }
 
 }

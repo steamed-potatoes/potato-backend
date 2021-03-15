@@ -8,7 +8,7 @@ public interface BoardCommentRepositoryCustom {
 
     BoardComment findBoardCommentById(Long boardCommentId);
 
-    List<BoardComment> findRootCommentByBoardId(Long boardId);
+    List<BoardComment> findRootCommentByOrganizationBoardId(Long organizationBoardId);
 
     BoardComment findBoardCommentByIdAndMemberId(Long boardCommentId, Long memberId);
 
