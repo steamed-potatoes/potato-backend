@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import static com.potato.config.interceptor.auth.Auth.Role.ORGANIZATION_ADMIN;
+
 @RequiredArgsConstructor
 @RestController
 public class OrganizationBoardController {
@@ -20,7 +22,7 @@ public class OrganizationBoardController {
     private final OrganizationBoardService organizationBoardService;
 
     @Operation(summary = "그룹의 관리자가 새로운 그룹의 게시물을 등록하는 API", description = "Bearer 토큰이 필요합니다")
-    @Auth
+    @Auth(role = ORGANIZATION_ADMIN)
     @PostMapping("/api/v2/organization/board/{subDomain}")
     public ApiResponse<OrganizationBoardInfoResponse> createOrganizationBoard(
         @PathVariable String subDomain, @Valid @RequestBody CreateOrganizationBoardRequest request, @MemberId Long memberId) {
