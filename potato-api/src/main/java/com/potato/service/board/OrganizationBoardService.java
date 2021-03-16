@@ -67,7 +67,7 @@ public class OrganizationBoardService {
         organizationBoardRepository.delete(organizationBoard);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<OrganizationBoardInfoResponse> retrieveLatestOrganizationBoardList(long lastOrganizationBoardId, int size) {
         return lastOrganizationBoardId == 0 ? getLatestOrganizationBoards(size) : getLatestOrganizationBoardsLessThanId(lastOrganizationBoardId, size);
     }
