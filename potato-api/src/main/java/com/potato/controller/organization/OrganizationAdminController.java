@@ -24,7 +24,7 @@ public class OrganizationAdminController {
     @Auth(role = ORGANIZATION_ADMIN)
     @PutMapping("/api/v1/organization/{subDomain}")
     public ApiResponse<OrganizationInfoResponse> updateOrganizationInfo(@PathVariable String subDomain, @Valid @RequestBody UpdateOrganizationInfoRequest request) {
-        return ApiResponse.of(organizationAdminService.updateOrganizationInfo(subDomain, request));
+        return ApiResponse.success(organizationAdminService.updateOrganizationInfo(subDomain, request));
     }
 
     @Operation(summary = "그룹 관리자가 가입 신청을 수락하는 API", description = "Bearer 토큰이 필요합니다")

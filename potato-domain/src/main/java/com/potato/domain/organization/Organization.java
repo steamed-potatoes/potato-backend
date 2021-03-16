@@ -111,7 +111,7 @@ public class Organization extends BaseTimeEntity {
 
     public void validateAdminMember(Long memberId) {
         if (!isAdmin(memberId)) {
-            throw new ForbiddenException(String.format("멤버 (%s)는 조직 (%s)의 관리자가 아닙니다", memberId, subDomain));
+            throw new ForbiddenException(String.format("멤버 (%s)는 그룹(%s)의 관리자가 아닙니다", memberId, subDomain), "그룹의 관리자만이 할 수 있습니다.");
         }
     }
 
@@ -122,7 +122,7 @@ public class Organization extends BaseTimeEntity {
 
     private void validateIsMemberOrPendingInOrganization(Long memberId) {
         if (isMemberOrPendingInOrganization(memberId)) {
-            throw new ConflictException(String.format("이미 조직(%s)에 가입되거나 가입신청 한 유저(%s)입니다.", subDomain, memberId));
+            throw new ConflictException(String.format("이미 그룹(%s)에 가입되거나 가입신청 한 유저(%s)입니다.", subDomain, memberId), "이미 그룹에 가입하거나 가입 신청하였습니다.");
         }
     }
 
@@ -133,7 +133,7 @@ public class Organization extends BaseTimeEntity {
 
     public void validateIsMemberInOrganization(Long memberId) {
         if (!isMemberInOrganization(memberId)) {
-            throw new ForbiddenException(String.format("해당하는 멤버 (%s)는 그룹 (%s)의 소속이 아닙니다", memberId, this.subDomain));
+            throw new ForbiddenException(String.format("해당하는 멤버 (%s)는 그룹 (%s)의 소속이 아닙니다", memberId, this.subDomain), "회원은 그룹의 소속이 아닙니다.");
         }
     }
 

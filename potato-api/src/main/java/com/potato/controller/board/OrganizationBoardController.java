@@ -28,19 +28,19 @@ public class OrganizationBoardController {
     @PostMapping("/api/v2/organization/board/{subDomain}")
     public ApiResponse<OrganizationBoardInfoResponse> createOrganizationBoard(
         @PathVariable String subDomain, @Valid @RequestBody CreateOrganizationBoardRequest request, @MemberId Long memberId) {
-        return ApiResponse.of(organizationBoardService.createBoard(subDomain, request, memberId));
+        return ApiResponse.success(organizationBoardService.createBoard(subDomain, request, memberId));
     }
 
     @Operation(summary = "특정 그룹의 게시물을 조회하는 API")
     @GetMapping("/api/v2/organization/board")
     public ApiResponse<OrganizationBoardWithCreatorInfoResponse> retrieveOrganizationBoard(@RequestParam Long organizationBoardId) {
-        return ApiResponse.of(organizationBoardService.retrieveBoard(organizationBoardId));
+        return ApiResponse.success(organizationBoardService.retrieveBoard(organizationBoardId));
     }
 
     @Operation(summary = "그룹의 게시물을 스크롤 페이지네이션 기반으로 조회하는 API", description = "lastOrganizationBoardId = 가장 마지막 게시물의 id, size = 받아올 게시물의 개수")
     @GetMapping("/api/v2/organization/board/list")
     public ApiResponse<List<OrganizationBoardInfoResponse>> retrieveLatestOrganizationBoardList(@Valid RetrieveLatestBoardsRequest request) {
-        return ApiResponse.of(organizationBoardService.retrieveLatestOrganizationBoardList(request.getLastOrganizationBoardId(), request.getSize()));
+        return ApiResponse.success(organizationBoardService.retrieveLatestOrganizationBoardList(request.getLastOrganizationBoardId(), request.getSize()));
     }
 
     @Operation(summary = "그룹의 관리자가 그룹의 게시물을 수정하는 API", description = "Bearer 토큰이 필요합니다")
@@ -48,7 +48,7 @@ public class OrganizationBoardController {
     @PutMapping("/api/v2/organization/board/{subDomain}")
     public ApiResponse<OrganizationBoardInfoResponse> updateOrganizationBoard(
         @PathVariable String subDomain, @Valid @RequestBody UpdateOrganizationBoardRequest request, @MemberId Long memberId) {
-        return ApiResponse.of(organizationBoardService.updateBoard(subDomain, request, memberId));
+        return ApiResponse.success(organizationBoardService.updateBoard(subDomain, request, memberId));
     }
 
     @Operation(summary = "그룹의 관리자가 그룹의 게시물을 삭제하는 API", description = "Bearer 토큰이 필요합니다")

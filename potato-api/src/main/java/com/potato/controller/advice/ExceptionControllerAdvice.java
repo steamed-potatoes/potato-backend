@@ -20,7 +20,7 @@ public class ExceptionControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiResponse<Object> handleValidationException(ValidationException e) {
         log.error(e.getMessage(), e);
-        return new ApiResponse<>(VALIDATION_EXCEPTION.getCode(), VALIDATION_EXCEPTION.getMessage(), e.getData());
+        return ApiResponse.error(VALIDATION_EXCEPTION.getCode(), e.getDescription() == null ? VALIDATION_EXCEPTION.getMessage() : e.getDescription());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -28,7 +28,7 @@ public class ExceptionControllerAdvice {
     public ApiResponse<Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         log.error(e.getMessage(), e);
         String field = e.getBindingResult().getFieldError() == null ? "" : e.getBindingResult().getFieldError().getField();
-        return new ApiResponse<>(VALIDATION_EXCEPTION.getCode(), String.format("(%s) %s", field, e.getBindingResult().getFieldError().getDefaultMessage()), null);
+        return ApiResponse.error(VALIDATION_EXCEPTION.getCode(), String.format("(%s) %s", field, e.getBindingResult().getFieldError().getDefaultMessage()));
     }
 
     @ExceptionHandler(BindException.class)
@@ -36,49 +36,49 @@ public class ExceptionControllerAdvice {
     public ApiResponse<Object> handleBindException(BindException e) {
         log.error(e.getMessage(), e);
         String field = e.getBindingResult().getFieldError() == null ? "" : e.getBindingResult().getFieldError().getField();
-        return new ApiResponse<>(VALIDATION_EXCEPTION.getCode(), String.format("(%s) %s", field, e.getBindingResult().getFieldError().getDefaultMessage()), null);
+        return ApiResponse.error(VALIDATION_EXCEPTION.getCode(), String.format("(%s) %s", field, e.getBindingResult().getFieldError().getDefaultMessage()));
     }
 
     @ExceptionHandler(UnAuthorizedException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ApiResponse<Object> handleUnauthorizedException(UnAuthorizedException e) {
         log.error(e.getMessage(), e);
-        return new ApiResponse<>(UNAUTHORIZED_EXCEPTION.getCode(), UNAUTHORIZED_EXCEPTION.getMessage(), e.getData());
+        return ApiResponse.error(UNAUTHORIZED_EXCEPTION.getCode(), UNAUTHORIZED_EXCEPTION.getMessage());
     }
 
     @ExceptionHandler(ForbiddenException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ApiResponse<Object> handleForbiddenException(ForbiddenException e) {
         log.error(e.getMessage(), e);
-        return new ApiResponse<>(FORBIDDEN_EXCEPTION.getCode(), FORBIDDEN_EXCEPTION.getMessage(), e.getData());
+        return ApiResponse.error(FORBIDDEN_EXCEPTION.getCode(), e.getDescription() == null ? FORBIDDEN_EXCEPTION.getMessage() : e.getDescription());
     }
 
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ApiResponse<Object> handleNotFoundException(NotFoundException e) {
         log.error(e.getMessage(), e);
-        return new ApiResponse<>(NOT_FOUND_EXCEPTION.getCode(), NOT_FOUND_EXCEPTION.getMessage(), e.getData());
+        return ApiResponse.error(NOT_FOUND_EXCEPTION.getCode(), e.getDescription() == null ? NOT_FOUND_EXCEPTION.getMessage() : e.getDescription());
     }
 
     @ExceptionHandler(ConflictException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ApiResponse<Object> handleConflictException(ConflictException e) {
         log.error(e.getMessage(), e);
-        return new ApiResponse<>(CONFLICT_EXCEPTION.getCode(), CONFLICT_EXCEPTION.getMessage(), e.getData());
+        return ApiResponse.error(CONFLICT_EXCEPTION.getCode(), e.getDescription() == null ? CONFLICT_EXCEPTION.getMessage() : e.getDescription());
     }
 
     @ExceptionHandler(BadGatewayException.class)
     @ResponseStatus(HttpStatus.BAD_GATEWAY)
     public ApiResponse<Object> handleBadGatewayException(BadGatewayException e) {
         log.error(e.getMessage(), e);
-        return new ApiResponse<>(BAD_GATEWAY_EXCEPTION.getCode(), BAD_GATEWAY_EXCEPTION.getMessage(), e.getData());
+        return ApiResponse.error(BAD_GATEWAY_EXCEPTION.getCode(), BAD_GATEWAY_EXCEPTION.getMessage());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ApiResponse<Object> handleInternalServerException(IllegalArgumentException e) {
         log.error(e.getMessage(), e);
-        return new ApiResponse<>(INTERNAL_SERVER_EXCEPTION.getCode(), INTERNAL_SERVER_EXCEPTION.getMessage(), null);
+        return ApiResponse.error(INTERNAL_SERVER_EXCEPTION.getCode(), INTERNAL_SERVER_EXCEPTION.getMessage());
     }
 
 }

@@ -18,7 +18,7 @@ public class ScheduleController {
 
     @GetMapping("/api/v1/schedule")
     public ApiResponse<ScheduleResponse> retrieveScheduleBetween(@Valid ScheduleRequest request) {
-        return ApiResponse.of(scheduleService.getDefaultSchedule(request));
+        return ApiResponse.success(scheduleService.getDefaultSchedule(request));
     }
 
 }

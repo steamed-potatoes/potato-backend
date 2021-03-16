@@ -5,11 +5,11 @@ import lombok.Getter;
 @Getter
 public abstract class CustomException extends RuntimeException {
 
-    private Object data;
+    private String description;
 
-    public CustomException(String message, Object data) {
+    public CustomException(String message, String description) {
         super(message);
-        this.data = data;
+        this.description = description;
     }
 
     public CustomException(String message) {
