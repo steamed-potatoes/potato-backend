@@ -1,5 +1,6 @@
 dependencies {
     implementation project(':potato-domain')
+    implementation project(':potato-external')
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
 }

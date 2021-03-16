@@ -24,7 +24,7 @@ public class OrganizationController {
     @Auth
     @PostMapping("/api/v1/organization")
     public ApiResponse<OrganizationInfoResponse> createOrganization(@Valid @RequestBody CreateOrganizationRequest request, @MemberId Long memberId) {
-        return ApiResponse.of(organizationService.createOrganization(request, memberId));
+        return ApiResponse.success(organizationService.createOrganization(request, memberId));
     }
 
     @Operation(summary = "특정 그룹에 가입신청을 하는 API", description = "Bearer 토큰이 필요합니다")

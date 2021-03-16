@@ -54,7 +54,7 @@ public class BoardComment extends BaseTimeEntity {
 
     public void addChildComment(Long memberId, String content) {
         if (!this.isRootComment()) {
-            throw new ValidationException(String.format("댓글은 2 depth 까지 가능합니다. memberId: (%s) content: (%s)", memberId, content));
+            throw new ValidationException(String.format("댓글은 2 depth 까지 가능합니다. memberId: (%s) content: (%s)", memberId, content), "댓글은 대댓글까지만 가능합니다.");
         }
         this.childComments.add(new BoardComment(this, this.organizationBoardId, memberId, content, this.depth + 1));
     }

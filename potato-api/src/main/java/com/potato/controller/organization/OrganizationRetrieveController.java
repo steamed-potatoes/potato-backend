@@ -22,26 +22,26 @@ public class OrganizationRetrieveController {
     @Operation(summary = "특정 그룹의 정보를 조회하는 API", description = "해당하는 그룹의 subDomain")
     @GetMapping("/api/v1/organization/{subDomain}")
     public ApiResponse<OrganizationWithMembersInfoResponse> getDetailOrganizationInfo(@PathVariable String subDomain) {
-        return ApiResponse.of(organizationRetrieveService.getDetailOrganizationInfo(subDomain));
+        return ApiResponse.success(organizationRetrieveService.getDetailOrganizationInfo(subDomain));
     }
 
     @Operation(summary = "등록된 그룹 리스트를 불러오는 API")
     @GetMapping("/api/v1/organization/list")
     public ApiResponse<List<OrganizationInfoResponse>> getOrganizations() {
-        return ApiResponse.of(organizationRetrieveService.getOrganizationsInfo());
+        return ApiResponse.success(organizationRetrieveService.getOrganizationsInfo());
     }
 
     @Operation(summary = "내가 속한 그룹의 리스트를 불러오는 API", description = "Bearer 토큰이 필요합니다")
     @Auth
     @GetMapping("/api/v1/organization/my")
     public ApiResponse<List<OrganizationInfoResponse>> getMyOrganizations(@MemberId Long memberId) {
-        return ApiResponse.of(organizationRetrieveService.getMyOrganizationsInfo(memberId));
+        return ApiResponse.success(organizationRetrieveService.getMyOrganizationsInfo(memberId));
     }
 
     @Operation(summary = "그룹을 팔로우한 멤버 리스트를 불러오는 API")
     @GetMapping("/api/v1/organization/follow/{subDomain}")
     public ApiResponse<List<MemberInfoResponse>> getOrganizationFollowMember(@PathVariable String subDomain) {
-        return ApiResponse.of(organizationRetrieveService.getOrganizationFollowMember(subDomain));
+        return ApiResponse.success(organizationRetrieveService.getOrganizationFollowMember(subDomain));
     }
 
 }
