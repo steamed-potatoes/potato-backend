@@ -42,3 +42,7 @@ Authorization: Bearer {{AUTHORIZATION}}
 ### 게시물의 좋아요를 취소하는 API
 DELETE {{host}}/api/v2/organization/board/like?organizationBoardId=1
 Authorization: Bearer {{AUTHORIZATION}}
+
+### 그룹의 게시물을 스크롤 페이지네이션 기반으로 조회하는 API
+GET {{host}}/api/v2/organization/board/list?lastOrganizationBoardId=2&size=1
+

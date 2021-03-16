@@ -41,7 +41,7 @@ public class OrganizationBoardRepositoryCustomImpl implements OrganizationBoardR
     @Override
     public List<OrganizationBoard> findBoardsOrderByDesc(int size) {
         return queryFactory.selectFrom(organizationBoard)
-            .orderBy(board.id.desc())
+            .orderBy(organizationBoard.id.desc())
             .limit(size)
             .fetch();
     }
@@ -50,9 +50,9 @@ public class OrganizationBoardRepositoryCustomImpl implements OrganizationBoardR
     public List<OrganizationBoard> findBoardsLessThanOrderByIdDescLimit(long lastOrganizationBoardId, int size) {
         return queryFactory.selectFrom(organizationBoard)
             .where(
-                board.id.lt(lastOrganizationBoardId)
+                organizationBoard.id.lt(lastOrganizationBoardId)
             )
-            .orderBy(board.id.desc())
+            .orderBy(organizationBoard.id.desc())
             .limit(size)
             .fetch();
     }
