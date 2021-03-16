@@ -9,7 +9,6 @@ import java.util.List;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.List;
 
 import static com.potato.domain.board.QBoard.board;
 import static com.potato.domain.board.organization.QOrganizationBoard.organizationBoard;
@@ -41,6 +40,7 @@ public class OrganizationBoardRepositoryCustomImpl implements OrganizationBoardR
     @Override
     public List<OrganizationBoard> findBoardsOrderByDesc(int size) {
         return queryFactory.selectFrom(organizationBoard)
+            .innerJoin(organizationBoard.board, board).fetchJoin()
             .orderBy(organizationBoard.id.desc())
             .limit(size)
             .fetch();
@@ -49,6 +49,7 @@ public class OrganizationBoardRepositoryCustomImpl implements OrganizationBoardR
     @Override
     public List<OrganizationBoard> findBoardsLessThanOrderByIdDescLimit(long lastOrganizationBoardId, int size) {
         return queryFactory.selectFrom(organizationBoard)
+            .innerJoin(organizationBoard.board, board).fetchJoin()
             .where(
                 organizationBoard.id.lt(lastOrganizationBoardId)
             )
