@@ -1,12 +1,12 @@
-package com.potato.domain;
+package com.potato.domain.adminMember;
 
+import com.potato.domain.BaseTimeEntity;
 import com.potato.domain.member.Email;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -22,3 +22,4 @@ public class AdminMember extends BaseTimeEntity {
     private String name;
 
 }
+

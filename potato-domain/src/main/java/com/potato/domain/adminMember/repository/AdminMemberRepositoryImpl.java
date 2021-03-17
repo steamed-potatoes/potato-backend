@@ -1,14 +1,14 @@
-package com.potato.domain.repository;
+package com.potato.domain.adminMember.repository;
 
-import com.potato.domain.AdminMember;
-import com.potato.domain.member.Email;
+import com.potato.domain.adminMember.AdminMember;
+import com.potato.domain.adminMember.QAdminMember;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
-import static com.potato.domain.QAdminMember.adminMember;
+import static com.potato.domain.adminMember.QAdminMember.adminMember;
 
 @RequiredArgsConstructor
-public class AdminMemberRepositoryCustomImpl implements AdminMemberRepositoryCustom {
+public class AdminMemberRepositoryImpl implements AdminMemberRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
