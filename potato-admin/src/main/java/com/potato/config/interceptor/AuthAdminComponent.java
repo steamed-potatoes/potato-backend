@@ -4,7 +4,7 @@ import com.potato.config.session.AdminMemberSession;
 import com.potato.config.session.SessionConstants;
 import com.potato.domain.adminMember.AdminMemberRepository;
 import com.potato.exception.UnAuthorizedException;
-import com.potato.service.AdminAuthServiceUtils;
+import com.potato.service.auth.AdminAuthServiceUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.session.Session;

@@ -1,4 +1,4 @@
-package com.potato.service;
+package com.potato.service.auth;
 
 import com.potato.domain.adminMember.AdminMember;
 import com.potato.domain.adminMember.AdminMemberRepository;

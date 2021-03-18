@@ -1,8 +1,8 @@
 package com.potato.controller.auth;
 
 import com.potato.controller.ApiResponse;
-import com.potato.service.AdminAuthService;
-import com.potato.service.dto.request.GoogleAuthRequest;
+import com.potato.service.auth.AdminAuthService;
+import com.potato.service.auth.dto.request.GoogleAuthRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
