@@ -3,7 +3,7 @@ package com.potato.service.board;
 import com.potato.domain.board.Board;
 import com.potato.domain.board.BoardRepository;
 import com.potato.domain.board.DeleteBoard;
-import com.potato.domain.board.DeleteBoardReposiory;
+import com.potato.domain.board.DeleteBoardRepository;
 import com.potato.domain.board.organization.*;
 import com.potato.exception.ConflictException;
 import com.potato.exception.NotFoundException;
@@ -43,7 +43,7 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
     private DeleteOrganizationBoardRepository deleteOrganizationBoardRepository;
 
     @Autowired
-    private DeleteBoardReposiory deleteBoardReposiory;
+    private DeleteBoardRepository deleteBoardRepository;
 
     @AfterEach
     void cleanUp() {
@@ -219,7 +219,7 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
         assertThat(deleteOrganizationBoardList).hasSize(1);
         assertDeletedBoardOrganization(deleteOrganizationBoardList.get(0), organizationBoard.getId(),organizationBoard.getSubDomain(), organizationBoard.getType());
 
-        List<DeleteBoard> deleteBoardList = deleteBoardReposiory.findAll();
+        List<DeleteBoard> deleteBoardList = deleteBoardRepository.findAll();
         assertThat(deleteBoardList).hasSize(1);
         assertDeletedBoard(deleteBoardList.get(0), organizationBoard.getTitle(), organizationBoard.getMemberId(), organizationBoard.getStartDateTime(), organizationBoard.getEndDateTime());
     }

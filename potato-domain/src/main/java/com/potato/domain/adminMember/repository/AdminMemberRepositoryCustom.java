@@ -4,6 +4,8 @@ import com.potato.domain.adminMember.AdminMember;
 
 public interface AdminMemberRepositoryCustom {
 
-    AdminMember findByEmail(String email);
+    AdminMember findAdminByEmail(String email);
+
+	AdminMember findAdminById(Long adminMemberId);
 
 }

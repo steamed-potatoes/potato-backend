@@ -2,7 +2,6 @@ package com.potato.domain.board.organization;
 
 import com.potato.domain.BaseTimeEntity;
 import com.potato.domain.board.DeleteBoard;
-import com.potato.domain.common.DateTimeInterval;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
