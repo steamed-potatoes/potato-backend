@@ -19,10 +19,9 @@ import static com.potato.session.SessionConstants.AUTH_SESSION;
 @RequiredArgsConstructor
 public class AdminAuthService {
 
-    private final AdminMemberRepository adminMemberRepository;
     private final HttpSession httpSession;
-
     private final GoogleApiCaller googleApiCaller;
+    private final AdminMemberRepository adminMemberRepository;
 
     public String handleGoogleAuthentication(GoogleAuthRequest request) {
         GoogleAccessTokenResponse googleAccessToken = googleApiCaller.getGoogleAccessToken(request.getCode(), request.getRedirectUri());
