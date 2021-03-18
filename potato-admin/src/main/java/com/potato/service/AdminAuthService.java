@@ -7,13 +7,13 @@ import com.potato.external.google.GoogleApiCaller;
 import com.potato.external.google.dto.response.GoogleAccessTokenResponse;
 import com.potato.external.google.dto.response.GoogleUserInfoResponse;
 import com.potato.service.dto.request.GoogleAuthRequest;
-import com.potato.session.AdminMemberSession;
+import com.potato.config.session.AdminMemberSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
 
-import static com.potato.session.SessionConstants.AUTH_SESSION;
+import static com.potato.config.session.SessionConstants.AUTH_SESSION;
 
 @Service
 @RequiredArgsConstructor

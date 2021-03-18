@@ -1,4 +1,4 @@
-package com.potato.session;
+package com.potato.config.session;
 
 import org.springframework.session.jdbc.config.annotation.web.http.EnableJdbcHttpSession;
 

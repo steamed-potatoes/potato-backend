@@ -1,4 +1,4 @@
-package com.potato.session;
+package com.potato.config.session;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
