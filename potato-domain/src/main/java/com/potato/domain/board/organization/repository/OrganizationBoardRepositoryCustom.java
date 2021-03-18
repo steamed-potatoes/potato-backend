@@ -5,7 +5,6 @@ import com.potato.domain.board.organization.OrganizationBoard;
 import java.util.List;
 
 import java.time.LocalDate;
-import java.util.List;
 
 public interface OrganizationBoardRepositoryCustom {
 
