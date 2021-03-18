@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -29,7 +30,7 @@ class OrganizationBoardRepositoryTest {
     }
 
     @Test
-    void 그룹_게시물을_저장한다() {
+    void OrganizaitonBoard저장시_Board도_함께_저장된다() {
         // given
         OrganizationBoard organizationBoard = OrganizationBoard.builder()
             .subDomain("subDomain")
@@ -54,7 +55,7 @@ class OrganizationBoardRepositoryTest {
     }
 
     @Test
-    void 그룹_게시물을_삭제한다() {
+    void OrganizationBoard를_삭제하면_Board도_삭제된다() {
         // given
         OrganizationBoard organizationBoard = OrganizationBoard.builder()
             .subDomain("subDomain")
@@ -78,6 +79,121 @@ class OrganizationBoardRepositoryTest {
 
         List<OrganizationBoard> organizationRepository = organizationBoardRepository.findAll();
         assertThat(organizationRepository).isEmpty();
+    }
+
+    @Test
+    void 캘린더_조회_시_앞쪽에_걸치는경우_포함된다() {
+        // given
+        LocalDate startDate = LocalDate.of(2021, 3, 1);
+        LocalDate endDate = LocalDate.of(2021, 3, 31);
+
+        OrganizationBoard organizationBoard = OrganizationBoard.builder()
+            .subDomain("subDomain")
+            .memberId(1L)
+            .startDateTime(LocalDateTime.of(2021, 2, 28, 0, 0))
+            .endDateTime(LocalDateTime.of(2021, 3, 1, 0, 1))
+            .title("감자 신입회원 모집")
+            .content("감자팀 신입회원을 모집합니다. 많은 참여바랍니다")
+            .imageUrl("http://image.com")
+            .type(OrganizationBoardType.RECRUIT)
+            .build();
+        organizationBoardRepository.save(organizationBoard);
+
+        // when
+        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findBetweenDate(startDate, endDate);
+        assertThat(organizationBoardList).hasSize(1);
+    }
+
+    @Test
+    void 캘린더_조회_시_뒷쪽에_걸치는경우_포함된다() {
+        // given
+        LocalDate startDate = LocalDate.of(2021, 3, 1);
+        LocalDate endDate = LocalDate.of(2021, 3, 31);
+
+        OrganizationBoard organizationBoard = OrganizationBoard.builder()
+            .subDomain("subDomain")
+            .memberId(1L)
+            .startDateTime(LocalDateTime.of(2021, 3, 31, 11, 59))
+            .endDateTime(LocalDateTime.of(2021, 4, 1, 0, 0))
+            .title("감자 신입회원 모집")
+            .content("감자팀 신입회원을 모집합니다. 많은 참여바랍니다")
+            .imageUrl("http://image.com")
+            .type(OrganizationBoardType.RECRUIT)
+            .build();
+        organizationBoardRepository.save(organizationBoard);
+
+        // when
+        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findBetweenDate(startDate, endDate);
+        assertThat(organizationBoardList).hasSize(1);
+    }
+
+    @Test
+    void 캘린더_조회_시_앞쪽_경계선을_넘어서는경우_포함되지_않는다() {
+        // given
+        LocalDate startDate = LocalDate.of(2021, 3, 1);
+        LocalDate endDate = LocalDate.of(2021, 3, 31);
+
+        OrganizationBoard organizationBoard = OrganizationBoard.builder()
+            .subDomain("subDomain")
+            .memberId(1L)
+            .startDateTime(LocalDateTime.of(2021, 2, 28, 0, 0))
+            .endDateTime(LocalDateTime.of(2021, 3, 1, 0, 0))
+            .title("감자 신입회원 모집")
+            .content("감자팀 신입회원을 모집합니다. 많은 참여바랍니다")
+            .imageUrl("http://image.com")
+            .type(OrganizationBoardType.RECRUIT)
+            .build();
+        organizationBoardRepository.save(organizationBoard);
+
+        // when
+        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findBetweenDate(startDate, endDate);
+        assertThat(organizationBoardList).isEmpty();
+    }
+
+    @Test
+    void 캘린더_조회_시_뒷쪽_경계선을_넘어서는경우_포함되지_않는다() {
+        // given
+        LocalDate startDate = LocalDate.of(2021, 3, 1);
+        LocalDate endDate = LocalDate.of(2021, 3, 31);
+
+        OrganizationBoard organizationBoard = OrganizationBoard.builder()
+            .subDomain("subDomain")
+            .memberId(1L)
+            .startDateTime(LocalDateTime.of(2021, 4, 1, 0, 0))
+            .endDateTime(LocalDateTime.of(2021, 4, 2, 0, 0))
+            .title("감자 신입회원 모집")
+            .content("감자팀 신입회원을 모집합니다. 많은 참여바랍니다")
+            .imageUrl("http://image.com")
+            .type(OrganizationBoardType.RECRUIT)
+            .build();
+        organizationBoardRepository.save(organizationBoard);
+
+        // when
+        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findBetweenDate(startDate, endDate);
+        assertThat(organizationBoardList).isEmpty();
+    }
+
+    @Test
+    void 캘린더_조회_시_안쪽에_있는경우_포함된다() {
+        // given
+        LocalDate startDate = LocalDate.of(2021, 3, 1);
+        LocalDate endDate = LocalDate.of(2021, 3, 31);
+
+        OrganizationBoard organizationBoard = OrganizationBoard.builder()
+            .subDomain("subDomain")
+            .memberId(1L)
+            .startDateTime(LocalDateTime.of(2021, 3, 15, 0, 0))
+            .endDateTime(LocalDateTime.of(2021, 3, 16, 0, 0))
+            .title("감자 신입회원 모집")
+            .content("감자팀 신입회원을 모집합니다. 많은 참여바랍니다")
+            .imageUrl("http://image.com")
+            .type(OrganizationBoardType.RECRUIT)
+            .build();
+        organizationBoardRepository.save(organizationBoard);
+
+        // when
+        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findBetweenDate(startDate, endDate);
+        assertThat(organizationBoardList).hasSize(1);
     }
 
 }

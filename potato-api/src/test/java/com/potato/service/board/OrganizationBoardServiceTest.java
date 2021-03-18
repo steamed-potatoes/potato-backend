@@ -2,18 +2,23 @@ package com.potato.service.board;
 
 import com.potato.domain.board.Board;
 import com.potato.domain.board.BoardRepository;
+import com.potato.domain.board.DeleteBoard;
+import com.potato.domain.board.DeleteBoardReposiory;
 import com.potato.domain.board.organization.*;
 import com.potato.exception.ConflictException;
 import com.potato.exception.NotFoundException;
 import com.potato.service.OrganizationMemberSetUpTest;
 import com.potato.service.board.dto.request.CreateOrganizationBoardRequest;
 import com.potato.service.board.dto.request.UpdateOrganizationBoardRequest;
+import com.potato.service.board.dto.response.OrganizationBoardInfoResponse;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,12 +39,19 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
     @Autowired
     private OrganizationBoardLikeRepository organizationBoardLikeRepository;
 
+    @Autowired
+    private DeleteOrganizationBoardRepository deleteOrganizationBoardRepository;
+
+    @Autowired
+    private DeleteBoardReposiory deleteBoardReposiory;
+
     @AfterEach
     void cleanUp() {
         super.cleanup();
         organizationBoardLikeRepository.deleteAllInBatch();
         organizationBoardRepository.deleteAllInBatch();
         boardRepository.deleteAllInBatch();
+        deleteOrganizationBoardRepository.deleteAll();
     }
 
     @Test
@@ -190,11 +202,169 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
         assertThatThrownBy(() -> organizationBoardService.cancelOrganizationBoardLike(organizationBoard.getId(), memberId)).isInstanceOf(NotFoundException.class);
     }
 
+    @Test
+    void 그룹_관리자가_게시물을_삭제하면_백업이_되고_삭제된다() {
+        //given
+        OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, memberId, "게시글", OrganizationBoardType.RECRUIT);
+        organizationBoardRepository.save(organizationBoard);
+
+        //when
+        organizationBoardService.deleteOrganizationBoard(subDomain, organizationBoard.getId(), memberId);
+
+        //then
+        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findAll();
+        assertThat(organizationBoardList).isEmpty();
+
+        List<DeleteOrganizationBoard> deleteOrganizationBoardList = deleteOrganizationBoardRepository.findAll();
+        assertThat(deleteOrganizationBoardList).hasSize(1);
+        assertDeletedBoardOrganization(deleteOrganizationBoardList.get(0), organizationBoard.getId(),organizationBoard.getSubDomain(), organizationBoard.getType());
+
+        List<DeleteBoard> deleteBoardList = deleteBoardReposiory.findAll();
+        assertThat(deleteBoardList).hasSize(1);
+        assertDeletedBoard(deleteBoardList.get(0), organizationBoard.getTitle(), organizationBoard.getMemberId(), organizationBoard.getStartDateTime(), organizationBoard.getEndDateTime());
+    }
+
+    @Test
+    void 해당하는_그룹_게시글이_아닐경우_삭제되지_않고_애러뜬다() {
+        //given
+        OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, memberId, "title", OrganizationBoardType.RECRUIT);
+        organizationBoardRepository.save(organizationBoard);
+
+        //when & then
+        assertThatThrownBy(
+            () -> organizationBoardService.deleteOrganizationBoard("another-subDomain", organizationBoard.getId(), memberId)
+        ).isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
+    void 게시물이_없으면_삭제되지_않는다() {
+        //when & then
+        assertThatThrownBy(
+            () -> organizationBoardService.deleteOrganizationBoard(subDomain, 999L, memberId)
+        ).isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
+    void 가장_최신_게시물_3개_불러온다() {
+        //given
+        OrganizationBoard organizationBoard1 = OrganizationBoardCreator.create(subDomain, memberId, "title1", OrganizationBoardType.RECRUIT);
+        OrganizationBoard organizationBoard2 = OrganizationBoardCreator.create(subDomain, memberId, "title2", OrganizationBoardType.RECRUIT);
+        OrganizationBoard organizationBoard3 = OrganizationBoardCreator.create(subDomain, memberId, "title3", OrganizationBoardType.RECRUIT);
+
+        organizationBoardRepository.saveAll(Arrays.asList(organizationBoard1, organizationBoard2, organizationBoard3));
+
+        //when
+        List<OrganizationBoardInfoResponse> responses = organizationBoardService.retrieveLatestOrganizationBoardList(0, 3);
+
+        //then
+        assertThat(responses).hasSize(3);
+        assertOrganizationBoardInfo(responses.get(0), organizationBoard3.getTitle(), organizationBoard3.getStartDateTime(),
+            organizationBoard3.getEndDateTime(), organizationBoard3.getSubDomain(), organizationBoard3.getType());
+        assertOrganizationBoardInfo(responses.get(1), organizationBoard2.getTitle(), organizationBoard2.getStartDateTime(),
+            organizationBoard2.getEndDateTime(), organizationBoard2.getSubDomain(), organizationBoard2.getType());
+        assertOrganizationBoardInfo(responses.get(2), organizationBoard1.getTitle(), organizationBoard1.getStartDateTime(),
+            organizationBoard1.getEndDateTime(), organizationBoard1.getSubDomain(), organizationBoard1.getType());
+    }
+
+    @Test
+    void 가장_최신_게시물_3개_불러올때_게시물이_없을_경우_빈리스트_반환() {
+        //given
+        List<OrganizationBoardInfoResponse> responses = organizationBoardService.retrieveLatestOrganizationBoardList(0, 3);
+
+        //then
+        assertThat(responses).isEmpty();
+    }
+
+    @DisplayName("게시물 4 이후부터 3개 조회했으니 [3, 2, 1]이 조회되어야 한다")
+    @Test
+    void 게시물_스크롤_페이지네이션_조회_기능_1() {
+        //given
+        OrganizationBoard organizationBoard1 = OrganizationBoardCreator.create(subDomain, memberId, "title1", OrganizationBoardType.RECRUIT);
+        OrganizationBoard organizationBoard2 = OrganizationBoardCreator.create(subDomain, memberId, "title2", OrganizationBoardType.RECRUIT);
+        OrganizationBoard organizationBoard3 = OrganizationBoardCreator.create(subDomain, memberId, "title3", OrganizationBoardType.RECRUIT);
+        OrganizationBoard organizationBoard4 = OrganizationBoardCreator.create(subDomain, memberId, "title4", OrganizationBoardType.RECRUIT);
+        OrganizationBoard organizationBoard5 = OrganizationBoardCreator.create(subDomain, memberId, "title5", OrganizationBoardType.RECRUIT);
+
+        organizationBoardRepository.saveAll(Arrays.asList(organizationBoard1, organizationBoard2, organizationBoard3, organizationBoard4, organizationBoard5));
+
+        //when
+        List<OrganizationBoardInfoResponse> responses = organizationBoardService.retrieveLatestOrganizationBoardList(organizationBoard4.getId(), 3);
+
+        //then
+        assertThat(responses).hasSize(3);
+        assertOrganizationBoardInfo(responses.get(0), organizationBoard3.getTitle(), organizationBoard3.getStartDateTime(),
+            organizationBoard3.getEndDateTime(), organizationBoard3.getSubDomain(), organizationBoard3.getType());
+        assertOrganizationBoardInfo(responses.get(1), organizationBoard2.getTitle(), organizationBoard2.getStartDateTime(),
+            organizationBoard2.getEndDateTime(), organizationBoard2.getSubDomain(), organizationBoard2.getType());
+        assertOrganizationBoardInfo(responses.get(2), organizationBoard1.getTitle(), organizationBoard1.getStartDateTime(),
+            organizationBoard1.getEndDateTime(), organizationBoard1.getSubDomain(), organizationBoard1.getType());
+    }
+
+    @DisplayName("게시물 4 이후부터 2개 조회했으니 [3, 2]이 조회되어야 한다")
+    @Test
+    void 게시물_스크롤_페이지네이션_조회_기능_2() {
+        //given
+        OrganizationBoard organizationBoard1 = OrganizationBoardCreator.create(subDomain, memberId, "title1", OrganizationBoardType.RECRUIT);
+        OrganizationBoard organizationBoard2 = OrganizationBoardCreator.create(subDomain, memberId, "title2", OrganizationBoardType.RECRUIT);
+        OrganizationBoard organizationBoard3 = OrganizationBoardCreator.create(subDomain, memberId, "title3", OrganizationBoardType.RECRUIT);
+        OrganizationBoard organizationBoard4 = OrganizationBoardCreator.create(subDomain, memberId, "title4", OrganizationBoardType.RECRUIT);
+        OrganizationBoard organizationBoard5 = OrganizationBoardCreator.create(subDomain, memberId, "title5", OrganizationBoardType.RECRUIT);
+
+        organizationBoardRepository.saveAll(Arrays.asList(organizationBoard1, organizationBoard2, organizationBoard3, organizationBoard4, organizationBoard5));
+
+        //when
+        List<OrganizationBoardInfoResponse> responses = organizationBoardService.retrieveLatestOrganizationBoardList(organizationBoard4.getId(), 2);
+
+        //then
+        assertThat(responses).hasSize(2);
+        assertOrganizationBoardInfo(responses.get(0), organizationBoard3.getTitle(), organizationBoard3.getStartDateTime(),
+            organizationBoard3.getEndDateTime(), organizationBoard3.getSubDomain(), organizationBoard3.getType());
+        assertOrganizationBoardInfo(responses.get(1), organizationBoard2.getTitle(), organizationBoard2.getStartDateTime(),
+            organizationBoard2.getEndDateTime(), organizationBoard2.getSubDomain(), organizationBoard2.getType());
+    }
+
+    @DisplayName("게시물 5 이후부터 3개 조회했으니 [4, 3, 2]이 조회되어야 한다")
+    @Test
+    void 게시물_스크롤_페이지네이션_조회_기능_3() {
+        //given
+        OrganizationBoard organizationBoard1 = OrganizationBoardCreator.create(subDomain, memberId, "title1", OrganizationBoardType.RECRUIT);
+        OrganizationBoard organizationBoard2 = OrganizationBoardCreator.create(subDomain, memberId, "title2", OrganizationBoardType.RECRUIT);
+        OrganizationBoard organizationBoard3 = OrganizationBoardCreator.create(subDomain, memberId, "title3", OrganizationBoardType.RECRUIT);
+        OrganizationBoard organizationBoard4 = OrganizationBoardCreator.create(subDomain, memberId, "title4", OrganizationBoardType.RECRUIT);
+        OrganizationBoard organizationBoard5 = OrganizationBoardCreator.create(subDomain, memberId, "title5", OrganizationBoardType.RECRUIT);
+
+        organizationBoardRepository.saveAll(Arrays.asList(organizationBoard1, organizationBoard2, organizationBoard3, organizationBoard4, organizationBoard5));
+
+        //when
+        List<OrganizationBoardInfoResponse> responses = organizationBoardService.retrieveLatestOrganizationBoardList(organizationBoard5.getId(), 3);
+
+        //then
+        assertThat(responses).hasSize(3);
+        assertOrganizationBoardInfo(responses.get(0), organizationBoard4.getTitle(), organizationBoard4.getStartDateTime(),
+            organizationBoard4.getEndDateTime(), organizationBoard4.getSubDomain(), organizationBoard4.getType());
+        assertOrganizationBoardInfo(responses.get(1), organizationBoard3.getTitle(), organizationBoard3.getStartDateTime(),
+            organizationBoard3.getEndDateTime(), organizationBoard3.getSubDomain(), organizationBoard3.getType());
+        assertOrganizationBoardInfo(responses.get(2), organizationBoard2.getTitle(), organizationBoard2.getStartDateTime(),
+            organizationBoard2.getEndDateTime(), organizationBoard2.getSubDomain(), organizationBoard2.getType());
+    }
+
+    @Test
+    void 게시물_스크롤_페이지네이션하는데_더이상_게시물이_존재하지_않을경우() {
+        //given
+        OrganizationBoard organizationBoard1 = OrganizationBoardCreator.create(subDomain, memberId, "title1", OrganizationBoardType.RECRUIT);
+        organizationBoardRepository.save(organizationBoard1);
+
+        //when
+        List<OrganizationBoardInfoResponse> responses = organizationBoardService.retrieveLatestOrganizationBoardList(organizationBoard1.getId(), 3);
+
+        //then
+        assertThat(responses).isEmpty();
+    }
+
     private void assertOrganizationBoardLike(OrganizationBoardLike organizationBoardLike, Long id, Long memberId) {
         assertThat(organizationBoardLike.getOrganizationBoard().getId()).isEqualTo(id);
         assertThat(organizationBoardLike.getMemberId()).isEqualTo(memberId);
     }
-
 
     private void assertBoard(Board board, String title, Long memberId, LocalDateTime startDateTime, LocalDateTime endDateTime) {
         assertThat(board.getTitle()).isEqualTo(title);
@@ -203,10 +373,32 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
         assertThat(board.getEndDateTime()).isEqualTo(endDateTime);
     }
 
+    private void assertDeletedBoard(DeleteBoard deleteBoard, String title, Long memberId, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        assertThat(deleteBoard.getTitle()).isEqualTo(title);
+        assertThat(deleteBoard.getMemberId()).isEqualTo(memberId);
+        assertThat(deleteBoard.getStartDateTime()).isEqualTo(startDateTime);
+        assertThat(deleteBoard.getEndDateTime()).isEqualTo(endDateTime);
+    }
+
     private void assertOrganizationBoard(OrganizationBoard organizationBoard, String content, OrganizationBoardType type, String subDomain) {
         assertThat(organizationBoard.getContent()).isEqualTo(content);
         assertThat(organizationBoard.getType()).isEqualTo(type);
         assertThat(organizationBoard.getSubDomain()).isEqualTo(subDomain);
+    }
+
+    private void assertDeletedBoardOrganization(DeleteOrganizationBoard deletedBoard, Long backUpId, String subDomain, OrganizationBoardType type) {
+        assertThat(deletedBoard.getBackUpId()).isEqualTo(backUpId);
+        assertThat(deletedBoard.getSubDomain()).isEqualTo(subDomain);
+        assertThat(deletedBoard.getOrganizationBoardType()).isEqualTo(type);
+        assertThat(deletedBoard.getDeletedMemberId()).isEqualTo(memberId);
+    }
+
+    private void assertOrganizationBoardInfo(OrganizationBoardInfoResponse organizationBoardInfoResponse, String title, LocalDateTime startDateTime, LocalDateTime endDateTime, String subDomain, OrganizationBoardType type) {
+        assertThat(organizationBoardInfoResponse.getTitle()).isEqualTo(title);
+        assertThat(organizationBoardInfoResponse.getStartDateTime()).isEqualTo(startDateTime);
+        assertThat(organizationBoardInfoResponse.getEndDateTime()).isEqualTo(endDateTime);
+        assertThat(organizationBoardInfoResponse.getType()).isEqualTo(type);
+        assertThat(organizationBoardInfoResponse.getSubDomain()).isEqualTo(subDomain);
     }
 
 }

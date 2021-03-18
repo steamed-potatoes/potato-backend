@@ -16,6 +16,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RequiredArgsConstructor
 @Service
 public class OrganizationBoardService {
@@ -23,6 +26,7 @@ public class OrganizationBoardService {
     private final OrganizationBoardRepository organizationBoardRepository;
     private final OrganizationRepository organizationRepository;
     private final MemberRepository memberRepository;
+    private final DeleteOrganizationBoardService deleteOrganizationBoardService;
 
     @Transactional
     public OrganizationBoardInfoResponse createBoard(String subDomain, CreateOrganizationBoardRequest request, Long memberId) {
@@ -54,6 +58,30 @@ public class OrganizationBoardService {
     public void cancelOrganizationBoardLike(Long organizationBoardId, Long memberId) {
         OrganizationBoard organizationBoard = OrganizationBoardServiceUtils.findOrganizationBoardById(organizationBoardRepository, organizationBoardId);
         organizationBoard.cancelLike(memberId);
+    }
+
+    @Transactional
+    public void deleteOrganizationBoard(String subDomain, Long organizationBoardId, Long memberId) {
+        OrganizationBoard organizationBoard = OrganizationBoardServiceUtils.findOrganizationBoardByIdAndSubDomain(organizationBoardRepository, subDomain, organizationBoardId);
+        deleteOrganizationBoardService.backUpOrganizationBoard(organizationBoard, memberId);
+        organizationBoardRepository.delete(organizationBoard);
+    }
+
+    @Transactional(readOnly = true)
+    public List<OrganizationBoardInfoResponse> retrieveLatestOrganizationBoardList(long lastOrganizationBoardId, int size) {
+        return lastOrganizationBoardId == 0 ? getLatestOrganizationBoards(size) : getLatestOrganizationBoardsLessThanId(lastOrganizationBoardId, size);
+    }
+
+    private List<OrganizationBoardInfoResponse> getLatestOrganizationBoards(int size) {
+        return organizationBoardRepository.findBoardsOrderByDesc(size).stream()
+            .map(OrganizationBoardInfoResponse::of).collect(Collectors.toList());
+    }
+
+    private List<OrganizationBoardInfoResponse> getLatestOrganizationBoardsLessThanId(long lastOrganizationBoardId, int size) {
+        return organizationBoardRepository.findBoardsLessThanOrderByIdDescLimit(lastOrganizationBoardId, size)
+            .stream()
+            .map(OrganizationBoardInfoResponse::of)
+            .collect(Collectors.toList());
     }
 
 }

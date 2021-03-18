@@ -1,9 +1,3 @@
-def javaProjects = [
-    project(':potato-admin'),
-    project(':potato-api'),
-    project(':potato-domain')
-]
-
 buildscript {
     ext {
         springBootVersion = '2.3.8.RELEASE'
@@ -16,14 +10,17 @@ buildscript {
     }
 }
 
-configure(javaProjects) {
+allprojects {
+    group = 'com.potato'
+}
+
+subprojects {
     apply plugin: 'java-library'
     apply plugin: 'eclipse'
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'jacoco'
 
-    group = 'com.potato'
     sourceCompatibility = '11'
 
     repositories {

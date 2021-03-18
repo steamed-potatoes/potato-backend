@@ -41,10 +41,7 @@ class GoogleAuthServiceTest {
     @Test
     void 구글_인증시_존재하지_않는_이메일의경우_회원가입을_위한_정보가_반환된다() {
         // given
-        AuthRequest request = AuthRequest.testBuilder()
-            .code("code")
-            .redirectUri("redirectUri")
-            .build();
+        AuthRequest request = AuthRequest.testInstance("code", "redirectUri");
 
         // when
         AuthResponse response = googleAuthService.handleGoogleAuthentication(request);
@@ -61,11 +58,8 @@ class GoogleAuthServiceTest {
         // given
         memberRepository.save(MemberCreator.create("will.seungho@gmail.com"));
 
-        AuthRequest request = AuthRequest.testBuilder()
-            .code("code")
-            .redirectUri("redirectUri")
-            .build();
-
+        AuthRequest request = AuthRequest.testInstance("code", "redirectUri");
+        
         // when
         AuthResponse response = googleAuthService.handleGoogleAuthentication(request);
 

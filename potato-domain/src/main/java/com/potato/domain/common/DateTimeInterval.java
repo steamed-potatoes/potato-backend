@@ -33,7 +33,7 @@ public class DateTimeInterval {
 
     private static void validateDateTime(LocalDateTime startDateTime, LocalDateTime endDateTime) {
         if (startDateTime.isAfter(endDateTime)) {
-            throw new ValidationException(String.format("시작 날짜(%s)가 종료 날짜(%s) 보다 이후일 수 없습니다", startDateTime, endDateTime));
+            throw new ValidationException(String.format("시작 날짜(%s)가 종료 날짜(%s) 보다 이후일 수 없습니다", startDateTime, endDateTime), "시작날짜보다 종료날짜가 이후일 수 없습니다.");
         }
     }
 

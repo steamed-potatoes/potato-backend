@@ -21,7 +21,7 @@ public class AuthController {
     @Operation(summary = "구글 인증 요청 API", description = "로그인을 위한 토큰 혹은 회원가입을 위한 정보가 반환됩니다.")
     @PostMapping("/api/v1/auth/google")
     public ApiResponse<AuthResponse> handleGoogleAuthentication(@Valid @RequestBody AuthRequest request) {
-        return ApiResponse.of(googleAuthService.handleGoogleAuthentication(request));
+        return ApiResponse.success(googleAuthService.handleGoogleAuthentication(request));
     }
 
 }

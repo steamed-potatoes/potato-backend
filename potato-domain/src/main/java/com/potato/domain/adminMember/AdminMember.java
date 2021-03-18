@@ -1,7 +1,9 @@
-package com.potato.domain;
+package com.potato.domain.adminMember;
 
+import com.potato.domain.BaseTimeEntity;
 import com.potato.domain.member.Email;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -21,4 +23,11 @@ public class AdminMember extends BaseTimeEntity {
 
     private String name;
 
+    @Builder()
+    public AdminMember(String email, String name) {
+        this.email = Email.of(email);
+        this.name = name;
+    }
+
 }
+
