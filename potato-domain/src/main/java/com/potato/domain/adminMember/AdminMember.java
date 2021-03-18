@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -22,11 +23,8 @@ public class AdminMember extends BaseTimeEntity {
 
     private String name;
 
-    /**
-     * 늘어날 것을 대비해서 builder로 만듦
-     */
     @Builder()
-    public AdminMember (String email, String name) {
+    public AdminMember(String email, String name) {
         this.email = Email.of(email);
         this.name = name;
     }

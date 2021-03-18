@@ -42,7 +42,7 @@ class AdminAuthServiceTest {
     }
 
     @Test
-    void 구글_인증시_존재하는_이메일이면_세션반환() {
+    void 구글_인증시_존재하는_이메일이면_로그인_처리한다() {
         //given
         AdminMember adminMember = AdminMemberCreator.create("googleAuth@gmail.com", "googleAuth");
         adminMemberRepository.save(adminMember);
@@ -56,7 +56,7 @@ class AdminAuthServiceTest {
     }
 
     @Test
-    void 구글_인증시_존재하지_않는_이메일이면_애러발생() {
+    void 구글_인증시_존재하지_않는_이메일이면_애러가_발생() {
         //given
         AdminMember adminMember = AdminMemberCreator.create("googleWrong@gmail.com", "googleAuth");
         adminMemberRepository.save(adminMember);
