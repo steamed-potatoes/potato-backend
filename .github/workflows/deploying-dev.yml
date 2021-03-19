@@ -31,7 +31,7 @@ jobs:
           DB_PASSWORD: ${{secrets.DB_PASSWORD}}
           DB_DRIVER: org.mariadb.jdbc.Driver
 
-          RESOURCE_PWD: gogo-domain/src/main/resources
+          RESOURCE_PWD: potato-domain/src/main/resources
         run: |
           echo -e "spring.profiles=$PROFILES\nspring.datasource.hikari.jdbc-url=$DB_URI\nspring.datasource.hikari.username=$DB_USERNAME\nspring.datasource.hikari.password=$DB_PASSWORD\nspring.datasource.hikari.driver-class-name=$DB_DRIVER" > $RESOURCE_PWD/application-rds.properties
 
