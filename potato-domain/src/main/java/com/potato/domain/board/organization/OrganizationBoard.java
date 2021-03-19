@@ -30,6 +30,9 @@ public class OrganizationBoard extends BaseTimeEntity {
     @JoinColumn(name = "board_id", nullable = false)
     private Board board;
 
+    @Column(nullable = false)
+    private Long memberId;
+
     private String content;
 
     private String imageUrl;
@@ -45,7 +48,8 @@ public class OrganizationBoard extends BaseTimeEntity {
     @Builder
     public OrganizationBoard(String subDomain, Long memberId, String title, LocalDateTime startDateTime, LocalDateTime endDateTime, String content, String imageUrl, OrganizationBoardType type) {
         this.subDomain = subDomain;
-        this.board = Board.of(memberId, title, startDateTime, endDateTime);
+        this.memberId = memberId;
+        this.board = Board.of(title, startDateTime, endDateTime);
         this.content = content;
         this.imageUrl = imageUrl;
         this.type = type;
@@ -56,7 +60,8 @@ public class OrganizationBoard extends BaseTimeEntity {
         this.content = content;
         this.imageUrl = imageUrl;
         this.type = type;
-        this.board = Board.of(memberId, title, startDateTime, endDateTime);
+        this.memberId = memberId;
+        this.board = Board.of(title, startDateTime, endDateTime);
     }
 
     public void addLike(Long memberId) {
@@ -88,10 +93,6 @@ public class OrganizationBoard extends BaseTimeEntity {
 
     public String getTitle() {
         return this.board.getTitle();
-    }
-
-    public Long getMemberId() {
-        return this.board.getMemberId();
     }
 
     public LocalDateTime getStartDateTime() {
