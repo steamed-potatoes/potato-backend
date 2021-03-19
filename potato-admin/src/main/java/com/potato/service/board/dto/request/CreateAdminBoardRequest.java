@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
@@ -20,10 +21,10 @@ public class CreateAdminBoardRequest {
     @NotBlank
     private String content;
 
-    @NotBlank
+    @NotNull
     private LocalDateTime startDateTime;
 
-    @NotBlank
+    @NotNull
     private LocalDateTime endDateTime;
 
     @Builder(builderMethodName = "testBuilder")

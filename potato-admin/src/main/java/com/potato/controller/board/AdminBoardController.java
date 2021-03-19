@@ -16,7 +16,7 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class AdminBoardController {
 
-    private AdminBoardService adminBoardService;
+    private final AdminBoardService adminBoardService;
 
     @Auth
     @PostMapping("/admin/v1/board")

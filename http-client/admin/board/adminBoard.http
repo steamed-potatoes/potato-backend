@@ -1,0 +1,11 @@
+### 관리자가_게시물_등록
+POST {{host_admin}}/admin/v1/board
+Content-Type: application/json
+Authorization: Bearer {{AUTHORIZATION}}
+
+{
+    "title": "관리자타이틀",
+    "content": "관리자컨텐츠",
+    "startDateTime": "2021-03-01T00:00:00",
+    "endDateTime": "2021-03-08T11:59:59"
+}
