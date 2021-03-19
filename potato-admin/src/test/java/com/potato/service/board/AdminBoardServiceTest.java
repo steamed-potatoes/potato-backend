@@ -8,7 +8,6 @@ import com.potato.domain.board.BoardRepository;
 import com.potato.domain.board.admin.AdminBoard;
 import com.potato.domain.board.admin.AdminBoardRepository;
 import com.potato.service.board.dto.request.CreateAdminBoardRequest;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +35,9 @@ public class AdminBoardServiceTest {
 
     @AfterEach
     void cleanUp() {
-        adminBoardRepository.deleteAll();
-        boardRepository.deleteAll();
+        adminMemberRepository.deleteAll();
+        adminBoardRepository.deleteAllInBatch();
+        boardRepository.deleteAllInBatch();
     }
 
     @Test
@@ -51,8 +51,8 @@ public class AdminBoardServiceTest {
         CreateAdminBoardRequest request = CreateAdminBoardRequest.testBuilder()
             .content(content)
             .title(title)
-            .startDateTime(LocalDateTime.of(21,9, 3, 12,12))
-            .endDateTime(LocalDateTime.of(21, 9, 5, 12,12))
+            .startDateTime(LocalDateTime.of(2021,9, 3, 12,12))
+            .endDateTime(LocalDateTime.of(2021, 9, 5, 12,12))
             .build();
 
         //when
