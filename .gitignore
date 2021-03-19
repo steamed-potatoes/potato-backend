@@ -39,3 +39,4 @@ out/
 generated/
 
 application-thirdparty.yml
+application-rds.yml

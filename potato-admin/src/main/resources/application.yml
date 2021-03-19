@@ -6,5 +6,6 @@ spring:
     include:
       - domain
       - thirdparty
+      - rds
   datasource:
     data: classpath:schema/schema-session.sql
