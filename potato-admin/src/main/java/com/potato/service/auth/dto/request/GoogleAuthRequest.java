@@ -1,4 +1,4 @@
-package com.potato.service.dto.request;
+package com.potato.service.auth.dto.request;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

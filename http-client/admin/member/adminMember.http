@@ -1,0 +1,11 @@
+### 세션 테스트
+GET {{host_admin}}/test-session
+
+> {%
+client.global.set("AUTHORIZATION", response.body["data"])
+ %}
+
+
+### 멤버 리스트를 조회하는 API
+GET {{host_admin}}/admin/v1/member/list
+Authorization: Bearer {{AUTHORIZATION}}

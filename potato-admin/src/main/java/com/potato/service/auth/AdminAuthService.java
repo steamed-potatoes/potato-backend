@@ -1,11 +1,11 @@
-package com.potato.service;
+package com.potato.service.auth;
 
 import com.potato.domain.adminMember.AdminMember;
 import com.potato.domain.adminMember.AdminMemberRepository;
 import com.potato.external.google.GoogleApiCaller;
 import com.potato.external.google.dto.response.GoogleAccessTokenResponse;
 import com.potato.external.google.dto.response.GoogleUserInfoResponse;
-import com.potato.service.dto.request.GoogleAuthRequest;
+import com.potato.service.auth.dto.request.GoogleAuthRequest;
 import com.potato.config.session.AdminMemberSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
