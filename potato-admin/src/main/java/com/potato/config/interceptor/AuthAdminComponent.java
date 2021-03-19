@@ -22,8 +22,10 @@ public class AuthAdminComponent {
     private final SessionRepository<? extends Session> sessionRepository;
     private final AdminMemberRepository adminMemberRepository;
 
-    public void validateExistAdminMember(HttpServletRequest request) {
-        AdminAuthServiceUtils.validateExistAdminMember(adminMemberRepository, getAdminMemberSession(request).getMemberId());
+    public Long getAdminMemberId(HttpServletRequest request) {
+        Long memberId = getAdminMemberSession(request).getMemberId();
+        AdminAuthServiceUtils.validateExistAdminMember(adminMemberRepository, memberId);
+        return memberId;
     }
 
     private AdminMemberSession getAdminMemberSession(HttpServletRequest request) {

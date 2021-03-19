@@ -1,2 +1,2 @@
 ### Health Check API
-GET {{host}}/ping
+GET {{host_api}}/ping

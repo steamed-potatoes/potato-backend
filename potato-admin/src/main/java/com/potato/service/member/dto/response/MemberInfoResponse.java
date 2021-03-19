@@ -1,4 +1,4 @@
-package com.potato.service.auth.member.dto.response;
+package com.potato.service.member.dto.response;
 
 import com.potato.domain.member.Member;
 import com.potato.domain.member.MemberProvider;

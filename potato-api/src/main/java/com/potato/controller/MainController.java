@@ -9,8 +9,8 @@ public class MainController {
 
     @Operation(summary = "Health Check")
     @GetMapping("/ping")
-    public String ping() {
-        return "pong";
+    public ApiResponse<String> ping() {
+        return ApiResponse.OK;
     }
 
 }

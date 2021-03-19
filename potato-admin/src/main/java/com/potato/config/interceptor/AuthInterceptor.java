@@ -24,8 +24,9 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
         if (auth == null) {
             return true;
         }
-        
-        authAdminComponent.validateExistAdminMember(request);
+
+        Long memberId = authAdminComponent.getAdminMemberId(request);
+        request.setAttribute("memberId", memberId);
         return true;
     }
 
