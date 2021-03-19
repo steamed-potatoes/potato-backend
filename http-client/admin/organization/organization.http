@@ -1,0 +1,2 @@
+GET {{host_admin}}/admin/v1/organization/list
+Authorization: Bearer {{AUTHORIZATION}}

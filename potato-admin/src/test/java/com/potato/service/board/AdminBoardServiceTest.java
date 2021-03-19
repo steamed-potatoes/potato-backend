@@ -1,12 +1,10 @@
 package com.potato.service.board;
 
-import com.potato.domain.adminMember.AdminMember;
-import com.potato.domain.adminMember.AdminMemberCreator;
-import com.potato.domain.adminMember.AdminMemberRepository;
 import com.potato.domain.board.Board;
 import com.potato.domain.board.BoardRepository;
 import com.potato.domain.board.admin.AdminBoard;
 import com.potato.domain.board.admin.AdminBoardRepository;
+import com.potato.service.AdminSetupTest;
 import com.potato.service.board.dto.request.CreateAdminBoardRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -19,10 +17,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-public class AdminBoardServiceTest {
-
-    @Autowired
-    private AdminMemberRepository adminMemberRepository;
+public class AdminBoardServiceTest extends AdminSetupTest {
 
     @Autowired
     private AdminBoardRepository adminBoardRepository;
@@ -34,8 +29,8 @@ public class AdminBoardServiceTest {
     private BoardRepository boardRepository;
 
     @AfterEach
-    void cleanUp() {
-        adminMemberRepository.deleteAll();
+    void cleanup() {
+        super.cleanUp();
         adminBoardRepository.deleteAllInBatch();
         boardRepository.deleteAllInBatch();
     }
@@ -43,9 +38,6 @@ public class AdminBoardServiceTest {
     @Test
     void 관리자_게시글에_글을_쓴다() {
         //given
-        AdminMember adminMember = AdminMemberCreator.create("tnswh2023@gmail.com", "관리자");
-        adminMemberRepository.save(adminMember);
-
         String content = "content";
         String title = "title";
         CreateAdminBoardRequest request = CreateAdminBoardRequest.testBuilder()
@@ -56,7 +48,7 @@ public class AdminBoardServiceTest {
             .build();
 
         //when
-        adminBoardService.createAdminBoard(request, adminMember.getId());
+        adminBoardService.createAdminBoard(request, adminMemberId);
 
         //then
         List<AdminBoard> adminBoardList = adminBoardRepository.findAll();
