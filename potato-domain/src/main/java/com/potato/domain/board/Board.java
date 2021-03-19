@@ -20,24 +20,19 @@ public class Board extends BaseTimeEntity {
     private Long id;
 
     @Column(nullable = false)
-    private Long memberId;
-
-    @Column(nullable = false)
     private String title;
 
     @Embedded
     private DateTimeInterval dateTimeInterval;
 
     @Builder
-    private Board(Long memberId, String title, LocalDateTime startDateTime, LocalDateTime endDateTime) {
-        this.memberId = memberId;
+    private Board(String title, LocalDateTime startDateTime, LocalDateTime endDateTime) {
         this.title = title;
         this.dateTimeInterval = DateTimeInterval.of(startDateTime, endDateTime);
     }
 
-    public static Board of(Long memberId, String title, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+    public static Board of(String title, LocalDateTime startDateTime, LocalDateTime endDateTime) {
         return Board.builder()
-            .memberId(memberId)
             .title(title)
             .startDateTime(startDateTime)
             .endDateTime(endDateTime)
