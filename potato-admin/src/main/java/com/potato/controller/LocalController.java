@@ -13,7 +13,7 @@ import javax.servlet.http.HttpSession;
 
 import static com.potato.config.session.SessionConstants.AUTH_SESSION;
 
-@Profile({"local", "dev"})
+@Profile("local")
 @RequiredArgsConstructor
 @RestController
 public class LocalController {
