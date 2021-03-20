@@ -8,7 +8,7 @@ public class MainController {
 
     @GetMapping("/ping")
     public ApiResponse<String> ping() {
-        return ApiResponse.OK;
+        return ApiResponse.success("Potato Admin Server OK");
     }
 
 }

@@ -10,7 +10,7 @@ public class MainController {
     @Operation(summary = "Health Check")
     @GetMapping("/ping")
     public ApiResponse<String> ping() {
-        return ApiResponse.OK;
+        return ApiResponse.success("Potato API Server OK");
     }
 
 }
