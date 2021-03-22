@@ -6,7 +6,8 @@ Content-Type: application/json
     "email": "will.seungho@gmail.com",
     "name": "강승호",
     "profileUrl": "http://profile.com",
-    "major": "IT_COMPUTER"
+    "major": "IT_COMPUTER",
+    "classNumber": 201610323
 }
 > {%
 client.global.set("AUTHORIZATION", response.body["data"])
@@ -27,7 +28,8 @@ Authorization: Bearer {{AUTHORIZATION}}
 {
     "name": "will",
     "profileUrl": null,
-    "major": "IT_ICT"
+    "major": "IT_ICT",
+    "classNumber": 201610333
 }
 
 

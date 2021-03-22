@@ -47,12 +47,14 @@ class MemberServiceTest {
         String name = "강승호";
         String profileUrl = "http://profile.com";
         MemberMajor major = MemberMajor.IT_ICT;
+        Integer classNumber = 201610323;
 
         CreateMemberRequest request = CreateMemberRequest.testBuilder()
             .email(email)
             .name(name)
             .profileUrl(profileUrl)
             .major(major)
+            .classNumber(classNumber)
             .build();
 
         // when
@@ -61,7 +63,7 @@ class MemberServiceTest {
         // then
         List<Member> memberList = memberRepository.findAll();
         assertThat(memberList).hasSize(1);
-        assertMemberInfo(memberList.get(0), email, name, profileUrl, major);
+        assertMemberInfo(memberList.get(0), email, name, profileUrl, major, classNumber);
     }
 
     @Test
@@ -88,14 +90,15 @@ class MemberServiceTest {
         String name = "강승호";
         String profileUrl = "http://profile.com";
         MemberMajor major = MemberMajor.IT_ICT;
+        Integer classNumber = 201610323;
 
-        Member member = memberRepository.save(MemberCreator.create(email, name, profileUrl, major));
+        Member member = memberRepository.save(MemberCreator.create(email, name, profileUrl, major, classNumber));
 
         // when
         MemberInfoResponse response = memberService.getMemberInfo(member.getId());
 
         // then
-        assertMemberInfoResponse(response, email, name, profileUrl, major);
+        assertMemberInfoResponse(response, email, name, profileUrl, major, classNumber);
     }
 
     @Test
@@ -110,16 +113,18 @@ class MemberServiceTest {
     void 회원정보를_수정한다() {
         // given
         Member member = memberRepository.save(MemberCreator.create(
-            "123@gmail.com", "sunjo", "profile.com", MemberMajor.IT_ICT));
+            "123@gmail.com", "sunjo", "profile.com", MemberMajor.IT_ICT, 201610323));
 
         String name = "유순조";
         String profileUrl = "http://profile.com";
         MemberMajor major = MemberMajor.IT_ICT;
+        Integer classNumber = 201610323;
 
         UpdateMemberRequest updateMemberRequest = UpdateMemberRequest.testBuilder()
             .name(name)
             .profileUrl(profileUrl)
             .major(major)
+            .classNumber(classNumber)
             .build();
 
         // when
@@ -128,7 +133,7 @@ class MemberServiceTest {
         // then
         List<Member> memberList = memberRepository.findAll();
         assertThat(memberList).hasSize(1);
-        assertMemberInfo(memberList.get(0), member.getEmail(), name, profileUrl, major);
+        assertMemberInfo(memberList.get(0), member.getEmail(), name, profileUrl, major, classNumber);
     }
 
     @Test

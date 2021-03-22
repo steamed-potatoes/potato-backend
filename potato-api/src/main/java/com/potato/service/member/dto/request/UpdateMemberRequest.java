@@ -20,11 +20,14 @@ public class UpdateMemberRequest {
 
     private MemberMajor major;
 
+    private Integer classNumber;
+
     @Builder(builderMethodName = "testBuilder")
-    public UpdateMemberRequest(@NotBlank String name, String profileUrl, MemberMajor major) {
+    public UpdateMemberRequest(@NotBlank String name, String profileUrl, MemberMajor major, Integer classNumber) {
         this.name = name;
         this.profileUrl = profileUrl;
         this.major = major;
+        this.classNumber = classNumber;
     }
 
 }

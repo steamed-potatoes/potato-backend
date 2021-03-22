@@ -32,29 +32,35 @@ public class Member extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private MemberProvider provider;
 
+    @Column(nullable = false)
+    private Integer classNumber;
+
     @Builder
-    public Member(String email, String name, String profileUrl, MemberMajor major, MemberProvider provider) {
+    public Member(String email, String name, String profileUrl, MemberMajor major, MemberProvider provider, Integer classNumber) {
         this.email = Email.of(email);
         this.name = name;
         this.profileUrl = profileUrl;
         this.major = major;
         this.provider = provider;
+        this.classNumber = classNumber;
     }
 
-    public static Member newGoogleInstance(String email, String name, String profileUrl, MemberMajor major) {
+    public static Member newGoogleInstance(String email, String name, String profileUrl, MemberMajor major, Integer classNumber) {
         return Member.builder()
             .email(email)
             .name(name)
             .profileUrl(profileUrl)
             .major(major)
             .provider(MemberProvider.GOOGLE)
+            .classNumber(classNumber)
             .build();
     }
 
-    public void updateMemberInfo(String name, String profileUrl, MemberMajor major) {
+    public void updateMemberInfo(String name, String profileUrl, MemberMajor major, Integer classNumber) {
         this.name = name;
         this.profileUrl = profileUrl;
         this.major = major;
+        this.classNumber = classNumber;
     }
 
     public String getEmail() {

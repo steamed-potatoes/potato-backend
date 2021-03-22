@@ -148,8 +148,8 @@ class OrganizationRetrieveServiceTest extends MemberSetupTest {
         List<MemberInfoResponse> responses = organizationRetrieveService.getOrganizationFollowMember(subDomain);
 
         //then
-        assertMemberInfoResponse(responses.get(0), followingEmail1, followingMember1.getName(), followingMember1.getProfileUrl(), followingMember1.getMajor());
-        assertMemberInfoResponse(responses.get(1), followingEmail2, followingMember2.getName(), followingMember2.getProfileUrl(), followingMember2.getMajor());
+        assertMemberInfoResponse(responses.get(0), followingEmail1, followingMember1.getName(), followingMember1.getProfileUrl(), followingMember1.getMajor(), followingMember1.getClassNumber());
+        assertMemberInfoResponse(responses.get(1), followingEmail2, followingMember2.getName(), followingMember2.getProfileUrl(), followingMember2.getMajor(), followingMember2.getClassNumber());
     }
 
     @Test
