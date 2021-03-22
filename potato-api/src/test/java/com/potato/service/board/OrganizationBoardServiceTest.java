@@ -78,11 +78,11 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
         List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findAll();
         assertThat(organizationBoardList).hasSize(1);
         assertThat(organizationBoardList.get(0).getLikesCount()).isEqualTo(0);
-        assertOrganizationBoard(organizationBoardList.get(0), content, type, subDomain);
+        assertOrganizationBoard(organizationBoardList.get(0), content, type, subDomain, memberId);
 
         List<Board> board = boardRepository.findAll();
         assertThat(board).hasSize(1);
-        assertBoard(board.get(0), title, memberId, startDateTime, endDateTime);
+        assertBoard(board.get(0), title, startDateTime, endDateTime);
     }
 
     @Test
@@ -112,11 +112,11 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
         // then
         List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findAll();
         assertThat(organizationBoardList).hasSize(1);
-        assertOrganizationBoard(organizationBoardList.get(0), content, type, subDomain);
+        assertOrganizationBoard(organizationBoardList.get(0), content, type, subDomain, memberId);
 
         List<Board> board = boardRepository.findAll();
         assertThat(board).hasSize(1);
-        assertBoard(board.get(0), title, memberId, startDateTime, endDateTime);
+        assertBoard(board.get(0), title, startDateTime, endDateTime);
     }
 
     @Test
@@ -138,9 +138,9 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
         organizationBoardService.updateBoard(subDomain, request, memberId);
 
         // then
-        List<Board> board = boardRepository.findAll();
-        assertThat(board).hasSize(1);
-        assertThat(board.get(0).getMemberId()).isEqualTo(memberId);
+        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findAll();
+        assertThat(organizationBoardList).hasSize(1);
+        assertThat(organizationBoardList.get(0).getMemberId()).isEqualTo(memberId);
     }
 
     @Test
@@ -217,7 +217,7 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
 
         List<DeleteOrganizationBoard> deleteOrganizationBoardList = deleteOrganizationBoardRepository.findAll();
         assertThat(deleteOrganizationBoardList).hasSize(1);
-        assertDeletedBoardOrganization(deleteOrganizationBoardList.get(0), organizationBoard.getId(),organizationBoard.getSubDomain(), organizationBoard.getType());
+        assertDeletedBoardOrganization(deleteOrganizationBoardList.get(0), organizationBoard.getId(), organizationBoard.getSubDomain(), organizationBoard.getType());
 
         List<DeleteBoard> deleteBoardList = deleteBoardRepository.findAll();
         assertThat(deleteBoardList).hasSize(1);
@@ -366,9 +366,8 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
         assertThat(organizationBoardLike.getMemberId()).isEqualTo(memberId);
     }
 
-    private void assertBoard(Board board, String title, Long memberId, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+    private void assertBoard(Board board, String title, LocalDateTime startDateTime, LocalDateTime endDateTime) {
         assertThat(board.getTitle()).isEqualTo(title);
-        assertThat(board.getMemberId()).isEqualTo(memberId);
         assertThat(board.getStartDateTime()).isEqualTo(startDateTime);
         assertThat(board.getEndDateTime()).isEqualTo(endDateTime);
     }
@@ -380,10 +379,11 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
         assertThat(deleteBoard.getEndDateTime()).isEqualTo(endDateTime);
     }
 
-    private void assertOrganizationBoard(OrganizationBoard organizationBoard, String content, OrganizationBoardType type, String subDomain) {
+    private void assertOrganizationBoard(OrganizationBoard organizationBoard, String content, OrganizationBoardType type, String subDomain, Long memberId) {
         assertThat(organizationBoard.getContent()).isEqualTo(content);
         assertThat(organizationBoard.getType()).isEqualTo(type);
         assertThat(organizationBoard.getSubDomain()).isEqualTo(subDomain);
+        assertThat(organizationBoard.getMemberId()).isEqualTo(memberId);
     }
 
     private void assertDeletedBoardOrganization(DeleteOrganizationBoard deletedBoard, Long backUpId, String subDomain, OrganizationBoardType type) {

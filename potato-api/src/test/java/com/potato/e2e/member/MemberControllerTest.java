@@ -46,10 +46,12 @@ class MemberControllerTest extends AbstractControllerTest {
         // given
         String email = "will.seungho@gmail.com";
         String name = "강승호";
+        Integer classNumber = 201610323;
 
         CreateMemberRequest request = CreateMemberRequest.testBuilder()
             .email(email)
             .name(name)
+            .classNumber(classNumber)
             .build();
 
         // when

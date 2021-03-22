@@ -1,5 +1,5 @@
 ### 게시물에 댓글 추가하는 API
-POST {{host}}/api/v2/board/comment
+POST {{host_api}}/api/v2/board/comment
 Content-Type: application/json
 Authorization: Bearer {{AUTHORIZATION}}
 
@@ -11,7 +11,7 @@ Authorization: Bearer {{AUTHORIZATION}}
 
 
 ### 댓글에 대댓글을 추가하는 API
-POST {{host}}/api/v2/board/comment
+POST {{host_api}}/api/v2/board/comment
 Content-Type: application/json
 Authorization: Bearer {{AUTHORIZATION}}
 
@@ -24,11 +24,11 @@ Authorization: Bearer {{AUTHORIZATION}}
 
 
 ### 댓글을 삭제한다.
-DELETE {{host}}/api/v2/board/comment?boardCommentId=1
+DELETE {{host_api}}/api/v2/board/comment?boardCommentId=1
 Authorization: Bearer {{AUTHORIZATION}}
 
 
 
 ### 해당 게시물의 댓글 리스트를 불러옵니다
-GET {{host}}/api/v2/board/comment/list?organizationBoardId=1
+GET {{host_api}}/api/v2/board/comment/list?organizationBoardId=1
 Authorization: Bearer {{AUTHORIZATION}}

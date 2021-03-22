@@ -4,7 +4,7 @@ import com.potato.config.session.AdminMemberSession;
 import com.potato.config.session.SessionConstants;
 import com.potato.domain.adminMember.AdminMemberRepository;
 import com.potato.exception.UnAuthorizedException;
-import com.potato.service.AdminAuthServiceUtils;
+import com.potato.service.auth.AdminAuthServiceUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.session.Session;
@@ -22,8 +22,10 @@ public class AuthAdminComponent {
     private final SessionRepository<? extends Session> sessionRepository;
     private final AdminMemberRepository adminMemberRepository;
 
-    public void validateExistAdminMember(HttpServletRequest request) {
-        AdminAuthServiceUtils.validateExistAdminMember(adminMemberRepository, getAdminMemberSession(request).getMemberId());
+    public Long getAdminMemberId(HttpServletRequest request) {
+        Long memberId = getAdminMemberSession(request).getMemberId();
+        AdminAuthServiceUtils.validateExistAdminMember(adminMemberRepository, memberId);
+        return memberId;
     }
 
     private AdminMemberSession getAdminMemberSession(HttpServletRequest request) {

@@ -21,8 +21,10 @@ public class MemberInfoResponse {
 
     private final String major;
 
+    private final Integer classNumber;
+
     public static MemberInfoResponse of(Member member) {
-        return new MemberInfoResponse(member.getId(), member.getEmail(), member.getName(), member.getProfileUrl(), member.getMajorName());
+        return new MemberInfoResponse(member.getId(), member.getEmail(), member.getName(), member.getProfileUrl(), member.getMajorName(), member.getClassNumber());
     }
 
 }
