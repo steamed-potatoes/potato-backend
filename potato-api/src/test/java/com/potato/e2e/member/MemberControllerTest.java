@@ -51,7 +51,7 @@ class MemberControllerTest extends AbstractControllerTest {
         CreateMemberRequest request = CreateMemberRequest.testBuilder()
             .email(email)
             .name(name)
-            .classNumber(201610323)
+            .classNumber(classNumber)
             .build();
 
         // when
