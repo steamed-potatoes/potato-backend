@@ -24,16 +24,19 @@ public class CreateMemberRequest {
 
     private MemberMajor major;
 
+    private Integer classNumber;
+
     @Builder(builderMethodName = "testBuilder")
-    public CreateMemberRequest(@NotBlank String email, @NotBlank String name, String profileUrl, MemberMajor major) {
+    public CreateMemberRequest(@NotBlank String email, @NotBlank String name, String profileUrl, MemberMajor major, Integer classNumber) {
         this.email = email;
         this.name = name;
         this.profileUrl = profileUrl;
         this.major = major;
+        this.classNumber = classNumber;
     }
 
     public Member toEntity() {
-        return Member.newGoogleInstance(this.email, this.name, this.profileUrl, this.major);
+        return Member.newGoogleInstance(this.email, this.name, this.profileUrl, this.major, this.classNumber);
     }
 
 }
