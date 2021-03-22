@@ -32,8 +32,8 @@ public class Member extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private MemberProvider provider;
 
-    @Column(nullable = false)
-    private Integer classNumber;
+    @Embedded
+    private ClassNumber classNumber;
 
     @Builder
     public Member(String email, String name, String profileUrl, MemberMajor major, MemberProvider provider, Integer classNumber) {
@@ -42,7 +42,7 @@ public class Member extends BaseTimeEntity {
         this.profileUrl = profileUrl;
         this.major = major;
         this.provider = provider;
-        this.classNumber = classNumber;
+        this.classNumber = ClassNumber.of(classNumber);
     }
 
     public static Member newGoogleInstance(String email, String name, String profileUrl, MemberMajor major, Integer classNumber) {
@@ -60,7 +60,7 @@ public class Member extends BaseTimeEntity {
         this.name = name;
         this.profileUrl = profileUrl;
         this.major = major;
-        this.classNumber = classNumber;
+        this.classNumber = ClassNumber.of(classNumber);
     }
 
     public String getEmail() {
@@ -72,6 +72,13 @@ public class Member extends BaseTimeEntity {
             return null;
         }
         return this.major.getName();
+    }
+
+    public Integer getClassNumber() {
+        if (this.classNumber == null) {
+            return null;
+        }
+        return this.classNumber.getClassNumber();
     }
 
 }

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @ToString
 @Getter
@@ -20,6 +21,7 @@ public class UpdateMemberRequest {
 
     private MemberMajor major;
 
+    @NotNull
     private Integer classNumber;
 
     @Builder(builderMethodName = "testBuilder")
