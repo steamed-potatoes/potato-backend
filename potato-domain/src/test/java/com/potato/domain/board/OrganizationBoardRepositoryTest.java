@@ -82,7 +82,7 @@ class OrganizationBoardRepositoryTest {
     }
 
     @Test
-    void 캘린더_조회_시_앞쪽에_걸치는경우_포함된다() {
+    void 그룹_게시물_조회_시_앞쪽에_걸치는경우_포함된다() {
         // given
         LocalDate startDate = LocalDate.of(2021, 3, 1);
         LocalDate endDate = LocalDate.of(2021, 3, 31);
@@ -101,11 +101,13 @@ class OrganizationBoardRepositoryTest {
 
         // when
         List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findBetweenDate(startDate, endDate);
+
+        // then
         assertThat(organizationBoardList).hasSize(1);
     }
 
     @Test
-    void 캘린더_조회_시_뒷쪽에_걸치는경우_포함된다() {
+    void 그룹_게시물_뒷쪽에_걸치는경우_포함된다() {
         // given
         LocalDate startDate = LocalDate.of(2021, 3, 1);
         LocalDate endDate = LocalDate.of(2021, 3, 31);
@@ -124,11 +126,13 @@ class OrganizationBoardRepositoryTest {
 
         // when
         List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findBetweenDate(startDate, endDate);
+
+        // then
         assertThat(organizationBoardList).hasSize(1);
     }
 
     @Test
-    void 캘린더_조회_시_앞쪽_경계선을_넘어서는경우_포함되지_않는다() {
+    void 그룹_게시_조회_시_앞쪽_경계선을_넘어서는경우_포함되지_않는다() {
         // given
         LocalDate startDate = LocalDate.of(2021, 3, 1);
         LocalDate endDate = LocalDate.of(2021, 3, 31);
@@ -147,11 +151,13 @@ class OrganizationBoardRepositoryTest {
 
         // when
         List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findBetweenDate(startDate, endDate);
+
+        // then
         assertThat(organizationBoardList).isEmpty();
     }
 
     @Test
-    void 캘린더_조회_시_뒷쪽_경계선을_넘어서는경우_포함되지_않는다() {
+    void 그룹_게시물_조회_시_뒷쪽_경계선을_넘어서는경우_포함되지_않는다() {
         // given
         LocalDate startDate = LocalDate.of(2021, 3, 1);
         LocalDate endDate = LocalDate.of(2021, 3, 31);
@@ -170,11 +176,13 @@ class OrganizationBoardRepositoryTest {
 
         // when
         List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findBetweenDate(startDate, endDate);
+
+        // then
         assertThat(organizationBoardList).isEmpty();
     }
 
     @Test
-    void 캘린더_조회_시_안쪽에_있는경우_포함된다() {
+    void 그룹_게시물_조회_시_안쪽에_있는경우_포함된다() {
         // given
         LocalDate startDate = LocalDate.of(2021, 3, 1);
         LocalDate endDate = LocalDate.of(2021, 3, 31);
@@ -193,6 +201,8 @@ class OrganizationBoardRepositoryTest {
 
         // when
         List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findBetweenDate(startDate, endDate);
+
+        // then
         assertThat(organizationBoardList).hasSize(1);
     }
 

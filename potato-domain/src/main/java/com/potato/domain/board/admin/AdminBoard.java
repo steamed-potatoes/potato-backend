@@ -35,4 +35,16 @@ public class AdminBoard extends BaseTimeEntity {
         this.content = content;
     }
 
+    public String getTitle() {
+        return this.board.getTitle();
+    }
+
+    public LocalDateTime getStartDateTime() {
+        return this.board.getStartDateTime();
+    }
+
+    public LocalDateTime getEndDateTime() {
+        return this.board.getEndDateTime();
+    }
+
 }
