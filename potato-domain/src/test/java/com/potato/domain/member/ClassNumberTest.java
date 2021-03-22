@@ -27,7 +27,7 @@ class ClassNumberTest {
         // when & then
         assertThatThrownBy(
             () -> ClassNumber.of(classNumber)
-        ).isInstanceOf(ValidationException.class).hasMessage(String.format("학번 (%d)은 잘못되었습니다.", classNumber));
+        ).isInstanceOf(ValidationException.class);
     }
 
     @Test

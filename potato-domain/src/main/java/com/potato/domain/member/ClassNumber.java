@@ -26,13 +26,13 @@ public class ClassNumber {
     }
 
     private void validateClassNumberFormat(Integer classNumber) {
-        validateClassNumberRange(classNumber);
-        validateClassNumberLength(classNumber);
+        validateIsInRange(classNumber);
+        validateLength(classNumber);
     }
 
-    private void validateClassNumberRange(Integer classNumber) {
+    private void validateIsInRange(Integer classNumber) {
         if (classNumber < getMinClassNumber() || classNumber >= getMaxClassNumber()) {
-            throw new ValidationException(String.format("학번 (%d)은 잘못되었습니다.", classNumber), "잘못된 학번입니다.");
+            throw new ValidationException(String.format("학번 (%d)은 허용되지 않은 범위입니다.", classNumber), "잘못된 학번입니다.");
         }
     }
 
@@ -41,11 +41,11 @@ public class ClassNumber {
     }
 
     private int getMaxClassNumber() {
-        final int currentYear = LocalDateTime.now().plusYears(1).getYear();
+        final int currentYear = LocalDateTime.now().getYear() + 1;
         return currentYear * DIGIT;
     }
 
-    private void validateClassNumberLength(Integer classNumber) {
+    private void validateLength(Integer classNumber) {
         if (String.valueOf(classNumber).length() != 9) {
             throw new ValidationException(String.format("(%d) 학번은 9자리가 아닙니다", classNumber), "잘못된 학번입니다.");
         }
