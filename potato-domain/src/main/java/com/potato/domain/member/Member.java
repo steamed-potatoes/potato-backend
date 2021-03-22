@@ -75,6 +75,9 @@ public class Member extends BaseTimeEntity {
     }
 
     public Integer getClassNumber() {
+        if (this.classNumber == null) {
+            return null;
+        }
         return this.classNumber.getClassNumber();
     }
 
