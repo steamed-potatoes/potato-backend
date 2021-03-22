@@ -31,4 +31,15 @@ public class ClassNumberTest {
         ).isInstanceOf(ValidationException.class).hasMessage(String.format("(%d) 학번은 양수가 아닙니다.", classNumber));
     }
 
+    @Test
+    void 학번이_아홉자리가_아닐경우() {
+        //given
+        Integer classNumber = 1234;
+
+        // when & then
+        assertThatThrownBy(
+            () -> ClassNumber.of(classNumber)
+        ).isInstanceOf(ValidationException.class);
+    }
+
 }
