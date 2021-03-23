@@ -1,6 +1,6 @@
 package com.potato.controller.board;
 
-import scom.potato.config.argumentResolver.MemberId;
+import com.potato.config.argumentResolver.MemberId;
 import com.potato.config.interceptor.auth.Auth;
 import com.potato.controller.ApiResponse;
 import com.potato.service.board.OrganizationBoardService;
