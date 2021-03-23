@@ -1,4 +1,4 @@
-package com.potato.service.board;
+package com.potato.service.board.organization;
 
 import com.potato.domain.board.organization.OrganizationBoard;
 import com.potato.domain.board.organization.OrganizationBoardRepository;
@@ -7,11 +7,11 @@ import com.potato.domain.member.MemberRepository;
 import com.potato.domain.organization.Organization;
 import com.potato.domain.organization.OrganizationRepository;
 import com.potato.event.board.OrganizationBoardDeletedEvent;
-import com.potato.service.board.dto.request.CreateOrganizationBoardRequest;
-import com.potato.service.board.dto.request.LikeOrganizationBoardRequest;
-import com.potato.service.board.dto.request.UpdateOrganizationBoardRequest;
-import com.potato.service.board.dto.response.OrganizationBoardInfoResponse;
-import com.potato.service.board.dto.response.OrganizationBoardWithCreatorInfoResponse;
+import com.potato.service.board.organization.dto.request.CreateOrganizationBoardRequest;
+import com.potato.service.board.organization.dto.request.LikeOrganizationBoardRequest;
+import com.potato.service.board.organization.dto.request.UpdateOrganizationBoardRequest;
+import com.potato.service.board.organization.dto.response.OrganizationBoardInfoResponse;
+import com.potato.service.board.organization.dto.response.OrganizationBoardWithCreatorInfoResponse;
 import com.potato.service.member.MemberServiceUtils;
 import com.potato.service.organization.OrganizationServiceUtils;
 import lombok.RequiredArgsConstructor;

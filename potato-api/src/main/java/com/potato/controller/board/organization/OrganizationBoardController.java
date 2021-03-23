@@ -1,12 +1,12 @@
-package com.potato.controller.board;
+package com.potato.controller.board.organization;
 
 import com.potato.config.argumentResolver.MemberId;
 import com.potato.config.interceptor.auth.Auth;
 import com.potato.controller.ApiResponse;
-import com.potato.service.board.OrganizationBoardService;
-import com.potato.service.board.dto.request.*;
-import com.potato.service.board.dto.response.OrganizationBoardInfoResponse;
-import com.potato.service.board.dto.response.OrganizationBoardWithCreatorInfoResponse;
+import com.potato.service.board.organization.OrganizationBoardService;
+import com.potato.service.board.organization.dto.request.*;
+import com.potato.service.board.organization.dto.response.OrganizationBoardInfoResponse;
+import com.potato.service.board.organization.dto.response.OrganizationBoardWithCreatorInfoResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

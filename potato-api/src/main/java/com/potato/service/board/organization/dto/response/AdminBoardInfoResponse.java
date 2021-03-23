@@ -1,4 +1,4 @@
-package com.potato.service.board.dto.response;
+package com.potato.service.board.organization.dto.response;
 
 import com.potato.domain.board.admin.AdminBoard;
 import lombok.AccessLevel;

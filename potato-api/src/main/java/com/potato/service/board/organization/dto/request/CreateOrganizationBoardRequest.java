@@ -1,5 +1,6 @@
-package com.potato.service.board.dto.request;
+package com.potato.service.board.organization.dto.request;
 
+import com.potato.domain.board.organization.OrganizationBoard;
 import com.potato.domain.board.organization.OrganizationBoardType;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,10 +14,7 @@ import java.time.LocalDateTime;
 @ToString
 @Getter
 @NoArgsConstructor
-public class UpdateOrganizationBoardRequest {
-
-    @NotNull
-    private Long organizationBoardId;
+public class CreateOrganizationBoardRequest {
 
     @NotBlank
     private String title;
@@ -36,14 +34,26 @@ public class UpdateOrganizationBoardRequest {
     private OrganizationBoardType type;
 
     @Builder(builderMethodName = "testBuilder")
-    public UpdateOrganizationBoardRequest(Long organizationBoardId, String title, String content, String imageUrl, LocalDateTime startDateTime, LocalDateTime endDateTime, OrganizationBoardType type) {
-        this.organizationBoardId = organizationBoardId;
+    public CreateOrganizationBoardRequest(String title, String content, String imageUrl, LocalDateTime startDateTime, LocalDateTime endDateTime, OrganizationBoardType type) {
         this.title = title;
         this.content = content;
         this.imageUrl = imageUrl;
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
         this.type = type;
+    }
+
+    public OrganizationBoard toEntity(String subDomain, Long memberId) {
+        return OrganizationBoard.builder()
+            .subDomain(subDomain)
+            .memberId(memberId)
+            .title(title)
+            .content(content)
+            .imageUrl(imageUrl)
+            .startDateTime(startDateTime)
+            .endDateTime(endDateTime)
+            .type(type)
+            .build();
     }
 
 }

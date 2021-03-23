@@ -2,8 +2,8 @@ package com.potato.service.schedule.dto.response;
 
 import com.potato.domain.board.admin.AdminBoard;
 import com.potato.domain.board.organization.OrganizationBoard;
-import com.potato.service.board.dto.response.AdminBoardInfoResponse;
-import com.potato.service.board.dto.response.OrganizationBoardInfoResponse;
+import com.potato.service.board.organization.dto.response.AdminBoardInfoResponse;
+import com.potato.service.board.organization.dto.response.OrganizationBoardInfoResponse;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

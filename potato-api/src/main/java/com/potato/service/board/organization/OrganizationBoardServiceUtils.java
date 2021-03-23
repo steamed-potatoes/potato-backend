@@ -1,4 +1,4 @@
-package com.potato.service.board;
+package com.potato.service.board.organization;
 
 import com.potato.domain.board.organization.OrganizationBoard;
 import com.potato.domain.board.organization.OrganizationBoardRepository;

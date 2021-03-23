@@ -1,7 +1,7 @@
-package com.potato.controller.board;
+package com.potato.controller.board.organization;
 
 import com.potato.event.board.OrganizationBoardDeletedEvent;
-import com.potato.service.board.DeleteOrganizationBoardService;
+import com.potato.service.board.organization.DeleteOrganizationBoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
