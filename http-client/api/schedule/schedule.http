@@ -1,2 +1,2 @@
 ### 캘린더 조회
-GET {{host}}/api/v1/schedule?startDate=2021-03-01&endDate=2021-03-31
+GET {{host_api}}/api/v1/schedule?startDate=2021-03-01&endDate=2021-03-31

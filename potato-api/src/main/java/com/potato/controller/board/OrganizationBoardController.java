@@ -1,6 +1,6 @@
 package com.potato.controller.board;
 
-import com.potato.config.argumentResolver.MemberId;
+import scom.potato.config.argumentResolver.MemberId;
 import com.potato.config.interceptor.auth.Auth;
 import com.potato.controller.ApiResponse;
 import com.potato.service.board.OrganizationBoardService;
@@ -40,7 +40,7 @@ public class OrganizationBoardController {
     @Operation(summary = "그룹의 게시물을 스크롤 페이지네이션 기반으로 조회하는 API", description = "lastOrganizationBoardId = 가장 마지막 게시물의 id, size = 받아올 게시물의 개수")
     @GetMapping("/api/v2/organization/board/list")
     public ApiResponse<List<OrganizationBoardInfoResponse>> retrieveLatestOrganizationBoardList(@Valid RetrieveLatestBoardsRequest request) {
-        return ApiResponse.success(organizationBoardService.retrieveLatestOrganizationBoardList(request.getLastOrganizationBoardId(), request.getSize()));
+        return ApiResponse.success(organizationBoardService.retrieveBoardsWithPagination(request.getLastOrganizationBoardId(), request.getSize()));
     }
 
     @Operation(summary = "그룹의 관리자가 그룹의 게시물을 수정하는 API", description = "Bearer 토큰이 필요합니다")
@@ -60,19 +60,11 @@ public class OrganizationBoardController {
         return ApiResponse.OK;
     }
 
-    @Operation(summary = "게시물의 좋아요를 추가하는 API", description = "Bearer 토큰이 필요합니다")
+    @Operation(summary = "게시물의 좋아요를 추가하거나 취소하는 API", description = "Bearer 토큰이 필요합니다, true: 좋아요 추가, false: 취소")
     @Auth
     @PutMapping("/api/v2/organization/board/like")
     public ApiResponse<String> likeOrganizationBoard(@Valid @RequestBody LikeOrganizationBoardRequest request, @MemberId Long memberId) {
-        organizationBoardService.likeOrganizationBoard(request.getOrganizationBoardId(), memberId);
-        return ApiResponse.OK;
-    }
-
-    @Operation(summary = "게시물의 좋아요를 취소하는 API", description = "Bearer 토큰이 필요합니다")
-    @Auth
-    @DeleteMapping("/api/v2/organization/board/like")
-    public ApiResponse<String> cancelLikeOrganizationBoard(@Valid LikeOrganizationBoardRequest request, @MemberId Long memberId) {
-        organizationBoardService.cancelOrganizationBoardLike(request.getOrganizationBoardId(), memberId);
+        organizationBoardService.likeOrganizationBoard(request, memberId);
         return ApiResponse.OK;
     }
 

@@ -6,6 +6,8 @@ import com.potato.exception.NotFoundException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 class OrganizationBoardServiceUtils {
 
@@ -23,6 +25,13 @@ class OrganizationBoardServiceUtils {
             throw new NotFoundException(String.format("해당하는 그룹 (%s)의 게시물 (%s)이 존재하지 않습니다", subDomain, organizationBoardId), "해당 그룹에 존재하지 않는 게시물입니다.");
         }
         return organizationBoard;
+    }
+
+    public static List<OrganizationBoard> findOrganizationBoardWithPagination(OrganizationBoardRepository organizationBoardRepository, long lastOrganizationBoardId, int size) {
+        if (lastOrganizationBoardId == 0) {
+            return organizationBoardRepository.findBoardsOrderByDesc(size);
+        }
+        return organizationBoardRepository.findBoardsLessThanOrderByIdDescLimit(lastOrganizationBoardId, size);
     }
 
 }
