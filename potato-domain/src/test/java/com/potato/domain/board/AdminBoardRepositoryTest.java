@@ -31,7 +31,7 @@ class AdminBoardRepositoryTest {
         LocalDate endDate = LocalDate.of(2021, 3, 31);
 
         AdminBoard adminBoard = AdminBoard.builder()
-            .adminMemberId(1L)
+            .administratorId(1L)
             .title("학사일정")
             .content("학사일정 뭐시기")
             .startDateTime(LocalDateTime.of(2021, 2, 28, 0, 0))
@@ -54,7 +54,7 @@ class AdminBoardRepositoryTest {
         LocalDate endDate = LocalDate.of(2021, 3, 31);
 
         AdminBoard adminBoard = AdminBoard.builder()
-            .adminMemberId(1L)
+            .administratorId(1L)
             .title("학사일정")
             .content("학사일정 뭐시기")
             .startDateTime(LocalDateTime.of(2021, 3, 31, 11, 59))
@@ -77,7 +77,7 @@ class AdminBoardRepositoryTest {
         LocalDate endDate = LocalDate.of(2021, 3, 31);
 
         AdminBoard adminBoard = AdminBoard.builder()
-            .adminMemberId(1L)
+            .administratorId(1L)
             .title("학사일정")
             .content("학사일정 뭐시기")
             .startDateTime(LocalDateTime.of(2021, 2, 28, 0, 0))
@@ -100,7 +100,7 @@ class AdminBoardRepositoryTest {
         LocalDate endDate = LocalDate.of(2021, 3, 31);
 
         AdminBoard adminBoard = AdminBoard.builder()
-            .adminMemberId(1L)
+            .administratorId(1L)
             .title("학사일정")
             .content("학사일정 뭐시기")
             .startDateTime(LocalDateTime.of(2021, 2, 28, 0, 0))
@@ -123,7 +123,7 @@ class AdminBoardRepositoryTest {
         LocalDate endDate = LocalDate.of(2021, 3, 31);
 
         AdminBoard adminBoard = AdminBoard.builder()
-            .adminMemberId(1L)
+            .administratorId(1L)
             .title("학사일정")
             .content("학사일정 뭐시기")
             .startDateTime(LocalDateTime.of(2021, 3, 15, 0, 0))

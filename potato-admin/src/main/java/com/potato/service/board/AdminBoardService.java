@@ -1,6 +1,5 @@
 package com.potato.service.board;
 
-import com.potato.domain.board.admin.AdminBoard;
 import com.potato.domain.board.admin.AdminBoardRepository;
 import com.potato.service.board.dto.request.CreateAdminBoardRequest;
 import lombok.RequiredArgsConstructor;

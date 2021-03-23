@@ -1,8 +1,8 @@
 package com.potato.service.auth;
 
-import com.potato.domain.adminMember.AdminMember;
-import com.potato.domain.adminMember.AdminMemberCreator;
-import com.potato.domain.adminMember.AdminMemberRepository;
+import com.potato.domain.administrator.Administrator;
+import com.potato.domain.administrator.AdministratorCreator;
+import com.potato.domain.administrator.AdministratorRepository;
 import com.potato.exception.NotFoundException;
 import com.potato.external.google.GoogleApiCaller;
 import com.potato.external.google.dto.response.GoogleAccessTokenResponse;
@@ -25,26 +25,26 @@ class AdminAuthServiceTest {
     private AdminAuthService adminAuthService;
 
     @Autowired
-    private AdminMemberRepository adminMemberRepository;
+    private AdministratorRepository administratorRepository;
 
     @Autowired
     private HttpSession httpSession;
 
     @BeforeEach
     void setUpAdminGoogleAuth() {
-        adminAuthService = new AdminAuthService(httpSession, new StubAdminGoogleApiCaller(), adminMemberRepository);
+        adminAuthService = new AdminAuthService(httpSession, new StubAdminGoogleApiCaller(), administratorRepository);
     }
 
     @AfterEach
     void cleanUp() {
-        adminMemberRepository.deleteAll();
+        administratorRepository.deleteAll();
     }
 
     @Test
     void 구글_인증시_존재하는_이메일이면_로그인_처리한다() {
         //given
-        AdminMember adminMember = AdminMemberCreator.create("googleAuth@gmail.com", "googleAuth");
-        adminMemberRepository.save(adminMember);
+        Administrator administrator = AdministratorCreator.create("googleAuth@gmail.com", "googleAuth");
+        administratorRepository.save(administrator);
 
         //when
         GoogleAuthRequest request = GoogleAuthRequest.testInstance("code", "redirectUri");
@@ -57,8 +57,8 @@ class AdminAuthServiceTest {
     @Test
     void 구글_인증시_존재하지_않는_이메일이면_애러가_발생() {
         //given
-        AdminMember adminMember = AdminMemberCreator.create("googleWrong@gmail.com", "googleAuth");
-        adminMemberRepository.save(adminMember);
+        Administrator administrator = AdministratorCreator.create("googleWrong@gmail.com", "googleAuth");
+        administratorRepository.save(administrator);
 
         GoogleAuthRequest request = GoogleAuthRequest.testInstance("code", "redirectUri");
 

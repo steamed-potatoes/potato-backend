@@ -1,13 +1,13 @@
-package com.potato.domain.adminMember;
+package com.potato.domain.administrator;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class AdminMemberCreator {
+public class AdministratorCreator {
 
-    public static AdminMember create(String email, String name) {
-        return AdminMember.builder()
+    public static Administrator create(String email, String name) {
+        return Administrator.builder()
             .email(email)
             .name(name)
             .build();

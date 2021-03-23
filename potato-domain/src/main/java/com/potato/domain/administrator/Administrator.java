@@ -1,4 +1,4 @@
-package com.potato.domain.adminMember;
+package com.potato.domain.administrator;
 
 import com.potato.domain.BaseTimeEntity;
 import com.potato.domain.member.Email;
@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class AdminMember extends BaseTimeEntity {
+public class Administrator extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +24,7 @@ public class AdminMember extends BaseTimeEntity {
     private String name;
 
     @Builder()
-    public AdminMember(String email, String name) {
+    public Administrator(String email, String name) {
         this.email = Email.of(email);
         this.name = name;
     }

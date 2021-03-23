@@ -8,9 +8,11 @@ import com.potato.domain.board.organization.*;
 import com.potato.exception.ConflictException;
 import com.potato.exception.NotFoundException;
 import com.potato.service.OrganizationMemberSetUpTest;
-import com.potato.service.board.dto.request.CreateOrganizationBoardRequest;
-import com.potato.service.board.dto.request.UpdateOrganizationBoardRequest;
-import com.potato.service.board.dto.response.OrganizationBoardInfoResponse;
+import com.potato.service.board.organization.OrganizationBoardService;
+import com.potato.service.board.organization.dto.request.CreateOrganizationBoardRequest;
+import com.potato.service.board.organization.dto.request.LikeOrganizationBoardRequest;
+import com.potato.service.board.organization.dto.request.UpdateOrganizationBoardRequest;
+import com.potato.service.board.organization.dto.response.OrganizationBoardInfoResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -149,8 +151,10 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
         OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, 999L, "이전의 게시글", OrganizationBoardType.RECRUIT);
         organizationBoardRepository.save(organizationBoard);
 
+        LikeOrganizationBoardRequest request = LikeOrganizationBoardRequest.testInstance(organizationBoard.getId(), true);
+
         // when
-        organizationBoardService.likeOrganizationBoard(organizationBoard.getId(), memberId);
+        organizationBoardService.likeOrganizationBoard(request, memberId);
 
         // then
         List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findAll();
@@ -169,8 +173,10 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
         organizationBoard.addLike(memberId);
         organizationBoardRepository.save(organizationBoard);
 
+        LikeOrganizationBoardRequest request = LikeOrganizationBoardRequest.testInstance(organizationBoard.getId(), true);
+
         // when & then
-        assertThatThrownBy(() -> organizationBoardService.likeOrganizationBoard(organizationBoard.getId(), memberId)).isInstanceOf(ConflictException.class);
+        assertThatThrownBy(() -> organizationBoardService.likeOrganizationBoard(request, memberId)).isInstanceOf(ConflictException.class);
     }
 
     @Test
@@ -180,8 +186,10 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
         organizationBoard.addLike(memberId);
         organizationBoardRepository.save(organizationBoard);
 
+        LikeOrganizationBoardRequest request = LikeOrganizationBoardRequest.testInstance(organizationBoard.getId(), false);
+
         // when
-        organizationBoardService.cancelOrganizationBoardLike(organizationBoard.getId(), memberId);
+        organizationBoardService.likeOrganizationBoard(request, memberId);
 
         // then
         List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findAll();
@@ -198,8 +206,10 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
         OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, 999L, "이전의 게시글", OrganizationBoardType.RECRUIT);
         organizationBoardRepository.save(organizationBoard);
 
+        LikeOrganizationBoardRequest request = LikeOrganizationBoardRequest.testInstance(organizationBoard.getId(), false);
+
         // when & then
-        assertThatThrownBy(() -> organizationBoardService.cancelOrganizationBoardLike(organizationBoard.getId(), memberId)).isInstanceOf(NotFoundException.class);
+        assertThatThrownBy(() -> organizationBoardService.likeOrganizationBoard(request, memberId)).isInstanceOf(NotFoundException.class);
     }
 
     @Test
@@ -254,7 +264,7 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
         organizationBoardRepository.saveAll(Arrays.asList(organizationBoard1, organizationBoard2, organizationBoard3));
 
         //when
-        List<OrganizationBoardInfoResponse> responses = organizationBoardService.retrieveLatestOrganizationBoardList(0, 3);
+        List<OrganizationBoardInfoResponse> responses = organizationBoardService.retrieveBoardsWithPagination(0, 3);
 
         //then
         assertThat(responses).hasSize(3);
@@ -269,7 +279,7 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
     @Test
     void 가장_최신_게시물_3개_불러올때_게시물이_없을_경우_빈리스트_반환() {
         //given
-        List<OrganizationBoardInfoResponse> responses = organizationBoardService.retrieveLatestOrganizationBoardList(0, 3);
+        List<OrganizationBoardInfoResponse> responses = organizationBoardService.retrieveBoardsWithPagination(0, 3);
 
         //then
         assertThat(responses).isEmpty();
@@ -288,7 +298,7 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
         organizationBoardRepository.saveAll(Arrays.asList(organizationBoard1, organizationBoard2, organizationBoard3, organizationBoard4, organizationBoard5));
 
         //when
-        List<OrganizationBoardInfoResponse> responses = organizationBoardService.retrieveLatestOrganizationBoardList(organizationBoard4.getId(), 3);
+        List<OrganizationBoardInfoResponse> responses = organizationBoardService.retrieveBoardsWithPagination(organizationBoard4.getId(), 3);
 
         //then
         assertThat(responses).hasSize(3);
@@ -313,7 +323,7 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
         organizationBoardRepository.saveAll(Arrays.asList(organizationBoard1, organizationBoard2, organizationBoard3, organizationBoard4, organizationBoard5));
 
         //when
-        List<OrganizationBoardInfoResponse> responses = organizationBoardService.retrieveLatestOrganizationBoardList(organizationBoard4.getId(), 2);
+        List<OrganizationBoardInfoResponse> responses = organizationBoardService.retrieveBoardsWithPagination(organizationBoard4.getId(), 2);
 
         //then
         assertThat(responses).hasSize(2);
@@ -336,7 +346,7 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
         organizationBoardRepository.saveAll(Arrays.asList(organizationBoard1, organizationBoard2, organizationBoard3, organizationBoard4, organizationBoard5));
 
         //when
-        List<OrganizationBoardInfoResponse> responses = organizationBoardService.retrieveLatestOrganizationBoardList(organizationBoard5.getId(), 3);
+        List<OrganizationBoardInfoResponse> responses = organizationBoardService.retrieveBoardsWithPagination(organizationBoard5.getId(), 3);
 
         //then
         assertThat(responses).hasSize(3);
@@ -355,7 +365,7 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
         organizationBoardRepository.save(organizationBoard1);
 
         //when
-        List<OrganizationBoardInfoResponse> responses = organizationBoardService.retrieveLatestOrganizationBoardList(organizationBoard1.getId(), 3);
+        List<OrganizationBoardInfoResponse> responses = organizationBoardService.retrieveBoardsWithPagination(organizationBoard1.getId(), 3);
 
         //then
         assertThat(responses).isEmpty();
