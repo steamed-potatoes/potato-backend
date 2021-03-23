@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 @ToString
@@ -15,10 +14,10 @@ public class LikeOrganizationBoardRequest {
     @NotNull
     private Long organizationBoardId;
 
-    @NotEmpty
-    private boolean isLike;
+    @NotNull
+    private Boolean isLike;
 
-    private LikeOrganizationBoardRequest(@NotNull Long organizationBoardId, @NotEmpty boolean isLike) {
+    private LikeOrganizationBoardRequest(@NotNull Long organizationBoardId, boolean isLike) {
         this.organizationBoardId = organizationBoardId;
         this.isLike = isLike;
     }

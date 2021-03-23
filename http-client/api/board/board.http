@@ -30,18 +30,15 @@ Authorization: Bearer {{AUTHORIZATION}}
     "type": "RECRUIT"
 }
 
-### 게시물의 좋아요를 추가하는 API
+### 게시물의 좋아요를 추가/취소하는 API
 PUT {{host_api}}/api/v2/organization/board/like
 Content-Type: application/json
 Authorization: Bearer {{AUTHORIZATION}}
 
 {
-    "organizationBoardId": 1
+    "organizationBoardId": 1,
+    "isLike": true
 }
-
-### 게시물의 좋아요를 취소하는 API
-DELETE {{host_api}}/api/v2/organization/board/like?organizationBoardId=1
-Authorization: Bearer {{AUTHORIZATION}}
 
 ### 그룹의 게시물을 스크롤 페이지네이션 기반으로 조회하는 API
 GET {{host_api}}/api/v2/organization/board/list?lastOrganizationBoardId=0&size=5

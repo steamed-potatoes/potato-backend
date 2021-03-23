@@ -62,7 +62,7 @@ public class OrganizationBoardService {
     @Transactional
     public void likeOrganizationBoard(LikeOrganizationBoardRequest request, Long memberId) {
         OrganizationBoard organizationBoard = OrganizationBoardServiceUtils.findOrganizationBoardById(organizationBoardRepository, request.getOrganizationBoardId());
-        if (request.isLike()) {
+        if (request.getIsLike()) {
             organizationBoard.addLike(memberId);
             return;
         }
