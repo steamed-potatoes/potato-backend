@@ -65,7 +65,7 @@ class ScheduleServiceTest extends OrganizationMemberSetUpTest {
     void 특정_기간동안의_스케쥴을_불러오면_관리자_게시물도_포함된다() {
         // given
         AdminBoard adminBoard = AdminBoard.builder()
-            .adminMemberId(1L)
+            .administratorId(1L)
             .title("학사일정")
             .content("학사일정 뭐시기")
             .startDateTime(LocalDateTime.of(2021, 3, 5, 0, 0))

@@ -1,9 +1,9 @@
 package com.potato.controller;
 
 import com.potato.config.session.AdminMemberSession;
-import com.potato.domain.adminMember.AdminMember;
-import com.potato.domain.adminMember.AdminMemberCreator;
-import com.potato.domain.adminMember.AdminMemberRepository;
+import com.potato.domain.administrator.Administrator;
+import com.potato.domain.administrator.AdministratorCreator;
+import com.potato.domain.administrator.AdministratorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,12 +19,12 @@ import static com.potato.config.session.SessionConstants.AUTH_SESSION;
 public class LocalController {
 
     private final HttpSession httpSession;
-    private final AdminMemberRepository adminMemberRepository;
+    private final AdministratorRepository administratorRepository;
 
     @GetMapping("/test-session")
     public ApiResponse<String> getSession() {
-        AdminMember adminMember = adminMemberRepository.save(AdminMemberCreator.create("admin.test@gmail.com", "테스트 관리자"));
-        httpSession.setAttribute(AUTH_SESSION, AdminMemberSession.of(adminMember.getId()));
+        Administrator administrator = administratorRepository.save(AdministratorCreator.create("admin.test@gmail.com", "테스트 관리자"));
+        httpSession.setAttribute(AUTH_SESSION, AdminMemberSession.of(administrator.getId()));
         return ApiResponse.success(httpSession.getId());
     }
 

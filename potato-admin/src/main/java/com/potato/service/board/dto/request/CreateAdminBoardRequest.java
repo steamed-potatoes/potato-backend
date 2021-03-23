@@ -35,9 +35,9 @@ public class CreateAdminBoardRequest {
         this.endDateTime = endDateTime;
     }
 
-    public AdminBoard toEntity(Long adminMemberId) {
+    public AdminBoard toEntity(Long administratorId) {
         return AdminBoard.builder()
-            .adminMemberId(adminMemberId)
+            .administratorId(administratorId)
             .title(title)
             .content(content)
             .startDateTime(startDateTime)
