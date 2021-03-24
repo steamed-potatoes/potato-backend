@@ -42,6 +42,7 @@ public class OrganizationBoard extends BaseTimeEntity {
 
     private String imageUrl;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private OrganizationBoardType type;
 

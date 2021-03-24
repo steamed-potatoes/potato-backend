@@ -30,6 +30,7 @@ public class Member extends BaseTimeEntity {
 
     private String profileUrl;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private MemberMajor major;
 

@@ -37,6 +37,7 @@ public class BoardComment extends BaseTimeEntity {
     @OneToMany(mappedBy = "parentComment", cascade = CascadeType.PERSIST)
     private final List<BoardComment> childComments = new ArrayList<>();
 
+    @Column(nullable = false)
     private String content;
 
     private int depth;
