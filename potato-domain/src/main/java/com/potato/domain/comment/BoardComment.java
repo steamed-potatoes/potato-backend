@@ -12,6 +12,11 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(
+    indexes = {
+        @Index(name = "idx_board_comment_1", columnList = "organizationBoardId")
+    }
+)
 @Entity
 public class BoardComment extends BaseTimeEntity {
 
@@ -32,7 +37,6 @@ public class BoardComment extends BaseTimeEntity {
     @OneToMany(mappedBy = "parentComment", cascade = CascadeType.PERSIST)
     private final List<BoardComment> childComments = new ArrayList<>();
 
-    @Column(nullable = false)
     private String content;
 
     private int depth;

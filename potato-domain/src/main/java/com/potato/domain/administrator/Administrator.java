@@ -21,6 +21,7 @@ public class Administrator extends BaseTimeEntity {
     @Embedded
     private Email email;
 
+    @Column(nullable = false, length = 50)
     private String name;
 
     @Builder()

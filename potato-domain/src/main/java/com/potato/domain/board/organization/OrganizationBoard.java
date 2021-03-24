@@ -16,6 +16,11 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(
+    indexes = {
+        @Index(name = "idx_organization_board_1", columnList = "subDomain")
+    }
+)
 @Entity
 public class OrganizationBoard extends BaseTimeEntity {
 

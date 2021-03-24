@@ -11,6 +11,11 @@ import javax.persistence.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(
+    indexes = {
+        @Index(name = "idx_organization_member_mapper_1", columnList = "memberId")
+    }
+)
 @Entity
 public class OrganizationMemberMapper extends BaseTimeEntity {
 

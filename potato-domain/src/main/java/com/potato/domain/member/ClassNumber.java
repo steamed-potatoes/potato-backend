@@ -17,7 +17,7 @@ public class ClassNumber {
     private final static int DIGIT = 100_000;
     private final static int MIN_YEAR = 1953;
 
-    @Column(nullable = false, length = 9)
+    @Column(length = 9)
     private Integer classNumber;
 
     private ClassNumber(Integer classNumber) {

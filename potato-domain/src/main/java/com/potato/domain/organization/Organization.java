@@ -16,6 +16,11 @@ import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(
+    uniqueConstraints = {
+        @UniqueConstraint(name = "uni_organization_1", columnNames = {"subDomain"})
+    }
+)
 @Entity
 public class Organization extends BaseTimeEntity {
 
@@ -23,10 +28,10 @@ public class Organization extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private String subDomain;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
     private String name;
 
     private String description;

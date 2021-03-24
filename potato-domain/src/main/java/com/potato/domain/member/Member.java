@@ -10,6 +10,11 @@ import javax.persistence.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(
+    uniqueConstraints = {
+        @UniqueConstraint(name = "uni_member_1", columnNames = {"email"})
+    }
+)
 @Entity
 public class Member extends BaseTimeEntity {
 
@@ -20,7 +25,7 @@ public class Member extends BaseTimeEntity {
     @Embedded
     private Email email;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private String name;
 
     private String profileUrl;
