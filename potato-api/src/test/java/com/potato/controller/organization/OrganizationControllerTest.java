@@ -77,7 +77,7 @@ class OrganizationControllerTest extends ControllerTestUtils {
         String profileUrl = "http://profile.com";
 
         Organization organization = OrganizationCreator.create(subDomain, name, description, profileUrl, OrganizationCategory.NON_APPROVED_CIRCLE);
-        organization.addAdmin(testMember.getId());
+        organization.addAdmin(testMemberId);
         organizationRepository.save(organization);
 
         // when
@@ -91,10 +91,7 @@ class OrganizationControllerTest extends ControllerTestUtils {
         assertThat(response.getData().getOrganization().getMembersCount()).isEqualTo(1);
 
         assertThat(response.getData().getMembers()).hasSize(1);
-        assertThat(response.getData().getMembers().get(0).getId()).isEqualTo(testMember.getId());
-        assertThat(response.getData().getMembers().get(0).getEmail()).isEqualTo(testMember.getEmail());
-        assertThat(response.getData().getMembers().get(0).getName()).isEqualTo(testMember.getName());
-        assertThat(response.getData().getMembers().get(0).getProfileUrl()).isEqualTo(testMember.getProfileUrl());
+        assertThat(response.getData().getMembers().get(0).getId()).isEqualTo(testMemberId);
     }
 
     @Test
@@ -106,7 +103,7 @@ class OrganizationControllerTest extends ControllerTestUtils {
         String profileUrl = "http://profile.com";
 
         Organization organization = OrganizationCreator.create(subDomain, name, description, profileUrl, OrganizationCategory.NON_APPROVED_CIRCLE);
-        organization.addAdmin(testMember.getId());
+        organization.addAdmin(testMemberId);
         organizationRepository.save(organization);
 
         // when
