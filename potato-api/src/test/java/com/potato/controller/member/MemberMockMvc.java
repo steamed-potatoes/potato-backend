@@ -1,4 +1,4 @@
-package com.potato.e2e.api;
+package com.potato.controller.member;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,12 +16,13 @@ import java.nio.charset.StandardCharsets;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
-public class MemberTestController {
+public class MemberMockMvc {
 
     private final MockMvc mockMvc;
+
     private final ObjectMapper objectMapper;
 
-    public MemberTestController(MockMvc mockMvc, ObjectMapper objectMapper) {
+    public MemberMockMvc(MockMvc mockMvc, ObjectMapper objectMapper) {
         this.mockMvc = mockMvc;
         this.objectMapper = objectMapper;
     }
