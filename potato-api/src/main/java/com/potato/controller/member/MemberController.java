@@ -52,7 +52,7 @@ public class MemberController {
     @Operation(summary = "특정 상대방 회원 정보를 불러오는 API")
     @Auth
     @GetMapping("/api/v1/member/{targetId}")
-    public ApiResponse<MemberInfoResponse> getMemberOne(@PathVariable Long targetId) {
+    public ApiResponse<MemberInfoResponse> getMemberInfo(@PathVariable Long targetId) {
         return ApiResponse.success(memberService.getMemberInfo(targetId));
     }
 
