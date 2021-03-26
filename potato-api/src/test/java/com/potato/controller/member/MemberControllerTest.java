@@ -1,48 +1,34 @@
-package com.potato.e2e.member;
+package com.potato.controller.member;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.potato.controller.ApiResponse;
+import com.potato.controller.ControllerTestUtils;
 import com.potato.controller.advice.ErrorCode;
 import com.potato.domain.member.Member;
 import com.potato.domain.member.MemberCreator;
 import com.potato.domain.member.MemberMajor;
-import com.potato.domain.member.MemberRepository;
-import com.potato.e2e.api.MemberTestController;
 import com.potato.service.member.dto.request.CreateMemberRequest;
 import com.potato.service.member.dto.request.UpdateMemberRequest;
 import com.potato.service.member.dto.response.MemberInfoResponse;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.web.servlet.MockMvc;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @AutoConfigureMockMvc
 @SpringBootTest
-class MemberControllerTest {
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    private MemberTestController memberTestController;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @Autowired
-    private MemberRepository memberRepository;
-
-    @BeforeEach
-    void cleanUp() {
-        memberRepository.deleteAll();
-    }
+class MemberControllerTest extends ControllerTestUtils {
 
     @BeforeEach
     void setUp() {
-        memberTestController = new MemberTestController(mockMvc, objectMapper);
+        super.setup();
+    }
+
+    @AfterEach
+    void cleanUp() {
+        super.cleanup();
     }
 
     @Test
@@ -57,7 +43,7 @@ class MemberControllerTest {
             .build();
 
         // when
-        ApiResponse<String> response = memberTestController.createMember(request);
+        ApiResponse<String> response = memberMockMvc.createMember(request);
 
         // then
         assertThat(response.getData()).isNotNull();
@@ -77,7 +63,7 @@ class MemberControllerTest {
             .build();
 
         // when
-        ApiResponse<String> response = memberTestController.createMember(request);
+        ApiResponse<String> response = memberMockMvc.createMember(request);
 
         // then
         assertThat(response.getCode()).isEqualTo(ErrorCode.CONFLICT_EXCEPTION.getCode());
@@ -96,7 +82,7 @@ class MemberControllerTest {
             .build();
 
         // when
-        ApiResponse<String> response = memberTestController.createMember(request);
+        ApiResponse<String> response = memberMockMvc.createMember(request);
 
         // then
         assertThat(response.getCode()).isEqualTo(ErrorCode.VALIDATION_EXCEPTION.getCode());
@@ -115,7 +101,7 @@ class MemberControllerTest {
             .build();
 
         // when
-        ApiResponse<String> response = memberTestController.createMember(request);
+        ApiResponse<String> response = memberMockMvc.createMember(request);
 
         // then
         assertThat(response.getCode()).isEqualTo(ErrorCode.VALIDATION_EXCEPTION.getCode());
@@ -124,10 +110,10 @@ class MemberControllerTest {
     @Test
     void 토큰을_이용해_내_정보를_불러온다() throws Exception {
         // given
-        String token = memberTestController.getMockMemberToken();
+        String token = memberMockMvc.getMockMemberToken();
 
         // when
-        ApiResponse<MemberInfoResponse> response = memberTestController.getMyMemberInfo(token);
+        ApiResponse<MemberInfoResponse> response = memberMockMvc.getMyMemberInfo(token);
 
         // then
         assertThat(response.getData().getEmail()).isEqualTo("will.seungho@gmail.com");
@@ -140,7 +126,7 @@ class MemberControllerTest {
     @Test
     void 토큰을_이용해_내_정보를_불러올때_잘못된_토큰이면_401_에러가_발생() throws Exception {
         // when
-        ApiResponse<MemberInfoResponse> response = memberTestController.getMyMemberInfo("wrong token");
+        ApiResponse<MemberInfoResponse> response = memberMockMvc.getMyMemberInfo("wrong token");
 
         // then
         assertThat(response.getCode()).isEqualTo(ErrorCode.UNAUTHORIZED_EXCEPTION.getCode());
@@ -161,10 +147,10 @@ class MemberControllerTest {
             .classNumber(classNumber)
             .build();
 
-        String token = memberTestController.getMockMemberToken();
+        String token = memberMockMvc.getMockMemberToken();
 
         // when
-        ApiResponse<MemberInfoResponse> response = memberTestController.updateMemberInfo(request, token);
+        ApiResponse<MemberInfoResponse> response = memberMockMvc.updateMemberInfo(request, token);
 
         // then
         assertThat(response.getData().getEmail()).isEqualTo("will.seungho@gmail.com");
@@ -177,12 +163,12 @@ class MemberControllerTest {
     @Test
     void 특정_유저의_정보를_불러온다() throws Exception {
         // given
-        String token = memberTestController.getMockMemberToken();
+        String token = memberMockMvc.getMockMemberToken();
 
         Member member = memberRepository.save(MemberCreator.create("ksh980212@gmail.com"));
 
         // when
-        ApiResponse<MemberInfoResponse> response = memberTestController.getMemberInfo(member.getId(), token);
+        ApiResponse<MemberInfoResponse> response = memberMockMvc.getMemberInfo(member.getId(), token);
 
         // then
         assertThat(response.getData().getEmail()).isEqualTo(member.getEmail());
