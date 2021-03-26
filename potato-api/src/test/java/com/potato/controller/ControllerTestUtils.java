@@ -2,6 +2,7 @@ package com.potato.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.potato.controller.member.MemberMockMvc;
+import com.potato.domain.member.Member;
 import com.potato.domain.member.MemberCreator;
 import com.potato.domain.member.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +21,10 @@ public abstract class ControllerTestUtils {
 
     protected MemberMockMvc memberMockMvc;
 
-    protected Long testMemberId;
+    protected Member testMember;
 
     protected void setup() {
-        testMemberId = memberRepository.save(MemberCreator.create("test.potato@gmail.com")).getId();
+        testMember = memberRepository.save(MemberCreator.create("test.potato@gmail.com"));
         memberMockMvc = new MemberMockMvc(mockMvc, objectMapper);
     }
 
