@@ -3,10 +3,7 @@ package com.potato.controller.organization;
 import com.potato.controller.ApiResponse;
 import com.potato.controller.ControllerTestUtils;
 import com.potato.domain.member.Member;
-import com.potato.domain.organization.Organization;
-import com.potato.domain.organization.OrganizationCategory;
-import com.potato.domain.organization.OrganizationCreator;
-import com.potato.domain.organization.OrganizationRepository;
+import com.potato.domain.organization.*;
 import com.potato.service.organization.dto.request.CreateOrganizationRequest;
 import com.potato.service.organization.dto.response.OrganizationInfoResponse;
 import com.potato.service.organization.dto.response.OrganizationWithMembersInfoResponse;
@@ -31,6 +28,9 @@ class OrganizationControllerTest extends ControllerTestUtils {
     @Autowired
     private OrganizationRepository organizationRepository;
 
+    @Autowired
+    private OrganizationMemberMapperRepository organizationMemberMapperRepository;
+
     @BeforeEach
     void setUp() {
         super.setup();
@@ -40,7 +40,8 @@ class OrganizationControllerTest extends ControllerTestUtils {
     @AfterEach
     void cleanUp() {
         super.cleanup();
-        organizationRepository.deleteAll();
+        organizationMemberMapperRepository.deleteAllInBatch();
+        organizationRepository.deleteAllInBatch();
     }
 
     @Test
