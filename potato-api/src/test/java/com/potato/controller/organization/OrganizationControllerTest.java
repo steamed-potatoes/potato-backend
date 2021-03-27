@@ -29,9 +29,6 @@ class OrganizationControllerTest extends ControllerTestUtils {
     @Autowired
     private OrganizationRepository organizationRepository;
 
-    @Autowired
-    private OrganizationMemberMapperRepository organizationMemberMapperRepository;
-
     @BeforeEach
     void setUp() {
         super.setup();
@@ -180,12 +177,10 @@ class OrganizationControllerTest extends ControllerTestUtils {
         organizationRepository.save(organization);
 
         //when
-        organizationMockMvc.applyJoiningOrganization(subDomain, token);
+        ApiResponse<String> response = organizationMockMvc.applyJoiningOrganization(subDomain, token);
 
         //then
-        List<OrganizationMemberMapper> organizationMemberMapperList = organizationMemberMapperRepository.findAll();
-        assertThat(organizationMemberMapperList).hasSize(2);
-        assertThat(organizationMemberMapperList.get(1).getRole()).isEqualTo(OrganizationRole.PENDING);
+        assertThat(response.getData()).isEqualTo("OK");
     }
 
     @Test
@@ -202,11 +197,10 @@ class OrganizationControllerTest extends ControllerTestUtils {
         organizationRepository.save(organization);
 
         //when
-        organizationMockMvc.cancelJoiningOrganization(subDomain, token);
+        ApiResponse<String> response = organizationMockMvc.cancelJoiningOrganization(subDomain, token);
 
         //then
-        List<OrganizationMemberMapper> organizationMemberMapperList = organizationMemberMapperRepository.findAll();
-        assertThat(organizationMemberMapperList).hasSize(1);
+        assertThat(response.getData()).isEqualTo("OK");
     }
 
     @Test
@@ -223,12 +217,10 @@ class OrganizationControllerTest extends ControllerTestUtils {
         organizationRepository.save(organization);
 
         //when
-        organizationMockMvc.leaveFromOrganization(subDomain, token);
+        ApiResponse<String> response = organizationMockMvc.leaveFromOrganization(subDomain, token);
 
         //then
-        List<OrganizationMemberMapper> organizationMemberMapperList = organizationMemberMapperRepository.findAll();
-        assertThat(organizationMemberMapperList).hasSize(1);
-        assertThat(organizationMemberMapperList.get(0).getRole()).isEqualTo(OrganizationRole.ADMIN);
+        assertThat(response.getData()).isEqualTo("OK");
     }
 
     @Test
