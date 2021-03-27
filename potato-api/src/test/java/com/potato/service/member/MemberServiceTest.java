@@ -142,8 +142,8 @@ class MemberServiceTest {
         Member member = MemberCreator.create("tnswh2023@naver.com");
         memberRepository.save(member);
 
-        Organization organization1 = OrganizationCreator.create("감자1");
-        Organization organization2 = OrganizationCreator.create("감자2");
+        Organization organization1 = OrganizationCreator.create("potato1");
+        Organization organization2 = OrganizationCreator.create("potato2");
 
         organization1.addFollow(member.getId());
         organization2.addFollow(member.getId());
@@ -153,8 +153,8 @@ class MemberServiceTest {
         List<OrganizationInfoResponse> responses = memberService.getOrganizationFollower(member.getId());
 
         //then
-        assertThat(responses.get(0).getSubDomain()).isEqualTo("감자1");
-        assertThat(responses.get(1).getSubDomain()).isEqualTo("감자2");
+        assertThat(responses.get(0).getSubDomain()).isEqualTo("potato1");
+        assertThat(responses.get(1).getSubDomain()).isEqualTo("potato2");
     }
 
     @Test
