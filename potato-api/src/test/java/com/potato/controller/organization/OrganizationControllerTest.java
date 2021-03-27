@@ -2,11 +2,9 @@ package com.potato.controller.organization;
 
 import com.potato.controller.ApiResponse;
 import com.potato.controller.ControllerTestUtils;
+import com.potato.controller.advice.ErrorCode;
 import com.potato.domain.member.Member;
-import com.potato.domain.organization.Organization;
-import com.potato.domain.organization.OrganizationCategory;
-import com.potato.domain.organization.OrganizationCreator;
-import com.potato.domain.organization.OrganizationRepository;
+import com.potato.domain.organization.*;
 import com.potato.service.organization.dto.request.CreateOrganizationRequest;
 import com.potato.service.organization.dto.response.OrganizationInfoResponse;
 import com.potato.service.organization.dto.response.OrganizationWithMembersInfoResponse;
@@ -30,6 +28,9 @@ class OrganizationControllerTest extends ControllerTestUtils {
 
     @Autowired
     private OrganizationRepository organizationRepository;
+
+    @Autowired
+    private OrganizationMemberMapperRepository organizationMemberMapperRepository;
 
     @BeforeEach
     void setUp() {
@@ -166,6 +167,87 @@ class OrganizationControllerTest extends ControllerTestUtils {
         assertThat(response.getData()).hasSize(2);
         assertThat(response.getData().get(0).getSubDomain()).isEqualTo(subDomain);
         assertThat(response.getData().get(1).getSubDomain()).isEqualTo(subDomain2);
+    }
+
+    @Test
+    void 특정그룹에_가입신청을_하는_경우() throws Exception {
+        //given
+        String token = memberMockMvc.getMockMemberToken();
+
+        String subDomain = "potato";
+        Organization organization = OrganizationCreator.create(subDomain);
+        organization.addAdmin(testMember.getId());
+        organizationRepository.save(organization);
+
+        //when
+        organizationMockMvc.applyJoiningOrganization(subDomain, token);
+
+        //then
+        List<OrganizationMemberMapper> organizationMemberMapperList = organizationMemberMapperRepository.findAll();
+        assertThat(organizationMemberMapperList).hasSize(2);
+        assertThat(organizationMemberMapperList.get(1).getRole()).isEqualTo(OrganizationRole.PENDING);
+    }
+
+    @Test
+    void 특정_그룹에_가입신청을_취소하는_경우() throws Exception {
+        //given
+        String email = "tnswh2023@gmail.com";
+        String token = memberMockMvc.getMockMemberToken(email);
+        Member member = memberRepository.findMemberByEmail(email);
+
+        String subDomain = "potato";
+        Organization organization = OrganizationCreator.create(subDomain);
+        organization.addAdmin(testMember.getId());
+        organization.addPending(member.getId());
+        organizationRepository.save(organization);
+
+        //when
+        organizationMockMvc.cancelJoiningOrganization(subDomain, token);
+
+        //then
+        List<OrganizationMemberMapper> organizationMemberMapperList = organizationMemberMapperRepository.findAll();
+        assertThat(organizationMemberMapperList).hasSize(1);
+    }
+
+    @Test
+    void 특정_그룹에서_회장과_회원이_있을때_회원이_탈퇴하는_경우() throws Exception {
+        //given
+        String email = "tnswh2023@gmail.com";
+        String token = memberMockMvc.getMockMemberToken(email);
+        Member member = memberRepository.findMemberByEmail(email);
+
+        String subDomain = "potato";
+        Organization organization = OrganizationCreator.create(subDomain);
+        organization.addAdmin(testMember.getId());
+        organization.addUser(member.getId());
+        organizationRepository.save(organization);
+
+        //when
+        organizationMockMvc.leaveFromOrganization(subDomain, token);
+
+        //then
+        List<OrganizationMemberMapper> organizationMemberMapperList = organizationMemberMapperRepository.findAll();
+        assertThat(organizationMemberMapperList).hasSize(1);
+        assertThat(organizationMemberMapperList.get(0).getRole()).isEqualTo(OrganizationRole.ADMIN);
+    }
+
+    @Test
+    void 특정_그룹에서_회장이_탈퇴하는_경우_애러발생() throws Exception {
+        //given
+        String email = "tnswh2023@gmail.com";
+        String token = memberMockMvc.getMockMemberToken(email);
+        Member member = memberRepository.findMemberByEmail(email);
+
+        String subDomain = "potato";
+        Organization organization = OrganizationCreator.create(subDomain);
+        organization.addAdmin(member.getId());
+        organizationRepository.save(organization);
+
+        //when
+        ApiResponse<String> response = organizationMockMvc.leaveFromOrganization(subDomain, token);
+
+        //then
+        assertThat(response.getCode()).isEqualTo(ErrorCode.FORBIDDEN_EXCEPTION.getCode());
     }
 
 }

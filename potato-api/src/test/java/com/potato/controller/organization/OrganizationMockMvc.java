@@ -78,4 +78,46 @@ class OrganizationMockMvc {
         );
     }
 
+    public ApiResponse<String> applyJoiningOrganization(String subDomain, String token) throws Exception {
+        MockHttpServletRequestBuilder builder = post("/api/v1/organization/join/apply/" + subDomain)
+            .contentType(MediaType.APPLICATION_JSON)
+            .header(HttpHeaders.AUTHORIZATION, "Bearer ".concat(token));
+
+        return objectMapper.readValue(
+            mockMvc.perform(builder)
+                .andReturn()
+                .getResponse()
+                .getContentAsString(StandardCharsets.UTF_8), new TypeReference<>() {
+            }
+        );
+    }
+
+    public ApiResponse<String> cancelJoiningOrganization(String subDomain, String token) throws Exception {
+        MockHttpServletRequestBuilder builder = put("/api/v1/organization/join/cancel/" + subDomain)
+            .contentType(MediaType.APPLICATION_JSON)
+            .header(HttpHeaders.AUTHORIZATION, "Bearer ".concat(token));
+
+        return objectMapper.readValue(
+            mockMvc.perform(builder)
+                .andReturn()
+                .getResponse()
+                .getContentAsString(StandardCharsets.UTF_8), new TypeReference<>() {
+            }
+        );
+    }
+
+    public ApiResponse<String> leaveFromOrganization(String subDomain, String token) throws Exception {
+        MockHttpServletRequestBuilder builder = delete("/api/v1/organization/leave/" + subDomain)
+            .contentType(MediaType.APPLICATION_JSON)
+            .header(HttpHeaders.AUTHORIZATION, "Bearer ".concat(token));
+
+        return objectMapper.readValue(
+            mockMvc.perform(builder)
+                .andReturn()
+                .getResponse()
+                .getContentAsString(StandardCharsets.UTF_8), new TypeReference<>() {
+            }
+        );
+    }
+
 }
