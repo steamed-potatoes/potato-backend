@@ -24,15 +24,27 @@ public class AdminBoard extends BaseTimeEntity {
     private Board board;
 
     @Column(nullable = false)
-    private Long adminMemberId;
+    private Long administratorId;
 
     private String content;
 
     @Builder
-    public AdminBoard(Long adminMemberId, String title, LocalDateTime startDateTime, LocalDateTime endDateTime, String content) {
-        this.adminMemberId = adminMemberId;
+    public AdminBoard(Long administratorId, String title, LocalDateTime startDateTime, LocalDateTime endDateTime, String content) {
+        this.administratorId = administratorId;
         this.board = Board.of(title, startDateTime, endDateTime);
         this.content = content;
+    }
+
+    public String getTitle() {
+        return this.board.getTitle();
+    }
+
+    public LocalDateTime getStartDateTime() {
+        return this.board.getStartDateTime();
+    }
+
+    public LocalDateTime getEndDateTime() {
+        return this.board.getEndDateTime();
     }
 
 }

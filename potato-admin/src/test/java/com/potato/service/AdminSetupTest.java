@@ -1,9 +1,8 @@
 package com.potato.service;
 
-import com.potato.domain.adminMember.AdminMember;
-import com.potato.domain.adminMember.AdminMemberCreator;
-import com.potato.domain.adminMember.AdminMemberRepository;
-import org.junit.jupiter.api.AfterEach;
+import com.potato.domain.administrator.Administrator;
+import com.potato.domain.administrator.AdministratorCreator;
+import com.potato.domain.administrator.AdministratorRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,18 +11,18 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class AdminSetupTest {
 
     @Autowired
-    protected AdminMemberRepository adminMemberRepository;
+    protected AdministratorRepository administratorRepository;
 
     protected Long adminMemberId;
 
     @BeforeEach
     void setUp() {
-        AdminMember adminMember = adminMemberRepository.save(AdminMemberCreator.create("admin@gmail.com", "admin"));
-        adminMemberId = adminMember.getId();
+        Administrator administrator = administratorRepository.save(AdministratorCreator.create("admin@gmail.com", "admin"));
+        adminMemberId = administrator.getId();
     }
 
     protected void cleanUp() {
-        adminMemberRepository.deleteAll();
+        administratorRepository.deleteAll();
     }
 
 }
