@@ -48,6 +48,7 @@ public class Organization extends BaseTimeEntity {
 
     @Builder
     public Organization(String subDomain, String name, String description, OrganizationCategory category, String profileUrl) {
+        SubDomainValidator.validateSubDomain(subDomain);
         this.subDomain = subDomain;
         this.name = name;
         this.description = description;
