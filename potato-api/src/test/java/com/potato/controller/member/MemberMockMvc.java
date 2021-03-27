@@ -93,4 +93,15 @@ public class MemberMockMvc {
         return createMember(request).getData();
     }
 
+    public String getMockMemberToken(String email) throws Exception {
+        CreateMemberRequest request = CreateMemberRequest.testBuilder()
+            .email(email)
+            .name("강승호")
+            .major(MemberMajor.IT_ICT)
+            .classNumber(201610302)
+            .profileUrl("http://profile.com")
+            .build();
+        return createMember(request).getData();
+    }
+
 }

@@ -64,4 +64,18 @@ class OrganizationMockMvc {
         );
     }
 
+    public ApiResponse<List<OrganizationInfoResponse>> getMyOrganizations(String token) throws Exception {
+        MockHttpServletRequestBuilder builder = get("/api/v1/organization/my")
+            .contentType(MediaType.APPLICATION_JSON)
+            .header(HttpHeaders.AUTHORIZATION, "Bearer ".concat(token));
+
+        return objectMapper.readValue(
+            mockMvc.perform(builder)
+                .andReturn()
+                .getResponse()
+                .getContentAsString(StandardCharsets.UTF_8), new TypeReference<>() {
+            }
+        );
+    }
+
 }

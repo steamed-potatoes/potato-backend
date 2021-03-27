@@ -2,6 +2,7 @@ package com.potato.controller.organization;
 
 import com.potato.controller.ApiResponse;
 import com.potato.controller.ControllerTestUtils;
+import com.potato.domain.member.Member;
 import com.potato.domain.organization.Organization;
 import com.potato.domain.organization.OrganizationCategory;
 import com.potato.domain.organization.OrganizationCreator;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -119,6 +121,51 @@ class OrganizationControllerTest extends ControllerTestUtils {
         assertThat(response.getData().get(0).getDescription()).isEqualTo(description);
         assertThat(response.getData().get(0).getProfileUrl()).isEqualTo(profileUrl);
         assertThat(response.getData().get(0).getMembersCount()).isEqualTo(1);
+    }
+
+    @Test
+    void 내가_속한_그룹의_리스트를_불러온다() throws Exception {
+        //given
+        String email = "tnswh2023@gmail.com";
+        String token = memberMockMvc.getMockMemberToken(email);
+        Member member = memberRepository.findMemberByEmail(email);
+
+        String subDomain = "potato";
+        Organization organization = OrganizationCreator.create("potato");
+        organization.addAdmin(member.getId());
+        organizationRepository.save(organization);
+
+        //when
+        ApiResponse<List<OrganizationInfoResponse>> response = organizationMockMvc.getMyOrganizations(token);
+
+        //then
+        assertThat(response.getData()).hasSize(1);
+        assertThat(response.getData().get(0).getSubDomain()).isEqualTo(subDomain);
+    }
+
+    @Test
+    void 내가_속한_그룹이_다중일_경우() throws Exception {
+        //given
+        String email = "tnswh2023@gmail.com";
+        String token = memberMockMvc.getMockMemberToken(email);
+        Member member = memberRepository.findMemberByEmail(email);
+
+        String subDomain = "potato";
+        Organization organization = OrganizationCreator.create(subDomain);
+        organization.addAdmin(member.getId());
+        String subDomain2 = "potato2";
+        Organization organization2 = OrganizationCreator.create(subDomain2);
+        organization2.addAdmin(testMember.getId());
+        organization2.addUser(member.getId());
+        organizationRepository.saveAll(Arrays.asList(organization, organization2));
+
+        //when
+        ApiResponse<List<OrganizationInfoResponse>> response = organizationMockMvc.getMyOrganizations(token);
+
+        //then
+        assertThat(response.getData()).hasSize(2);
+        assertThat(response.getData().get(0).getSubDomain()).isEqualTo(subDomain);
+        assertThat(response.getData().get(1).getSubDomain()).isEqualTo(subDomain2);
     }
 
 }
