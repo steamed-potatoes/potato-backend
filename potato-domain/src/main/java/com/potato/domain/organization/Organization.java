@@ -158,7 +158,7 @@ public class Organization extends BaseTimeEntity {
 
     public List<Long> getMemberIds() {
         return this.organizationMemberMapperList.stream()
-            .map(OrganizationMemberMapper::getId)
+            .map(OrganizationMemberMapper::getMemberId)
             .collect(Collectors.toList());
     }
 

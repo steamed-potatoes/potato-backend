@@ -39,7 +39,7 @@ class OrganizationRetrieveServiceTest extends MemberSetupTest {
     private final String subDomain = "potato";
 
     @Test
-    void 서브도메인을_통해_특정_조직의_간단한_정보를_불러온다() {
+    void 서브도메인을_통해_특정_조직의_자세한_정보를_불러온다() {
         // given
         String name = "찐 감자";
         String description = "개발 동아리 입니다";
@@ -55,6 +55,7 @@ class OrganizationRetrieveServiceTest extends MemberSetupTest {
 
         // then
         assertOrganizationInfoResponse(response.getOrganization(), organization.getId(), subDomain, name, description, profileUrl, category, organization.getMembersCount());
+        assertThat(response.getMembers()).hasSize(1);
     }
 
     @Test
