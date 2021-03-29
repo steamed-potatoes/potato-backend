@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.potato.controller.ApiResponse;
 import com.potato.domain.member.MemberMajor;
-import com.potato.service.member.dto.request.CreateMemberRequest;
+import com.potato.service.member.dto.request.SignUpMemberRequest;
 import com.potato.service.member.dto.request.UpdateMemberRequest;
 import com.potato.service.member.dto.response.MemberInfoResponse;
 import org.springframework.http.HttpHeaders;
@@ -27,7 +27,7 @@ public class MemberMockMvc {
         this.objectMapper = objectMapper;
     }
 
-    public ApiResponse<String> createMember(CreateMemberRequest request) throws Exception {
+    public ApiResponse<String> signUpMember(SignUpMemberRequest request) throws Exception {
         MockHttpServletRequestBuilder builder = post("/api/v1/member")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request));
@@ -82,25 +82,25 @@ public class MemberMockMvc {
     }
 
     public String getMockMemberToken() throws Exception {
-        CreateMemberRequest request = CreateMemberRequest.testBuilder()
+        SignUpMemberRequest request = SignUpMemberRequest.testBuilder()
             .email("will.seungho@gmail.com")
             .name("강승호")
             .major(MemberMajor.IT_ICT)
             .classNumber(201610302)
             .profileUrl("http://profile.com")
             .build();
-        return createMember(request).getData();
+        return signUpMember(request).getData();
     }
 
     public String getMockMemberToken(String email) throws Exception {
-        CreateMemberRequest request = CreateMemberRequest.testBuilder()
+        SignUpMemberRequest request = SignUpMemberRequest.testBuilder()
             .email(email)
             .name("강승호")
             .major(MemberMajor.IT_ICT)
             .classNumber(201610302)
             .profileUrl("http://profile.com")
             .build();
-        return createMember(request).getData();
+        return signUpMember(request).getData();
     }
 
 }

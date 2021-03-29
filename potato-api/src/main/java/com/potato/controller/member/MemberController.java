@@ -5,7 +5,7 @@ import com.potato.config.argumentResolver.MemberId;
 import com.potato.config.session.MemberSession;
 import com.potato.controller.ApiResponse;
 import com.potato.service.member.MemberService;
-import com.potato.service.member.dto.request.CreateMemberRequest;
+import com.potato.service.member.dto.request.SignUpMemberRequest;
 import com.potato.service.member.dto.request.UpdateMemberRequest;
 import com.potato.service.member.dto.response.MemberInfoResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,8 +26,8 @@ public class MemberController {
 
     @Operation(summary = "회원가입을 요청하는 API", description = "로그인을 위한 토큰이 반환됩니다")
     @PostMapping("/api/v1/member")
-    public ApiResponse<String> createMember(@Valid @RequestBody CreateMemberRequest request) {
-        Long memberId = memberService.createMember(request);
+    public ApiResponse<String> signUpMember(@Valid @RequestBody SignUpMemberRequest request) {
+        Long memberId = memberService.signUpMember(request);
         httpSession.setAttribute(AUTH_SESSION, MemberSession.of(memberId));
         return ApiResponse.success(httpSession.getId());
     }

@@ -2,7 +2,7 @@ package com.potato.service.member;
 
 import com.potato.domain.member.Member;
 import com.potato.domain.member.MemberRepository;
-import com.potato.service.member.dto.request.CreateMemberRequest;
+import com.potato.service.member.dto.request.SignUpMemberRequest;
 import com.potato.service.member.dto.request.UpdateMemberRequest;
 import com.potato.service.member.dto.response.MemberInfoResponse;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public Long createMember(CreateMemberRequest request) {
+    public Long signUpMember(SignUpMemberRequest request) {
         MemberServiceUtils.validateNonExistsMember(memberRepository, request.getEmail());
         return memberRepository.save(request.toEntity()).getId();
     }

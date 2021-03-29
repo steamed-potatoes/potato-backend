@@ -3,7 +3,7 @@ package com.potato.service.member;
 import com.potato.domain.member.*;
 import com.potato.exception.ConflictException;
 import com.potato.exception.NotFoundException;
-import com.potato.service.member.dto.request.CreateMemberRequest;
+import com.potato.service.member.dto.request.SignUpMemberRequest;
 import com.potato.service.member.dto.request.UpdateMemberRequest;
 import com.potato.service.member.dto.response.MemberInfoResponse;
 import org.junit.jupiter.api.AfterEach;
@@ -40,7 +40,7 @@ class MemberServiceTest {
         MemberMajor major = MemberMajor.IT_ICT;
         Integer classNumber = 201610323;
 
-        CreateMemberRequest request = CreateMemberRequest.testBuilder()
+        SignUpMemberRequest request = SignUpMemberRequest.testBuilder()
             .email(email)
             .name(name)
             .profileUrl(profileUrl)
@@ -49,7 +49,7 @@ class MemberServiceTest {
             .build();
 
         // when
-        memberService.createMember(request);
+        memberService.signUpMember(request);
 
         // then
         List<Member> memberList = memberRepository.findAll();
@@ -63,14 +63,14 @@ class MemberServiceTest {
         String email = "will.seungho@gmail.com";
         memberRepository.save(MemberCreator.create(email));
 
-        CreateMemberRequest request = CreateMemberRequest.testBuilder()
+        SignUpMemberRequest request = SignUpMemberRequest.testBuilder()
             .email(email)
             .name("강승호")
             .build();
 
         // when & then
         assertThatThrownBy(
-            () -> memberService.createMember(request)
+            () -> memberService.signUpMember(request)
         ).isInstanceOf(ConflictException.class);
     }
 

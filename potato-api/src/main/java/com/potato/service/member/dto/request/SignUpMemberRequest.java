@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 @ToString
 @Getter
 @NoArgsConstructor
-public class CreateMemberRequest {
+public class SignUpMemberRequest {
 
     @NotBlank
     private String email;
@@ -29,7 +29,7 @@ public class CreateMemberRequest {
     private Integer classNumber;
 
     @Builder(builderMethodName = "testBuilder")
-    public CreateMemberRequest(@NotBlank String email, @NotBlank String name, String profileUrl, MemberMajor major, @NotBlank Integer classNumber) {
+    public SignUpMemberRequest(@NotBlank String email, @NotBlank String name, String profileUrl, MemberMajor major, @NotBlank Integer classNumber) {
         this.email = email;
         this.name = name;
         this.profileUrl = profileUrl;

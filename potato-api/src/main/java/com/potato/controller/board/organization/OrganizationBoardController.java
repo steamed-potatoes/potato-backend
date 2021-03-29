@@ -54,13 +54,13 @@ public class OrganizationBoardController {
     @Operation(summary = "그룹의 관리자가 그룹의 게시물을 삭제하는 API", description = "Bearer 토큰이 필요합니다")
     @Auth(role = ORGANIZATION_ADMIN)
     @DeleteMapping("/api/v2/organization/board/{subDomain}")
-    public ApiResponse<String> deleteOrganizationBoard(
-        @PathVariable String subDomain, @Valid @RequestBody DeleteOrganizationBoardRequest request, @MemberId Long memberId) {
+    public ApiResponse<String> deleteOrganizationBoard(@PathVariable String subDomain, @Valid @RequestBody DeleteOrganizationBoardRequest request,
+                                                       @MemberId Long memberId) {
         organizationBoardService.deleteOrganizationBoard(subDomain, request.getOrganizationBoardId(), memberId);
         return ApiResponse.OK;
     }
 
-    @Operation(summary = "게시물의 좋아요를 추가하는 API", description = "Bearer 토큰이 필요합니다, true: 좋아요 추가, false: 취소")
+    @Operation(summary = "게시물의 좋아요를 추가하는 API", description = "Bearer 토큰이 필요합니다")
     @Auth
     @PostMapping("/api/v2/organization/board/like")
     public ApiResponse<String> likeOrganizationBoard(@Valid @RequestBody LikeOrganizationBoardRequest request, @MemberId Long memberId) {
@@ -68,7 +68,7 @@ public class OrganizationBoardController {
         return ApiResponse.OK;
     }
 
-    @Operation(summary = "게시물의 좋아요를 삭제하는 API", description = "Bearer 토큰이 필요합니다, true: 좋아요 추가, false: 취소")
+    @Operation(summary = "게시물의 좋아요를 취소하는 API", description = "Bearer 토큰이 필요합니다")
     @Auth
     @DeleteMapping("/api/v2/organization/board/like")
     public ApiResponse<String> cancelOrganizationBoard(@Valid @RequestBody LikeOrganizationBoardRequest request, @MemberId Long memberId) {
