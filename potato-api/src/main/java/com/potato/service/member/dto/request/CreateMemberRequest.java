@@ -1,6 +1,5 @@
 package com.potato.service.member.dto.request;
 
-import com.potato.domain.member.ClassNumber;
 import com.potato.domain.member.Member;
 import com.potato.domain.member.MemberMajor;
 import lombok.Builder;

@@ -14,16 +14,12 @@ public class LikeOrganizationBoardRequest {
     @NotNull
     private Long organizationBoardId;
 
-    @NotNull
-    private Boolean isLike;
-
-    private LikeOrganizationBoardRequest(@NotNull Long organizationBoardId, boolean isLike) {
+    private LikeOrganizationBoardRequest(@NotNull Long organizationBoardId) {
         this.organizationBoardId = organizationBoardId;
-        this.isLike = isLike;
     }
 
-    public static LikeOrganizationBoardRequest testInstance(Long organizationBoardId, boolean isLike) {
-        return new LikeOrganizationBoardRequest(organizationBoardId, isLike);
+    public static LikeOrganizationBoardRequest testInstance(Long organizationBoardId) {
+        return new LikeOrganizationBoardRequest(organizationBoardId);
     }
 
 }
