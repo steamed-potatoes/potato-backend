@@ -163,12 +163,10 @@ class MemberControllerTest extends ControllerTestUtils {
     @Test
     void 특정_유저의_정보를_불러온다() throws Exception {
         // given
-        String token = memberMockMvc.getMockMemberToken();
-
         Member member = memberRepository.save(MemberCreator.create("ksh980212@gmail.com"));
 
         // when
-        ApiResponse<MemberInfoResponse> response = memberMockMvc.getMemberInfo(member.getId(), token);
+        ApiResponse<MemberInfoResponse> response = memberMockMvc.getMemberInfo(member.getId());
 
         // then
         assertThat(response.getData().getEmail()).isEqualTo(member.getEmail());

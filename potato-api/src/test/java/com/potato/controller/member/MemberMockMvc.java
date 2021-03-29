@@ -69,9 +69,8 @@ public class MemberMockMvc {
         );
     }
 
-    public ApiResponse<MemberInfoResponse> getMemberInfo(Long memberId, String token) throws Exception {
-        MockHttpServletRequestBuilder builder = get("/api/v1/member/" + memberId)
-            .header(HttpHeaders.AUTHORIZATION, "Bearer ".concat(token));
+    public ApiResponse<MemberInfoResponse> getMemberInfo(Long memberId) throws Exception {
+        MockHttpServletRequestBuilder builder = get("/api/v1/member/" + memberId);
 
         return objectMapper.readValue(
             mockMvc.perform(builder)

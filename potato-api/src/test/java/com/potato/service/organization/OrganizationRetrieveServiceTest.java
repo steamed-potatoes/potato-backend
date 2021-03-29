@@ -167,4 +167,38 @@ class OrganizationRetrieveServiceTest extends MemberSetupTest {
         assertThat(responses).isEmpty();
     }
 
+    @Test
+    void 멤버가_팔로우한_조직들을_가져온다() {
+        //given
+        Member member = MemberCreator.create("tnswh2023@naver.com");
+        memberRepository.save(member);
+
+        Organization organization1 = OrganizationCreator.create("potato1");
+        Organization organization2 = OrganizationCreator.create("potato2");
+
+        organization1.addFollow(member.getId());
+        organization2.addFollow(member.getId());
+        organizationRepository.saveAll(Arrays.asList(organization1, organization2));
+
+        //when
+        List<OrganizationInfoResponse> responses = organizationRetrieveService.retrieveFollowingOrganizations(member.getId());
+
+        //then
+        assertThat(responses.get(0).getSubDomain()).isEqualTo("potato1");
+        assertThat(responses.get(1).getSubDomain()).isEqualTo("potato2");
+    }
+
+    @Test
+    void 멤버가_팔로우한_조직이_없을_경우_빈배열을_반환한다() {
+        //given
+        Member member = MemberCreator.create("tnswh2023@naver.com");
+        memberRepository.save(member);
+
+        //when
+        List<OrganizationInfoResponse> responses = organizationRetrieveService.retrieveFollowingOrganizations(member.getId());
+
+        //then
+        assertThat(responses).isEmpty();
+    }
+
 }
