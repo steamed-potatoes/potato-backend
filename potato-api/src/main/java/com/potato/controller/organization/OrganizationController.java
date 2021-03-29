@@ -98,4 +98,11 @@ public class OrganizationController {
         return ApiResponse.success(organizationRetrieveService.getOrganizationFollowMember(subDomain));
     }
 
+    @Operation(summary = "내가 팔로우한 그룹들을 가져오는 API", description = "Bearer 토큰이 필요합니다.")
+    @Auth
+    @GetMapping("/api/v1/member/organization/follow")
+    public ApiResponse<List<OrganizationInfoResponse>> retrieveFollowingOrganizations(@MemberId Long memberId) {
+        return ApiResponse.success(organizationRetrieveService.retrieveFollowingOrganizations(memberId));
+    }
+
 }

@@ -1,6 +1,5 @@
 package com.potato.service.member.dto.request;
 
-import com.potato.domain.member.ClassNumber;
 import com.potato.domain.member.Member;
 import com.potato.domain.member.MemberMajor;
 import lombok.Builder;
@@ -14,7 +13,7 @@ import javax.validation.constraints.NotNull;
 @ToString
 @Getter
 @NoArgsConstructor
-public class CreateMemberRequest {
+public class SignUpMemberRequest {
 
     @NotBlank
     private String email;
@@ -30,7 +29,7 @@ public class CreateMemberRequest {
     private Integer classNumber;
 
     @Builder(builderMethodName = "testBuilder")
-    public CreateMemberRequest(@NotBlank String email, @NotBlank String name, String profileUrl, MemberMajor major, @NotBlank Integer classNumber) {
+    public SignUpMemberRequest(@NotBlank String email, @NotBlank String name, String profileUrl, MemberMajor major, @NotBlank Integer classNumber) {
         this.email = email;
         this.name = name;
         this.profileUrl = profileUrl;

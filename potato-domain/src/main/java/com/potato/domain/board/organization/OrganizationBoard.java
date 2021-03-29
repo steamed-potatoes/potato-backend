@@ -103,4 +103,8 @@ public class OrganizationBoard extends BaseTimeEntity {
         return this.board.getEndDateTime();
     }
 
+    public DeleteOrganizationBoard delete(Long memberId) {
+        return DeleteOrganizationBoard.newBackUpInstance(this, memberId);
+    }
+
 }

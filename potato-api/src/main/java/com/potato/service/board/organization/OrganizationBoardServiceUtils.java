@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-class OrganizationBoardServiceUtils {
+final class OrganizationBoardServiceUtils {
 
     static OrganizationBoard findOrganizationBoardById(OrganizationBoardRepository repository, Long organizationBoardId) {
         OrganizationBoard organizationBoard = repository.findOrganizationBoardById(organizationBoardId);

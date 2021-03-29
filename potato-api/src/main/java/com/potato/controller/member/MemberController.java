@@ -5,18 +5,15 @@ import com.potato.config.argumentResolver.MemberId;
 import com.potato.config.session.MemberSession;
 import com.potato.controller.ApiResponse;
 import com.potato.service.member.MemberService;
-import com.potato.service.member.dto.request.CreateMemberRequest;
+import com.potato.service.member.dto.request.SignUpMemberRequest;
 import com.potato.service.member.dto.request.UpdateMemberRequest;
 import com.potato.service.member.dto.response.MemberInfoResponse;
-import com.potato.service.organization.dto.response.OrganizationInfoResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-
-import java.util.List;
 
 import static com.potato.config.session.SessionConstants.AUTH_SESSION;
 
@@ -29,8 +26,8 @@ public class MemberController {
 
     @Operation(summary = "회원가입을 요청하는 API", description = "로그인을 위한 토큰이 반환됩니다")
     @PostMapping("/api/v1/member")
-    public ApiResponse<String> createMember(@Valid @RequestBody CreateMemberRequest request) {
-        Long memberId = memberService.createMember(request);
+    public ApiResponse<String> signUpMember(@Valid @RequestBody SignUpMemberRequest request) {
+        Long memberId = memberService.signUpMember(request);
         httpSession.setAttribute(AUTH_SESSION, MemberSession.of(memberId));
         return ApiResponse.success(httpSession.getId());
     }
@@ -50,17 +47,9 @@ public class MemberController {
     }
 
     @Operation(summary = "특정 상대방 회원 정보를 불러오는 API")
-    @Auth
     @GetMapping("/api/v1/member/{targetId}")
     public ApiResponse<MemberInfoResponse> getMemberInfo(@PathVariable Long targetId) {
         return ApiResponse.success(memberService.getMemberInfo(targetId));
-    }
-
-    @Operation(summary = "내가 팔로우한 그룹들을 가져오는 API", description = "Bearer 토큰이 필요합니다.")
-    @Auth
-    @GetMapping("/api/v1/member/organization/follow")
-    public ApiResponse<List<OrganizationInfoResponse>> getOrganizationFollower(@MemberId Long memberId) {
-        return ApiResponse.success(memberService.getOrganizationFollower(memberId));
     }
 
 }
