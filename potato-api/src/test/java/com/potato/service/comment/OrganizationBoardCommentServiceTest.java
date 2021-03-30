@@ -104,6 +104,16 @@ class OrganizationBoardCommentServiceTest extends OrganizationMemberSetUpTest {
     }
 
     @Test
+    void 존재하지_않는_댓글에_대댓글을_추가할_수_없다() {
+        // given
+        organizationBoardRepository.save(organizationBoard);
+        AddBoardCommentRequest request = AddBoardCommentRequest.testInstance(organizationBoard.getId(), 999L, "대댓글");
+
+        // when & then
+        assertThatThrownBy(() -> organizationBoardCommentService.addBoardComment(request, memberId)).isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
     void 특정_게시물의_댓글들을_불러온다() {
         // given
         organizationBoardRepository.save(organizationBoard);
