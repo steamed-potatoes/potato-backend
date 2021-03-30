@@ -95,7 +95,7 @@ class OrganizationBoardCommentServiceTest extends OrganizationMemberSetUpTest {
     }
 
     @Test
-    void 존재하는_게시물에_댓글을_추가할_수_없다() {
+    void 존재하지_않는_게시물에_댓글을_추가할_수_없다() {
         // given
         AddBoardCommentRequest request = AddBoardCommentRequest.testInstance(999L, null, "없는 게시물에 댓글");
 
