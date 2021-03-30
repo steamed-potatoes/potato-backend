@@ -60,7 +60,7 @@ class OrganizationControllerTest extends ControllerTestUtils {
             .build();
 
         // when
-        ApiResponse<OrganizationInfoResponse> response = organizationMockMvc.createOrganization(request, token);
+        ApiResponse<OrganizationInfoResponse> response = organizationMockMvc.createOrganization(request, token, 200);
 
         // then
         assertThat(response.getData().getSubDomain()).isEqualTo(subDomain);
@@ -68,6 +68,28 @@ class OrganizationControllerTest extends ControllerTestUtils {
         assertThat(response.getData().getProfileUrl()).isEqualTo(profileUrl);
         assertThat(response.getData().getDescription()).isEqualTo(description);
         assertThat(response.getData().getMembersCount()).isEqualTo(1);
+    }
+
+    @Test
+    void 로그인하지_않고_새로운_그룹을_생성하면_401에러_발생() throws Exception {
+        // given
+        String subDomain = "potato";
+        String name = "감자";
+        String description = "개발의 감을 잡자";
+        String profileUrl = "http://profile.com";
+
+        CreateOrganizationRequest request = CreateOrganizationRequest.testBuilder()
+            .subDomain(subDomain)
+            .name(name)
+            .description(description)
+            .profileUrl(profileUrl)
+            .build();
+
+        // when
+        ApiResponse<OrganizationInfoResponse> response = organizationMockMvc.createOrganization(request, "wrong Token", 401);
+
+        // then
+        assertThat(response.getCode()).isEqualTo(ErrorCode.UNAUTHORIZED_EXCEPTION.getCode());
     }
 
     @Test
@@ -83,7 +105,7 @@ class OrganizationControllerTest extends ControllerTestUtils {
         organizationRepository.save(organization);
 
         // when
-        ApiResponse<OrganizationWithMembersInfoResponse> response = organizationMockMvc.getDetailOrganizationInfo(subDomain);
+        ApiResponse<OrganizationWithMembersInfoResponse> response = organizationMockMvc.getDetailOrganizationInfo(subDomain, 200);
 
         // then
         assertThat(response.getData().getOrganization().getSubDomain()).isEqualTo(subDomain);
@@ -112,7 +134,7 @@ class OrganizationControllerTest extends ControllerTestUtils {
         organizationRepository.save(organization);
 
         // when
-        ApiResponse<List<OrganizationInfoResponse>> response = organizationMockMvc.getOrganizations();
+        ApiResponse<List<OrganizationInfoResponse>> response = organizationMockMvc.getOrganizations(200);
 
         // then
         assertThat(response.getData()).hasSize(1);
@@ -136,7 +158,7 @@ class OrganizationControllerTest extends ControllerTestUtils {
         organizationRepository.save(organization);
 
         //when
-        ApiResponse<List<OrganizationInfoResponse>> response = organizationMockMvc.getMyOrganizations(token);
+        ApiResponse<List<OrganizationInfoResponse>> response = organizationMockMvc.getMyOrganizations(token, 200);
 
         //then
         assertThat(response.getData()).hasSize(1);
@@ -160,7 +182,7 @@ class OrganizationControllerTest extends ControllerTestUtils {
         organizationRepository.saveAll(Arrays.asList(organization, organization2));
 
         //when
-        ApiResponse<List<OrganizationInfoResponse>> response = organizationMockMvc.getMyOrganizations(token);
+        ApiResponse<List<OrganizationInfoResponse>> response = organizationMockMvc.getMyOrganizations(token, 200);
 
         //then
         assertThat(response.getData()).hasSize(2);
@@ -179,7 +201,7 @@ class OrganizationControllerTest extends ControllerTestUtils {
         organizationRepository.save(organization);
 
         //when
-        ApiResponse<String> response = organizationMockMvc.applyJoiningOrganization(subDomain, token);
+        ApiResponse<String> response = organizationMockMvc.applyJoiningOrganization(subDomain, token, 200);
 
         //then
         assertThat(response.getData()).isEqualTo("OK");
@@ -199,7 +221,7 @@ class OrganizationControllerTest extends ControllerTestUtils {
         organizationRepository.save(organization);
 
         //when
-        ApiResponse<String> response = organizationMockMvc.cancelJoiningOrganization(subDomain, token);
+        ApiResponse<String> response = organizationMockMvc.cancelJoiningOrganization(subDomain, token, 200);
 
         //then
         assertThat(response.getData()).isEqualTo("OK");
@@ -219,7 +241,7 @@ class OrganizationControllerTest extends ControllerTestUtils {
         organizationRepository.save(organization);
 
         //when
-        ApiResponse<String> response = organizationMockMvc.leaveFromOrganization(subDomain, token);
+        ApiResponse<String> response = organizationMockMvc.leaveFromOrganization(subDomain, token, 200);
 
         //then
         assertThat(response.getData()).isEqualTo("OK");
@@ -238,7 +260,7 @@ class OrganizationControllerTest extends ControllerTestUtils {
         organizationRepository.save(organization);
 
         //when
-        ApiResponse<String> response = organizationMockMvc.leaveFromOrganization(subDomain, token);
+        ApiResponse<String> response = organizationMockMvc.leaveFromOrganization(subDomain, token, 403);
 
         //then
         assertThat(response.getCode()).isEqualTo(ErrorCode.FORBIDDEN_EXCEPTION.getCode());
@@ -256,7 +278,7 @@ class OrganizationControllerTest extends ControllerTestUtils {
         organizationRepository.save(organization);
 
         //when
-        ApiResponse<String> response = organizationMockMvc.followOrganization(subDomain, token);
+        ApiResponse<String> response = organizationMockMvc.followOrganization(subDomain, token, 200);
 
         //then
         assertThat(response.getData()).isEqualTo("OK");
@@ -276,7 +298,7 @@ class OrganizationControllerTest extends ControllerTestUtils {
         organizationRepository.save(organization);
 
         //when
-        ApiResponse<String> response = organizationMockMvc.unFollowOrganization(subDomain, token);
+        ApiResponse<String> response = organizationMockMvc.unFollowOrganization(subDomain, token, 200);
 
         //then
         assertThat(response.getData()).isEqualTo("OK");
@@ -294,7 +316,7 @@ class OrganizationControllerTest extends ControllerTestUtils {
         organizationRepository.save(organization);
 
         //when
-        ApiResponse<String> response = organizationMockMvc.unFollowOrganization(subDomain, token);
+        ApiResponse<String> response = organizationMockMvc.unFollowOrganization(subDomain, token, 404);
 
         //then
         assertThat(response.getCode()).isEqualTo(ErrorCode.NOT_FOUND_EXCEPTION.getCode());
@@ -317,7 +339,7 @@ class OrganizationControllerTest extends ControllerTestUtils {
         organizationRepository.save(organization);
 
         //when
-        ApiResponse<List<MemberInfoResponse>> response = organizationMockMvc.getOrganizationFollowMember(subDomain);
+        ApiResponse<List<MemberInfoResponse>> response = organizationMockMvc.getOrganizationFollowMember(subDomain, 200);
 
         //then
         assertThat(response.getData()).hasSize(2);
@@ -334,7 +356,7 @@ class OrganizationControllerTest extends ControllerTestUtils {
         organizationRepository.save(organization);
 
         //when
-        ApiResponse<List<MemberInfoResponse>> response = organizationMockMvc.getOrganizationFollowMember(subDomain);
+        ApiResponse<List<MemberInfoResponse>> response = organizationMockMvc.getOrganizationFollowMember(subDomain, 200);
 
         //then
         assertThat(response.getData()).isEmpty();
@@ -359,7 +381,7 @@ class OrganizationControllerTest extends ControllerTestUtils {
         organizationRepository.saveAll(Arrays.asList(organization1, organization2));
 
         //when
-        ApiResponse<List<OrganizationInfoResponse>> response = organizationMockMvc.retrieveFollowingOrganization(token);
+        ApiResponse<List<OrganizationInfoResponse>> response = organizationMockMvc.retrieveFollowingOrganization(token, 200);
 
         //then
         assertThat(response.getData()).hasSize(2);
@@ -374,7 +396,7 @@ class OrganizationControllerTest extends ControllerTestUtils {
         String token = memberMockMvc.getMockMemberToken(email);
 
         //when
-        ApiResponse<List<OrganizationInfoResponse>> response = organizationMockMvc.retrieveFollowingOrganization(token);
+        ApiResponse<List<OrganizationInfoResponse>> response = organizationMockMvc.retrieveFollowingOrganization(token, 200);
 
         //then
         assertThat(response.getData()).isEmpty();
