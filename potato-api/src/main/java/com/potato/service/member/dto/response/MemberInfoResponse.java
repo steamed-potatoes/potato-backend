@@ -1,27 +1,25 @@
 package com.potato.service.member.dto.response;
 
 import com.potato.domain.member.Member;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @ToString
 @Getter
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class MemberInfoResponse {
 
-    private final Long id;
+    private Long id;
 
-    private final String email;
+    private String email;
 
-    private final String name;
+    private String name;
 
-    private final String profileUrl;
+    private String profileUrl;
 
-    private final String major;
+    private String major;
 
-    private final Integer classNumber;
+    private Integer classNumber;
 
     public static MemberInfoResponse of(Member member) {
         return new MemberInfoResponse(member.getId(), member.getEmail(), member.getName(), member.getProfileUrl(), member.getMajorName(), member.getClassNumber());

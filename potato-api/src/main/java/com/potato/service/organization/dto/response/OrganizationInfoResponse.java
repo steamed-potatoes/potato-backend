@@ -2,29 +2,27 @@ package com.potato.service.organization.dto.response;
 
 import com.potato.domain.organization.Organization;
 import com.potato.domain.organization.OrganizationCategory;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @ToString
 @Getter
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class OrganizationInfoResponse {
 
-    private final Long id;
+    private Long id;
 
-    private final String subDomain;
+    private String subDomain;
 
-    private final String name;
+    private String name;
 
-    private final String description;
+    private String description;
 
-    private final String profileUrl;
+    private String profileUrl;
 
-    private final int membersCount;
+    private int membersCount;
 
-    private final OrganizationCategory category;
+    private OrganizationCategory category;
 
     public static OrganizationInfoResponse of(Organization organization) {
         return new OrganizationInfoResponse(organization.getId(), organization.getSubDomain(), organization.getName(),

@@ -1,10 +1,7 @@
 package com.potato.service.comment.dto.response;
 
 import com.potato.domain.comment.BoardComment;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,16 +9,17 @@ import java.util.stream.Collectors;
 
 @ToString
 @Getter
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BoardCommentResponse {
 
-    private final Long id;
+    private Long id;
 
-    private final Long boardId;
+    private Long boardId;
 
-    private final Long memberId;
+    private Long memberId;
 
-    private final String content;
+    private String content;
 
     private final List<BoardCommentResponse> children = new ArrayList<>();
 

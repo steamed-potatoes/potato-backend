@@ -1,24 +1,22 @@
 package com.potato.service.auth.dto.response;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @ToString
 @Getter
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class AuthResponse {
 
-    private final AuthType type;
+    private AuthType type;
 
-    private final String email;
+    private String email;
 
-    private final String name;
+    private String name;
 
-    private final String profileUrl;
+    private String profileUrl;
 
-    private final String token;
+    private String token;
 
     public static AuthResponse signUp(String email, String name, String profileUrl) {
         return new AuthResponse(AuthType.SIGN_UP, email, name, profileUrl, null);

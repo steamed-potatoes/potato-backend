@@ -1,20 +1,18 @@
 package com.potato.controller;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @ToString
 @Getter
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ApiResponse<T> {
 
     public static final ApiResponse<String> OK = new ApiResponse<>("", "", "OK");
 
-    private final String code;
-    private final String message;
-    private final T data;
+    private String code;
+    private String message;
+    private T data;
 
     public static <T> ApiResponse<T> success(T data) {
         return new ApiResponse<>("", "", data);

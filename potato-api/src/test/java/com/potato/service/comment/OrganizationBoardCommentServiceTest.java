@@ -95,6 +95,15 @@ class OrganizationBoardCommentServiceTest extends OrganizationMemberSetUpTest {
     }
 
     @Test
+    void 존재하는_게시물에_댓글을_추가할_수_없다() {
+        // given
+        AddBoardCommentRequest request = AddBoardCommentRequest.testInstance(999L, null, "없는 게시물에 댓글");
+
+        // when & then
+        assertThatThrownBy(() -> organizationBoardCommentService.addBoardComment(request, memberId)).isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
     void 특정_게시물의_댓글들을_불러온다() {
         // given
         organizationBoardRepository.save(organizationBoard);
@@ -119,6 +128,12 @@ class OrganizationBoardCommentServiceTest extends OrganizationMemberSetUpTest {
 
         assertThat(responses.get(1).getChildren()).hasSize(1);
         assertBoardCommentResponse(responses.get(1).getChildren().get(0), "자식 댓글2-1");
+    }
+
+    @Test
+    void 존재하지_않는_게시물의_댓글을_불러올_수_없다() {
+        // when & then
+        assertThatThrownBy(() -> organizationBoardCommentService.retrieveBoardCommentList(999L)).isInstanceOf(NotFoundException.class);
     }
 
     @Test
