@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import java.nio.charset.StandardCharsets;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class MemberMockMvc {
 
@@ -27,13 +28,14 @@ public class MemberMockMvc {
         this.objectMapper = objectMapper;
     }
 
-    public ApiResponse<String> signUpMember(SignUpMemberRequest request) throws Exception {
+    public ApiResponse<String> signUpMember(SignUpMemberRequest request, int expectedStatus) throws Exception {
         MockHttpServletRequestBuilder builder = post("/api/v1/member")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request));
 
         return objectMapper.readValue(
             mockMvc.perform(builder)
+                .andExpect(status().is(expectedStatus))
                 .andReturn()
                 .getResponse()
                 .getContentAsString(StandardCharsets.UTF_8), new TypeReference<>() {
@@ -41,12 +43,13 @@ public class MemberMockMvc {
         );
     }
 
-    public ApiResponse<MemberInfoResponse> getMyMemberInfo(String token) throws Exception {
+    public ApiResponse<MemberInfoResponse> getMyMemberInfo(String token, int expectedStatus) throws Exception {
         MockHttpServletRequestBuilder builder = get("/api/v1/member")
             .header(HttpHeaders.AUTHORIZATION, "Bearer ".concat(token));
 
         return objectMapper.readValue(
             mockMvc.perform(builder)
+                .andExpect(status().is(expectedStatus))
                 .andReturn()
                 .getResponse()
                 .getContentAsString(StandardCharsets.UTF_8), new TypeReference<>() {
@@ -54,7 +57,7 @@ public class MemberMockMvc {
         );
     }
 
-    public ApiResponse<MemberInfoResponse> updateMemberInfo(UpdateMemberRequest request, String token) throws Exception {
+    public ApiResponse<MemberInfoResponse> updateMemberInfo(UpdateMemberRequest request, String token, int expectedStatus) throws Exception {
         MockHttpServletRequestBuilder builder = put("/api/v1/member")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request))
@@ -62,6 +65,7 @@ public class MemberMockMvc {
 
         return objectMapper.readValue(
             mockMvc.perform(builder)
+                .andExpect(status().is(expectedStatus))
                 .andReturn()
                 .getResponse()
                 .getContentAsString(StandardCharsets.UTF_8), new TypeReference<>() {
@@ -69,11 +73,12 @@ public class MemberMockMvc {
         );
     }
 
-    public ApiResponse<MemberInfoResponse> getMemberInfo(Long memberId) throws Exception {
+    public ApiResponse<MemberInfoResponse> getMemberInfo(Long memberId, int expectedStatus) throws Exception {
         MockHttpServletRequestBuilder builder = get("/api/v1/member/" + memberId);
 
         return objectMapper.readValue(
             mockMvc.perform(builder)
+                .andExpect(status().is(expectedStatus))
                 .andReturn()
                 .getResponse()
                 .getContentAsString(StandardCharsets.UTF_8), new TypeReference<>() {
@@ -89,7 +94,7 @@ public class MemberMockMvc {
             .classNumber(201610302)
             .profileUrl("http://profile.com")
             .build();
-        return signUpMember(request).getData();
+        return signUpMember(request, 200).getData();
     }
 
     public String getMockMemberToken(String email) throws Exception {
@@ -100,7 +105,7 @@ public class MemberMockMvc {
             .classNumber(201610302)
             .profileUrl("http://profile.com")
             .build();
-        return signUpMember(request).getData();
+        return signUpMember(request, 200).getData();
     }
 
 }

@@ -43,7 +43,7 @@ class MemberControllerTest extends ControllerTestUtils {
             .build();
 
         // when
-        ApiResponse<String> response = memberMockMvc.signUpMember(request);
+        ApiResponse<String> response = memberMockMvc.signUpMember(request, 200);
 
         // then
         assertThat(response.getData()).isNotNull();
@@ -63,7 +63,7 @@ class MemberControllerTest extends ControllerTestUtils {
             .build();
 
         // when
-        ApiResponse<String> response = memberMockMvc.signUpMember(request);
+        ApiResponse<String> response = memberMockMvc.signUpMember(request, 409);
 
         // then
         assertThat(response.getCode()).isEqualTo(ErrorCode.CONFLICT_EXCEPTION.getCode());
@@ -82,7 +82,7 @@ class MemberControllerTest extends ControllerTestUtils {
             .build();
 
         // when
-        ApiResponse<String> response = memberMockMvc.signUpMember(request);
+        ApiResponse<String> response = memberMockMvc.signUpMember(request, 400);
 
         // then
         assertThat(response.getCode()).isEqualTo(ErrorCode.VALIDATION_EXCEPTION.getCode());
@@ -101,7 +101,7 @@ class MemberControllerTest extends ControllerTestUtils {
             .build();
 
         // when
-        ApiResponse<String> response = memberMockMvc.signUpMember(request);
+        ApiResponse<String> response = memberMockMvc.signUpMember(request, 400);
 
         // then
         assertThat(response.getCode()).isEqualTo(ErrorCode.VALIDATION_EXCEPTION.getCode());
@@ -113,7 +113,7 @@ class MemberControllerTest extends ControllerTestUtils {
         String token = memberMockMvc.getMockMemberToken();
 
         // when
-        ApiResponse<MemberInfoResponse> response = memberMockMvc.getMyMemberInfo(token);
+        ApiResponse<MemberInfoResponse> response = memberMockMvc.getMyMemberInfo(token, 200);
 
         // then
         assertThat(response.getData().getEmail()).isEqualTo("will.seungho@gmail.com");
@@ -126,7 +126,7 @@ class MemberControllerTest extends ControllerTestUtils {
     @Test
     void 토큰을_이용해_내_정보를_불러올때_잘못된_토큰이면_401_에러가_발생() throws Exception {
         // when
-        ApiResponse<MemberInfoResponse> response = memberMockMvc.getMyMemberInfo("wrong token");
+        ApiResponse<MemberInfoResponse> response = memberMockMvc.getMyMemberInfo("wrong token", 401);
 
         // then
         assertThat(response.getCode()).isEqualTo(ErrorCode.UNAUTHORIZED_EXCEPTION.getCode());
@@ -150,7 +150,7 @@ class MemberControllerTest extends ControllerTestUtils {
         String token = memberMockMvc.getMockMemberToken();
 
         // when
-        ApiResponse<MemberInfoResponse> response = memberMockMvc.updateMemberInfo(request, token);
+        ApiResponse<MemberInfoResponse> response = memberMockMvc.updateMemberInfo(request, token, 200);
 
         // then
         assertThat(response.getData().getEmail()).isEqualTo("will.seungho@gmail.com");
@@ -166,7 +166,7 @@ class MemberControllerTest extends ControllerTestUtils {
         Member member = memberRepository.save(MemberCreator.create("ksh980212@gmail.com"));
 
         // when
-        ApiResponse<MemberInfoResponse> response = memberMockMvc.getMemberInfo(member.getId());
+        ApiResponse<MemberInfoResponse> response = memberMockMvc.getMemberInfo(member.getId(), 200);
 
         // then
         assertThat(response.getData().getEmail()).isEqualTo(member.getEmail());
