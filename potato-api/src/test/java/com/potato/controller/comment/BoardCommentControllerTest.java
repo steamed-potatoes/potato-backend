@@ -113,6 +113,23 @@ class BoardCommentControllerTest extends ControllerTestUtils {
         assertThat(response.getCode()).isEqualTo(ErrorCode.UNAUTHORIZED_EXCEPTION.getCode());
     }
 
+    @Test
+    void 게시물에_댓글을_추가한다() throws Exception {
+        // given
+        String token = memberMockMvc.getMockMemberToken();
+
+        OrganizationBoard organizationBoard = OrganizationBoardCreator.create("subDomain", testMember.getId(), "123", OrganizationBoardType.RECRUIT);
+        organizationBoardRepository.save(organizationBoard);
+
+        AddBoardCommentRequest request = AddBoardCommentRequest.testInstance(organizationBoard.getId(), null, "댓글");
+
+        // when
+        ApiResponse<String> response = boardCommentMockMvc.addBoardComment(request, token, 200);
+
+        // then
+        assertThat(response.getData()).isEqualTo("OK");
+    }
+
     private void assertBoardCommentResponse(BoardCommentResponse boardCommentResponse, Long organizationBoardId, String content, Long memberId) {
         assertThat(boardCommentResponse.getBoardId()).isEqualTo(organizationBoardId);
         assertThat(boardCommentResponse.getContent()).isEqualTo(content);
