@@ -1,6 +1,7 @@
 # Potato Backend
 
 ![Generic badge](https://img.shields.io/badge/version-0.1.2-brightgreen.svg)
+[![codecov](https://codecov.io/gh/steamed-potatoes/potato-backend/branch/develop/graph/badge.svg?token=ACoWRzqGBl)](https://codecov.io/gh/steamed-potatoes/potato-backend)
 
 ## Health Check
 
