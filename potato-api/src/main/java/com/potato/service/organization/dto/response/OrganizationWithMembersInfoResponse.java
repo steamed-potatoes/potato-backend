@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 @ToString
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class OrganizationWithMembersInfoResponse {
 

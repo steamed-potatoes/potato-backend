@@ -1,18 +1,15 @@
 package com.potato.service.board.dto.request;
 
 import com.potato.domain.board.admin.AdminBoard;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
-@NoArgsConstructor
-@Getter
 @ToString
+@Getter
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CreateAdminBoardRequest {
 
     @NotBlank

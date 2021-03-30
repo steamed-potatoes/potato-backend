@@ -1,13 +1,10 @@
 package com.potato.external.google.dto.response;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @ToString
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class GoogleUserInfoResponse {
 
     private String id;
