@@ -2,35 +2,33 @@ package com.potato.service.board.organization.dto.response;
 
 import com.potato.domain.board.organization.OrganizationBoard;
 import com.potato.domain.board.organization.OrganizationBoardType;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @ToString
 @Getter
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class OrganizationBoardInfoResponse {
 
-    private final Long id;
+    private Long id;
 
-    private final String subDomain;
+    private String subDomain;
 
-    private final String title;
+    private String title;
 
-    private final LocalDateTime startDateTime;
+    private LocalDateTime startDateTime;
 
-    private final LocalDateTime endDateTime;
+    private LocalDateTime endDateTime;
 
-    private final String content;
+    private String content;
 
-    private final String imageUrl;
+    private String imageUrl;
 
-    private final int likesCount;
+    private int likesCount;
 
-    private final OrganizationBoardType type;
+    private OrganizationBoardType type;
 
     public static OrganizationBoardInfoResponse of(OrganizationBoard organizationBoard) {
         return new OrganizationBoardInfoResponse(organizationBoard.getId(), organizationBoard.getSubDomain(), organizationBoard.getTitle(),
