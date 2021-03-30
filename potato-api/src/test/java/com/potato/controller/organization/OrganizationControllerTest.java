@@ -4,7 +4,9 @@ import com.potato.controller.ApiResponse;
 import com.potato.controller.ControllerTestUtils;
 import com.potato.controller.advice.ErrorCode;
 import com.potato.domain.member.Member;
+import com.potato.domain.member.MemberCreator;
 import com.potato.domain.organization.*;
+import com.potato.service.member.dto.response.MemberInfoResponse;
 import com.potato.service.organization.dto.request.CreateOrganizationRequest;
 import com.potato.service.organization.dto.response.OrganizationInfoResponse;
 import com.potato.service.organization.dto.response.OrganizationWithMembersInfoResponse;
@@ -240,6 +242,142 @@ class OrganizationControllerTest extends ControllerTestUtils {
 
         //then
         assertThat(response.getCode()).isEqualTo(ErrorCode.FORBIDDEN_EXCEPTION.getCode());
+    }
+
+    @Test
+    void 특정_조직을_팔로우하려는_경우() throws Exception {
+        //given
+        String email = "tnswh2023@gmail.com";
+        String token = memberMockMvc.getMockMemberToken(email);
+
+        String subDomain = "potato";
+        Organization organization = OrganizationCreator.create(subDomain);
+        organization.addAdmin(testMember.getId());
+        organizationRepository.save(organization);
+
+        //when
+        ApiResponse<String> response = organizationMockMvc.followOrganization(subDomain, token);
+
+        //then
+        assertThat(response.getData()).isEqualTo("OK");
+    }
+
+    @Test
+    void 특정_조직을_팔로우_취소하는_경우() throws Exception {
+        //given
+        String email = "tnswh2023@gmail.com";
+        String token = memberMockMvc.getMockMemberToken(email);
+        Member member = memberRepository.findMemberByEmail(email);
+
+        String subDomain = "potato";
+        Organization organization = OrganizationCreator.create(subDomain);
+        organization.addAdmin(testMember.getId());
+        organization.addFollow(member.getId());
+        organizationRepository.save(organization);
+
+        //when
+        ApiResponse<String> response = organizationMockMvc.unFollowOrganization(subDomain, token);
+
+        //then
+        assertThat(response.getData()).isEqualTo("OK");
+    }
+
+    @Test
+    void 특정_조직_팔로우하지_않은_사람이_팔로우_취소하는_경우_애러발생() throws Exception {
+        //given
+        String email = "tnswh2023@gmail.com";
+        String token = memberMockMvc.getMockMemberToken(email);
+
+        String subDomain = "potato";
+        Organization organization = OrganizationCreator.create(subDomain);
+        organization.addAdmin(testMember.getId());
+        organizationRepository.save(organization);
+
+        //when
+        ApiResponse<String> response = organizationMockMvc.unFollowOrganization(subDomain, token);
+
+        //then
+        assertThat(response.getCode()).isEqualTo(ErrorCode.NOT_FOUND_EXCEPTION.getCode());
+    }
+
+    @Test
+    void 그룹을_팔로우한_멤버_리스트를_불러오는_경우() throws Exception {
+        //given
+        String email1 = "tnswh1@gmail.com";
+        String email2 = "tnswh2@gmail.com";
+        Member member1 = MemberCreator.create(email1);
+        Member member2 = MemberCreator.create(email2);
+        memberRepository.saveAll(Arrays.asList(member1, member2));
+
+        String subDomain = "potato";
+        Organization organization = OrganizationCreator.create(subDomain);
+        organization.addAdmin(testMember.getId());
+        organization.addFollow(member1.getId());
+        organization.addFollow(member2.getId());
+        organizationRepository.save(organization);
+
+        //when
+        ApiResponse<List<MemberInfoResponse>> response = organizationMockMvc.getOrganizationFollowMember(subDomain);
+
+        //then
+        assertThat(response.getData()).hasSize(2);
+        assertThat(response.getData().get(0).getEmail()).isEqualTo(email1);
+        assertThat(response.getData().get(1).getEmail()).isEqualTo(email2);
+    }
+
+    @Test
+    void 그룹을_팔로우한_멤버가_없는데_리스트를_불러오는_경우_빈_배열을_반환() throws Exception {
+        //given
+        String subDomain = "potato";
+        Organization organization = OrganizationCreator.create(subDomain);
+        organization.addAdmin(testMember.getId());
+        organizationRepository.save(organization);
+
+        //when
+        ApiResponse<List<MemberInfoResponse>> response = organizationMockMvc.getOrganizationFollowMember(subDomain);
+
+        //then
+        assertThat(response.getData()).isEmpty();
+    }
+
+    @Test
+    void 내가_팔로우한_그룹들을_가져오는_경우() throws Exception {
+        //given
+        String email = "tnswh2023@gmail.com";
+        String token = memberMockMvc.getMockMemberToken(email);
+        Member member = memberRepository.findMemberByEmail(email);
+
+        String subDomain1 = "potatoOne";
+        Organization organization1 = OrganizationCreator.create(subDomain1);
+        organization1.addAdmin(testMember.getId());
+        organization1.addFollow(member.getId());
+
+        String subDomain2 = "potatoTwo";
+        Organization organization2 = OrganizationCreator.create(subDomain2);
+        organization2.addAdmin(testMember.getId());
+        organization2.addFollow(member.getId());
+        organizationRepository.saveAll(Arrays.asList(organization1, organization2));
+
+        //when
+        ApiResponse<List<OrganizationInfoResponse>> response = organizationMockMvc.retrieveFollowingOrganization(token);
+
+        //then
+        assertThat(response.getData()).hasSize(2);
+        assertThat(response.getData().get(0).getSubDomain()).isEqualTo(subDomain1);
+        assertThat(response.getData().get(1).getSubDomain()).isEqualTo(subDomain2);
+    }
+
+    @Test
+    void 내가_팔로우한_그룹이_없는데_그룹들을_가져오는_경우_빈_배열을_반환() throws Exception {
+        //given
+        String email = "tnswh2023@gmail.com";
+        String token = memberMockMvc.getMockMemberToken(email);
+
+        //when
+        ApiResponse<List<OrganizationInfoResponse>> response = organizationMockMvc.retrieveFollowingOrganization(token);
+
+        //then
+        assertThat(response.getData()).isEmpty();
     }
 
 }
