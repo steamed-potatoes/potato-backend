@@ -1,6 +1,6 @@
 # Potato Backend
 
-![Generic badge](https://img.shields.io/badge/version-0.1.1-brightgreen.svg)
+![Generic badge](https://img.shields.io/badge/version-0.1.2-brightgreen.svg)
 
 ## Health Check
 
