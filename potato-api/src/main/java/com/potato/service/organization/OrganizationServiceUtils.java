@@ -8,7 +8,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class OrganizationServiceUtils {
+public final class OrganizationServiceUtils {
 
     static void validateNotExistsOrganization(OrganizationRepository organizationRepository, String subDomain) {
         Organization organization = organizationRepository.findOrganizationBySubDomain(subDomain);

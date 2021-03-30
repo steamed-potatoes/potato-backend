@@ -22,7 +22,7 @@ public class OrganizationService {
         return OrganizationInfoResponse.of(organizationRepository.save(organization));
     }
 
-    @Transactional()
+    @Transactional
     public void applyJoiningOrganization(String subDomain, Long memberId) {
         Organization organization = OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, subDomain);
         organization.addPending(memberId);

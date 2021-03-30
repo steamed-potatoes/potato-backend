@@ -1,5 +1,6 @@
 package com.potato.service.board.organization.dto.request;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -8,7 +9,7 @@ import javax.validation.constraints.Min;
 
 @ToString
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class RetrieveLatestBoardsRequest {
 
     @Min(0)

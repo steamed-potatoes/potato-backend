@@ -1,6 +1,5 @@
 package com.potato.service.organization;
 
-import com.potato.domain.member.Member;
 import com.potato.domain.member.MemberRepository;
 import com.potato.domain.organization.Organization;
 import com.potato.domain.organization.OrganizationRepository;
@@ -24,14 +23,12 @@ public class OrganizationRetrieveService {
     @Transactional(readOnly = true)
     public OrganizationWithMembersInfoResponse getDetailOrganizationInfo(String subDomain) {
         Organization organization = OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, subDomain);
-        List<Member> memberList = memberRepository.findAllById(organization.getMemberIds());
-        return OrganizationWithMembersInfoResponse.of(organization, memberList);
+        return OrganizationWithMembersInfoResponse.of(organization, memberRepository.findAllById(organization.getMemberIds()));
     }
 
     @Transactional(readOnly = true)
     public List<OrganizationInfoResponse> getMyOrganizationsInfo(Long memberId) {
-        List<Organization> organizations = organizationRepository.findAllByMemberId(memberId);
-        return organizations.stream()
+        return organizationRepository.findAllByMemberId(memberId).stream()
             .map(OrganizationInfoResponse::of)
             .collect(Collectors.toList());
     }
@@ -46,9 +43,16 @@ public class OrganizationRetrieveService {
     @Transactional(readOnly = true)
     public List<MemberInfoResponse> getOrganizationFollowMember(String subDomain) {
         Organization organization = OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, subDomain);
-        List<Member> followMemberList = memberRepository.findAllById(organization.getFollowIds());
-        return followMemberList.stream()
+        return memberRepository.findAllById(organization.getFollowIds()).stream()
             .map(MemberInfoResponse::of)
+            .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<OrganizationInfoResponse> retrieveFollowingOrganizations(Long memberId) {
+        List<Organization> organizationList = organizationRepository.findAllByFollowMemberId(memberId);
+        return organizationList.stream()
+            .map(OrganizationInfoResponse::of)
             .collect(Collectors.toList());
     }
 

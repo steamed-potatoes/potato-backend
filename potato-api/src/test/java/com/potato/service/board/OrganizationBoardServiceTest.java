@@ -151,7 +151,7 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
         OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, 999L, "이전의 게시글", OrganizationBoardType.RECRUIT);
         organizationBoardRepository.save(organizationBoard);
 
-        LikeOrganizationBoardRequest request = LikeOrganizationBoardRequest.testInstance(organizationBoard.getId(), true);
+        LikeOrganizationBoardRequest request = LikeOrganizationBoardRequest.testInstance(organizationBoard.getId());
 
         // when
         organizationBoardService.likeOrganizationBoard(request, memberId);
@@ -173,7 +173,7 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
         organizationBoard.addLike(memberId);
         organizationBoardRepository.save(organizationBoard);
 
-        LikeOrganizationBoardRequest request = LikeOrganizationBoardRequest.testInstance(organizationBoard.getId(), true);
+        LikeOrganizationBoardRequest request = LikeOrganizationBoardRequest.testInstance(organizationBoard.getId());
 
         // when & then
         assertThatThrownBy(() -> organizationBoardService.likeOrganizationBoard(request, memberId)).isInstanceOf(ConflictException.class);
@@ -186,10 +186,10 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
         organizationBoard.addLike(memberId);
         organizationBoardRepository.save(organizationBoard);
 
-        LikeOrganizationBoardRequest request = LikeOrganizationBoardRequest.testInstance(organizationBoard.getId(), false);
+        LikeOrganizationBoardRequest request = LikeOrganizationBoardRequest.testInstance(organizationBoard.getId());
 
         // when
-        organizationBoardService.likeOrganizationBoard(request, memberId);
+        organizationBoardService.cancelLikeOrganizationBoard(request, memberId);
 
         // then
         List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findAll();
@@ -206,10 +206,10 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
         OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, 999L, "이전의 게시글", OrganizationBoardType.RECRUIT);
         organizationBoardRepository.save(organizationBoard);
 
-        LikeOrganizationBoardRequest request = LikeOrganizationBoardRequest.testInstance(organizationBoard.getId(), false);
+        LikeOrganizationBoardRequest request = LikeOrganizationBoardRequest.testInstance(organizationBoard.getId());
 
         // when & then
-        assertThatThrownBy(() -> organizationBoardService.likeOrganizationBoard(request, memberId)).isInstanceOf(NotFoundException.class);
+        assertThatThrownBy(() -> organizationBoardService.cancelLikeOrganizationBoard(request, memberId)).isInstanceOf(NotFoundException.class);
     }
 
     @Test

@@ -8,7 +8,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class MemberServiceUtils {
+public final class MemberServiceUtils {
 
     static void validateNonExistsMember(MemberRepository memberRepository, String email) {
         Member member = memberRepository.findMemberByEmail(email);

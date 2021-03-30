@@ -1,14 +1,15 @@
 package com.potato.domain.organization;
 
 import com.potato.domain.BaseTimeEntity;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@NoArgsConstructor
 public class OrganizationFollower extends BaseTimeEntity {
 
     @Id

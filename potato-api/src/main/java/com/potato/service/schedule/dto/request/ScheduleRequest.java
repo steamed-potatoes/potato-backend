@@ -1,5 +1,6 @@
 package com.potato.service.schedule.dto.request;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -9,7 +10,7 @@ import java.time.LocalDate;
 
 @ToString
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ScheduleRequest {
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)

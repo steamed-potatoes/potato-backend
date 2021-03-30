@@ -1,17 +1,14 @@
 package com.potato.service.member.dto.request;
 
 import com.potato.domain.member.MemberMajor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @ToString
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UpdateMemberRequest {
 
     @NotBlank

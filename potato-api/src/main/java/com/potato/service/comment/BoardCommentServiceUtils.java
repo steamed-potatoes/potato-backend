@@ -7,7 +7,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-class BoardCommentServiceUtils {
+final class BoardCommentServiceUtils {
 
     static BoardComment findBoardCommentById(BoardCommentRepository boardCommentRepository, Long boardCommentId) {
         BoardComment boardComment = boardCommentRepository.findBoardCommentById(boardCommentId);
