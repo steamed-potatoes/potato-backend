@@ -180,6 +180,12 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
     }
 
     @Test
+    void 존재하지_않는_게시물에_좋아요를_누르면_에러가_발생한다() {
+        // when & then
+        assertThatThrownBy(() -> organizationBoardService.likeOrganizationBoard(LikeOrganizationBoardRequest.testInstance(999L), memberId)).isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
     void 그룹_게시물_좋아요를_취소한다() {
         // given
         OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, 999L, "이전의 게시글", OrganizationBoardType.RECRUIT);
