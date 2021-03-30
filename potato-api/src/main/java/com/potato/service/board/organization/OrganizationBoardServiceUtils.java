@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-final class OrganizationBoardServiceUtils {
+public final class OrganizationBoardServiceUtils {
 
     static OrganizationBoard findOrganizationBoardById(OrganizationBoardRepository repository, Long organizationBoardId) {
         OrganizationBoard organizationBoard = repository.findOrganizationBoardById(organizationBoardId);
@@ -32,6 +32,13 @@ final class OrganizationBoardServiceUtils {
             return organizationBoardRepository.findBoardsOrderByDesc(size);
         }
         return organizationBoardRepository.findBoardsLessThanOrderByIdDescLimit(lastOrganizationBoardId, size);
+    }
+
+    public static void validateExistsBoard(OrganizationBoardRepository organizationBoardRepository, Long organizationBoardId) {
+        OrganizationBoard organizationBoard = organizationBoardRepository.findOrganizationBoardById(organizationBoardId);
+        if (organizationBoard == null) {
+            throw new NotFoundException(String.format("해당하는 그룹의 게시물 (%s)이 존재하지 않습니다", organizationBoardId), "존재하지 않는 게시물 입니다.");
+        }
     }
 
 }
