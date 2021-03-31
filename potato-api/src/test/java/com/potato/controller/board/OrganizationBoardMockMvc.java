@@ -1,12 +1,10 @@
 package com.potato.controller.board;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.potato.controller.ApiResponse;
 import com.potato.service.board.organization.dto.request.CreateOrganizationBoardRequest;
 import com.potato.service.board.organization.dto.request.DeleteOrganizationBoardRequest;
-import com.potato.service.board.organization.dto.request.RetrieveLatestBoardsRequest;
 import com.potato.service.board.organization.dto.request.UpdateOrganizationBoardRequest;
 import com.potato.service.board.organization.dto.response.OrganizationBoardInfoResponse;
 import com.potato.service.board.organization.dto.response.OrganizationBoardWithCreatorInfoResponse;
