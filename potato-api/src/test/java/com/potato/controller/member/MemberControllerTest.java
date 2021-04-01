@@ -118,7 +118,7 @@ class MemberControllerTest extends ControllerTestUtils {
         // then
         assertThat(response.getData().getEmail()).isEqualTo("will.seungho@gmail.com");
         assertThat(response.getData().getName()).isEqualTo("강승호");
-        assertThat(response.getData().getMajor()).isEqualTo("IT학부, ICT융합학과");
+        assertThat(response.getData().getMajor()).isEqualTo("ICT융합학과");
         assertThat(response.getData().getClassNumber()).isEqualTo(201610302);
         assertThat(response.getData().getProfileUrl()).isEqualTo("http://profile.com");
     }
