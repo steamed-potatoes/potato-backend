@@ -26,7 +26,7 @@ public class AdminBoardMockMvc {
         this.objectMapper = objectMapper;
     }
 
-    public ApiResponse<String> createAdminBoard(CreateAdminBoardRequest request, String token, int expectedStatus) throws Exception {
+    public ApiResponse<AdminBoardInfoResponse> createAdminBoard(CreateAdminBoardRequest request, String token, int expectedStatus) throws Exception {
         MockHttpServletRequestBuilder builder = post("/admin/v1/board")
             .contentType(MediaType.APPLICATION_JSON)
             .header(HttpHeaders.AUTHORIZATION, "Bearer ".concat(token))

@@ -20,9 +20,8 @@ public class AdminBoardController {
 
     @Auth
     @PostMapping("/admin/v1/board")
-    public ApiResponse<String> createAdminBoard(@Valid @RequestBody CreateAdminBoardRequest request, @MemberId Long adminMemberId) {
-        adminBoardService.createAdminBoard(request, adminMemberId);
-        return ApiResponse.OK;
+    public ApiResponse<AdminBoardInfoResponse> createAdminBoard(@Valid @RequestBody CreateAdminBoardRequest request, @MemberId Long adminMemberId) {
+        return ApiResponse.success(adminBoardService.createAdminBoard(request, adminMemberId));
     }
 
     @Auth
