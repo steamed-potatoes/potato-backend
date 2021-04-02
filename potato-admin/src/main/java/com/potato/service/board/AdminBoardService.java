@@ -16,8 +16,8 @@ public class AdminBoardService {
     private final AdminBoardRepository adminBoardRepository;
 
     @Transactional
-    public void createAdminBoard(CreateAdminBoardRequest request, Long adminMemberId) {
-        adminBoardRepository.save(request.toEntity(adminMemberId));
+    public AdminBoardInfoResponse createAdminBoard(CreateAdminBoardRequest request, Long adminMemberId) {
+        return AdminBoardInfoResponse.of(adminBoardRepository.save(request.toEntity(adminMemberId)));
     }
 
     @Transactional

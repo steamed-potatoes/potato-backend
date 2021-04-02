@@ -7,7 +7,6 @@ import com.potato.domain.board.admin.AdminBoardRepository;
 import com.potato.service.board.dto.request.CreateAdminBoardRequest;
 import com.potato.service.board.dto.request.UpdateAdminBoardRequest;
 import com.potato.service.board.dto.response.AdminBoardInfoResponse;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,18 +43,18 @@ public class AdminBoardControllerTest extends ControllerTestUtils {
         //given
         String token = administratorMockMvc.getMockAdminToken();
 
+        String title = "title";
         CreateAdminBoardRequest request = CreateAdminBoardRequest.testBuilder()
             .startDateTime(LocalDateTime.of(2021, 4, 1, 0, 0))
             .endDateTime(LocalDateTime.of(2021, 4, 3, 0, 0))
-            .title("title")
+            .title(title)
             .build();
 
         //when
-        ApiResponse<String> response = adminBoardMockMvc.createAdminBoard(request, token, 200);
+        ApiResponse<AdminBoardInfoResponse> response = adminBoardMockMvc.createAdminBoard(request, token, 200);
 
         //then
-        System.out.println("response = " + response);
-        assertThat(response.getData()).isEqualTo("OK");
+        assertThat(response.getData().getTitle()).isEqualTo(title);
     }
 
     @Test
