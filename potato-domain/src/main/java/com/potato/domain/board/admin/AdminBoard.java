@@ -47,4 +47,9 @@ public class AdminBoard extends BaseTimeEntity {
         return this.board.getEndDateTime();
     }
 
+    public void updateInfo(String title, String content, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        this.board = Board.of(title, startDateTime, endDateTime);
+        this.content = content;
+    }
+
 }
