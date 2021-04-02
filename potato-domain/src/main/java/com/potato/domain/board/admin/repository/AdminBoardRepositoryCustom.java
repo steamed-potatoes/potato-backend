@@ -9,4 +9,6 @@ public interface AdminBoardRepositoryCustom {
 
     List<AdminBoard> findBetweenDate(LocalDate startDate, LocalDate endDate);
 
+    AdminBoard findAdminBoardById(Long adminBoardId);
+
 }
