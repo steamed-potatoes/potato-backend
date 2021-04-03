@@ -3,7 +3,10 @@ package com.potato.service.board;
 import com.potato.domain.board.admin.AdminBoard;
 import com.potato.domain.board.admin.AdminBoardRepository;
 import com.potato.exception.NotFoundException;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AdminBoardServiceUtils {
 
     public static AdminBoard findAdminBoardById(AdminBoardRepository adminBoardRepository, Long adminBoardId) {
