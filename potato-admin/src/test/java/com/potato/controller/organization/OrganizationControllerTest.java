@@ -2,15 +2,15 @@ package com.potato.controller.organization;
 
 import com.potato.controller.ApiResponse;
 import com.potato.controller.ControllerTestUtils;
-import com.potato.controller.admin.AdministratorMockMvc;
 import com.potato.domain.member.Member;
 import com.potato.domain.member.MemberCreator;
 import com.potato.domain.member.MemberRepository;
 import com.potato.domain.organization.Organization;
+import com.potato.domain.organization.OrganizationCategory;
 import com.potato.domain.organization.OrganizationCreator;
 import com.potato.domain.organization.OrganizationRepository;
+import com.potato.service.organization.dto.request.UpdateCategoryRequest;
 import com.potato.service.organization.dto.response.OrganizationInfoResponse;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,7 +35,6 @@ public class OrganizationControllerTest extends ControllerTestUtils {
     @Autowired
     private OrganizationRepository organizationRepository;
 
-
     @BeforeEach
     void setUp() {
         super.setup();
@@ -45,6 +44,8 @@ public class OrganizationControllerTest extends ControllerTestUtils {
     @AfterEach
     void cleanUp() {
         super.cleanup();
+        memberRepository.deleteAll();
+        organizationRepository.deleteAll();
     }
 
     @Test
@@ -73,6 +74,25 @@ public class OrganizationControllerTest extends ControllerTestUtils {
         assertThat(response.getData()).hasSize(2);
         assertThat(response.getData().get(0).getSubDomain()).isEqualTo(subDomain1);
         assertThat(response.getData().get(1).getSubDomain()).isEqualTo(subDomain2);
+    }
+
+    @Test
+    void 비인준_그룹을_인준그룹으로_바꾼다() throws Exception {
+        //given
+        String token = administratorMockMvc.getMockAdminToken();
+
+        Organization organization = OrganizationCreator.create("potato", "감자", "설명", "http://profile.com", OrganizationCategory.NON_APPROVED_CIRCLE);
+        organization.addAdmin(1L);
+        organizationRepository.save(organization);
+
+        UpdateCategoryRequest request = UpdateCategoryRequest.testInstance(OrganizationCategory.NON_APPROVED_CIRCLE);
+
+        //when
+        ApiResponse<OrganizationInfoResponse> response = organizationMockMvc.changeCategoryToApproved(organization.getSubDomain(), request, token, 200);
+
+        //then
+        assertThat(response.getData().getSubDomain()).isEqualTo(organization.getSubDomain());
+        assertThat(response.getData().getCategory()).isEqualTo(OrganizationCategory.APPROVED_CIRCLE);
     }
 
 }
