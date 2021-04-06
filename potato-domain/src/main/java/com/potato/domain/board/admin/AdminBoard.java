@@ -52,4 +52,8 @@ public class AdminBoard extends BaseTimeEntity {
         this.content = content;
     }
 
+    public DeleteAdminBoard delete(Long adminMemberId) {
+        return DeleteAdminBoard.newBackupInstance(this, adminMemberId);
+    }
+
 }

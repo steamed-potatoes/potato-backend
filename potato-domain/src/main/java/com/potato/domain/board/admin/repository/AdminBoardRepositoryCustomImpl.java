@@ -32,7 +32,7 @@ public class AdminBoardRepositoryCustomImpl implements AdminBoardRepositoryCusto
         return queryFactory.selectFrom(adminBoard)
             .innerJoin(adminBoard.board, board).fetchJoin()
             .where(
-                board.id.eq(adminBoardId)
+                adminBoard.id.eq(adminBoardId)
             )
             .fetchOne();
     }
