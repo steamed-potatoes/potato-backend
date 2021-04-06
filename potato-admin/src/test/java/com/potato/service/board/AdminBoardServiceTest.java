@@ -2,10 +2,15 @@ package com.potato.service.board;
 
 import com.potato.domain.board.Board;
 import com.potato.domain.board.BoardRepository;
+import com.potato.domain.board.DeleteBoard;
+import com.potato.domain.board.DeleteBoardRepository;
 import com.potato.domain.board.admin.AdminBoard;
 import com.potato.domain.board.admin.AdminBoardRepository;
+import com.potato.domain.board.admin.DeleteAdminBoard;
+import com.potato.domain.board.admin.DeleteAdminBoardRepository;
 import com.potato.service.AdminSetupTest;
 import com.potato.service.board.dto.request.CreateAdminBoardRequest;
+import com.potato.service.board.dto.request.DeleteAdminBoardRequest;
 import com.potato.service.board.dto.request.UpdateAdminBoardRequest;
 import com.potato.service.board.dto.response.AdminBoardInfoResponse;
 import org.junit.jupiter.api.AfterEach;
@@ -31,11 +36,19 @@ public class AdminBoardServiceTest extends AdminSetupTest {
     @Autowired
     private BoardRepository boardRepository;
 
+    @Autowired
+    private DeleteAdminBoardRepository deleteAdminBoardRepository;
+
+    @Autowired
+    private DeleteBoardRepository deleteBoardRepository;
+
     @AfterEach
     void cleanup() {
         super.cleanUp();
         adminBoardRepository.deleteAllInBatch();
         boardRepository.deleteAllInBatch();
+        deleteAdminBoardRepository.deleteAllInBatch();
+        deleteBoardRepository.deleteAllInBatch();
     }
 
     @Test
@@ -93,6 +106,37 @@ public class AdminBoardServiceTest extends AdminSetupTest {
         List<Board> boardList = boardRepository.findAll();
         assertThat(boardList).hasSize(1);
         assertThat(boardList.get(0).getTitle()).isEqualTo(title);
+    }
+
+    @Test
+    public void 관리자가_게시글을_삭제하면_백업되고_삭제한다() throws Exception {
+        //given
+        String title = "학사";
+        String content = "학사행정입니다.";
+        AdminBoard adminBoard = AdminBoard.builder()
+            .administratorId(adminMemberId)
+            .title(title)
+            .content(content)
+            .startDateTime(LocalDateTime.of(2021, 4, 1, 0, 0))
+            .endDateTime(LocalDateTime.of(2021, 4, 3, 0, 0))
+            .build();
+        adminBoardRepository.save(adminBoard);
+
+        //when
+        adminBoardService.deleteAdminBoard(adminBoard.getId(), adminMemberId);
+
+        //then
+        List<DeleteAdminBoard> deleteAdminBoardList = deleteAdminBoardRepository.findAll();
+        List<DeleteBoard> deleteBoardList = deleteBoardRepository.findAll();
+        assertThat(deleteAdminBoardList).hasSize(1);
+        assertThat(deleteBoardList).hasSize(1);
+        assertThat(deleteAdminBoardList.get(0).getContent()).isEqualTo(content);
+        assertThat(deleteBoardList.get(0).getTitle()).isEqualTo(title);
+        assertThat(deleteAdminBoardList.get(0).getDeleteAdministratorId()).isEqualTo(adminMemberId);
+        assertThat(deleteBoardList.get(0).getMemberId()).isEqualTo(adminMemberId);
+
+        List<AdminBoard> adminBoardList = adminBoardRepository.findAll();
+        assertThat(adminBoardList).hasSize(0);
     }
 
 }
