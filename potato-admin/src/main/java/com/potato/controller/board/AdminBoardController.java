@@ -5,7 +5,6 @@ import com.potato.config.resolver.MemberId;
 import com.potato.controller.ApiResponse;
 import com.potato.service.board.AdminBoardService;
 import com.potato.service.board.dto.request.CreateAdminBoardRequest;
-import com.potato.service.board.dto.request.DeleteAdminBoardRequest;
 import com.potato.service.board.dto.request.UpdateAdminBoardRequest;
 import com.potato.service.board.dto.response.AdminBoardInfoResponse;
 import lombok.RequiredArgsConstructor;
@@ -32,9 +31,9 @@ public class AdminBoardController {
     }
 
     @Auth
-    @DeleteMapping("/admin/v1/board")
-    public ApiResponse<String> deleteAdminBoard(@Valid @RequestBody DeleteAdminBoardRequest request, @MemberId Long adminMemberId) {
-        adminBoardService.deleteAdminBoard(request.getAdminBoardId(), adminMemberId);
+    @DeleteMapping("/admin/v1/board/{adminBoardId}")
+    public ApiResponse<String> deleteAdminBoard(@PathVariable Long adminBoardId, @MemberId Long adminMemberId) {
+        adminBoardService.deleteAdminBoard(adminBoardId, adminMemberId);
         return ApiResponse.OK;
     }
 

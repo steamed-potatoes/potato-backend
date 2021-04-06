@@ -4,7 +4,6 @@ import com.potato.domain.board.admin.AdminBoard;
 import com.potato.domain.board.admin.AdminBoardRepository;
 import com.potato.domain.board.admin.DeleteAdminBoardRepository;
 import com.potato.service.board.dto.request.CreateAdminBoardRequest;
-import com.potato.service.board.dto.request.DeleteAdminBoardRequest;
 import com.potato.service.board.dto.request.UpdateAdminBoardRequest;
 import com.potato.service.board.dto.response.AdminBoardInfoResponse;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +17,6 @@ public class AdminBoardService {
     private final AdminBoardRepository adminBoardRepository;
 
     private final DeleteAdminBoardRepository deleteAdminBoardRepository;
-
 
     @Transactional
     public AdminBoardInfoResponse createAdminBoard(CreateAdminBoardRequest request, Long adminMemberId) {

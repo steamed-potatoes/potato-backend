@@ -10,13 +10,10 @@ import com.potato.domain.board.admin.DeleteAdminBoard;
 import com.potato.domain.board.admin.DeleteAdminBoardRepository;
 import com.potato.service.AdminSetupTest;
 import com.potato.service.board.dto.request.CreateAdminBoardRequest;
-import com.potato.service.board.dto.request.DeleteAdminBoardRequest;
 import com.potato.service.board.dto.request.UpdateAdminBoardRequest;
-import com.potato.service.board.dto.response.AdminBoardInfoResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
@@ -128,15 +125,26 @@ public class AdminBoardServiceTest extends AdminSetupTest {
         //then
         List<DeleteAdminBoard> deleteAdminBoardList = deleteAdminBoardRepository.findAll();
         List<DeleteBoard> deleteBoardList = deleteBoardRepository.findAll();
+
         assertThat(deleteAdminBoardList).hasSize(1);
         assertThat(deleteBoardList).hasSize(1);
-        assertThat(deleteAdminBoardList.get(0).getContent()).isEqualTo(content);
-        assertThat(deleteBoardList.get(0).getTitle()).isEqualTo(title);
-        assertThat(deleteAdminBoardList.get(0).getDeleteAdministratorId()).isEqualTo(adminMemberId);
-        assertThat(deleteBoardList.get(0).getMemberId()).isEqualTo(adminMemberId);
 
         List<AdminBoard> adminBoardList = adminBoardRepository.findAll();
-        assertThat(adminBoardList).hasSize(0);
+        assertThat(adminBoardList).isEmpty();
+
+        assertDeleteAdminBoard(deleteAdminBoardList.get(0), content, adminMemberId, adminBoard.getId());
+        assertDeleteBoard(deleteBoardList.get(0), title, adminMemberId);
+    }
+
+    private void assertDeleteAdminBoard(DeleteAdminBoard deleteAdminBoard, String content, Long adminMemberId, Long adminBoardId) {
+        assertThat(deleteAdminBoard.getContent()).isEqualTo(content);
+        assertThat(deleteAdminBoard.getBackUpId()).isEqualTo(adminBoardId);
+        assertThat(deleteAdminBoard.getDeleteAdministratorId()).isEqualTo(adminMemberId);
+    }
+
+    private void assertDeleteBoard(DeleteBoard deleteBoard, String title, Long adminMemberId) {
+        assertThat(deleteBoard.getTitle()).isEqualTo(title);
+        assertThat(deleteBoard.getMemberId()).isEqualTo(adminMemberId);
     }
 
 }
