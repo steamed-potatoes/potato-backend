@@ -18,7 +18,16 @@ Authorization: Bearer {{AUTHORIZATION}}
 {
     "adminBoardId": 1,
     "title": "관리자타이틀업데이트",
-    "content": "관리자컨텐츠",
+    "content": "관리자컨텐츠업데이트",
     "startDateTime": "2021-03-01T00:00:00",
     "endDateTime": "2021-03-08T11:59:59"
+}
+
+### 관리자가 게시글 삭제
+DELETE {{host_admin}}/admin/v1/board
+Content-Type: application/json
+Authorization: Bearer {{AUTHORIZATION}}
+
+{
+    "adminBoardId": 1
 }
