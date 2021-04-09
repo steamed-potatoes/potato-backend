@@ -24,7 +24,7 @@ public class SwaggerConfig {
             .addSecurityItem(new SecurityRequirement().addList(securityKey))
             .info(new Info()
                 .title("Potato API Server")
-                .version("v0.1.2")
+                .version("v0.1.3")
                 .description("Potato API Documents"));
     }
 
