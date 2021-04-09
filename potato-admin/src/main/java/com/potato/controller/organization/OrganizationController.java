@@ -24,9 +24,9 @@ public class OrganizationController {
     }
 
     @Auth
-    @PatchMapping("/admin/v1/organization/category/approved/{subDomain}")
-    public ApiResponse<OrganizationInfoResponse> changeCategoryToApproved(@PathVariable String subDomain, @Valid @RequestBody UpdateCategoryRequest request) {
-        return ApiResponse.success(organizationService.changeCategoryToApproved(subDomain, request));
+    @PutMapping("/admin/v1/organization/{subDomain}/category")
+    public ApiResponse<OrganizationInfoResponse> updateCategoryByAdmin(@PathVariable String subDomain, @Valid @RequestBody UpdateCategoryRequest request) {
+        return ApiResponse.success(organizationService.updateCategory(subDomain, request));
     }
 
 }

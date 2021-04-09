@@ -4,7 +4,6 @@ import com.potato.domain.organization.Organization;
 import com.potato.domain.organization.OrganizationCategory;
 import com.potato.domain.organization.OrganizationCreator;
 import com.potato.domain.organization.OrganizationRepository;
-import com.potato.exception.NotFoundException;
 import com.potato.service.AdminSetupTest;
 import com.potato.service.organization.dto.request.UpdateCategoryRequest;
 import com.potato.service.organization.dto.response.OrganizationInfoResponse;
@@ -17,7 +16,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 public class OrganizationServiceTest extends AdminSetupTest {
@@ -36,16 +34,17 @@ public class OrganizationServiceTest extends AdminSetupTest {
 
     @Test
     void 그룹_리스트들을_불러온다() {
-        //given
+        // given
         Organization organization1 = OrganizationCreator.create("subDomain1");
         Organization organization2 = OrganizationCreator.create("subDomain2");
         Organization organization3 = OrganizationCreator.create("subDomain3");
         organizationRepository.saveAll(Arrays.asList(organization1, organization2, organization3));
 
-        //when
+        // when
         List<OrganizationInfoResponse> responses = organizationService.retrieveOrganization();
 
-        //then
+        // then
+        assertThat(responses).hasSize(3);
         assertOrganizationInfoResponse(responses.get(0), organization1.getId(), organization1.getSubDomain(), organization1.getName(),
             organization1.getDescription(), organization1.getProfileUrl(), organization1.getCategory(), organization1.getMembersCount());
         assertOrganizationInfoResponse(responses.get(1), organization2.getId(), organization2.getSubDomain(), organization2.getName(),
@@ -56,35 +55,40 @@ public class OrganizationServiceTest extends AdminSetupTest {
 
     @Test
     void 비인준_그룹을_인준그룹으로_변경해준다() {
-        //given
+        // given
         Organization organization = OrganizationCreator.create("potato", "감자", "설명", "http://profile.com", OrganizationCategory.NON_APPROVED_CIRCLE);
         organization.addAdmin(1L);
         organizationRepository.save(organization);
 
-        UpdateCategoryRequest request = UpdateCategoryRequest.testInstance(OrganizationCategory.NON_APPROVED_CIRCLE);
+        UpdateCategoryRequest request = UpdateCategoryRequest.testInstance(OrganizationCategory.APPROVED_CIRCLE);
 
-        //when
-        organizationService.changeCategoryToApproved(organization.getSubDomain(), request);
+        // when
+        organizationService.updateCategory(organization.getSubDomain(), request);
 
-        //then
+        // then
         List<Organization> organizationList = organizationRepository.findAll();
+        assertThat(organizationList).hasSize(1);
+        assertThat(organizationList.get(0).getSubDomain()).isEqualTo(organization.getSubDomain());
         assertThat(organizationList.get(0).getCategory()).isEqualTo(OrganizationCategory.APPROVED_CIRCLE);
     }
 
     @Test
-    void 인준_그룹을_인준그룹으로_변경하려고_하면_애러가_발생() {
-        //given
+    void 인준_그룹을_비인준그룹으로_변경() {
+        // given
         Organization organization = OrganizationCreator.create("potato", "감자", "설명", "http://profile.com", OrganizationCategory.APPROVED_CIRCLE);
         organization.addAdmin(1L);
         organizationRepository.save(organization);
 
         UpdateCategoryRequest request = UpdateCategoryRequest.testInstance(OrganizationCategory.NON_APPROVED_CIRCLE);
 
-        //when & then
-        assertThatThrownBy(
-            () -> organizationService.changeCategoryToApproved(organization.getSubDomain(), request)
-        ).isInstanceOf(NotFoundException.class);
+        // when
+        organizationService.updateCategory(organization.getSubDomain(), request);
 
+        // then
+        List<Organization> organizationList = organizationRepository.findAll();
+        assertThat(organizationList).hasSize(1);
+        assertThat(organizationList.get(0).getSubDomain()).isEqualTo(organization.getSubDomain());
+        assertThat(organizationList.get(0).getCategory()).isEqualTo(OrganizationCategory.NON_APPROVED_CIRCLE);
     }
 
     private void assertOrganizationInfoResponse(OrganizationInfoResponse response, Long id, String subDomain, String name,

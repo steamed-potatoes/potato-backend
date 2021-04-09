@@ -74,6 +74,10 @@ public class Organization extends BaseTimeEntity {
         this.profileUrl = profileUrl;
     }
 
+    public void updateCategory(OrganizationCategory category) {
+        this.category = category;
+    }
+
     public void addAdmin(Long memberId) {
         OrganizationMemberMapper organizationMemberMapper = OrganizationMemberMapper.newAdmin(this, memberId);
         this.organizationMemberMapperList.add(organizationMemberMapper);
@@ -191,7 +195,4 @@ public class Organization extends BaseTimeEntity {
             .collect(Collectors.toList());
     }
 
-    public void updateCategoryToApproved() {
-        this.category = OrganizationCategory.APPROVED_CIRCLE;
-    }
 }
