@@ -80,11 +80,11 @@ public class OrganizationMemberMapper extends BaseTimeEntity {
         return this.memberId.equals(memberId);
     }
 
-    public void appointOrganizationAdmin() {
+    void appointAdmin() {
         this.role = OrganizationRole.ADMIN;
     }
 
-    public void OrganizationAdminToMember() {
+    void disappointAdmin() {
         this.role = OrganizationRole.USER;
     }
 
