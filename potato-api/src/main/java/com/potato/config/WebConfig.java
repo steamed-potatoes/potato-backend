@@ -26,7 +26,7 @@ public class WebConfig implements WebMvcConfigurer {
                 "https://potato-admin.netlify.app", "http://potato-admin.netlify.app",
                 "http://localhost:3000"
             )
-            .allowedMethods("GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS")
+            .allowedMethods("GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS", "PATCH")
             .allowedHeaders("*")
             .allowCredentials(true);
     }
