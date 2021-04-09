@@ -19,6 +19,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -50,14 +51,11 @@ public class OrganizationControllerTest extends ControllerTestUtils {
 
     @Test
     void 그룹들_리스트_불러오는_경우() throws Exception {
-        //given
+        // given
         String token = administratorMockMvc.getMockAdminToken();
 
-        String email1 = "tnswh1@naver.com";
-        String email2 = "tnswh2@gmail.com";
-        Member member1 = MemberCreator.create(email1);
-        Member member2 = MemberCreator.create(email2);
-        memberRepository.saveAll(Arrays.asList(member1, member2));
+        Member member1 = MemberCreator.create("tnswh1@naver.com");
+        memberRepository.saveAll(Collections.singletonList(member1));
 
         String subDomain1 = "potato";
         Organization organization1 = OrganizationCreator.create(subDomain1);
@@ -68,10 +66,10 @@ public class OrganizationControllerTest extends ControllerTestUtils {
         organization2.addAdmin(member1.getId());
         organizationRepository.saveAll(Arrays.asList(organization1, organization2));
 
-        //when
+        // when
         ApiResponse<List<OrganizationInfoResponse>> response = organizationMockMvc.retrieveOrganization(token, 200);
 
-        //then
+        // then
         assertThat(response.getData()).hasSize(2);
         assertThat(response.getData().get(0).getSubDomain()).isEqualTo(subDomain1);
         assertThat(response.getData().get(1).getSubDomain()).isEqualTo(subDomain2);

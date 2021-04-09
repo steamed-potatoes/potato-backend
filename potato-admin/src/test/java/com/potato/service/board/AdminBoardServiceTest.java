@@ -8,6 +8,7 @@ import com.potato.domain.board.admin.AdminBoard;
 import com.potato.domain.board.admin.AdminBoardRepository;
 import com.potato.domain.board.admin.DeleteAdminBoard;
 import com.potato.domain.board.admin.DeleteAdminBoardRepository;
+import com.potato.exception.NotFoundException;
 import com.potato.service.AdminSetupTest;
 import com.potato.service.board.dto.request.CreateAdminBoardRequest;
 import com.potato.service.board.dto.request.UpdateAdminBoardRequest;
@@ -20,6 +21,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 public class AdminBoardServiceTest extends AdminSetupTest {
@@ -42,10 +44,10 @@ public class AdminBoardServiceTest extends AdminSetupTest {
     @AfterEach
     void cleanup() {
         super.cleanUp();
-        adminBoardRepository.deleteAll();
-        boardRepository.deleteAll();
-        deleteAdminBoardRepository.deleteAll();
-        deleteBoardRepository.deleteAll();
+        adminBoardRepository.deleteAllInBatch();
+        boardRepository.deleteAllInBatch();
+        deleteAdminBoardRepository.deleteAllInBatch();
+        deleteBoardRepository.deleteAllInBatch();
     }
 
     @Test
@@ -87,8 +89,8 @@ public class AdminBoardServiceTest extends AdminSetupTest {
             .administratorId(adminMemberId)
             .title("학사")
             .content("학사행정입니다.")
-            .startDateTime(startDateTime)
-            .endDateTime(endDateTime)
+            .startDateTime(LocalDateTime.of(2020,3,30,0, 0))
+            .endDateTime(LocalDateTime.of(2020,4,30,0, 0))
             .build();
         adminBoardRepository.save(adminBoard);
 
@@ -119,6 +121,18 @@ public class AdminBoardServiceTest extends AdminSetupTest {
     }
 
     @Test
+    void 관리자_게시물을_수정할때_해당하는_게시물이_없는경우_에러가_발생한다() {
+        // given
+        UpdateAdminBoardRequest request = UpdateAdminBoardRequest.testBuilder()
+            .adminBoardId(999L)
+            .title("제목")
+            .build();
+
+        // when & then
+        assertThatThrownBy(() -> adminBoardService.updateAdminBoard(request)).isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
     void 관리자가_게시글을_삭제하면_백업되고_삭제한다() {
         // given
         String title = "학사";
@@ -138,14 +152,26 @@ public class AdminBoardServiceTest extends AdminSetupTest {
         // then
         List<DeleteAdminBoard> deleteAdminBoardList = deleteAdminBoardRepository.findAll();
         assertThat(deleteAdminBoardList).hasSize(1);
+        assertDeleteAdminBoard(deleteAdminBoardList.get(0), content, adminMemberId, adminBoard.getId());
 
         List<AdminBoard> adminBoardList = adminBoardRepository.findAll();
         assertThat(adminBoardList).isEmpty();
 
         List<DeleteBoard> deleteBoardList = deleteBoardRepository.findAll();
         assertThat(deleteBoardList).hasSize(1);
-        assertDeleteAdminBoard(deleteAdminBoardList.get(0), content, adminMemberId, adminBoard.getId());
         assertDeleteBoard(deleteBoardList.get(0), title, adminMemberId);
+    }
+
+    @Test
+    void 관리자_게시물을_삭제할때_해당하는_게시물이_없는경우_에러가_발생한다() {
+        // given
+        UpdateAdminBoardRequest request = UpdateAdminBoardRequest.testBuilder()
+            .adminBoardId(999L)
+            .title("제목")
+            .build();
+
+        // when & then
+        assertThatThrownBy(() -> adminBoardService.deleteAdminBoard(999L, adminMemberId)).isInstanceOf(NotFoundException.class);
     }
 
     private void assertDeleteAdminBoard(DeleteAdminBoard deleteAdminBoard, String content, Long adminMemberId, Long adminBoardId) {
