@@ -113,6 +113,26 @@ public class Organization extends BaseTimeEntity {
         organizationMemberMapperList.remove(organizationMemberMapper);
         this.membersCount--;
     }
+    public void addFollow(Long memberId) {
+        this.organizationFollowerList.add(OrganizationFollower.newFollow(this, memberId));
+        this.followersCount++;
+    }
+
+    public void unFollow(Long memberId) {
+        OrganizationFollower followMember = this.findFollowMember(memberId);
+        organizationFollowerList.remove(followMember);
+        followersCount--;
+    }
+
+    public void appointOrganizationAdmin(Long targetMemberId, Long adminMemberId) {
+        if (targetMemberId.equals(adminMemberId)) {
+            throw new ForbiddenException(String.format("자기 자신 (%s)한테 관리자를 넘겨줄 수 없습니다", targetMemberId));
+        }
+        OrganizationMemberMapper member = findMember(targetMemberId);
+        member.appointAdmin();
+        OrganizationMemberMapper adminMember = findMember(adminMemberId);
+        adminMember.disappointAdmin();
+    }
 
     public void validateAdminMember(Long memberId) {
         if (!isAdmin(memberId)) {
@@ -171,18 +191,7 @@ public class Organization extends BaseTimeEntity {
         return findMember(memberId).getRole();
     }
 
-    public void addFollow(Long memberId) {
-        this.organizationFollowerList.add(OrganizationFollower.newFollow(this, memberId));
-        this.followersCount++;
-    }
-
-    public void unFollow(Long memberId, Organization organization) {
-        OrganizationFollower followMember = this.findFollowMember(memberId, organization);
-        organizationFollowerList.remove(followMember);
-        followersCount--;
-    }
-
-    public OrganizationFollower findFollowMember(Long memberId, Organization organization) {
+    public OrganizationFollower findFollowMember(Long memberId) {
         return this.organizationFollowerList.stream()
             .filter(mapper -> mapper.isSameMember(memberId))
             .findFirst()

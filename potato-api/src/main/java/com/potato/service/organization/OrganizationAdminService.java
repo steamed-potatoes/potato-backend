@@ -40,4 +40,10 @@ public class OrganizationAdminService {
         organization.removeUser(targetMemberId);
     }
 
+    @Transactional
+    public void appointOrganizationAdmin(String subDomain, Long targetMemberId, Long adminMemberId) {
+        Organization organization = OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, subDomain);
+        organization.appointOrganizationAdmin(targetMemberId, adminMemberId);
+    }
+
 }
