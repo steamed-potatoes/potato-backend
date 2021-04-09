@@ -195,4 +195,11 @@ public class Organization extends BaseTimeEntity {
             .collect(Collectors.toList());
     }
 
+    public void appointOrganizationAdmin(Long targetMemberId, Long adminMemberId) {
+        OrganizationMemberMapper member = findMember(targetMemberId);
+        member.appointOrganizationAdmin();
+        OrganizationMemberMapper adminMember = findMember(adminMemberId);
+        adminMember.OrganizationAdminToMember();
+    }
+
 }

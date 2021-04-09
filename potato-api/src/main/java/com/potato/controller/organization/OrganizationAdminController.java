@@ -1,8 +1,10 @@
 package com.potato.controller.organization;
 
+import com.potato.config.argumentResolver.MemberId;
 import com.potato.config.interceptor.auth.Auth;
 import com.potato.controller.ApiResponse;
 import com.potato.service.organization.OrganizationAdminService;
+import com.potato.service.organization.dto.request.AppointOrganizationAdminRequest;
 import com.potato.service.organization.dto.request.ManageOrganizationMemberRequest;
 import com.potato.service.organization.dto.request.UpdateOrganizationInfoRequest;
 import com.potato.service.organization.dto.response.OrganizationInfoResponse;
@@ -49,6 +51,14 @@ public class OrganizationAdminController {
     @DeleteMapping("/api/v1/organization/kick/{subDomain}")
     public ApiResponse<String> kickOffOrganizationUserByAdmin(@PathVariable String subDomain, @RequestParam Long targetMemberId) {
         organizationAdminService.kickOffOrganizationUserByAdmin(subDomain, targetMemberId);
+        return ApiResponse.OK;
+    }
+
+    @Operation(summary = "그룹 관리자가 일반 멤버에게 관리자를 임명하는 API", description = "Bearer 토큰이 필요합니다.")
+    @Auth(role = ORGANIZATION_ADMIN)
+    @PutMapping("/api/v1/organization/appoint/{subDomain}")
+    public ApiResponse<String> appointOrganizationAdmin(@PathVariable String subDomain,@Valid @RequestBody AppointOrganizationAdminRequest request, @MemberId Long adminMemberId) {
+        organizationAdminService.appointOrganizationAdmin(subDomain, request.getTargetMemberId(), adminMemberId);
         return ApiResponse.OK;
     }
 
