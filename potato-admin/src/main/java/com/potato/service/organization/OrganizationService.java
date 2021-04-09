@@ -26,7 +26,6 @@ public class OrganizationService {
 
     @Transactional
     public OrganizationInfoResponse changeCategoryToApproved(String subDomain, UpdateCategoryRequest request) {
-        System.out.println("request = " + request.getCategory());
         Organization organization = OrganizationServiceUtils.findOrganizationBySubDomainAndCategory(organizationRepository, subDomain, request.getCategory());
         organization.updateCategoryToApproved();
         return OrganizationInfoResponse.of(organization);
