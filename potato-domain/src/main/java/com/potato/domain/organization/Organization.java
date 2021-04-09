@@ -191,4 +191,7 @@ public class Organization extends BaseTimeEntity {
             .collect(Collectors.toList());
     }
 
+    public void updateCategoryToApproved() {
+        this.category = OrganizationCategory.APPROVED_CIRCLE;
+    }
 }

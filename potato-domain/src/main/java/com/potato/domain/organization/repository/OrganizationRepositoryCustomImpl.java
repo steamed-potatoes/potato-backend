@@ -1,6 +1,7 @@
 package com.potato.domain.organization.repository;
 
 import com.potato.domain.organization.Organization;
+import com.potato.domain.organization.OrganizationCategory;
 import com.potato.domain.organization.OrganizationRole;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +43,17 @@ public class OrganizationRepositoryCustomImpl implements OrganizationRepositoryC
             .where(
                 organizationFollower.memberId.eq(memberId)
             ).fetch();
+    }
+
+    @Override
+    public Organization findOrganizationBySubDomainAndCategory(String subDomain, OrganizationCategory category) {
+        return queryFactory.selectFrom(organization)
+            .innerJoin(organization.organizationMemberMapperList, organizationMemberMapper).fetchJoin()
+            .where(
+                organization.subDomain.eq(subDomain),
+                organization.category.eq(category)
+            )
+            .fetchOne();
     }
 
 }

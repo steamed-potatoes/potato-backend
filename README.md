@@ -1,14 +1,15 @@
 # Potato Backend
 
-![Generic badge](https://img.shields.io/badge/version-0.1.1-brightgreen.svg)
+![Generic badge](https://img.shields.io/badge/version-0.1.2-brightgreen.svg)
+[![codecov](https://codecov.io/gh/steamed-potatoes/potato-backend/branch/develop/graph/badge.svg?token=ACoWRzqGBl)](https://codecov.io/gh/steamed-potatoes/potato-backend)
 
-## Health Check
+## Health Check (Development Server)
 
 [API Server](https://api.pmarket.space/ping)
 
 [Admin Server](https://test.pmarket.space/ping)
 
-## Tech Stack
+## Technologies
 
 ### Language & Framework
 - Language: Java 11
@@ -29,3 +30,21 @@
 
 ### CI/CD
 - Github Action CI/CD
+
+## Getting Started
+```shell
+git clone https://github.com/steamed-potatoes/potato-backend
+```
+
+### case1. with gradlew
+```shell
+./gradlew clean build
+java -jar muyaho-api/build/libs/muyaho-api-0.0.1-SNAPSHOT.jar 
+```
+### case2. with docker-compose
+```shell
+docker-compose up --build
+```
+
+## Contact
+will.seungho@gmail.com

@@ -27,4 +27,14 @@ public class AdminBoardRepositoryCustomImpl implements AdminBoardRepositoryCusto
             ).fetch();
     }
 
+    @Override
+    public AdminBoard findAdminBoardById(Long adminBoardId) {
+        return queryFactory.selectFrom(adminBoard)
+            .innerJoin(adminBoard.board, board).fetchJoin()
+            .where(
+                adminBoard.id.eq(adminBoardId)
+            )
+            .fetchOne();
+    }
+
 }

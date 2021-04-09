@@ -5,7 +5,9 @@ Authorization: Bearer {{AUTHORIZATION}}
 
 {
     "subDomain": "potato",
-    "name": "감자팀"
+    "name": "감자팀",
+    "description": "테스트2 그룹입니다.",
+    "profileUrl": "https://avatars.githubusercontent.com/u/48153675?v=4"
 }
 
 

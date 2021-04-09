@@ -7,5 +7,6 @@ spring:
       - domain
       - thirdparty
       - rds
+      - cloud
   datasource:
     data: classpath:schema/schema-session.sql

@@ -1,2 +1,11 @@
 GET {{host_admin}}/admin/v1/organization/list
 Authorization: Bearer {{AUTHORIZATION}}
+
+### 비인준_동아리를_인준동아리로(현재 category 넘겨주기)
+PATCH {{host_admin}}/admin/v1/organization/category/approved/potato
+Content-Type: application/json
+Authorization: Bearer {{AUTHORIZATION}}
+
+{
+    "category": "NON_APPROVED_CIRCLE"
+}

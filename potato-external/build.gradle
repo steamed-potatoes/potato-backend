@@ -5,4 +5,5 @@ dependencies {
     implementation project(':potato-domain')
 
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-aws', version: '2.2.6.RELEASE'
 }

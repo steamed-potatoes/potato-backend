@@ -50,6 +50,7 @@ class GoogleAuthServiceTest {
         assertThat(response.getType()).isEqualTo(AuthResponse.AuthType.SIGN_UP);
         assertThat(response.getEmail()).isEqualTo("will.seungho@gmail.com");
         assertThat(response.getName()).isEqualTo("강승호");
+        assertThat(response.getProfileUrl()).isEqualTo("picture");
         assertThat(response.getToken()).isNull();
     }
 
@@ -59,7 +60,7 @@ class GoogleAuthServiceTest {
         memberRepository.save(MemberCreator.create("will.seungho@gmail.com"));
 
         AuthRequest request = AuthRequest.testInstance("code", "redirectUri");
-        
+
         // when
         AuthResponse response = googleAuthService.handleGoogleAuthentication(request);
 
@@ -84,6 +85,7 @@ class GoogleAuthServiceTest {
             return GoogleUserInfoResponse.testBuilder()
                 .email("will.seungho@gmail.com")
                 .name("강승호")
+                .picture("picture")
                 .build();
         }
 
