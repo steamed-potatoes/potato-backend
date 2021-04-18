@@ -107,4 +107,8 @@ public class OrganizationBoard extends BaseTimeEntity {
         return DeleteOrganizationBoard.newBackUpInstance(this, memberId);
     }
 
+    public DeleteOrganizationBoard deleteByAdmin(Long adminMemberId) {
+        return DeleteOrganizationBoard.newBackUpInstanceByAdmin(this, adminMemberId);
+    }
+
 }

@@ -3,8 +3,10 @@ package com.potato.controller.board;
 import com.potato.config.interceptor.Auth;
 import com.potato.config.resolver.MemberId;
 import com.potato.controller.ApiResponse;
+import com.potato.domain.board.organization.DeleteOrganizationBoardRepository;
 import com.potato.service.board.AdminBoardService;
 import com.potato.service.board.dto.request.CreateAdminBoardRequest;
+import com.potato.service.board.dto.request.DeleteOrganizationBoardRequest;
 import com.potato.service.board.dto.request.UpdateAdminBoardRequest;
 import com.potato.service.board.dto.response.AdminBoardInfoResponse;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +36,13 @@ public class AdminBoardController {
     @DeleteMapping("/admin/v1/board/{adminBoardId}")
     public ApiResponse<String> deleteAdminBoard(@PathVariable Long adminBoardId, @MemberId Long adminMemberId) {
         adminBoardService.deleteAdminBoard(adminBoardId, adminMemberId);
+        return ApiResponse.OK;
+    }
+
+    @Auth
+    @DeleteMapping("/admin/v1/board/{subDomain}")
+    public ApiResponse<String> deleteOrganizationBoard(@PathVariable String subDomain, @MemberId Long adminMemberId, DeleteOrganizationBoardRequest request) {
+        adminBoardService.deleteOrganizationBoard(subDomain, adminMemberId, request.getOrganizationBoardId());
         return ApiResponse.OK;
     }
 

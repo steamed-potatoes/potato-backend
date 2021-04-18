@@ -8,6 +8,7 @@ import com.potato.domain.board.admin.AdminBoard;
 import com.potato.domain.board.admin.AdminBoardRepository;
 import com.potato.domain.board.admin.DeleteAdminBoard;
 import com.potato.domain.board.admin.DeleteAdminBoardRepository;
+import com.potato.domain.board.organization.*;
 import com.potato.exception.NotFoundException;
 import com.potato.service.AdminSetupTest;
 import com.potato.service.board.dto.request.CreateAdminBoardRequest;
@@ -41,12 +42,20 @@ public class AdminBoardServiceTest extends AdminSetupTest {
     @Autowired
     private DeleteBoardRepository deleteBoardRepository;
 
+    @Autowired
+    private OrganizationBoardRepository organizationBoardRepository;
+
+    @Autowired
+    private DeleteOrganizationBoardRepository deleteOrganizationBoardRepository;
+
     @AfterEach
     void cleanup() {
         super.cleanUp();
         adminBoardRepository.deleteAllInBatch();
         boardRepository.deleteAllInBatch();
+        organizationBoardRepository.deleteAllInBatch();
         deleteAdminBoardRepository.deleteAllInBatch();
+        deleteOrganizationBoardRepository.deleteAllInBatch();
         deleteBoardRepository.deleteAllInBatch();
     }
 
@@ -172,6 +181,32 @@ public class AdminBoardServiceTest extends AdminSetupTest {
 
         // when & then
         assertThatThrownBy(() -> adminBoardService.deleteAdminBoard(999L, adminMemberId)).isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
+    public void 관리자가_일반유저들의_게시글을_삭제한다() {
+        //given
+        String subDomain = "subDomain";
+        OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, 1L, "title", OrganizationBoardType.RECRUIT);
+        organizationBoardRepository.save(organizationBoard);
+
+        //when
+        adminBoardService.deleteOrganizationBoard(subDomain, 2L, organizationBoard.getId());
+
+        //then
+        List<DeleteOrganizationBoard> deleteOrganizationBoardList = deleteOrganizationBoardRepository.findAll();
+        List<DeleteBoard> deleteBoardList = deleteBoardRepository.findAll();
+        assertThat(deleteBoardList).hasSize(1);
+        assertThat(deleteOrganizationBoardList).hasSize(1);
+        assertThat(deleteOrganizationBoardList.get(0).getSubDomain()).isEqualTo(subDomain);
+    }
+
+    @Test
+    public void 그룹게시물이_없을_경우에_관리자가_삭제하려고_하면_애러가_발생한다() {
+        // when & then
+        assertThatThrownBy(
+            () -> adminBoardService.deleteOrganizationBoard("subDomain", 1L, 1L)
+        ).isInstanceOf(NotFoundException.class);
     }
 
     private void assertDeleteAdminBoard(DeleteAdminBoard deleteAdminBoard, String content, Long adminMemberId, Long adminBoardId) {
