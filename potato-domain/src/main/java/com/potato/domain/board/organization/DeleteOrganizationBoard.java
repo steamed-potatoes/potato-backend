@@ -34,6 +34,8 @@ public class DeleteOrganizationBoard extends BaseTimeEntity {
 
     private Long deletedMemberId;
 
+    private Long deletedAdminMemberId;
+
     private String content;
 
     private String imageUrl;
@@ -43,7 +45,7 @@ public class DeleteOrganizationBoard extends BaseTimeEntity {
 
     @Builder
     public DeleteOrganizationBoard(Long backUpId, String subDomain, Long memberId, OrganizationBoardType organizationBoardType, String title,
-                                   String content, String imageUrl, LocalDateTime startDateTime, LocalDateTime endDateTime, LocalDateTime backUpCreatedDateTime, Long deletedMemberId) {
+                                   String content, String imageUrl, LocalDateTime startDateTime, LocalDateTime endDateTime, LocalDateTime backUpCreatedDateTime, Long deletedMemberId, Long deletedAdminMemberId) {
         this.backUpId = backUpId;
         this.board = DeleteBoard.of(memberId, title, startDateTime, endDateTime);
         this.subDomain = subDomain;
@@ -52,12 +54,29 @@ public class DeleteOrganizationBoard extends BaseTimeEntity {
         this.imageUrl = imageUrl;
         this.backUpCreatedDateTime = backUpCreatedDateTime;
         this.deletedMemberId = deletedMemberId;
+        this.deletedAdminMemberId = deletedAdminMemberId;
     }
 
     public static DeleteOrganizationBoard newBackUpInstance(OrganizationBoard organizationBoard, Long memberId) {
         return DeleteOrganizationBoard.builder()
             .backUpId(organizationBoard.getId())
             .deletedMemberId(memberId)
+            .memberId(organizationBoard.getMemberId())
+            .subDomain(organizationBoard.getSubDomain())
+            .organizationBoardType(organizationBoard.getType())
+            .title(organizationBoard.getTitle())
+            .content(organizationBoard.getContent())
+            .imageUrl(organizationBoard.getImageUrl())
+            .startDateTime(organizationBoard.getStartDateTime())
+            .endDateTime(organizationBoard.getEndDateTime())
+            .backUpCreatedDateTime(organizationBoard.getCreatedDateTime())
+            .build();
+    }
+
+    public static DeleteOrganizationBoard newBackUpInstanceByAdmin(OrganizationBoard organizationBoard, Long adminMemberId) {
+        return DeleteOrganizationBoard.builder()
+            .backUpId(organizationBoard.getId())
+            .deletedAdminMemberId(adminMemberId)
             .memberId(organizationBoard.getMemberId())
             .subDomain(organizationBoard.getSubDomain())
             .organizationBoardType(organizationBoard.getType())
