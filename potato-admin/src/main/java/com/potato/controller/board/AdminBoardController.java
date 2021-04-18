@@ -3,7 +3,6 @@ package com.potato.controller.board;
 import com.potato.config.interceptor.Auth;
 import com.potato.config.resolver.MemberId;
 import com.potato.controller.ApiResponse;
-import com.potato.domain.board.organization.DeleteOrganizationBoardRepository;
 import com.potato.service.board.AdminBoardService;
 import com.potato.service.board.dto.request.CreateAdminBoardRequest;
 import com.potato.service.board.dto.request.DeleteOrganizationBoardRequest;

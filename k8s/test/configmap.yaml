@@ -1,6 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: potato-api-test-config
-data:
-  profiles: test

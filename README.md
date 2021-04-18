@@ -29,7 +29,7 @@
 - Nginx
 
 ### CI/CD
-- Github Action CI/CD
+- GitHub Action CI/CD
 
 ## Getting Started
 ```shell

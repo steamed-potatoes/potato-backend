@@ -23,7 +23,7 @@ public abstract class ControllerTestUtils {
 
     protected AdministratorMockMvc administratorMockMvc;
 
-    protected String administratorEmail = "administrator@gmail.com";
+    protected final String administratorEmail = "administrator@gmail.com";
 
     protected void setup() {
         testAdministrator = administratorRepository.save(AdministratorCreator.create(administratorEmail, "administrator"));
