@@ -227,4 +227,47 @@ class OrganizationAdminServiceTest extends MemberSetupTest {
         assertThatThrownBy(() -> organizationAdminService.kickOffOrganizationUserByAdmin(subDomain, targetMemberId)).isInstanceOf(ForbiddenException.class);
     }
 
+    @Test
+    void 그룹_관리자가_그룹멤버에게_관리자를_임명한다() {
+        //given
+        Organization organization = OrganizationCreator.create(subDomain);
+        organization.addAdmin(memberId);
+        organization.addUser(targetMemberId);
+        organizationRepository.save(organization);
+
+        //when
+        organizationAdminService.appointOrganizationAdmin(subDomain, targetMemberId, memberId);
+
+        //then
+        List<OrganizationMemberMapper> organizationMemberMapperList = organizationMemberMapperRepository.findAll();
+        assertOrganizationMemberMapper(organizationMemberMapperList.get(0), memberId, OrganizationRole.USER);
+        assertOrganizationMemberMapper(organizationMemberMapperList.get(1), targetMemberId, OrganizationRole.ADMIN);
+    }
+
+    @Test
+    void 그룹_관리자가_그룹에_속해있지_않은_사람에게_임명하려고_하면_애러발생() {
+        //given
+        Organization organization = OrganizationCreator.create(subDomain);
+        organization.addAdmin(memberId);
+        organizationRepository.save(organization);
+
+        //when & then
+        assertThatThrownBy(
+            () -> organizationAdminService.appointOrganizationAdmin(subDomain, targetMemberId, memberId)
+        ).isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
+    void 그룹_관리자가_자신한테_그룹_관리자를_넘겨주는경우_에러가_발생한다() {
+        // given
+        Organization organization = OrganizationCreator.create(subDomain);
+        organization.addAdmin(memberId);
+        organizationRepository.save(organization);
+
+        // when & then
+        assertThatThrownBy(
+            () -> organizationAdminService.appointOrganizationAdmin(subDomain, memberId, memberId)
+        ).isInstanceOf(ForbiddenException.class);
+    }
+
 }

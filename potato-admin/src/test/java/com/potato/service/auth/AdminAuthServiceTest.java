@@ -42,21 +42,21 @@ class AdminAuthServiceTest {
 
     @Test
     void 구글_인증시_존재하는_이메일이면_로그인_처리한다() {
-        //given
+        // given
         Administrator administrator = AdministratorCreator.create("googleAuth@gmail.com", "googleAuth");
         administratorRepository.save(administrator);
 
-        //when
+        // when
         GoogleAuthRequest request = GoogleAuthRequest.testInstance("code", "redirectUri");
         String token = adminAuthService.handleGoogleAuthentication(request);
 
-        //then
+        // then
         assertThat(token).isNotNull();
     }
 
     @Test
     void 구글_인증시_존재하지_않는_이메일이면_애러가_발생() {
-        //given
+        // given
         Administrator administrator = AdministratorCreator.create("googleWrong@gmail.com", "googleAuth");
         administratorRepository.save(administrator);
 

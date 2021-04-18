@@ -49,7 +49,7 @@ public class OrganizationService {
     @Transactional
     public void unFollowOrganization(String subDomain, Long memberId) {
         Organization organization = OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, subDomain);
-        organization.unFollow(memberId, organization);
+        organization.unFollow(memberId);
     }
 
 }

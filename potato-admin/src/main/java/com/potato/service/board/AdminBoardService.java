@@ -3,6 +3,9 @@ package com.potato.service.board;
 import com.potato.domain.board.admin.AdminBoard;
 import com.potato.domain.board.admin.AdminBoardRepository;
 import com.potato.domain.board.admin.DeleteAdminBoardRepository;
+import com.potato.domain.board.organization.DeleteOrganizationBoardRepository;
+import com.potato.domain.board.organization.OrganizationBoard;
+import com.potato.domain.board.organization.OrganizationBoardRepository;
 import com.potato.service.board.dto.request.CreateAdminBoardRequest;
 import com.potato.service.board.dto.request.UpdateAdminBoardRequest;
 import com.potato.service.board.dto.response.AdminBoardInfoResponse;
@@ -17,6 +20,10 @@ public class AdminBoardService {
     private final AdminBoardRepository adminBoardRepository;
 
     private final DeleteAdminBoardRepository deleteAdminBoardRepository;
+
+    private final OrganizationBoardRepository organizationBoardRepository;
+
+    private final DeleteOrganizationBoardRepository deleteOrganizationBoardRepository;
 
     @Transactional
     public AdminBoardInfoResponse createAdminBoard(CreateAdminBoardRequest request, Long adminMemberId) {
@@ -37,4 +44,10 @@ public class AdminBoardService {
         adminBoardRepository.delete(adminBoard);
     }
 
+    @Transactional
+    public void deleteOrganizationBoard(String subDomain, Long adminMemberId, Long organizationBoardId) {
+        OrganizationBoard organizationBoard = OrganizationBoardServiceUtils.findOrganizationBoardBySubDomainAndId(organizationBoardRepository, subDomain, organizationBoardId);
+        deleteOrganizationBoardRepository.save(organizationBoard.deleteByAdmin(adminMemberId));
+        organizationBoardRepository.delete(organizationBoard);
+    }
 }

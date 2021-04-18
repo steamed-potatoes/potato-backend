@@ -41,8 +41,8 @@ public class OrganizationMockMvc {
         );
     }
 
-    public ApiResponse<OrganizationInfoResponse> changeCategoryToApproved(String subDomain, UpdateCategoryRequest request, String token, int expectedStatus) throws Exception {
-        MockHttpServletRequestBuilder builder = patch("/admin/v1/organization/category/approved/" + subDomain)
+    public ApiResponse<OrganizationInfoResponse> updateCategory(String subDomain, UpdateCategoryRequest request, String token, int expectedStatus) throws Exception {
+        MockHttpServletRequestBuilder builder = put("/admin/v1/organization/" + subDomain + "/category")
             .contentType(MediaType.APPLICATION_JSON)
             .header(HttpHeaders.AUTHORIZATION, "Bearer ".concat(token))
             .content(objectMapper.writeValueAsString(request));
