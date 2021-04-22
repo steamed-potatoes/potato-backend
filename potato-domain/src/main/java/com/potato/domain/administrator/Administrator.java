@@ -12,6 +12,9 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@Table(
+    uniqueConstraints = @UniqueConstraint(name = "uni_administrator_1", columnNames = {"email"})
+)
 public class Administrator extends BaseTimeEntity {
 
     @Id
@@ -21,6 +24,7 @@ public class Administrator extends BaseTimeEntity {
     @Embedded
     private Email email;
 
+    @Column(nullable = false, length = 50)
     private String name;
 
     @Builder()

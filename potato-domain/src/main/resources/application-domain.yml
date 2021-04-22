@@ -5,7 +5,6 @@ spring:
       hibernate.use_sql_comments: true
       hibernate.format_sql: true
     open-in-view: false
-
 ---
 spring:
   profiles: local
@@ -16,6 +15,7 @@ spring:
       settings:
         web-allow-others: true
   datasource:
+    data: classpath:schema/schema-session.sql
     hikari:
       driver-class-name: org.h2.Driver
       jdbc-url: jdbc:h2:mem:potato;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
@@ -23,6 +23,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
+  flyway:
+    enabled: false
 ---
 spring:
   profiles: dev
