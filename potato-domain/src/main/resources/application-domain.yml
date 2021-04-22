@@ -5,6 +5,8 @@ spring:
       hibernate.use_sql_comments: true
       hibernate.format_sql: true
     open-in-view: false
+    hibernate:
+      ddl-auto: none
 ---
 spring:
   profiles: local
@@ -27,7 +29,7 @@ spring:
     enabled: false
 ---
 spring:
-  profiles: dev
+  profiles: dev, prod
   jpa:
     properties:
       hibernate.dialect: org.hibernate.dialect.MySQL57Dialect
@@ -35,10 +37,6 @@ spring:
       hibernate.default_batch_fetch_size: 1000
       hibernate.query.in_clause_parameter_padding: true
     hibernate:
-      ddl-auto: update
----
-spring:
-  profiles: prod
-  jpa:
-    hibernate:
       ddl-auto: none
+---
+
