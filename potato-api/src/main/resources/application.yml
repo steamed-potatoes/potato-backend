@@ -15,3 +15,6 @@ spring:
       - thirdparty
       - swagger
       - cloud
+logging:
+  file:
+    path: logs/api/
