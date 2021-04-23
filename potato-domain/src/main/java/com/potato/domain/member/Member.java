@@ -11,6 +11,9 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@Table(
+    uniqueConstraints = @UniqueConstraint(name = "uni_member_1", columnNames = {"email"})
+)
 public class Member extends BaseTimeEntity {
 
     @Id
@@ -20,20 +23,21 @@ public class Member extends BaseTimeEntity {
     @Embedded
     private Email email;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private String name;
 
     private String profileUrl;
 
+    @Column(length = 30)
     @Enumerated(EnumType.STRING)
     private MemberMajor major;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private MemberProvider provider;
-
     @Embedded
     private ClassNumber classNumber;
+
+    @Column(nullable = false, length = 30)
+    @Enumerated(EnumType.STRING)
+    private MemberProvider provider;
 
     @Builder
     public Member(String email, String name, String profileUrl, MemberMajor major, MemberProvider provider, Integer classNumber) {

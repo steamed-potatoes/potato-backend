@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.potato.controller.ApiResponse;
 import com.potato.service.board.organization.dto.request.CreateOrganizationBoardRequest;
-import com.potato.service.board.organization.dto.request.DeleteOrganizationBoardRequest;
 import com.potato.service.board.organization.dto.request.UpdateOrganizationBoardRequest;
 import com.potato.service.board.organization.dto.response.OrganizationBoardInfoResponse;
 import com.potato.service.board.organization.dto.response.OrganizationBoardWithCreatorInfoResponse;
@@ -55,6 +54,7 @@ class OrganizationBoardMockMvc {
 
         return objectMapper.readValue(
             mockMvc.perform(builder)
+                .andExpect(status().is(expectedStatus))
                 .andReturn()
                 .getResponse()
                 .getContentAsString(StandardCharsets.UTF_8), new TypeReference<>() {
@@ -80,24 +80,8 @@ class OrganizationBoardMockMvc {
         );
     }
 
-    public ApiResponse<OrganizationBoardInfoResponse> updateOrganizationBoard(String subDomain, UpdateOrganizationBoardRequest request,String token, int expectedStatus) throws Exception {
+    public ApiResponse<OrganizationBoardInfoResponse> updateOrganizationBoard(String subDomain, UpdateOrganizationBoardRequest request, String token, int expectedStatus) throws Exception {
         MockHttpServletRequestBuilder builder = put("/api/v2/organization/board/" + subDomain)
-            .contentType(MediaType.APPLICATION_JSON)
-            .header(HttpHeaders.AUTHORIZATION, "Bearer ".concat(token))
-            .content(objectMapper.writeValueAsString(request));
-
-        return objectMapper.readValue(
-            mockMvc.perform(builder)
-                .andExpect(status().is(expectedStatus))
-                .andReturn()
-                .getResponse()
-                .getContentAsString(StandardCharsets.UTF_8), new TypeReference<>() {
-            }
-        );
-    }
-
-    public ApiResponse<OrganizationBoardInfoResponse> deleteOrganizationBoard(String subDomain, DeleteOrganizationBoardRequest request, String token, int expectedStatus) throws Exception {
-        MockHttpServletRequestBuilder builder = delete("/api/v2/organization/board/" + subDomain)
             .contentType(MediaType.APPLICATION_JSON)
             .header(HttpHeaders.AUTHORIZATION, "Bearer ".concat(token))
             .content(objectMapper.writeValueAsString(request));

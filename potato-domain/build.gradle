@@ -7,6 +7,8 @@ dependencies {
     runtimeOnly 'com.h2database:h2'
     runtimeOnly group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '2.6.2'
 
+    implementation 'org.flywaydb:flyway-core'
+
     implementation "com.querydsl:querydsl-jpa"
     implementation "com.querydsl:querydsl-core"
     annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jpa"

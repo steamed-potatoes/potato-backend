@@ -27,7 +27,7 @@ public class AdminBoardMockMvc {
     }
 
     public ApiResponse<AdminBoardInfoResponse> createAdminBoard(CreateAdminBoardRequest request, String token, int expectedStatus) throws Exception {
-        MockHttpServletRequestBuilder builder = post("/admin/v1/board")
+        MockHttpServletRequestBuilder builder = post("/admin/v1/board/admin")
             .contentType(MediaType.APPLICATION_JSON)
             .header(HttpHeaders.AUTHORIZATION, "Bearer ".concat(token))
             .content(objectMapper.writeValueAsString(request));
@@ -43,7 +43,7 @@ public class AdminBoardMockMvc {
     }
 
     public ApiResponse<AdminBoardInfoResponse> updateAdminBoard(UpdateAdminBoardRequest request, String token, int expectedStatus) throws Exception {
-        MockHttpServletRequestBuilder builder = put("/admin/v1/board")
+        MockHttpServletRequestBuilder builder = put("/admin/v1/board/admin")
             .contentType(MediaType.APPLICATION_JSON)
             .header(HttpHeaders.AUTHORIZATION, "Bearer ".concat(token))
             .content(objectMapper.writeValueAsString(request));

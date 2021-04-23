@@ -20,26 +20,26 @@ public class AdminBoardController {
     private final AdminBoardService adminBoardService;
 
     @Auth
-    @PostMapping("/admin/v1/board")
+    @PostMapping("/admin/v1/board/admin")
     public ApiResponse<AdminBoardInfoResponse> createAdminBoard(@Valid @RequestBody CreateAdminBoardRequest request, @MemberId Long adminMemberId) {
         return ApiResponse.success(adminBoardService.createAdminBoard(request, adminMemberId));
     }
 
     @Auth
-    @PutMapping("/admin/v1/board")
+    @PutMapping("/admin/v1/board/admin")
     public ApiResponse<AdminBoardInfoResponse> updateAdminBoard(@Valid @RequestBody UpdateAdminBoardRequest request, @MemberId Long adminMemberId) {
        return ApiResponse.success(adminBoardService.updateAdminBoard(request));
     }
 
     @Auth
-    @DeleteMapping("/admin/v1/board/{adminBoardId}")
+    @DeleteMapping("/admin/v1/board/admin/{adminBoardId}")
     public ApiResponse<String> deleteAdminBoard(@PathVariable Long adminBoardId, @MemberId Long adminMemberId) {
         adminBoardService.deleteAdminBoard(adminBoardId, adminMemberId);
         return ApiResponse.OK;
     }
 
     @Auth
-    @DeleteMapping("/admin/v1/board/{subDomain}")
+    @DeleteMapping("/admin/v1/board/organization/{subDomain}")
     public ApiResponse<String> deleteOrganizationBoard(@PathVariable String subDomain, @MemberId Long adminMemberId, DeleteOrganizationBoardRequest request) {
         adminBoardService.deleteOrganizationBoard(subDomain, adminMemberId, request.getOrganizationBoardId());
         return ApiResponse.OK;

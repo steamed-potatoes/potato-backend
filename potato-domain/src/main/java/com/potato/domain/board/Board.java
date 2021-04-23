@@ -13,6 +13,9 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@Table(
+    indexes = @Index(name = "idx_board_id", columnList = "startDateTime")
+)
 public class Board extends BaseTimeEntity {
 
     @Id

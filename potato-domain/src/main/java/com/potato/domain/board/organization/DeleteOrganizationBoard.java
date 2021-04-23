@@ -23,14 +23,18 @@ public class DeleteOrganizationBoard extends BaseTimeEntity {
     private Long backUpId;
 
     @Column(nullable = false)
-    private String subDomain;
-
-    @Column(nullable = false)
-    private OrganizationBoardType organizationBoardType;
+    private LocalDateTime backUpCreatedDateTime;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "board_id", nullable = false)
     private DeleteBoard board;
+
+    @Column(nullable = false, length = 50)
+    private String subDomain;
+
+    @Column(nullable = false, length = 30)
+    @Enumerated(EnumType.STRING)
+    private OrganizationBoardType organizationBoardType;
 
     private Long deletedMemberId;
 
@@ -39,9 +43,6 @@ public class DeleteOrganizationBoard extends BaseTimeEntity {
     private String content;
 
     private String imageUrl;
-
-    @Column(nullable = false)
-    private LocalDateTime backUpCreatedDateTime;
 
     @Builder
     public DeleteOrganizationBoard(Long backUpId, String subDomain, Long memberId, OrganizationBoardType organizationBoardType, String title,
