@@ -1,13 +1,15 @@
-# Potato Backend
+# Potato Backend 
 
-![Generic badge](https://img.shields.io/badge/version-0.2.0-brightgreen.svg)
+![Generic badge](https://img.shields.io/badge/version-0.2.1-brightgreen.svg)
 [![codecov](https://codecov.io/gh/steamed-potatoes/potato-backend/branch/develop/graph/badge.svg?token=ACoWRzqGBl)](https://codecov.io/gh/steamed-potatoes/potato-backend)
 
 ## Health Check (Development Server)
 
-[API Server](https://api.pmarket.space/ping)
+### API Server
+![API Server](https://img.shields.io/website?down_message=OFF&style=flat-square&up_message=OK&url=https%3A%2F%2Fapi.pmarket.space%2Fping)
 
-[Admin Server](https://test.pmarket.space/ping)
+### Admin Server
+![Admin Server](https://img.shields.io/website?down_message=OFF&style=flat-square&up_message=OK&url=https%3A%2F%2Ftest.pmarket.space%2Fping)
 
 ## Technologies
 
