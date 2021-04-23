@@ -1,6 +1,6 @@
 # Potato Backend
 
-![Generic badge](https://img.shields.io/badge/version-0.1.4-brightgreen.svg)
+![Generic badge](https://img.shields.io/badge/version-0.2.0-brightgreen.svg)
 [![codecov](https://codecov.io/gh/steamed-potatoes/potato-backend/branch/develop/graph/badge.svg?token=ACoWRzqGBl)](https://codecov.io/gh/steamed-potatoes/potato-backend)
 
 ## Health Check (Development Server)
@@ -15,18 +15,21 @@
 - Language: Java 11
 - Framework: Spring Boot 2.3
 - Web Framework: Spring Web MVC + Spring WebFlux (WebClient)
-- Data Access: Spring Data JPA + Hibernate JPA + QueryDSL
-- Build: Gradle
-- Unit/Integration Testing: Junit5
+- Data Access: Spring Data JPA (Hibernate) + QueryDSL 4.3
+- Build: Gradle 6.7
+- Unit/Integration Testing: Junit 5
 
 ### Infra (Production Server)
 - TODO
 
 ### Infra (Development Server)
 - AWS EC2
-- AWS RDS (MariaDB)
+- AWS RDS (MariaDB 10.4), flyway 6.4
 - Docker-compose
 - Nginx
+
+### Infra (Local)
+- H2 InMemory DB
 
 ### CI/CD
 - GitHub Action CI/CD
@@ -36,12 +39,18 @@
 git clone https://github.com/steamed-potatoes/potato-backend
 ```
 
-### case1. with gradlew
+### case 1) with gradlew
 ```shell
+# Build
 ./gradlew clean build
-java -jar muyaho-api/build/libs/muyaho-api-0.0.1-SNAPSHOT.jar 
+
+# API Server
+java -jar potato-api/build/libs/potato-api.jar  
+
+# Admin Server
+java -jar potato-admin/build/libs/potato-admin.jar
 ```
-### case2. with docker-compose
+### case 2) with docker-compose
 ```shell
 docker-compose up --build
 ```
