@@ -22,7 +22,7 @@ public class SwaggerConfig {
             .addSecurityItem(new SecurityRequirement().addList(securityKey))
             .info(new Info()
                 .title("Potato Admin Server")
-                .version("v0.1.3")
+                .version("v0.1.4")
                 .description("Potato API Documents"));
     }
 

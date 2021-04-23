@@ -173,12 +173,6 @@ public class AdminBoardServiceTest extends AdminSetupTest {
 
     @Test
     void 관리자_게시물을_삭제할때_해당하는_게시물이_없는경우_에러가_발생한다() {
-        // given
-        UpdateAdminBoardRequest request = UpdateAdminBoardRequest.testBuilder()
-            .adminBoardId(999L)
-            .title("제목")
-            .build();
-
         // when & then
         assertThatThrownBy(() -> adminBoardService.deleteAdminBoard(999L, adminMemberId)).isInstanceOf(NotFoundException.class);
     }

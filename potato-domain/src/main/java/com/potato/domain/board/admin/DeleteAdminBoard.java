@@ -1,6 +1,6 @@
 package com.potato.domain.board.admin;
 
-import com.potato.domain.board.Board;
+import com.potato.domain.BaseTimeEntity;
 import com.potato.domain.board.DeleteBoard;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class DeleteAdminBoard {
+public class DeleteAdminBoard extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,10 +26,10 @@ public class DeleteAdminBoard {
     @JoinColumn(name = "board_id", nullable = false)
     private DeleteBoard board;
 
-    private String content;
-
     @Column(nullable = false)
     private Long deleteAdministratorId;
+
+    private String content;
 
     @Builder
     public DeleteAdminBoard(Long backUpId, Long administratorId, String title, LocalDateTime startDateTime, LocalDateTime endDateTime, String content, Long deleteAdministratorId) {

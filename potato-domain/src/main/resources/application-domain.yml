@@ -2,10 +2,22 @@ spring:
   jpa:
     properties:
       hibernate.show_sql: true
-      hibernate.use_sql_comments: true
       hibernate.format_sql: true
+      hibernate.use_sql_comments: true
+      hibernate.dialect: org.hibernate.dialect.MySQL57Dialect
+      hibernate.dialect.storage_engine: innodb
+      hibernate.default_batch_fetch_size: 1000
+      hibernate.query.in_clause_parameter_padding: true
+      hibernate.connection.provider_disables_autocommit: true
     open-in-view: false
-
+    hibernate:
+      ddl-auto: none
+  datasource:
+    hikari:
+      auto-commit: false
+logging:
+  level:
+    org.hibernate.type: trace
 ---
 spring:
   profiles: local
@@ -16,27 +28,34 @@ spring:
       settings:
         web-allow-others: true
   datasource:
+    data: classpath:schema/schema-session.sql
     hikari:
       driver-class-name: org.h2.Driver
-      jdbc-url: jdbc:h2:mem:potato;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+      jdbc-url: jdbc:h2:mem:potato;MODE=MYSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;
       username: sa
   jpa:
     hibernate:
       ddl-auto: create
+  flyway:
+    enabled: false
 ---
 spring:
   profiles: dev
   jpa:
-    properties:
-      hibernate.dialect: org.hibernate.dialect.MySQL57Dialect
-      hibernate.dialect.storage_engine: innodb
-      hibernate.default_batch_fetch_size: 1000
-      hibernate.query.in_clause_parameter_padding: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
 ---
+
+spring:
+  profiles: beta
+  jpa:
+    hibernate:
+      ddl-auto: none
+---
+
 spring:
   profiles: prod
   jpa:
     hibernate:
       ddl-auto: none
+---

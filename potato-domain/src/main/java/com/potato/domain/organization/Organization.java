@@ -17,26 +17,31 @@ import java.util.stream.Collectors;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@Table(
+    uniqueConstraints = @UniqueConstraint(name = "uni_organization_1", columnNames = "subDomain"),
+    indexes = @Index(name = "idx_organization_1", columnList = "category")
+)
 public class Organization extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private String subDomain;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private String name;
 
-    private String description;
-
-    private int membersCount;
-
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private OrganizationCategory category;
 
     private String profileUrl;
+
+    private String description;
+
+    private int membersCount;
 
     private int followersCount;
 
@@ -113,6 +118,7 @@ public class Organization extends BaseTimeEntity {
         organizationMemberMapperList.remove(organizationMemberMapper);
         this.membersCount--;
     }
+
     public void addFollow(Long memberId) {
         this.organizationFollowerList.add(OrganizationFollower.newFollow(this, memberId));
         this.followersCount++;

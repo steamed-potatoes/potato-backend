@@ -1,5 +1,5 @@
 ### 관리자가_게시물_등록
-POST {{host_admin}}/admin/v1/board
+POST {{host_admin}}/admin/v1/board/admin
 Content-Type: application/json
 Authorization: Bearer {{AUTHORIZATION}}
 
@@ -11,7 +11,7 @@ Authorization: Bearer {{AUTHORIZATION}}
 }
 
 ### 관리자가_게시물_수정
-PUT {{host_admin}}/admin/v1/board
+PUT {{host_admin}}/admin/v1/board/admin
 Content-Type: application/json
 Authorization: Bearer {{AUTHORIZATION}}
 
@@ -24,6 +24,6 @@ Authorization: Bearer {{AUTHORIZATION}}
 }
 
 ### 관리자가 게시글 삭제
-DELETE {{host_admin}}/admin/v1/board/1
+DELETE {{host_admin}}/admin/v1/board/admin/1
 Content-Type: application/json
 Authorization: Bearer {{AUTHORIZATION}}

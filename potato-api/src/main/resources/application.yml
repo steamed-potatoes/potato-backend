@@ -3,6 +3,10 @@ server:
 spring:
   session:
     store-type: jdbc
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
   profiles:
     active: local
     include:
@@ -11,5 +15,6 @@ spring:
       - thirdparty
       - swagger
       - cloud
-  datasource:
-    data: classpath:schema/schema-session.sql
+logging:
+  file:
+    path: logs/api/
