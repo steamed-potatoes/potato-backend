@@ -10,6 +10,7 @@ import com.potato.domain.board.organization.OrganizationBoardType;
 import com.potato.domain.comment.BoardComment;
 import com.potato.domain.comment.BoardCommentCreator;
 import com.potato.domain.comment.BoardCommentRepository;
+import com.potato.domain.comment.BoardCommentType;
 import com.potato.service.comment.dto.request.AddBoardCommentRequest;
 import com.potato.service.comment.dto.response.BoardCommentResponse;
 import org.junit.jupiter.api.AfterEach;
@@ -54,7 +55,8 @@ class BoardCommentControllerTest extends ControllerTestUtils {
         OrganizationBoard organizationBoard = OrganizationBoardCreator.create("subDomain", testMember.getId(), "123", OrganizationBoardType.RECRUIT);
         organizationBoardRepository.save(organizationBoard);
 
-        BoardComment rootComment = BoardCommentCreator.createRootComment(organizationBoard.getId(), testMember.getId(), "루트 댓글1");
+        BoardCommentType type = BoardCommentType.ORGANIZATION_BOARD;
+        BoardComment rootComment = BoardCommentCreator.createRootComment(type, organizationBoard.getId(), testMember.getId(), "루트 댓글1");
         rootComment.addChildComment(testMember.getId(), "대댓글1");
         rootComment.addChildComment(testMember.getId(), "대댓글2");
         boardCommentRepository.save(rootComment);
@@ -64,11 +66,11 @@ class BoardCommentControllerTest extends ControllerTestUtils {
 
         // then
         assertThat(response.getData()).hasSize(1);
-        assertBoardCommentResponse(response.getData().get(0), organizationBoard.getId(), "루트 댓글1", testMember.getId());
+        assertBoardCommentResponse(response.getData().get(0), type, organizationBoard.getId(), "루트 댓글1", testMember.getId());
 
         assertThat(response.getData().get(0).getChildren()).hasSize(2);
-        assertBoardCommentResponse(response.getData().get(0).getChildren().get(0), organizationBoard.getId(), "대댓글1", testMember.getId());
-        assertBoardCommentResponse(response.getData().get(0).getChildren().get(1), organizationBoard.getId(), "대댓글2", testMember.getId());
+        assertBoardCommentResponse(response.getData().get(0).getChildren().get(0), type, organizationBoard.getId(), "대댓글1", testMember.getId());
+        assertBoardCommentResponse(response.getData().get(0).getChildren().get(1), type, organizationBoard.getId(), "대댓글2", testMember.getId());
     }
 
     @Test
@@ -86,7 +88,8 @@ class BoardCommentControllerTest extends ControllerTestUtils {
         OrganizationBoard organizationBoard = OrganizationBoardCreator.create("subDomain", testMember.getId(), "123", OrganizationBoardType.RECRUIT);
         organizationBoardRepository.save(organizationBoard);
 
-        BoardComment rootComment = BoardCommentCreator.createRootComment(organizationBoard.getId(), testMember.getId(), "루트 댓글1");
+        BoardCommentType type = BoardCommentType.ORGANIZATION_BOARD;
+        BoardComment rootComment = BoardCommentCreator.createRootComment(type, organizationBoard.getId(), testMember.getId(), "루트 댓글1");
         rootComment.delete();
         boardCommentRepository.save(rootComment);
 
@@ -95,7 +98,7 @@ class BoardCommentControllerTest extends ControllerTestUtils {
 
         // then
         assertThat(response.getData()).hasSize(1);
-        assertBoardCommentResponse(response.getData().get(0), organizationBoard.getId(), "삭제된 메시지입니다", null);
+        assertBoardCommentResponse(response.getData().get(0), type, organizationBoard.getId(), "삭제된 메시지입니다", null);
     }
 
     @Test
@@ -104,7 +107,7 @@ class BoardCommentControllerTest extends ControllerTestUtils {
         OrganizationBoard organizationBoard = OrganizationBoardCreator.create("subDomain", testMember.getId(), "123", OrganizationBoardType.RECRUIT);
         organizationBoardRepository.save(organizationBoard);
 
-        AddBoardCommentRequest request = AddBoardCommentRequest.testInstance(organizationBoard.getId(), null, "로그인 하지 않은 유저가 댓글을 달 경우");
+        AddBoardCommentRequest request = AddBoardCommentRequest.testInstance(BoardCommentType.ADMIN_BOARD, organizationBoard.getId(), null, "로그인 하지 않은 유저가 댓글을 달 경우");
 
         // when
         ApiResponse<String> response = boardCommentMockMvc.addBoardComment(request, "wrong token", 401);
@@ -121,7 +124,7 @@ class BoardCommentControllerTest extends ControllerTestUtils {
         OrganizationBoard organizationBoard = OrganizationBoardCreator.create("subDomain", testMember.getId(), "123", OrganizationBoardType.RECRUIT);
         organizationBoardRepository.save(organizationBoard);
 
-        AddBoardCommentRequest request = AddBoardCommentRequest.testInstance(organizationBoard.getId(), null, "댓글");
+        AddBoardCommentRequest request = AddBoardCommentRequest.testInstance(BoardCommentType.ADMIN_BOARD, organizationBoard.getId(), null, "댓글");
 
         // when
         ApiResponse<String> response = boardCommentMockMvc.addBoardComment(request, token, 200);
@@ -130,8 +133,9 @@ class BoardCommentControllerTest extends ControllerTestUtils {
         assertThat(response.getData()).isEqualTo("OK");
     }
 
-    private void assertBoardCommentResponse(BoardCommentResponse boardCommentResponse, Long organizationBoardId, String content, Long memberId) {
+    private void assertBoardCommentResponse(BoardCommentResponse boardCommentResponse, BoardCommentType type, Long organizationBoardId, String content, Long memberId) {
         assertThat(boardCommentResponse.getBoardId()).isEqualTo(organizationBoardId);
+        assertThat(boardCommentResponse.getType()).isEqualTo(type);
         assertThat(boardCommentResponse.getContent()).isEqualTo(content);
         assertThat(boardCommentResponse.getMemberId()).isEqualTo(memberId);
     }

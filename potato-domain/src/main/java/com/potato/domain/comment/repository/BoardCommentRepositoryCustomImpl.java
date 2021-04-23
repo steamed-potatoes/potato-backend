@@ -23,11 +23,11 @@ public class BoardCommentRepositoryCustomImpl implements BoardCommentRepositoryC
     }
 
     @Override
-    public List<BoardComment> findRootCommentByOrganizationBoardId(Long organizationBoardId) {
+    public List<BoardComment> findRootCommentByOrganizationBoardId(Long boardId) {
         return queryFactory.selectFrom(boardComment).distinct()
             .leftJoin(boardComment.childComments, new QBoardComment("child")).fetchJoin()
             .where(
-                boardComment.organizationBoardId.eq(organizationBoardId),
+                boardComment.boardId.eq(boardId),
                 boardComment.parentComment.isNull()
             ).fetch();
     }

@@ -4,7 +4,8 @@ Content-Type: application/json
 Authorization: Bearer {{AUTHORIZATION}}
 
 {
-    "organizationBoardId": 1,
+    "type": "ORGANIZATION_BOARD",
+    "boardId": 1,
     "parentCommentId": null,
     "content": "댓글"
 }
@@ -16,7 +17,8 @@ Content-Type: application/json
 Authorization: Bearer {{AUTHORIZATION}}
 
 {
-    "organizationBoardId": 1,
+    "type": "ORGANIZATION_BOARD",
+    "boardId": 1,
     "parentCommentId": 1,
     "content": "대댓글"
 }

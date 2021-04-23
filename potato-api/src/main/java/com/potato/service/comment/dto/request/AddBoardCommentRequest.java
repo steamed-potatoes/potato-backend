@@ -1,5 +1,6 @@
 package com.potato.service.comment.dto.request;
 
+import com.potato.domain.comment.BoardCommentType;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,21 +15,25 @@ import javax.validation.constraints.NotNull;
 public class AddBoardCommentRequest {
 
     @NotNull
-    private Long organizationBoardId;
+    private BoardCommentType type;
+
+    @NotNull
+    private Long boardId;
 
     private Long parentCommentId;
 
     @NotBlank
     private String content;
 
-    private AddBoardCommentRequest(Long organizationBoardId, Long parentCommentId, String content) {
-        this.organizationBoardId = organizationBoardId;
+    private AddBoardCommentRequest(BoardCommentType type, Long boardId, Long parentCommentId, String content) {
+        this.type = type;
+        this.boardId = boardId;
         this.parentCommentId = parentCommentId;
         this.content = content;
     }
 
-    public static AddBoardCommentRequest testInstance(Long organizationBoardId, Long parentCommentId, String content) {
-        return new AddBoardCommentRequest(organizationBoardId, parentCommentId, content);
+    public static AddBoardCommentRequest testInstance(BoardCommentType type, Long boardId, Long parentCommentId, String content) {
+        return new AddBoardCommentRequest(type, boardId, parentCommentId, content);
     }
 
     public boolean hasParentComment() {

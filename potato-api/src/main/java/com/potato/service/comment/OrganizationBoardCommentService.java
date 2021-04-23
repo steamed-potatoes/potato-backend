@@ -22,13 +22,13 @@ public class OrganizationBoardCommentService {
 
     @Transactional
     public void addBoardComment(AddBoardCommentRequest request, Long memberId) {
-        OrganizationBoardServiceUtils.validateExistsBoard(organizationBoardRepository, request.getOrganizationBoardId());
+        OrganizationBoardServiceUtils.validateExistsBoard(organizationBoardRepository, request.getBoardId());
         if (!request.hasParentComment()) {
             BoardComment boardComment = BoardCommentServiceUtils.findBoardCommentById(boardCommentRepository, request.getParentCommentId());
             boardComment.addChildComment(memberId, request.getContent());
             return;
         }
-        boardCommentRepository.save(BoardComment.newRootComment(request.getOrganizationBoardId(), memberId, request.getContent()));
+        boardCommentRepository.save(BoardComment.newRootComment(request.getType(), request.getBoardId(), memberId, request.getContent()));
     }
 
     @Transactional(readOnly = true)
