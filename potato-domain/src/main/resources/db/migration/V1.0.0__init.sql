@@ -1,25 +1,26 @@
-CREATE TABLE IF NOT EXISTS `spring_session`
+CREATE TABLE IF NOT EXISTS SPRING_SESSION
 (
-    `session_id`            CHAR(36) NOT NULL,
-    `creation_time`         BIGINT   NOT NULL,
-    `last_access_time`      BIGINT   NOT NULL,
-    `max_inactive_interval` INT      NOT NULL,
-    `principal_name`        VARCHAR(100),
-    CONSTRAINT `spring_session_pk` PRIMARY KEY (`session_id`)
+    SESSION_ID            CHAR(36) NOT NULL,
+    CREATION_TIME         BIGINT   NOT NULL,
+    LAST_ACCESS_TIME      BIGINT   NOT NULL,
+    MAX_INACTIVE_INTERVAL INT      NOT NULL,
+    PRINCIPAL_NAME        VARCHAR(100),
+    CONSTRAINT SPRING_SESSION_PK PRIMARY KEY (SESSION_ID)
 );
 
-CREATE INDEX IF NOT EXISTS `spring_session_ix1` ON `spring_session` (`last_access_time`);
+CREATE INDEX IF NOT EXISTS SPRING_SESSION_IX1 ON SPRING_SESSION (LAST_ACCESS_TIME);
 
-CREATE TABLE IF NOT EXISTS `spring_session_attributes`
+CREATE TABLE IF NOT EXISTS SPRING_SESSION_ATTRIBUTES
 (
-    `session_id`      CHAR(36)     NOT NULL,
-    `attribute_name`  VARCHAR(200) NOT NULL,
-    `attribute_bytes` MEDIUMBLOB   NOT NULL,
-    CONSTRAINT SPRING_SESSION_ATTRIBUTES_PK PRIMARY KEY (`session_id`, `attribute_name`),
-    CONSTRAINT SPRING_SESSION_ATTRIBUTES_FK FOREIGN KEY (`session_id`) REFERENCES `spring_session` (`session_id`) ON DELETE CASCADE
+    SESSION_ID      CHAR(36)     NOT NULL,
+    ATTRIBUTE_NAME  VARCHAR(200) NOT NULL,
+    ATTRIBUTE_BYTES MEDIUMBLOB   NOT NULL,
+    CONSTRAINT SPRING_SESSION_ATTRIBUTES_PK PRIMARY KEY (SESSION_ID, ATTRIBUTE_NAME),
+    CONSTRAINT SPRING_SESSION_ATTRIBUTES_FK FOREIGN KEY (SESSION_ID) REFERENCES SPRING_SESSION (SESSION_ID) ON DELETE CASCADE
 );
 
-CREATE INDEX IF NOT EXISTS `spring_session_attributes_ix1` ON `spring_session_attributes` (`session_id`);
+CREATE INDEX IF NOT EXISTS SPRING_SESSION_ATTRIBUTES_IX1 ON SPRING_SESSION_ATTRIBUTES (SESSION_ID);
+
 
 CREATE TABLE IF NOT EXISTS `member`
 (
@@ -48,6 +49,7 @@ CREATE TABLE IF NOT EXISTS `administrator`
     UNIQUE KEY `uni_administrator_1` (`email`)
 ) ENGINE = InnoDB;
 
+
 CREATE TABLE IF NOT EXISTS `organization`
 (
     `id`                      BIGINT      NOT NULL AUTO_INCREMENT,
@@ -65,6 +67,7 @@ CREATE TABLE IF NOT EXISTS `organization`
     KEY `idx_organization_1` (`category`)
 ) ENGINE = InnoDB;
 
+
 CREATE TABLE IF NOT EXISTS `organization_member_mapper`
 (
     `id`                      BIGINT      NOT NULL AUTO_INCREMENT,
@@ -78,6 +81,7 @@ CREATE TABLE IF NOT EXISTS `organization_member_mapper`
     KEY `idx_organization_member_mapper_1` (`member_id`)
 ) ENGINE = InnoDB;
 
+
 CREATE TABLE IF NOT EXISTS `organization_follower`
 (
     `id`                      BIGINT NOT NULL AUTO_INCREMENT,
@@ -87,4 +91,121 @@ CREATE TABLE IF NOT EXISTS `organization_follower`
     `last_modified_date_time` DATETIME(6) DEFAULT NULL,
     PRIMARY KEY (`id`),
     FOREIGN KEY (`organization_id`) REFERENCES `organization` (`id`)
+) ENGINE = InnoDB;
+
+
+CREATE TABLE IF NOT EXISTS `board`
+(
+    `id`                      BIGINT       NOT NULL AUTO_INCREMENT,
+    `title`                   VARCHAR(200) NOT NULL,
+    `start_date_time`         DATETIME(6)  NOT NULL,
+    `end_date_time`           DATETIME(6)  NOT NULL,
+    `created_date_time`       DATETIME(6) DEFAULT NULL,
+    `last_modified_date_time` DATETIME(6) DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    KEY `idx_board_1` (`start_date_time`)
+) ENGINE = InnoDB;
+
+
+CREATE TABLE IF NOT EXISTS `organization_board`
+(
+    `id`                      BIGINT      NOT NULL AUTO_INCREMENT,
+    `board_id`                BIGINT      NOT NULL,
+    `sub_domain`              varchar(50) NOT NULL,
+    `member_id`               BIGINT      NOT NULL,
+    `content`                 VARCHAR(2048)        DEFAULT NULL,
+    `image_url`               VARCHAR(2048)        DEFAULT NULL,
+    `type`                    VARCHAR(30) NOT NULL,
+    `likes_count`             INTEGER     NOT NULL DEFAULT 0,
+    `created_date_time`       DATETIME(6)          DEFAULT NULL,
+    `last_modified_date_time` DATETIME(6)          DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`board_id`) REFERENCES `board` (`id`),
+    KEY `idx_organization_board_1` (`sub_domain`)
+) ENGINE = InnoDB;
+
+
+CREATE TABLE IF NOT EXISTS `admin_board`
+(
+    `id`                      BIGINT NOT NULL AUTO_INCREMENT,
+    `board_id`                BIGINT NOT NULL,
+    `administrator_id`        BIGINT NOT NULL,
+    `content`                 VARCHAR(2048) DEFAULT NULL,
+    `created_date_time`       DATETIME(6)   DEFAULT NULL,
+    `last_modified_date_time` DATETIME(6)   DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`board_id`) REFERENCES `board` (`id`)
+) ENGINE = InnoDB;
+
+
+CREATE TABLE IF NOT EXISTS `organization_board_like`
+(
+    `id`                      BIGINT NOT NULL AUTO_INCREMENT,
+    `organization_board_id`   BIGINT NOT NULL,
+    `member_id`               BIGINT NOT NULL,
+    `created_date_time`       DATETIME(6) DEFAULT NULL,
+    `last_modified_date_time` DATETIME(6) DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`organization_board_id`) REFERENCES `organization_board` (`id`)
+) ENGINE = InnoDB;
+
+
+CREATE TABLE IF NOT EXISTS `board_comment`
+(
+    `id`                      BIGINT        NOT NULL AUTO_INCREMENT,
+    `type`                    VARCHAR(30)   NOT NULL,
+    `board_id`                BIGINT        NOT NULL,
+    `member_id`               BIGINT        NOT NULL,
+    `board_comment_id`        BIGINT                 DEFAULT NULL,
+    `content`                 VARCHAR(2048) NOT NULL,
+    `depth`                   INTEGER       NOT NULL DEFAULT 0,
+    `is_deleted`              TINYINT(1)    NOT NULL DEFAULT FALSE,
+    `created_date_time`       DATETIME(6)            DEFAULT NULL,
+    `last_modified_date_time` DATETIME(6)            DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    KEY `idx_board_comment_1` (`board_id`, `board_comment_id`)
+) ENGINE = InnoDB;
+
+
+CREATE TABLE IF NOT EXISTS `delete_board`
+(
+    `id`                      BIGINT       NOT NULL AUTO_INCREMENT,
+    `member_id`               BIGINT       NOT NULL,
+    `title`                   VARCHAR(200) NOT NULL,
+    `start_date_time`         DATETIME(6)  NOT NULL,
+    `end_date_time`           DATETIME(6)  NOT NULL,
+    `created_date_time`       DATETIME(6) DEFAULT NULL,
+    `last_modified_date_time` DATETIME(6) DEFAULT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB;
+
+
+CREATE TABLE IF NOT EXISTS `delete_organization_board`
+(
+    `id`                        BIGINT      NOT NULL AUTO_INCREMENT,
+    `back_up_id`                BIGINT      NOT NULL,
+    `back_up_created_date_time` DATETIME(6) NOT NULL,
+    `board_id`                  BIGINT      NOT NULL,
+    `sub_domain`                VARCHAR(50) NOT NULL,
+    `organization_board_type`   VARCHAR(30) NOT NULL,
+    `deleted_member_id`         BIGINT        DEFAULT NULL,
+    `deleted_admin_member_id`   BIGINT        DEFAULT NULL,
+    `content`                   VARCHAR(2048) DEFAULT NULL,
+    `image_url`                 VARCHAR(2048) DEFAULT NULL,
+    `created_date_time`         DATETIME(6)   DEFAULT NULL,
+    `last_modified_date_time`   DATETIME(6)   DEFAULT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB;
+
+
+CREATE TABLE IF NOT EXISTS `delete_admin_board`
+(
+    `id`                      BIGINT NOT NULL AUTO_INCREMENT,
+    `back_up_id`              BIGINT NOT NULL,
+    `board_id`                BIGINT NOT NULL,
+    `delete_administrator_id` BIGINT NOT NULL,
+    `content`                 VARCHAR(2048) DEFAULT NULL,
+    `created_date_time`       DATETIME(6)   DEFAULT NULL,
+    `last_modified_date_time` DATETIME(6)   DEFAULT NULL,
+    PRIMARY KEY (`id`)
 ) ENGINE = InnoDB;

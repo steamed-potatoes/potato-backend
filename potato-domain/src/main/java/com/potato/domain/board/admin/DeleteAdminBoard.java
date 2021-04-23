@@ -26,10 +26,10 @@ public class DeleteAdminBoard extends BaseTimeEntity {
     @JoinColumn(name = "board_id", nullable = false)
     private DeleteBoard board;
 
-    private String content;
-
     @Column(nullable = false)
     private Long deleteAdministratorId;
+
+    private String content;
 
     @Builder
     public DeleteAdminBoard(Long backUpId, Long administratorId, String title, LocalDateTime startDateTime, LocalDateTime endDateTime, String content, Long deleteAdministratorId) {

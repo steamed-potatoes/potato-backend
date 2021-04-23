@@ -17,18 +17,21 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@Table(
+    indexes = @Index(name = "idx_organization_board_1", columnList = "subDomain")
+)
 public class OrganizationBoard extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String subDomain;
-
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "board_id", nullable = false)
     private Board board;
+
+    @Column(nullable = false, length = 50)
+    private String subDomain;
 
     @Column(nullable = false)
     private Long memberId;
@@ -37,6 +40,7 @@ public class OrganizationBoard extends BaseTimeEntity {
 
     private String imageUrl;
 
+    @Column(nullable = false, length = 30)
     @Enumerated(EnumType.STRING)
     private OrganizationBoardType type;
 

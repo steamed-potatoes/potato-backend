@@ -13,13 +13,16 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@Table(
+    indexes = @Index(name = "idx_board_comment_1", columnList = "boardId,board_comment_id")
+)
 public class BoardComment extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 30)
     @Enumerated(EnumType.STRING)
     private BoardCommentType type;
 
@@ -39,8 +42,10 @@ public class BoardComment extends BaseTimeEntity {
     @Column(nullable = false)
     private String content;
 
+    @Column(nullable = false)
     private int depth;
 
+    @Column(nullable = false)
     private boolean isDeleted;
 
     private BoardComment(BoardComment parentComment, BoardCommentType type, Long boardId, Long memberId, String content, int depth) {
