@@ -62,7 +62,7 @@ class BoardCommentControllerTest extends ControllerTestUtils {
         boardCommentRepository.save(rootComment);
 
         // when
-        ApiResponse<List<BoardCommentResponse>> response = boardCommentMockMvc.retrieveBoardComments(organizationBoard.getId(), 200);
+        ApiResponse<List<BoardCommentResponse>> response = boardCommentMockMvc.retrieveBoardComments(type, organizationBoard.getId(), 200);
 
         // then
         assertThat(response.getData()).hasSize(1);
@@ -76,7 +76,7 @@ class BoardCommentControllerTest extends ControllerTestUtils {
     @Test
     void 존재하지_않는_게시물의_댓글을_조회하면_404에러가_발생() throws Exception {
         // when
-        ApiResponse<List<BoardCommentResponse>> response = boardCommentMockMvc.retrieveBoardComments(999L, 404);
+        ApiResponse<List<BoardCommentResponse>> response = boardCommentMockMvc.retrieveBoardComments(BoardCommentType.ADMIN_BOARD, 999L, 404);
 
         // then
         assertThat(response.getCode()).isEqualTo(ErrorCode.NOT_FOUND_EXCEPTION.getCode());
@@ -94,7 +94,7 @@ class BoardCommentControllerTest extends ControllerTestUtils {
         boardCommentRepository.save(rootComment);
 
         // when
-        ApiResponse<List<BoardCommentResponse>> response = boardCommentMockMvc.retrieveBoardComments(organizationBoard.getId(), 200);
+        ApiResponse<List<BoardCommentResponse>> response = boardCommentMockMvc.retrieveBoardComments(type, organizationBoard.getId(), 200);
 
         // then
         assertThat(response.getData()).hasSize(1);
@@ -124,13 +124,27 @@ class BoardCommentControllerTest extends ControllerTestUtils {
         OrganizationBoard organizationBoard = OrganizationBoardCreator.create("subDomain", testMember.getId(), "123", OrganizationBoardType.RECRUIT);
         organizationBoardRepository.save(organizationBoard);
 
-        AddBoardCommentRequest request = AddBoardCommentRequest.testInstance(BoardCommentType.ADMIN_BOARD, organizationBoard.getId(), null, "댓글");
+        AddBoardCommentRequest request = AddBoardCommentRequest.testInstance(BoardCommentType.ORGANIZATION_BOARD, organizationBoard.getId(), null, "댓글");
 
         // when
         ApiResponse<String> response = boardCommentMockMvc.addBoardComment(request, token, 200);
 
         // then
         assertThat(response.getData()).isEqualTo("OK");
+    }
+
+    @Test
+    void 존재하지_않는_게시물에_댓글을_추가하려하면_404_에러발생() throws Exception {
+        // given
+        String token = memberMockMvc.getMockMemberToken();
+
+        AddBoardCommentRequest request = AddBoardCommentRequest.testInstance(BoardCommentType.ORGANIZATION_BOARD, 999L, null, "댓글");
+
+        // when
+        ApiResponse<String> response = boardCommentMockMvc.addBoardComment(request, token, 404);
+
+        // then
+        assertThat(response.getCode()).isEqualTo(ErrorCode.NOT_FOUND_EXCEPTION.getCode());
     }
 
     private void assertBoardCommentResponse(BoardCommentResponse boardCommentResponse, BoardCommentType type, Long organizationBoardId, String content, Long memberId) {

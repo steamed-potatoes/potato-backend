@@ -1,8 +1,13 @@
 package com.potato.service.comment;
 
+import com.potato.domain.board.admin.AdminBoardRepository;
+import com.potato.domain.board.organization.OrganizationBoardRepository;
 import com.potato.domain.comment.BoardComment;
 import com.potato.domain.comment.BoardCommentRepository;
+import com.potato.domain.comment.BoardCommentType;
 import com.potato.exception.NotFoundException;
+import com.potato.service.board.admin.AdminBoardServiceUtils;
+import com.potato.service.board.organization.OrganizationBoardServiceUtils;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -17,12 +22,20 @@ final class BoardCommentServiceUtils {
         return boardComment;
     }
 
-    public static BoardComment findBoardCommentByIdAndMemberId(BoardCommentRepository boardCommentRepository, Long boardCommentId, Long memberId) {
+    static BoardComment findBoardCommentByIdAndMemberId(BoardCommentRepository boardCommentRepository, Long boardCommentId, Long memberId) {
         BoardComment boardComment = boardCommentRepository.findBoardCommentByIdAndMemberId(boardCommentId, memberId);
         if (boardComment == null) {
             throw new NotFoundException(String.format("멤버 (%s)가 작성한 id(%s)를 가진 댓글이 없습니다", memberId, boardCommentId), "회원이 작성한 해당하는 댓글이 존재하지 않습니다.");
         }
         return boardComment;
+    }
+
+    static void validateExistBoard(OrganizationBoardRepository organizationBoardRepository, AdminBoardRepository adminBoardRepository, BoardCommentType type, Long boardId) {
+        if (type.equals(BoardCommentType.ORGANIZATION_BOARD)) {
+            OrganizationBoardServiceUtils.validateExistsBoard(organizationBoardRepository, boardId);
+        } else if (type.equals(BoardCommentType.ADMIN_BOARD)) {
+            AdminBoardServiceUtils.validateExistBoard(adminBoardRepository, boardId);
+        }
     }
 
 }

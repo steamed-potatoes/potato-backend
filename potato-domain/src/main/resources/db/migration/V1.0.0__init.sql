@@ -163,7 +163,7 @@ CREATE TABLE IF NOT EXISTS `board_comment`
     `created_date_time`       DATETIME(6)            DEFAULT NULL,
     `last_modified_date_time` DATETIME(6)            DEFAULT NULL,
     PRIMARY KEY (`id`),
-    KEY `idx_board_comment_1` (`board_id`, `board_comment_id`)
+    KEY `idx_board_comment_1` (`type`, `board_id`)
 ) ENGINE = InnoDB;
 
 

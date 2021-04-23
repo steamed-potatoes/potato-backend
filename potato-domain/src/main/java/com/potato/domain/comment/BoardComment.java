@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(
-    indexes = @Index(name = "idx_board_comment_1", columnList = "boardId,board_comment_id")
+    indexes = @Index(name = "idx_board_comment_1", columnList = "type,boardId")
 )
 public class BoardComment extends BaseTimeEntity {
 

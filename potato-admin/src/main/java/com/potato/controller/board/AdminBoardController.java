@@ -33,7 +33,7 @@ public class AdminBoardController {
 
     @Auth
     @DeleteMapping("/admin/v1/board/{adminBoardId}")
-    public ApiResponse<String> deleteAdminBoard(@PathVariable Long adminBoardId, @MemberId Long adminMemberId) {
+    public ApiResponse<String> deleteAdminBoard(@RequestParam Long adminBoardId, @MemberId Long adminMemberId) {
         adminBoardService.deleteAdminBoard(adminBoardId, adminMemberId);
         return ApiResponse.OK;
     }

@@ -1,6 +1,7 @@
 package com.potato.domain.comment.repository;
 
 import com.potato.domain.comment.BoardComment;
+import com.potato.domain.comment.BoardCommentType;
 import com.potato.domain.comment.QBoardComment;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -23,10 +24,11 @@ public class BoardCommentRepositoryCustomImpl implements BoardCommentRepositoryC
     }
 
     @Override
-    public List<BoardComment> findRootCommentByOrganizationBoardId(Long boardId) {
+    public List<BoardComment> findRootCommentByOrganizationBoardId(BoardCommentType type, Long boardId) {
         return queryFactory.selectFrom(boardComment).distinct()
             .leftJoin(boardComment.childComments, new QBoardComment("child")).fetchJoin()
             .where(
+                boardComment.type.eq(type),
                 boardComment.boardId.eq(boardId),
                 boardComment.parentComment.isNull()
             ).fetch();
