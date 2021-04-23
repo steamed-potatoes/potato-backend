@@ -54,6 +54,7 @@ class OrganizationBoardMockMvc {
 
         return objectMapper.readValue(
             mockMvc.perform(builder)
+                .andExpect(status().is(expectedStatus))
                 .andReturn()
                 .getResponse()
                 .getContentAsString(StandardCharsets.UTF_8), new TypeReference<>() {
