@@ -46,8 +46,8 @@ public class OrganizationBoardController {
     }
 
     @Operation(summary = "얼마 남지 않은 게시물을 조회하는 API", description = "dateTime = 현재 시간, size = 불러올 개수")
-    @GetMapping("/api/v2/organization/board/list/i")
-    public ApiResponse<List<OrganizationBoardInfoResponse>> retrieve(RetrieveImminentBoardsRequest request) {
+    @GetMapping("/api/v2/organization/board/list/imminentBoards")
+    public ApiResponse<List<OrganizationBoardInfoResponse>> retrieveImminentBoards(RetrieveImminentBoardsRequest request) {
         return ApiResponse.success(organizationBoardRetrieveService.retrieveImminentBoards(request));
     }
 
