@@ -1,6 +1,7 @@
 package com.potato.domain.board;
 
 import com.potato.domain.board.organization.OrganizationBoard;
+import com.potato.domain.board.organization.OrganizationBoardCreator;
 import com.potato.domain.board.organization.OrganizationBoardRepository;
 import com.potato.domain.board.organization.OrganizationBoardType;
 import org.junit.jupiter.api.AfterEach;
@@ -100,7 +101,7 @@ class OrganizationBoardRepositoryTest {
         organizationBoardRepository.save(organizationBoard);
 
         // when
-        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findBetweenDate(startDate, endDate);
+        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findBetweenDateIncludeOverlapping(startDate, endDate);
 
         // then
         assertThat(organizationBoardList).hasSize(1);
@@ -125,7 +126,7 @@ class OrganizationBoardRepositoryTest {
         organizationBoardRepository.save(organizationBoard);
 
         // when
-        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findBetweenDate(startDate, endDate);
+        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findBetweenDateIncludeOverlapping(startDate, endDate);
 
         // then
         assertThat(organizationBoardList).hasSize(1);
@@ -150,7 +151,7 @@ class OrganizationBoardRepositoryTest {
         organizationBoardRepository.save(organizationBoard);
 
         // when
-        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findBetweenDate(startDate, endDate);
+        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findBetweenDateIncludeOverlapping(startDate, endDate);
 
         // then
         assertThat(organizationBoardList).isEmpty();
@@ -175,7 +176,7 @@ class OrganizationBoardRepositoryTest {
         organizationBoardRepository.save(organizationBoard);
 
         // when
-        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findBetweenDate(startDate, endDate);
+        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findBetweenDateIncludeOverlapping(startDate, endDate);
 
         // then
         assertThat(organizationBoardList).isEmpty();
@@ -200,10 +201,100 @@ class OrganizationBoardRepositoryTest {
         organizationBoardRepository.save(organizationBoard);
 
         // when
-        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findBetweenDate(startDate, endDate);
+        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findBetweenDateIncludeOverlapping(startDate, endDate);
 
         // then
         assertThat(organizationBoardList).hasSize(1);
+    }
+
+    @Test
+    void findBetween_아직_시작하지_않았고_종료날짜가_대상_종료날짜보다_이전인경우_포함된다() {
+        // given
+        LocalDateTime startDateTime = LocalDateTime.of(2021, 4, 2, 0, 0);
+        LocalDateTime endDateTime = LocalDateTime.of(2021, 4, 2, 11, 59);
+        OrganizationBoard organizationBoard = OrganizationBoardCreator.create("subDomain", 1L, "게시물", startDateTime, endDateTime, OrganizationBoardType.RECRUIT);
+        organizationBoardRepository.save(organizationBoard);
+
+        // when
+        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findBetweenDateLimit(LocalDateTime.of(2021, 4, 1, 0, 0), LocalDateTime.of(2021, 4, 3, 0, 0), 1);
+
+        // then
+        assertThat(organizationBoardList).hasSize(1);
+    }
+
+    @Test
+    void findBetween_이미_시작하고_종료날짜가_대상_종료날짜보다_이전인경우_포함된다() {
+        // given
+        LocalDateTime startDateTime = LocalDateTime.of(2021, 3, 31, 11, 59);
+        LocalDateTime endDateTime = LocalDateTime.of(2021, 4, 2, 11, 59);
+        OrganizationBoard organizationBoard = OrganizationBoardCreator.create("subDomain", 1L, "게시물", startDateTime, endDateTime, OrganizationBoardType.RECRUIT);
+        organizationBoardRepository.save(organizationBoard);
+
+        // when
+        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findBetweenDateLimit(LocalDateTime.of(2021, 4, 1, 0, 0), LocalDateTime.of(2021, 4, 3, 0, 0), 1);
+
+        // then
+        assertThat(organizationBoardList).hasSize(1);
+    }
+
+    @Test
+    void findBetween_이미_시작하였고_종료날짜가_대상종료날짜보다_이후인경우_포함되지_않는다() {
+        // given
+        LocalDateTime startDateTime = LocalDateTime.of(2021, 4, 2, 0, 0);
+        LocalDateTime endDateTime = LocalDateTime.of(2021, 4, 3, 0, 1);
+        OrganizationBoard organizationBoard = OrganizationBoardCreator.create("subDomain", 1L, "게시물", startDateTime, endDateTime, OrganizationBoardType.RECRUIT);
+        organizationBoardRepository.save(organizationBoard);
+
+        // when
+        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findBetweenDateLimit(LocalDateTime.of(2021, 4, 1, 0, 0), LocalDateTime.of(2021, 4, 3, 0, 0), 1);
+
+        // then
+        assertThat(organizationBoardList).isEmpty();
+    }
+
+    @Test
+    void findBetween_아예_끝난경우_포함되지_않는다() {
+        // given
+        LocalDateTime startDateTime = LocalDateTime.of(2021, 3, 31, 0, 0);
+        LocalDateTime endDateTime = LocalDateTime.of(2021, 3, 31, 11, 59);
+        OrganizationBoard organizationBoard = OrganizationBoardCreator.create("subDomain", 1L, "게시물", startDateTime, endDateTime, OrganizationBoardType.RECRUIT);
+        organizationBoardRepository.save(organizationBoard);
+
+        // when
+        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findBetweenDateLimit(LocalDateTime.of(2021, 4, 1, 0, 0), LocalDateTime.of(2021, 4, 3, 0, 0), 1);
+
+        // then
+        assertThat(organizationBoardList).isEmpty();
+    }
+
+    @Test
+    void findBetween_거의_종료되가지만_아직_안끝난경우_포함된다() {
+        // given
+        LocalDateTime startDateTime = LocalDateTime.of(2021, 3, 31, 0, 0);
+        LocalDateTime endDateTime = LocalDateTime.of(2021, 4, 1, 0, 1);
+        OrganizationBoard organizationBoard = OrganizationBoardCreator.create("subDomain", 1L, "게시물", startDateTime, endDateTime, OrganizationBoardType.RECRUIT);
+        organizationBoardRepository.save(organizationBoard);
+
+        // when
+        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findBetweenDateLimit(LocalDateTime.of(2021, 4, 1, 0, 0), LocalDateTime.of(2021, 4, 3, 0, 0), 1);
+
+        // then
+        assertThat(organizationBoardList).hasSize(1);
+    }
+
+    @Test
+    void findBetween_아직_시작하지_않았지만_종료날짜가_대상종료날짜보다_이후인경우_포함되지_않는다() {
+        // given
+        LocalDateTime startDateTime = LocalDateTime.of(2021, 4, 2, 0, 0);
+        LocalDateTime endDateTime = LocalDateTime.of(2021, 4, 10, 0, 0);
+        OrganizationBoard organizationBoard = OrganizationBoardCreator.create("subDomain", 1L, "게시물", startDateTime, endDateTime, OrganizationBoardType.RECRUIT);
+        organizationBoardRepository.save(organizationBoard);
+
+        // when
+        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findBetweenDateLimit(LocalDateTime.of(2021, 4, 1, 0, 0), LocalDateTime.of(2021, 4, 3, 0, 0), 1);
+
+        // then
+        assertThat(organizationBoardList).isEmpty();
     }
 
 }
