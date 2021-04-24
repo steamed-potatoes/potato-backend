@@ -3,16 +3,21 @@ package com.potato.service.board;
 import com.potato.domain.board.organization.*;
 import com.potato.service.OrganizationMemberSetUpTest;
 import com.potato.service.board.organization.OrganizationBoardRetrieveService;
+import com.potato.service.board.organization.dto.request.RetrieveImminentBoardsRequest;
 import com.potato.service.board.organization.dto.response.OrganizationBoardInfoResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -146,6 +151,99 @@ class OrganizationBoardRetrieveServiceTest extends OrganizationMemberSetUpTest {
 
         //then
         assertThat(responses).isEmpty();
+    }
+
+    @MethodSource("아직_시작하지_않고_일주일_이내에_종료되는_게시물들")
+    @ParameterizedTest
+    void 얼마남지_않은_게시물_조회시_아직_시작하지_않고_일주일_이전에_종료되는_그룹_게시물들이_포함된다(LocalDateTime startDateTime, LocalDateTime endDateTime, String title) {
+        // given
+        OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, memberId, title, startDateTime, endDateTime, OrganizationBoardType.RECRUIT);
+        organizationBoardRepository.save(organizationBoard);
+
+        RetrieveImminentBoardsRequest request = RetrieveImminentBoardsRequest.testInstance(LocalDateTime.of(2021, 4, 23, 0, 0), 3);
+
+        // when
+        List<OrganizationBoardInfoResponse> organizationBoardInfoResponses = organizationBoardService.retrieveImminentBoards(request);
+
+        // then
+        assertThat(organizationBoardInfoResponses).hasSize(1);
+        assertOrganizationBoardInfo(organizationBoardInfoResponses.get(0), title, startDateTime, endDateTime, subDomain, OrganizationBoardType.RECRUIT);
+    }
+
+    private static Stream<Arguments> 아직_시작하지_않고_일주일_이내에_종료되는_게시물들() {
+        return Stream.of(
+            Arguments.of(LocalDateTime.of(2021, 4, 24, 0, 0), LocalDateTime.of(2021, 4, 29, 11, 59), "게시물1"),
+            Arguments.of(LocalDateTime.of(2021, 4, 23, 0, 1), LocalDateTime.of(2021, 4, 23, 0, 1), "게시물1")
+        );
+    }
+
+    @MethodSource("아직_시작하지_않고_일주일_이후에_종료되는_게시물들")
+    @ParameterizedTest
+    void 얼마남지_않은_게시물_조회시_아직_시작하지_않고_일주일_이후로_종료되는_그룹_게시물들이_포함되지_않는다(LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        // given
+        OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, memberId, "게시물", startDateTime, endDateTime, OrganizationBoardType.RECRUIT);
+        organizationBoardRepository.save(organizationBoard);
+
+        RetrieveImminentBoardsRequest request = RetrieveImminentBoardsRequest.testInstance(LocalDateTime.of(2021, 4, 23, 0, 0), 3);
+
+        // when
+        List<OrganizationBoardInfoResponse> organizationBoardInfoResponses = organizationBoardService.retrieveImminentBoards(request);
+
+        // then
+        assertThat(organizationBoardInfoResponses).isEmpty();
+    }
+
+    private static Stream<Arguments> 아직_시작하지_않고_일주일_이후에_종료되는_게시물들() {
+        return Stream.of(
+            Arguments.of(LocalDateTime.of(2021, 4, 23, 0, 1), LocalDateTime.of(2021, 5, 3, 0, 1)),
+            Arguments.of(LocalDateTime.of(2021, 4, 23, 0, 1), LocalDateTime.of(2021, 5, 1, 0, 0))
+        );
+    }
+
+    @MethodSource("이미_시작하였고_일주일_이내에_종료되는_게시물들")
+    @ParameterizedTest
+    void 얼마남지_않은_게시물_조회시_이미_시작하였고_일주일_이전에_종료되는_그룹_게시물들이_포함된다(LocalDateTime startDateTime, LocalDateTime endDateTime, String title) {
+        // given
+        OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, memberId, title, startDateTime, endDateTime, OrganizationBoardType.RECRUIT);
+        organizationBoardRepository.save(organizationBoard);
+
+        RetrieveImminentBoardsRequest request = RetrieveImminentBoardsRequest.testInstance(LocalDateTime.of(2021, 4, 23, 0, 0), 3);
+
+        // when
+        List<OrganizationBoardInfoResponse> organizationBoardInfoResponses = organizationBoardService.retrieveImminentBoards(request);
+
+        // then
+        assertThat(organizationBoardInfoResponses).hasSize(1);
+        assertOrganizationBoardInfo(organizationBoardInfoResponses.get(0), title, startDateTime, endDateTime, subDomain, OrganizationBoardType.RECRUIT);
+    }
+
+    private static Stream<Arguments> 이미_시작하였고_일주일_이내에_종료되는_게시물들() {
+        return Stream.of(
+            Arguments.of(LocalDateTime.of(2021, 4, 21, 0, 0), LocalDateTime.of(2021, 4, 29, 11, 59), "게시물1"),
+            Arguments.of(LocalDateTime.of(2021, 4, 22, 11, 59), LocalDateTime.of(2021, 4, 23, 0, 1), "게시물1")
+        );
+    }
+
+    @MethodSource("이미_끝난_게시물들")
+    @ParameterizedTest
+    void 얼마남지_않은_게시물_조회시_이미_끝난경우_조회되지_않는다(LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        // given
+        OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, memberId, "게시물", startDateTime, endDateTime, OrganizationBoardType.RECRUIT);
+        organizationBoardRepository.save(organizationBoard);
+
+        RetrieveImminentBoardsRequest request = RetrieveImminentBoardsRequest.testInstance(LocalDateTime.of(2021, 4, 23, 0, 0), 3);
+
+        // when
+        List<OrganizationBoardInfoResponse> organizationBoardInfoResponses = organizationBoardService.retrieveImminentBoards(request);
+
+        assertThat(organizationBoardInfoResponses).isEmpty();
+    }
+
+    private static Stream<Arguments> 이미_끝난_게시물들() {
+        return Stream.of(
+            Arguments.of(LocalDateTime.of(2021, 4, 20, 0, 0), LocalDateTime.of(2021, 4, 22, 23, 50)),
+            Arguments.of(LocalDateTime.of(2021, 4, 21, 0, 0), LocalDateTime.of(2021, 4, 22, 23, 59))
+        );
     }
 
     private void assertOrganizationBoardInfo(OrganizationBoardInfoResponse organizationBoardInfoResponse, String title, LocalDateTime startDateTime, LocalDateTime endDateTime, String subDomain, OrganizationBoardType type) {

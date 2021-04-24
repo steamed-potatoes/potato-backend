@@ -45,6 +45,12 @@ public class OrganizationBoardController {
         return ApiResponse.success(organizationBoardRetrieveService.retrieveBoardsWithPagination(request.getLastOrganizationBoardId(), request.getSize()));
     }
 
+    @Operation(summary = "얼마 남지 않은 게시물을 조회하는 API", description = "dateTime = 현재 시간, size = 불러올 개수")
+    @GetMapping("/api/v2/organization/board/list/i")
+    public ApiResponse<List<OrganizationBoardInfoResponse>> retrieve(RetrieveImminentBoardsRequest request) {
+        return ApiResponse.success(organizationBoardRetrieveService.retrieveImminentBoards(request));
+    }
+
     @Operation(summary = "그룹의 관리자가 그룹의 게시물을 수정하는 API", description = "Bearer 토큰이 필요합니다")
     @Auth(role = ORGANIZATION_ADMIN)
     @PutMapping("/api/v2/organization/board/{subDomain}")
