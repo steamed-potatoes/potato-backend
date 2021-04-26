@@ -200,4 +200,30 @@ class OrganizationBoardControllerTest extends ControllerTestUtils {
         assertThat(response.getData().getTitle()).isEqualTo(updateTitle);
     }
 
+    @Test
+    void 인기있는_게시글_5개를_가져오는_경우() throws Exception {
+        //given
+        String subDomain = "potato";
+        OrganizationBoard organizationBoard1 = OrganizationBoardCreator.create(subDomain, 1L, "title1", OrganizationBoardType.RECRUIT);
+        organizationBoard1.addLike(2L);
+        organizationBoard1.addLike(3L);
+        OrganizationBoard organizationBoard2 = OrganizationBoardCreator.create(subDomain, 1L, "title2", OrganizationBoardType.RECRUIT);
+        organizationBoard2.addLike(2L);
+        OrganizationBoard organizationBoard3 = OrganizationBoardCreator.create(subDomain, 1L, "title3", OrganizationBoardType.RECRUIT);
+        OrganizationBoard organizationBoard4 = OrganizationBoardCreator.create(subDomain, 1L, "title4", OrganizationBoardType.RECRUIT);
+        OrganizationBoard organizationBoard5 = OrganizationBoardCreator.create(subDomain, 1L, "title5", OrganizationBoardType.RECRUIT);
+
+        organizationBoardRepository.saveAll(Arrays.asList(organizationBoard1, organizationBoard2, organizationBoard3, organizationBoard4, organizationBoard5));
+
+        //when
+        ApiResponse<List<OrganizationBoardInfoResponse>> response = organizationBoardMockMvc.retrievePopularBoard(200);
+
+        //then
+        assertThat(response.getData().get(0).getTitle()).isEqualTo(organizationBoard1.getTitle());
+        assertThat(response.getData().get(1).getTitle()).isEqualTo(organizationBoard2.getTitle());
+        assertThat(response.getData().get(2).getTitle()).isEqualTo(organizationBoard5.getTitle());
+        assertThat(response.getData().get(3).getTitle()).isEqualTo(organizationBoard4.getTitle());
+        assertThat(response.getData().get(4).getTitle()).isEqualTo(organizationBoard3.getTitle());
+    }
+
 }

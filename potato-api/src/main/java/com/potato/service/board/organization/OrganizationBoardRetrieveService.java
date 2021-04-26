@@ -49,4 +49,11 @@ public class OrganizationBoardRetrieveService {
             .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public List<OrganizationBoardInfoResponse> retrievePopularBoard() {
+        return organizationBoardRepository.findPopularBoard().stream()
+            .map(OrganizationBoardInfoResponse::of)
+            .collect(Collectors.toList());
+    }
+
 }
