@@ -80,4 +80,12 @@ public class OrganizationBoardRepositoryCustomImpl implements OrganizationBoardR
             .fetch();
     }
 
+    @Override
+    public List<OrganizationBoard> findPopularBoard() {
+        return queryFactory.selectFrom(organizationBoard)
+            .orderBy(organizationBoard.likesCount.desc(), organizationBoard.id.desc())
+            .limit(5)
+            .fetch();
+    }
+
 }

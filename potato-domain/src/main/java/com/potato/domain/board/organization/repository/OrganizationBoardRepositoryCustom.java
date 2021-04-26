@@ -21,4 +21,6 @@ public interface OrganizationBoardRepositoryCustom {
 
     List<OrganizationBoard> findBetweenDateLimit(LocalDateTime startDateTime, LocalDateTime endDateTime, int size);
 
+    List<OrganizationBoard> findPopularBoard();
+
 }
