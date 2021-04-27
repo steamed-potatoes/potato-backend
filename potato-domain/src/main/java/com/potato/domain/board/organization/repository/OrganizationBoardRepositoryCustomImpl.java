@@ -85,7 +85,8 @@ public class OrganizationBoardRepositoryCustomImpl implements OrganizationBoardR
         return queryFactory.selectFrom(organizationBoard)
             .orderBy(
                 organizationBoard.likesCount.desc(),
-                organizationBoard.id.desc())
+                organizationBoard.id.desc()
+            )
             .limit(size)
             .fetch();
     }

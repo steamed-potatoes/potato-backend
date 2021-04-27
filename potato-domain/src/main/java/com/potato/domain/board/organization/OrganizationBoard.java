@@ -20,7 +20,7 @@ import java.util.List;
 @Table(
     indexes = {
         @Index(name = "idx_organization_board_1", columnList = "subDomain"),
-        @Index(name = "idx_organization_board_2", columnList = "likesCount")
+        @Index(name = "idx_organization_board_2", columnList = "likesCount,id")
     }
 )
 public class OrganizationBoard extends BaseTimeEntity {
