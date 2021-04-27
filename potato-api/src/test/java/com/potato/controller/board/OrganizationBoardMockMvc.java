@@ -96,4 +96,19 @@ class OrganizationBoardMockMvc {
         );
     }
 
+    public ApiResponse<List<OrganizationBoardInfoResponse>> retrievePopularBoard(int expectedStatus) throws Exception {
+        MockHttpServletRequestBuilder builder = get("/api/v2/organization/board/popular/list")
+            .param("size", String.valueOf(5))
+            .contentType(MediaType.APPLICATION_JSON);
+
+        return objectMapper.readValue(
+            mockMvc.perform(builder)
+                .andExpect(status().is(expectedStatus))
+                .andReturn()
+                .getResponse()
+                .getContentAsString(StandardCharsets.UTF_8), new TypeReference<>() {
+            }
+        );
+    }
+
 }

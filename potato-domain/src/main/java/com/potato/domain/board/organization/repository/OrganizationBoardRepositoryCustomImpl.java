@@ -59,13 +59,35 @@ public class OrganizationBoardRepositoryCustomImpl implements OrganizationBoardR
     }
 
     @Override
-    public List<OrganizationBoard> findBetweenDate(LocalDate startDate, LocalDate endDate) {
+    public List<OrganizationBoard> findBetweenDateIncludeOverlapping(LocalDate startDate, LocalDate endDate) {
         return queryFactory.selectFrom(organizationBoard)
             .innerJoin(organizationBoard.board, board).fetchJoin()
             .where(
                 board.dateTimeInterval.startDateTime.before(LocalDateTime.of(endDate, LocalTime.MAX)),
                 board.dateTimeInterval.endDateTime.after(LocalDateTime.of(startDate, LocalTime.MIN))
             ).fetch();
+    }
+
+    @Override
+    public List<OrganizationBoard> findBetweenDateLimit(LocalDateTime startDateTime, LocalDateTime endDateTime, int size) {
+        return queryFactory.selectFrom(organizationBoard)
+            .innerJoin(organizationBoard.board, board).fetchJoin()
+            .where(
+                board.dateTimeInterval.endDateTime.between(startDateTime, endDateTime)
+            )
+            .orderBy(board.dateTimeInterval.endDateTime.asc())
+            .limit(size)
+            .fetch();
+    }
+
+    @Override
+    public List<OrganizationBoard> findBoardsOrderByLikesCountLimitSize(int size) {
+        return queryFactory.selectFrom(organizationBoard)
+            .orderBy(
+                organizationBoard.likesCount.desc(),
+                organizationBoard.id.desc())
+            .limit(size)
+            .fetch();
     }
 
 }

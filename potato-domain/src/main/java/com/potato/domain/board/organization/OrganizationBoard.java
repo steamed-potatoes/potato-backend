@@ -18,7 +18,10 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(
-    indexes = @Index(name = "idx_organization_board_1", columnList = "subDomain")
+    indexes = {
+        @Index(name = "idx_organization_board_1", columnList = "subDomain"),
+        @Index(name = "idx_organization_board_2", columnList = "likesCount")
+    }
 )
 public class OrganizationBoard extends BaseTimeEntity {
 

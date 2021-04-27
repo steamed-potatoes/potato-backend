@@ -3,6 +3,7 @@ package com.potato.controller.board.organization;
 import com.potato.config.argumentResolver.MemberId;
 import com.potato.config.interceptor.auth.Auth;
 import com.potato.controller.ApiResponse;
+import com.potato.service.board.organization.OrganizationBoardRetrieveService;
 import com.potato.service.board.organization.OrganizationBoardService;
 import com.potato.service.board.organization.dto.request.*;
 import com.potato.service.board.organization.dto.response.OrganizationBoardInfoResponse;
@@ -22,6 +23,7 @@ import static com.potato.config.interceptor.auth.Auth.Role.ORGANIZATION_ADMIN;
 public class OrganizationBoardController {
 
     private final OrganizationBoardService organizationBoardService;
+    private final OrganizationBoardRetrieveService organizationBoardRetrieveService;
 
     @Operation(summary = "그룹의 관리자가 새로운 그룹의 게시물을 등록하는 API", description = "Bearer 토큰이 필요합니다")
     @Auth(role = ORGANIZATION_ADMIN)
@@ -34,13 +36,19 @@ public class OrganizationBoardController {
     @Operation(summary = "특정 그룹의 게시물을 조회하는 API")
     @GetMapping("/api/v2/organization/board")
     public ApiResponse<OrganizationBoardWithCreatorInfoResponse> retrieveOrganizationBoard(@RequestParam Long organizationBoardId) {
-        return ApiResponse.success(organizationBoardService.retrieveBoard(organizationBoardId));
+        return ApiResponse.success(organizationBoardRetrieveService.retrieveBoard(organizationBoardId));
     }
 
     @Operation(summary = "그룹의 게시물을 스크롤 페이지네이션 기반으로 조회하는 API", description = "lastOrganizationBoardId = 가장 마지막 게시물의 id, size = 받아올 게시물의 개수")
     @GetMapping("/api/v2/organization/board/list")
     public ApiResponse<List<OrganizationBoardInfoResponse>> retrieveLatestOrganizationBoardList(@Valid RetrieveLatestBoardsRequest request) {
-        return ApiResponse.success(organizationBoardService.retrieveBoardsWithPagination(request.getLastOrganizationBoardId(), request.getSize()));
+        return ApiResponse.success(organizationBoardRetrieveService.retrieveBoardsWithPagination(request.getLastOrganizationBoardId(), request.getSize()));
+    }
+
+    @Operation(summary = "얼마 남지 않은 게시물을 조회하는 API", description = "dateTime = 현재 시간, size = 불러올 개수")
+    @GetMapping("/api/v2/organization/board/list/imminentBoards")
+    public ApiResponse<List<OrganizationBoardInfoResponse>> retrieveImminentBoards(@Valid RetrieveImminentBoardsRequest request) {
+        return ApiResponse.success(organizationBoardRetrieveService.retrieveImminentBoards(request));
     }
 
     @Operation(summary = "그룹의 관리자가 그룹의 게시물을 수정하는 API", description = "Bearer 토큰이 필요합니다")
@@ -74,6 +82,12 @@ public class OrganizationBoardController {
     public ApiResponse<String> cancelOrganizationBoard(@Valid LikeOrganizationBoardRequest request, @MemberId Long memberId) {
         organizationBoardService.cancelLikeOrganizationBoard(request, memberId);
         return ApiResponse.OK;
+    }
+
+    @Operation(summary = "인기있는 게시물 조회하는 API")
+    @GetMapping("/api/v2/organization/board/popular/list")
+    public ApiResponse<List<OrganizationBoardInfoResponse>> retrievePopularBoard(@Valid RetrievePopularOrganizationBoardRequest request) {
+        return ApiResponse.success(organizationBoardRetrieveService.retrievePopularBoard(request.getSize()));
     }
 
 }

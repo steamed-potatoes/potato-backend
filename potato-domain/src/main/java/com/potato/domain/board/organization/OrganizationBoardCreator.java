@@ -19,4 +19,15 @@ public class OrganizationBoardCreator {
             .build();
     }
 
+    public static OrganizationBoard create(String subDomain, Long memberId, String title, LocalDateTime startDateTime, LocalDateTime endDateTime, OrganizationBoardType type) {
+        return OrganizationBoard.builder()
+            .subDomain(subDomain)
+            .memberId(memberId)
+            .title(title)
+            .type(type)
+            .startDateTime(startDateTime)
+            .endDateTime(endDateTime)
+            .build();
+    }
+
 }

@@ -21,7 +21,7 @@ public class ScheduleService {
 
     @Transactional(readOnly = true)
     public ScheduleResponse getDefaultSchedule(ScheduleRequest request) {
-        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findBetweenDate(request.getStartDate(), request.getEndDate());
+        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findBetweenDateIncludeOverlapping(request.getStartDate(), request.getEndDate());
         List<AdminBoard> adminBoardList = adminBoardRepository.findBetweenDate(request.getStartDate(), request.getEndDate());
         return ScheduleResponse.of(organizationBoardList, adminBoardList);
     }

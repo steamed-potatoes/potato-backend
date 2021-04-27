@@ -44,4 +44,15 @@ public class OrganizationRepositoryCustomImpl implements OrganizationRepositoryC
             ).fetch();
     }
 
+    @Override
+    public List<Organization> findOrganizationOrderByFollowersCountLimit(int size) {
+        return queryFactory.selectFrom(organization)
+            .orderBy(
+                organization.followersCount.desc(),
+                organization.id.desc()
+            )
+            .limit(size)
+            .fetch();
+    }
+
 }

@@ -1,13 +1,20 @@
-# Potato Backend
+# Potato Backend 
 
-![Generic badge](https://img.shields.io/badge/version-0.2.0-brightgreen.svg)
+![Generic badge](https://img.shields.io/badge/version-0.2.1-orange.svg)
 [![codecov](https://codecov.io/gh/steamed-potatoes/potato-backend/branch/develop/graph/badge.svg?token=ACoWRzqGBl)](https://codecov.io/gh/steamed-potatoes/potato-backend)
 
-## Health Check (Development Server)
+---
+## Development Server
 
 [API Server](https://api.pmarket.space/ping)
 
+![API Server](https://img.shields.io/website?down_message=OFF&style=flat-square&up_message=ON&url=https%3A%2F%2Fapi.pmarket.space%2Fping)
+
 [Admin Server](https://test.pmarket.space/ping)
+
+![Admin Server](https://img.shields.io/website?down_message=OFF&style=flat-square&up_message=ON&url=https%3A%2F%2Ftest.pmarket.space%2Fping)
+
+---
 
 ## Technologies
 
@@ -34,6 +41,8 @@
 ### CI/CD
 - GitHub Action CI/CD
 
+---
+
 ## Getting Started
 ```shell
 git clone https://github.com/steamed-potatoes/potato-backend
@@ -55,5 +64,7 @@ java -jar potato-admin/build/libs/potato-admin.jar
 docker-compose up --build
 ```
 
-## Contact
-will.seungho@gmail.com
+---
+
+## Contacts
+- will.seungho@gmail.com
