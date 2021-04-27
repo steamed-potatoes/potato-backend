@@ -256,7 +256,7 @@ class OrganizationBoardRetrieveServiceTest extends OrganizationMemberSetUpTest {
         organizationBoardRepository.saveAll(Arrays.asList(organizationBoard1, organizationBoard2));
 
         // when
-        List<OrganizationBoardInfoResponse> responses = organizationBoardService.retrievePopularBoard();
+        List<OrganizationBoardInfoResponse> responses = organizationBoardService.retrievePopularBoard(2);
 
         // then
         assertThat(responses).hasSize(2);
@@ -275,7 +275,7 @@ class OrganizationBoardRetrieveServiceTest extends OrganizationMemberSetUpTest {
         organizationBoardRepository.saveAll(Arrays.asList(organizationBoard1, organizationBoard2));
 
         // when
-        List<OrganizationBoardInfoResponse> responses = organizationBoardService.retrievePopularBoard();
+        List<OrganizationBoardInfoResponse> responses = organizationBoardService.retrievePopularBoard(3);
 
         // then
         assertThat(responses).hasSize(2);
@@ -298,7 +298,7 @@ class OrganizationBoardRetrieveServiceTest extends OrganizationMemberSetUpTest {
         organizationBoardRepository.saveAll(Arrays.asList(organizationBoard1, organizationBoard2, organizationBoard3, organizationBoard4, organizationBoard5, organizationBoard6));
 
         // when
-        List<OrganizationBoardInfoResponse> responses = organizationBoardService.retrievePopularBoard();
+        List<OrganizationBoardInfoResponse> responses = organizationBoardService.retrievePopularBoard(5);
 
         // then
         assertThat(responses).hasSize(5);

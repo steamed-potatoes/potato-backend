@@ -86,8 +86,8 @@ public class OrganizationBoardController {
 
     @Operation(summary = "인기있는 게시물 조회하는 API")
     @GetMapping("/api/v2/organization/board/popular/list")
-    public ApiResponse<List<OrganizationBoardInfoResponse>> retrievePopularBoard() {
-        return ApiResponse.success(organizationBoardRetrieveService.retrievePopularBoard());
+    public ApiResponse<List<OrganizationBoardInfoResponse>> retrievePopularBoard(@Valid RetrievePopularOrganizationBoardRequest request) {
+        return ApiResponse.success(organizationBoardRetrieveService.retrievePopularBoard(request.getSize()));
     }
 
 }
