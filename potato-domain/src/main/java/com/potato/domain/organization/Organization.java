@@ -19,7 +19,10 @@ import java.util.stream.Collectors;
 @Entity
 @Table(
     uniqueConstraints = @UniqueConstraint(name = "uni_organization_1", columnNames = "subDomain"),
-    indexes = @Index(name = "idx_organization_1", columnList = "category")
+    indexes = {
+        @Index(name = "idx_organization_1", columnList = "category"),
+        @Index(name = "idx_organization_2", columnList = "followersCount")
+    }
 )
 public class Organization extends BaseTimeEntity {
 

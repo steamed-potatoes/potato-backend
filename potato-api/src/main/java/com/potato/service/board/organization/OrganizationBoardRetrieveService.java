@@ -50,8 +50,8 @@ public class OrganizationBoardRetrieveService {
     }
 
     @Transactional(readOnly = true)
-    public List<OrganizationBoardInfoResponse> retrievePopularBoard() {
-        return organizationBoardRepository.findPopularBoard().stream()
+    public List<OrganizationBoardInfoResponse> retrievePopularBoard(int size) {
+        return organizationBoardRepository.findBoardsOrderByLikesCountLimitSize(size).stream()
             .map(OrganizationBoardInfoResponse::of)
             .collect(Collectors.toList());
     }

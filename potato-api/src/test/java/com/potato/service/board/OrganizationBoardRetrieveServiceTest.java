@@ -247,57 +247,63 @@ class OrganizationBoardRetrieveServiceTest extends OrganizationMemberSetUpTest {
     }
 
     @Test
-    void 인기있는_게시물_5개_조회해오기() {
+    void 인기있는_게시물조회시_좋아요가_많은_순으로_조회한다() {
         // given
-        OrganizationBoard organizationBoard1 = OrganizationBoardCreator.create(subDomain, memberId, "title1", OrganizationBoardType.RECRUIT);
+        OrganizationBoard organizationBoard1 = OrganizationBoardCreator.create(subDomain, memberId, "title2", OrganizationBoardType.RECRUIT);
         organizationBoard1.addLike(2L);
-        organizationBoard1.addLike(3L);
-        organizationBoard1.addLike(4L);
-        OrganizationBoard organizationBoard2 = OrganizationBoardCreator.create(subDomain, memberId, "title2", OrganizationBoardType.RECRUIT);
-        organizationBoard2.addLike(2L);
-        OrganizationBoard organizationBoard3 = OrganizationBoardCreator.create(subDomain, memberId, "title3", OrganizationBoardType.RECRUIT);
+        OrganizationBoard organizationBoard2 = OrganizationBoardCreator.create(subDomain, memberId, "title3", OrganizationBoardType.RECRUIT);
 
-        organizationBoardRepository.saveAll(Arrays.asList(organizationBoard1, organizationBoard2, organizationBoard3));
+        organizationBoardRepository.saveAll(Arrays.asList(organizationBoard1, organizationBoard2));
 
         // when
-        List<OrganizationBoardInfoResponse> responses = organizationBoardService.retrievePopularBoard();
+        List<OrganizationBoardInfoResponse> responses = organizationBoardService.retrievePopularBoard(2);
 
         // then
-        assertThat(responses).hasSize(3);
+        assertThat(responses).hasSize(2);
         assertOrganizationBoardInfo(responses.get(0), organizationBoard1.getTitle(), organizationBoard1.getStartDateTime(),
             organizationBoard1.getEndDateTime(), organizationBoard1.getSubDomain(), organizationBoard1.getType());
         assertOrganizationBoardInfo(responses.get(1), organizationBoard2.getTitle(), organizationBoard2.getStartDateTime(),
             organizationBoard2.getEndDateTime(), organizationBoard2.getSubDomain(), organizationBoard2.getType());
-        assertOrganizationBoardInfo(responses.get(2), organizationBoard3.getTitle(), organizationBoard3.getStartDateTime(),
-            organizationBoard3.getEndDateTime(), organizationBoard3.getSubDomain(), organizationBoard3.getType());
     }
 
     @Test
-    void 인기있는_게시물_6개중에_5개_조회해오기_만약_같으면_최신게시글_가져오기() {
+    void 인기있는_게시물_조회시_좋아요수가_같으면_최신순부터_조회한다() {
         // given
-        OrganizationBoard organizationBoard1 = OrganizationBoardCreator.create(subDomain, memberId, "title1", OrganizationBoardType.RECRUIT);
-        organizationBoard1.addLike(2L);
-        organizationBoard1.addLike(3L);
-        organizationBoard1.addLike(4L);
-        OrganizationBoard organizationBoard2 = OrganizationBoardCreator.create(subDomain, memberId, "title2", OrganizationBoardType.RECRUIT);
-        organizationBoard2.addLike(2L);
-        OrganizationBoard organizationBoard3 = OrganizationBoardCreator.create(subDomain, memberId, "title3", OrganizationBoardType.RECRUIT);
-        organizationBoard3.addLike(2L);
-        OrganizationBoard organizationBoard4 = OrganizationBoardCreator.create(subDomain, memberId, "title4", OrganizationBoardType.RECRUIT);
-        organizationBoard4.addLike(2L);
-        OrganizationBoard organizationBoard5 = OrganizationBoardCreator.create(subDomain, memberId, "title5", OrganizationBoardType.RECRUIT);
-        organizationBoard5.addLike(2L);
-        OrganizationBoard organizationBoard6 = OrganizationBoardCreator.create(subDomain, memberId, "title6", OrganizationBoardType.RECRUIT);
+        OrganizationBoard organizationBoard1 = OrganizationBoardCreator.create(subDomain, memberId, "더 오래된 게시물", OrganizationBoardType.RECRUIT);
+        OrganizationBoard organizationBoard2 = OrganizationBoardCreator.create(subDomain, memberId, "더 최신의 게시물", OrganizationBoardType.RECRUIT);
+
+        organizationBoardRepository.saveAll(Arrays.asList(organizationBoard1, organizationBoard2));
+
+        // when
+        List<OrganizationBoardInfoResponse> responses = organizationBoardService.retrievePopularBoard(3);
+
+        // then
+        assertThat(responses).hasSize(2);
+        assertOrganizationBoardInfo(responses.get(0), organizationBoard2.getTitle(), organizationBoard2.getStartDateTime(),
+            organizationBoard2.getEndDateTime(), organizationBoard2.getSubDomain(), organizationBoard2.getType());
+        assertOrganizationBoardInfo(responses.get(1), organizationBoard1.getTitle(), organizationBoard1.getStartDateTime(),
+            organizationBoard1.getEndDateTime(), organizationBoard1.getSubDomain(), organizationBoard1.getType());
+    }
+
+    @Test
+    void 인기있는_게시물_조회시_상위의_5개만_불러온다() {
+        // given
+        OrganizationBoard organizationBoard1 = OrganizationBoardCreator.create(subDomain, memberId, "게시물1", OrganizationBoardType.RECRUIT);
+        OrganizationBoard organizationBoard2 = OrganizationBoardCreator.create(subDomain, memberId, "게시물2", OrganizationBoardType.RECRUIT);
+        OrganizationBoard organizationBoard3 = OrganizationBoardCreator.create(subDomain, memberId, "게시물3", OrganizationBoardType.RECRUIT);
+        OrganizationBoard organizationBoard4 = OrganizationBoardCreator.create(subDomain, memberId, "게시물4", OrganizationBoardType.RECRUIT);
+        OrganizationBoard organizationBoard5 = OrganizationBoardCreator.create(subDomain, memberId, "게시물5", OrganizationBoardType.RECRUIT);
+        OrganizationBoard organizationBoard6 = OrganizationBoardCreator.create(subDomain, memberId, "게시물6", OrganizationBoardType.RECRUIT);
 
         organizationBoardRepository.saveAll(Arrays.asList(organizationBoard1, organizationBoard2, organizationBoard3, organizationBoard4, organizationBoard5, organizationBoard6));
 
         // when
-        List<OrganizationBoardInfoResponse> responses = organizationBoardService.retrievePopularBoard();
+        List<OrganizationBoardInfoResponse> responses = organizationBoardService.retrievePopularBoard(5);
 
         // then
         assertThat(responses).hasSize(5);
-        assertOrganizationBoardInfo(responses.get(0), organizationBoard1.getTitle(), organizationBoard1.getStartDateTime(),
-            organizationBoard1.getEndDateTime(), organizationBoard1.getSubDomain(), organizationBoard1.getType());
+        assertOrganizationBoardInfo(responses.get(0), organizationBoard6.getTitle(), organizationBoard6.getStartDateTime(),
+            organizationBoard6.getEndDateTime(), organizationBoard6.getSubDomain(), organizationBoard6.getType());
         assertOrganizationBoardInfo(responses.get(1), organizationBoard5.getTitle(), organizationBoard5.getStartDateTime(),
             organizationBoard5.getEndDateTime(), organizationBoard5.getSubDomain(), organizationBoard5.getType());
         assertOrganizationBoardInfo(responses.get(2), organizationBoard4.getTitle(), organizationBoard4.getStartDateTime(),

@@ -201,4 +201,45 @@ class OrganizationRetrieveServiceTest extends MemberSetupTest {
         assertThat(responses).isEmpty();
     }
 
+    @Test
+    void 팔로우가_많은_그룹수부터_조회한다() {
+        // given
+        Organization organization1 = OrganizationCreator.create("first");
+        organization1.addFollow(1L);
+        organization1.addFollow(2L);
+
+        Organization organization2 = OrganizationCreator.create("second");
+        organization2.addFollow(1L);
+
+        Organization organization3 = OrganizationCreator.create("third");
+
+        organizationRepository.saveAll(Arrays.asList(organization1, organization2, organization3));
+
+        // when
+        List<OrganizationInfoResponse> organizationInfoResponses = organizationRetrieveService.retrievePopularOrganizations(3);
+
+        // then
+        assertThat(organizationInfoResponses).hasSize(3);
+        assertOrganizationInfoResponse(organizationInfoResponses.get(0), organization1.getSubDomain());
+        assertOrganizationInfoResponse(organizationInfoResponses.get(1), organization2.getSubDomain());
+        assertOrganizationInfoResponse(organizationInfoResponses.get(2), organization3.getSubDomain());
+    }
+
+    @Test
+    void 그룹의_팔로우_수가_같은_경우_최신순으로_조회된다() {
+        // given
+        Organization organization1 = OrganizationCreator.create("first");
+        Organization organization2 = OrganizationCreator.create("second");
+
+        organizationRepository.saveAll(Arrays.asList(organization1, organization2));
+
+        // when
+        List<OrganizationInfoResponse> organizationInfoResponses = organizationRetrieveService.retrievePopularOrganizations(2);
+
+        // then
+        assertThat(organizationInfoResponses).hasSize(2);
+        assertOrganizationInfoResponse(organizationInfoResponses.get(0), organization2.getSubDomain());
+        assertOrganizationInfoResponse(organizationInfoResponses.get(1), organization1.getSubDomain());
+    }
+
 }
