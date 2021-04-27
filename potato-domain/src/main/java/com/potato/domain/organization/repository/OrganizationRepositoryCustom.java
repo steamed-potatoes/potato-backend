@@ -12,4 +12,6 @@ public interface OrganizationRepositoryCustom {
 
     List<Organization> findAllByFollowMemberId(Long memberId);
 
+    List<Organization> findOrganizationOrderByFollowersCountLimit(int size);
+
 }

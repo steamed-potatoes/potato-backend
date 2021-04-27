@@ -81,10 +81,12 @@ public class OrganizationBoardRepositoryCustomImpl implements OrganizationBoardR
     }
 
     @Override
-    public List<OrganizationBoard> findPopularBoard() {
+    public List<OrganizationBoard> findBoardsOrderByLikesCountLimitSize(int size) {
         return queryFactory.selectFrom(organizationBoard)
-            .orderBy(organizationBoard.likesCount.desc(), organizationBoard.id.desc())
-            .limit(5)
+            .orderBy(
+                organizationBoard.likesCount.desc(),
+                organizationBoard.id.desc())
+            .limit(size)
             .fetch();
     }
 

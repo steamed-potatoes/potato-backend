@@ -7,6 +7,7 @@ import com.potato.service.member.dto.response.MemberInfoResponse;
 import com.potato.service.organization.OrganizationRetrieveService;
 import com.potato.service.organization.OrganizationService;
 import com.potato.service.organization.dto.request.CreateOrganizationRequest;
+import com.potato.service.organization.dto.request.RetrievePopularOrganizationsRequest;
 import com.potato.service.organization.dto.response.OrganizationInfoResponse;
 import com.potato.service.organization.dto.response.OrganizationWithMembersInfoResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -43,6 +44,12 @@ public class OrganizationController {
     @GetMapping("/api/v1/organization/list")
     public ApiResponse<List<OrganizationInfoResponse>> getOrganizations() {
         return ApiResponse.success(organizationRetrieveService.getOrganizationsInfo());
+    }
+
+    @Operation(summary = "인기있는 그룹 리스트를 조회한다")
+    @GetMapping("/api/v1/organization/list/popular")
+    public ApiResponse<List<OrganizationInfoResponse>> retrievePopularOrganizations(@Valid RetrievePopularOrganizationsRequest request) {
+        return ApiResponse.success(organizationRetrieveService.retrievePopularOrganizations(request.getSize()));
     }
 
     @Operation(summary = "내가 속한 그룹의 리스트를 불러오는 API", description = "Bearer 토큰이 필요합니다")

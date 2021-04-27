@@ -41,6 +41,13 @@ public class OrganizationRetrieveService {
     }
 
     @Transactional(readOnly = true)
+    public List<OrganizationInfoResponse> retrievePopularOrganizations(int size) {
+        return organizationRepository.findOrganizationOrderByFollowersCountLimit(size).stream()
+            .map(OrganizationInfoResponse::of)
+            .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
     public List<MemberInfoResponse> getOrganizationFollowMember(String subDomain) {
         Organization organization = OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, subDomain);
         return memberRepository.findAllById(organization.getFollowIds()).stream()
