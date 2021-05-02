@@ -2,7 +2,7 @@ package com.potato.service.board.organization;
 
 import com.potato.domain.board.organization.OrganizationBoard;
 import com.potato.domain.board.organization.OrganizationBoardRepository;
-import com.potato.domain.comment.BoardCommentType;
+import com.potato.domain.board.organization.OrganizationBoardType;
 import com.potato.exception.NotFoundException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -33,6 +33,13 @@ public final class OrganizationBoardServiceUtils {
             return organizationBoardRepository.findBoardsOrderByDesc(size);
         }
         return organizationBoardRepository.findBoardsLessThanOrderByIdDescLimit(lastOrganizationBoardId, size);
+    }
+
+    public static List<OrganizationBoard> findOrganizationBoardWithPaginationByType(OrganizationBoardRepository organizationBoardRepository, OrganizationBoardType type, long lastOrganizationBoardId, int size) {
+        if (lastOrganizationBoardId == 0) {
+            return organizationBoardRepository.findBoardsByTypeOrderByDesc(type, size);
+        }
+        return organizationBoardRepository.findBoardsByTypeLessThanOrderByIdDescLimit(type, lastOrganizationBoardId, size);
     }
 
     public static void validateExistsBoard(OrganizationBoardRepository organizationBoardRepository, Long organizationBoardId) {

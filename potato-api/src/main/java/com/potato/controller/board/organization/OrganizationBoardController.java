@@ -42,7 +42,7 @@ public class OrganizationBoardController {
     @Operation(summary = "그룹의 게시물을 스크롤 페이지네이션 기반으로 조회하는 API", description = "lastOrganizationBoardId = 가장 마지막 게시물의 id, size = 받아올 게시물의 개수")
     @GetMapping("/api/v2/organization/board/list")
     public ApiResponse<List<OrganizationBoardInfoResponse>> retrieveLatestOrganizationBoardList(@Valid RetrieveLatestBoardsRequest request) {
-        return ApiResponse.success(organizationBoardRetrieveService.retrieveBoardsWithPagination(request.getLastOrganizationBoardId(), request.getSize()));
+        return ApiResponse.success(organizationBoardRetrieveService.retrieveBoardsWithPagination(request.getType(), request.getLastOrganizationBoardId(), request.getSize()));
     }
 
     @Operation(summary = "얼마 남지 않은 게시물을 조회하는 API", description = "dateTime = 현재 시간, size = 불러올 개수")

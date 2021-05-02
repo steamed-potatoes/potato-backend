@@ -46,7 +46,7 @@ class OrganizationBoardRetrieveServiceTest extends OrganizationMemberSetUpTest {
         organizationBoardRepository.saveAll(Arrays.asList(organizationBoard1, organizationBoard2, organizationBoard3));
 
         //when
-        List<OrganizationBoardInfoResponse> responses = organizationBoardService.retrieveBoardsWithPagination(0, 3);
+        List<OrganizationBoardInfoResponse> responses = organizationBoardService.retrieveBoardsWithPagination(null, 0, 3);
 
         //then
         assertThat(responses).hasSize(3);
@@ -61,7 +61,7 @@ class OrganizationBoardRetrieveServiceTest extends OrganizationMemberSetUpTest {
     @Test
     void 가장_최신_게시물_3개_불러올때_게시물이_없을_경우_빈리스트_반환() {
         //given
-        List<OrganizationBoardInfoResponse> responses = organizationBoardService.retrieveBoardsWithPagination(0, 3);
+        List<OrganizationBoardInfoResponse> responses = organizationBoardService.retrieveBoardsWithPagination(null, 0, 3);
 
         //then
         assertThat(responses).isEmpty();
@@ -80,7 +80,7 @@ class OrganizationBoardRetrieveServiceTest extends OrganizationMemberSetUpTest {
         organizationBoardRepository.saveAll(Arrays.asList(organizationBoard1, organizationBoard2, organizationBoard3, organizationBoard4, organizationBoard5));
 
         //when
-        List<OrganizationBoardInfoResponse> responses = organizationBoardService.retrieveBoardsWithPagination(organizationBoard4.getId(), 3);
+        List<OrganizationBoardInfoResponse> responses = organizationBoardService.retrieveBoardsWithPagination(null, organizationBoard4.getId(), 3);
 
         //then
         assertThat(responses).hasSize(3);
@@ -105,7 +105,7 @@ class OrganizationBoardRetrieveServiceTest extends OrganizationMemberSetUpTest {
         organizationBoardRepository.saveAll(Arrays.asList(organizationBoard1, organizationBoard2, organizationBoard3, organizationBoard4, organizationBoard5));
 
         //when
-        List<OrganizationBoardInfoResponse> responses = organizationBoardService.retrieveBoardsWithPagination(organizationBoard4.getId(), 2);
+        List<OrganizationBoardInfoResponse> responses = organizationBoardService.retrieveBoardsWithPagination(null, organizationBoard4.getId(), 2);
 
         //then
         assertThat(responses).hasSize(2);
@@ -128,7 +128,7 @@ class OrganizationBoardRetrieveServiceTest extends OrganizationMemberSetUpTest {
         organizationBoardRepository.saveAll(Arrays.asList(organizationBoard1, organizationBoard2, organizationBoard3, organizationBoard4, organizationBoard5));
 
         //when
-        List<OrganizationBoardInfoResponse> responses = organizationBoardService.retrieveBoardsWithPagination(organizationBoard5.getId(), 3);
+        List<OrganizationBoardInfoResponse> responses = organizationBoardService.retrieveBoardsWithPagination(null, organizationBoard5.getId(), 3);
 
         //then
         assertThat(responses).hasSize(3);
@@ -147,10 +147,26 @@ class OrganizationBoardRetrieveServiceTest extends OrganizationMemberSetUpTest {
         organizationBoardRepository.save(organizationBoard1);
 
         //when
-        List<OrganizationBoardInfoResponse> responses = organizationBoardService.retrieveBoardsWithPagination(organizationBoard1.getId(), 3);
+        List<OrganizationBoardInfoResponse> responses = organizationBoardService.retrieveBoardsWithPagination(null, organizationBoard1.getId(), 3);
 
         //then
         assertThat(responses).isEmpty();
+    }
+
+    @Test
+    void 카테고리가_정해진_경우_카테고리만_조회한다() {
+        //given
+        OrganizationBoard organizationBoard1 = OrganizationBoardCreator.create(subDomain, memberId, "title1", OrganizationBoardType.RECRUIT);
+        OrganizationBoard organizationBoard2 = OrganizationBoardCreator.create(subDomain, memberId, "title2", OrganizationBoardType.EVENT);
+        organizationBoardRepository.saveAll(Arrays.asList(organizationBoard1, organizationBoard2));
+
+        //when
+        List<OrganizationBoardInfoResponse> responses = organizationBoardService.retrieveBoardsWithPagination(OrganizationBoardType.RECRUIT, 0, 3);
+
+        //then
+        assertThat(responses).hasSize(1);
+        assertOrganizationBoardInfo(responses.get(0), organizationBoard1.getTitle(), organizationBoard1.getStartDateTime(),
+            organizationBoard1.getEndDateTime(), organizationBoard1.getSubDomain(), organizationBoard1.getType());
     }
 
     @MethodSource("아직_시작하지_않고_일주일_이내에_종료되는_게시물들")
