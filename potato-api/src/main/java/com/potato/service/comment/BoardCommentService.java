@@ -5,7 +5,6 @@ import com.potato.domain.board.organization.OrganizationBoardRepository;
 import com.potato.domain.comment.BoardComment;
 import com.potato.domain.comment.BoardCommentRepository;
 import com.potato.domain.comment.BoardCommentType;
-import com.potato.service.board.organization.OrganizationBoardServiceUtils;
 import com.potato.service.comment.dto.request.AddBoardCommentRequest;
 import com.potato.service.comment.dto.response.BoardCommentResponse;
 import lombok.RequiredArgsConstructor;

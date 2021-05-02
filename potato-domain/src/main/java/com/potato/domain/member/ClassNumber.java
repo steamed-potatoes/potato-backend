@@ -1,6 +1,6 @@
 package com.potato.domain.member;
 
-import com.potato.exception.ValidationException;
+import com.potato.exception.model.ValidationException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

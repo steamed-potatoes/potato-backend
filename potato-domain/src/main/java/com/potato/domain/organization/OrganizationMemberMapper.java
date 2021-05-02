@@ -1,8 +1,8 @@
 package com.potato.domain.organization;
 
 import com.potato.domain.BaseTimeEntity;
-import com.potato.exception.ForbiddenException;
-import com.potato.exception.NotFoundException;
+import com.potato.exception.model.ForbiddenException;
+import com.potato.exception.model.NotFoundException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

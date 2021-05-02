@@ -1,6 +1,6 @@
 package com.potato.domain.member;
 
-import com.potato.exception.ValidationException;
+import com.potato.exception.model.ValidationException;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

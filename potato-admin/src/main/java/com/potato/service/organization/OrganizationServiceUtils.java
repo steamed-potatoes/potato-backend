@@ -2,7 +2,7 @@ package com.potato.service.organization;
 
 import com.potato.domain.organization.Organization;
 import com.potato.domain.organization.OrganizationRepository;
-import com.potato.exception.NotFoundException;
+import com.potato.exception.model.NotFoundException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 

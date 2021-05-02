@@ -1,4 +1,4 @@
-package com.potato.exception;
+package com.potato.exception.model;
 
 import com.potato.exception.ErrorCode;
 import lombok.Getter;
@@ -11,10 +11,6 @@ public abstract class CustomException extends RuntimeException {
     public CustomException(String message, ErrorCode errorCode) {
         super(message);
         this.errorCode = errorCode;
-    }
-
-    public CustomException(String message) {
-        super(message);
     }
 
 }

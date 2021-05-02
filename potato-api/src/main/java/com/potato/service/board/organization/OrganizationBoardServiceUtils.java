@@ -3,7 +3,7 @@ package com.potato.service.board.organization;
 import com.potato.domain.board.organization.OrganizationBoard;
 import com.potato.domain.board.organization.OrganizationBoardRepository;
 import com.potato.domain.board.organization.OrganizationBoardType;
-import com.potato.exception.NotFoundException;
+import com.potato.exception.model.NotFoundException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 

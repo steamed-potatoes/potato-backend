@@ -1,7 +1,7 @@
 package com.potato.external.google;
 
-import com.potato.exception.BadGatewayException;
-import com.potato.exception.ValidationException;
+import com.potato.exception.model.BadGatewayException;
+import com.potato.exception.model.ValidationException;
 import com.potato.external.google.dto.component.GoogleAccessTokenComponent;
 import com.potato.external.google.dto.component.GoogleUserInfoComponent;
 import com.potato.external.google.dto.request.GoogleAccessTokenRequest;

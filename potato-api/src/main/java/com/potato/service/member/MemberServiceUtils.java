@@ -2,8 +2,8 @@ package com.potato.service.member;
 
 import com.potato.domain.member.Member;
 import com.potato.domain.member.MemberRepository;
-import com.potato.exception.ConflictException;
-import com.potato.exception.NotFoundException;
+import com.potato.exception.model.ConflictException;
+import com.potato.exception.model.NotFoundException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 

@@ -1,8 +1,8 @@
 package com.potato.service.member;
 
 import com.potato.domain.member.*;
-import com.potato.exception.ConflictException;
-import com.potato.exception.NotFoundException;
+import com.potato.exception.model.ConflictException;
+import com.potato.exception.model.NotFoundException;
 import com.potato.service.member.dto.request.SignUpMemberRequest;
 import com.potato.service.member.dto.request.UpdateMemberRequest;
 import com.potato.service.member.dto.response.MemberInfoResponse;

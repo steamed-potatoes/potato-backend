@@ -1,6 +1,6 @@
 package com.potato.domain.common;
 
-import com.potato.exception.ValidationException;
+import com.potato.exception.model.ValidationException;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;

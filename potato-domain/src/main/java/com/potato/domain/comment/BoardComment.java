@@ -1,7 +1,8 @@
 package com.potato.domain.comment;
 
 import com.potato.domain.BaseTimeEntity;
-import com.potato.exception.ValidationException;
+import com.potato.exception.ErrorCode;
+import com.potato.exception.model.ValidationException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,8 +10,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.potato.exception.ErrorCode.COMMENT_DEPTH_EXCEPTION;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -66,7 +65,7 @@ public class BoardComment extends BaseTimeEntity {
 
     public void addChildComment(Long memberId, String content) {
         if (!this.isRootComment()) {
-            throw new ValidationException(String.format("댓글은 2 depth 까지 가능합니다. memberId: (%s) content: (%s)", memberId, content), COMMENT_DEPTH_EXCEPTION);
+            throw new ValidationException(String.format("댓글은 2 depth 까지 가능합니다. memberId: (%s) content: (%s)", memberId, content), ErrorCode.VALIDATION_COMMENT_DEPTH_EXCEPTION);
         }
         this.childComments.add(new BoardComment(this, this.type, this.boardId, memberId, content, this.depth + 1));
     }

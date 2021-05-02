@@ -5,7 +5,7 @@ import com.potato.domain.board.organization.OrganizationBoardRepository;
 import com.potato.domain.comment.BoardComment;
 import com.potato.domain.comment.BoardCommentRepository;
 import com.potato.domain.comment.BoardCommentType;
-import com.potato.exception.NotFoundException;
+import com.potato.exception.model.NotFoundException;
 import com.potato.service.board.admin.AdminBoardServiceUtils;
 import com.potato.service.board.organization.OrganizationBoardServiceUtils;
 import lombok.AccessLevel;

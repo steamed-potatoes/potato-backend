@@ -1,4 +1,6 @@
-package com.potato.exception;
+package com.potato.exception.model;
+
+import com.potato.exception.ErrorCode;
 
 public class UnAuthorizedException extends CustomException {
 

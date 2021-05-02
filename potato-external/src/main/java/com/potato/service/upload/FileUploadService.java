@@ -1,8 +1,8 @@
 package com.potato.service.upload;
 
 import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.potato.exception.BadGatewayException;
-import com.potato.exception.ValidationException;
+import com.potato.exception.model.BadGatewayException;
+import com.potato.exception.model.ValidationException;
 import com.potato.external.s3.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
