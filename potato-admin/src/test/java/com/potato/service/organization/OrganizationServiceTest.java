@@ -4,7 +4,7 @@ import com.potato.domain.organization.Organization;
 import com.potato.domain.organization.OrganizationCategory;
 import com.potato.domain.organization.OrganizationCreator;
 import com.potato.domain.organization.OrganizationRepository;
-import com.potato.exception.NotFoundException;
+import com.potato.exception.model.NotFoundException;
 import com.potato.service.AdminSetupTest;
 import com.potato.service.organization.dto.request.UpdateCategoryRequest;
 import com.potato.service.organization.dto.response.OrganizationInfoResponse;

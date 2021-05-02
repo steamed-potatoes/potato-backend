@@ -2,7 +2,7 @@ package com.potato.controller.comment;
 
 import com.potato.controller.ApiResponse;
 import com.potato.controller.ControllerTestUtils;
-import com.potato.controller.advice.ErrorCode;
+import com.potato.exception.ErrorCode;
 import com.potato.domain.board.organization.OrganizationBoard;
 import com.potato.domain.board.organization.OrganizationBoardCreator;
 import com.potato.domain.board.organization.OrganizationBoardRepository;

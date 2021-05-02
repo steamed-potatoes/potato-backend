@@ -3,7 +3,7 @@ package com.potato.service.organization;
 import com.potato.domain.member.Member;
 import com.potato.domain.member.MemberCreator;
 import com.potato.domain.organization.*;
-import com.potato.exception.NotFoundException;
+import com.potato.exception.model.NotFoundException;
 import com.potato.service.MemberSetupTest;
 import com.potato.service.member.dto.response.MemberInfoResponse;
 import com.potato.service.organization.dto.response.OrganizationWithMembersInfoResponse;

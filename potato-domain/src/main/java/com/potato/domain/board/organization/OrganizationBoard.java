@@ -2,8 +2,8 @@ package com.potato.domain.board.organization;
 
 import com.potato.domain.BaseTimeEntity;
 import com.potato.domain.board.Board;
-import com.potato.exception.ConflictException;
-import com.potato.exception.NotFoundException;
+import com.potato.exception.model.ConflictException;
+import com.potato.exception.model.NotFoundException;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -74,7 +74,7 @@ public class OrganizationBoard extends BaseTimeEntity {
 
     public void addLike(Long memberId) {
         if (hasAlreadyLike(memberId)) {
-            throw new ConflictException(String.format("이미 멤버 (%s)는 게시물 (%s)에 좋아요를 눌렀습니다", memberId, this.id), "이미 해당 게시물을 좋아하고 있습니다.");
+            throw new ConflictException(String.format("이미 멤버 (%s)는 게시물 (%s)에 좋아요를 눌렀습니다", memberId, this.id));
         }
         OrganizationBoardLike like = OrganizationBoardLike.of(this, memberId);
         this.organizationBoardLikeList.add(like);

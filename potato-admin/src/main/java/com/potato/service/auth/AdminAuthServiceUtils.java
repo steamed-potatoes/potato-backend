@@ -2,7 +2,7 @@ package com.potato.service.auth;
 
 import com.potato.domain.administrator.Administrator;
 import com.potato.domain.administrator.AdministratorRepository;
-import com.potato.exception.NotFoundException;
+import com.potato.exception.model.NotFoundException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 

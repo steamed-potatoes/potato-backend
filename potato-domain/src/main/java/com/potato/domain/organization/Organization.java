@@ -1,9 +1,10 @@
 package com.potato.domain.organization;
 
 import com.potato.domain.BaseTimeEntity;
-import com.potato.exception.ConflictException;
-import com.potato.exception.ForbiddenException;
-import com.potato.exception.NotFoundException;
+import com.potato.exception.model.ConflictException;
+import com.potato.exception.ErrorCode;
+import com.potato.exception.model.ForbiddenException;
+import com.potato.exception.model.NotFoundException;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -145,7 +146,7 @@ public class Organization extends BaseTimeEntity {
 
     public void validateAdminMember(Long memberId) {
         if (!isAdmin(memberId)) {
-            throw new ForbiddenException(String.format("멤버 (%s)는 그룹(%s)의 관리자가 아닙니다", memberId, subDomain), "그룹의 관리자만이 할 수 있습니다.");
+            throw new ForbiddenException(String.format("멤버 (%s)는 그룹(%s)의 관리자가 아닙니다", memberId, subDomain), ErrorCode.FORBIDDEN_NOT_ORGANIZATION_ADMIN_EXCEPTION);
         }
     }
 
@@ -156,7 +157,7 @@ public class Organization extends BaseTimeEntity {
 
     private void validateIsMemberOrPendingInOrganization(Long memberId) {
         if (isMemberOrPendingInOrganization(memberId)) {
-            throw new ConflictException(String.format("이미 그룹(%s)에 가입되거나 가입신청 한 유저(%s)입니다.", subDomain, memberId), "이미 그룹에 가입하거나 가입 신청하였습니다.");
+            throw new ConflictException(String.format("이미 그룹(%s)에 가입되거나 가입신청 한 유저(%s)입니다.", subDomain, memberId));
         }
     }
 
@@ -167,7 +168,7 @@ public class Organization extends BaseTimeEntity {
 
     public void validateIsMemberInOrganization(Long memberId) {
         if (!isMemberInOrganization(memberId)) {
-            throw new ForbiddenException(String.format("해당하는 멤버 (%s)는 그룹 (%s)의 소속이 아닙니다", memberId, this.subDomain), "회원은 그룹의 소속이 아닙니다.");
+            throw new ForbiddenException(String.format("해당하는 멤버 (%s)는 그룹 (%s)의 소속이 아닙니다", memberId, this.subDomain), ErrorCode.FORBIDDEN_NOT_ORGANIZATION_MEMBER_EXCEPTION);
         }
     }
 

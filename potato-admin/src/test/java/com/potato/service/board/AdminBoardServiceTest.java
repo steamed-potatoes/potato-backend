@@ -9,7 +9,7 @@ import com.potato.domain.board.admin.AdminBoardRepository;
 import com.potato.domain.board.admin.DeleteAdminBoard;
 import com.potato.domain.board.admin.DeleteAdminBoardRepository;
 import com.potato.domain.board.organization.*;
-import com.potato.exception.NotFoundException;
+import com.potato.exception.model.NotFoundException;
 import com.potato.service.AdminSetupTest;
 import com.potato.service.board.dto.request.CreateAdminBoardRequest;
 import com.potato.service.board.dto.request.UpdateAdminBoardRequest;
