@@ -2,12 +2,12 @@ package com.potato.exception;
 
 public class NotFoundException extends CustomException {
 
-    public NotFoundException(String message, String description) {
-        super(message, description);
+    public NotFoundException(String message, ErrorCode errorCode) {
+        super(message, errorCode);
     }
 
     public NotFoundException(String message) {
-        super(message);
+        super(message, ErrorCode.NOT_FOUND_EXCEPTION);
     }
 
 }

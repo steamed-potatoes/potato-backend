@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 
 import java.util.regex.Pattern;
 
+import static com.potato.exception.ErrorCode.VALIDATION_SUBDOMAIN_EXCEPTION;
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 class SubDomainValidator {
 
@@ -13,7 +15,7 @@ class SubDomainValidator {
 
     static void validateSubDomain(String subDomain) {
         if (!SUB_DOMAIN_PATTERN.matcher(subDomain).matches()) {
-            throw new ValidationException(String.format("허용되지 않은 SubDomain (%s) 입니다", subDomain), "허용되지 않은 도메인 입니다");
+            throw new ValidationException(String.format("허용되지 않은 SubDomain (%s) 입니다", subDomain), VALIDATION_SUBDOMAIN_EXCEPTION);
         }
     }
 

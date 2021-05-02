@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import static com.potato.exception.ErrorCode.*;
+
 @RequiredArgsConstructor
 @Component
 public class WebClientGoogleApiCallerImpl implements GoogleApiCaller {
@@ -31,7 +33,7 @@ public class WebClientGoogleApiCallerImpl implements GoogleApiCaller {
             .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .body(Mono.just(createGoogleAccessTokenRequest(code, redirectUri)), GoogleAccessTokenRequest.class)
             .retrieve()
-            .onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(new ValidationException(String.format("잘못된 입력이 들어왔습니다 (%s) (%s)", code, redirectUri))))
+            .onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(new ValidationException(String.format("잘못된 입력이 들어왔습니다 (%s) (%s)", code, redirectUri), VALIDATION_GOOGLE_CODE_EXCEPTION)))
             .onStatus(HttpStatus::is5xxServerError, clientResponse -> Mono.error(new BadGatewayException("구글 토큰 가져오는 중 에러가 발생하였습니다")))
             .bodyToMono(GoogleAccessTokenResponse.class)
             .block();

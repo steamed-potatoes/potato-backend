@@ -10,6 +10,8 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.potato.exception.ErrorCode.COMMENT_DEPTH_EXCEPTION;
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -64,7 +66,7 @@ public class BoardComment extends BaseTimeEntity {
 
     public void addChildComment(Long memberId, String content) {
         if (!this.isRootComment()) {
-            throw new ValidationException(String.format("댓글은 2 depth 까지 가능합니다. memberId: (%s) content: (%s)", memberId, content), "댓글은 대댓글까지만 가능합니다.");
+            throw new ValidationException(String.format("댓글은 2 depth 까지 가능합니다. memberId: (%s) content: (%s)", memberId, content), COMMENT_DEPTH_EXCEPTION);
         }
         this.childComments.add(new BoardComment(this, this.type, this.boardId, memberId, content, this.depth + 1));
     }

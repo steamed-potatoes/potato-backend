@@ -17,7 +17,7 @@ final class BoardCommentServiceUtils {
     static BoardComment findBoardCommentById(BoardCommentRepository boardCommentRepository, Long boardCommentId) {
         BoardComment boardComment = boardCommentRepository.findBoardCommentById(boardCommentId);
         if (boardComment == null) {
-            throw new NotFoundException(String.format("해당하는 id (%s)를 가진 댓글이 없습니다", boardCommentId), "해당하는 댓글이 존재하지 않습니다.");
+            throw new NotFoundException(String.format("해당하는 id (%s)를 가진 댓글이 없습니다", boardCommentId));
         }
         return boardComment;
     }
@@ -25,7 +25,7 @@ final class BoardCommentServiceUtils {
     static BoardComment findBoardCommentByIdAndMemberId(BoardCommentRepository boardCommentRepository, Long boardCommentId, Long memberId) {
         BoardComment boardComment = boardCommentRepository.findBoardCommentByIdAndMemberId(boardCommentId, memberId);
         if (boardComment == null) {
-            throw new NotFoundException(String.format("멤버 (%s)가 작성한 id(%s)를 가진 댓글이 없습니다", memberId, boardCommentId), "회원이 작성한 해당하는 댓글이 존재하지 않습니다.");
+            throw new NotFoundException(String.format("멤버 (%s)가 작성한 id(%s)를 가진 댓글이 없습니다", memberId, boardCommentId));
         }
         return boardComment;
     }
