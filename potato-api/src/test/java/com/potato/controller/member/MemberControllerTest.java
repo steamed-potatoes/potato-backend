@@ -2,7 +2,7 @@ package com.potato.controller.member;
 
 import com.potato.controller.ApiResponse;
 import com.potato.controller.ControllerTestUtils;
-import com.potato.controller.advice.ErrorCode;
+import com.potato.exception.ErrorCode;
 import com.potato.domain.member.Member;
 import com.potato.domain.member.MemberCreator;
 import com.potato.domain.member.MemberMajor;

@@ -1,6 +1,6 @@
 package com.potato.domain.member;
 
-import com.potato.exception.ValidationException;
+import com.potato.exception.model.ValidationException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.time.LocalDateTime;
+
+import static com.potato.exception.ErrorCode.VALIDATION_CLASS_NUMBER_EXCEPTION;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -32,7 +34,7 @@ public class ClassNumber {
 
     private void validateIsInRange(Integer classNumber) {
         if (classNumber < getMinClassNumber() || classNumber >= getMaxClassNumber()) {
-            throw new ValidationException(String.format("학번 (%d)은 허용되지 않은 범위입니다.", classNumber), "잘못된 학번입니다.");
+            throw new ValidationException(String.format("잘못된 학번 (%s) 입니다. (학번의 범위를 벗어났습니다)", classNumber), VALIDATION_CLASS_NUMBER_EXCEPTION);
         }
     }
 
@@ -47,7 +49,7 @@ public class ClassNumber {
 
     private void validateLength(Integer classNumber) {
         if (String.valueOf(classNumber).length() != 9) {
-            throw new ValidationException(String.format("(%d) 학번은 9자리가 아닙니다", classNumber), "잘못된 학번입니다.");
+            throw new ValidationException(String.format("잘못된 학번 (%s)입니다. (학번이 9자리가 아닙니다)", classNumber), VALIDATION_CLASS_NUMBER_EXCEPTION);
         }
     }
 

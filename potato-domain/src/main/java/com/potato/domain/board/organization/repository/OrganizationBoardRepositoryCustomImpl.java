@@ -1,6 +1,7 @@
 package com.potato.domain.board.organization.repository;
 
 import com.potato.domain.board.organization.OrganizationBoard;
+import com.potato.domain.board.organization.OrganizationBoardType;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -47,11 +48,36 @@ public class OrganizationBoardRepositoryCustomImpl implements OrganizationBoardR
     }
 
     @Override
+    public List<OrganizationBoard> findBoardsByTypeOrderByDesc(OrganizationBoardType type, int size) {
+        return queryFactory.selectFrom(organizationBoard)
+            .innerJoin(organizationBoard.board, board).fetchJoin()
+            .where(
+                organizationBoard.type.eq(type)
+            )
+            .orderBy(organizationBoard.id.desc())
+            .limit(size)
+            .fetch();
+    }
+
+    @Override
     public List<OrganizationBoard> findBoardsLessThanOrderByIdDescLimit(long lastOrganizationBoardId, int size) {
         return queryFactory.selectFrom(organizationBoard)
             .innerJoin(organizationBoard.board, board).fetchJoin()
             .where(
                 organizationBoard.id.lt(lastOrganizationBoardId)
+            )
+            .orderBy(organizationBoard.id.desc())
+            .limit(size)
+            .fetch();
+    }
+
+    @Override
+    public List<OrganizationBoard> findBoardsByTypeLessThanOrderByIdDescLimit(OrganizationBoardType type, long lastOrganizationBoardId, int size) {
+        return queryFactory.selectFrom(organizationBoard)
+            .innerJoin(organizationBoard.board, board).fetchJoin()
+            .where(
+                organizationBoard.id.lt(lastOrganizationBoardId),
+                organizationBoard.type.eq(type)
             )
             .orderBy(organizationBoard.id.desc())
             .limit(size)
@@ -85,7 +111,8 @@ public class OrganizationBoardRepositoryCustomImpl implements OrganizationBoardR
         return queryFactory.selectFrom(organizationBoard)
             .orderBy(
                 organizationBoard.likesCount.desc(),
-                organizationBoard.id.desc())
+                organizationBoard.id.desc()
+            )
             .limit(size)
             .fetch();
     }

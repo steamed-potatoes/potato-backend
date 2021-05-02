@@ -3,7 +3,7 @@ package com.potato.service.auth;
 import com.potato.domain.administrator.Administrator;
 import com.potato.domain.administrator.AdministratorCreator;
 import com.potato.domain.administrator.AdministratorRepository;
-import com.potato.exception.NotFoundException;
+import com.potato.exception.model.NotFoundException;
 import com.potato.external.google.GoogleApiCaller;
 import com.potato.external.google.dto.response.GoogleAccessTokenResponse;
 import com.potato.external.google.dto.response.GoogleUserInfoResponse;

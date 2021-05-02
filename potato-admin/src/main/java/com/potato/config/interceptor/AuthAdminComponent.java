@@ -3,7 +3,7 @@ package com.potato.config.interceptor;
 import com.potato.config.session.AdminMemberSession;
 import com.potato.config.session.SessionConstants;
 import com.potato.domain.administrator.AdministratorRepository;
-import com.potato.exception.UnAuthorizedException;
+import com.potato.exception.model.UnAuthorizedException;
 import com.potato.service.auth.AdminAuthServiceUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;

@@ -1,6 +1,7 @@
 package com.potato.domain.board.organization.repository;
 
 import com.potato.domain.board.organization.OrganizationBoard;
+import com.potato.domain.board.organization.OrganizationBoardType;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,7 +16,11 @@ public interface OrganizationBoardRepositoryCustom {
 
     List<OrganizationBoard> findBoardsOrderByDesc(int size);
 
+    List<OrganizationBoard> findBoardsByTypeOrderByDesc(OrganizationBoardType type, int size);
+
     List<OrganizationBoard> findBoardsLessThanOrderByIdDescLimit(long lastOrganizationBoardId, int size);
+
+    List<OrganizationBoard> findBoardsByTypeLessThanOrderByIdDescLimit(OrganizationBoardType type, long lastOrganizationBoardId, int size);
 
     List<OrganizationBoard> findBetweenDateIncludeOverlapping(LocalDate startDate, LocalDate endDate);
 

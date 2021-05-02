@@ -12,7 +12,7 @@ import com.potato.domain.comment.BoardComment;
 import com.potato.domain.comment.BoardCommentCreator;
 import com.potato.domain.comment.BoardCommentRepository;
 import com.potato.domain.comment.BoardCommentType;
-import com.potato.exception.NotFoundException;
+import com.potato.exception.model.NotFoundException;
 import com.potato.service.OrganizationMemberSetUpTest;
 import com.potato.service.comment.dto.request.AddBoardCommentRequest;
 import com.potato.service.comment.dto.response.BoardCommentResponse;
@@ -23,7 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;

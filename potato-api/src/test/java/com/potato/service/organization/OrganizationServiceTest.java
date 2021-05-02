@@ -2,11 +2,10 @@ package com.potato.service.organization;
 
 import com.potato.domain.member.Member;
 import com.potato.domain.member.MemberCreator;
-import com.potato.domain.organization.OrganizationFollower;
 import com.potato.domain.organization.*;
-import com.potato.exception.ConflictException;
-import com.potato.exception.ForbiddenException;
-import com.potato.exception.NotFoundException;
+import com.potato.exception.model.ConflictException;
+import com.potato.exception.model.ForbiddenException;
+import com.potato.exception.model.NotFoundException;
 import com.potato.service.MemberSetupTest;
 import com.potato.service.organization.dto.request.CreateOrganizationRequest;
 import org.junit.jupiter.api.AfterEach;

@@ -1,8 +1,8 @@
 package com.potato.service.upload;
 
 import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.potato.exception.BadGatewayException;
-import com.potato.exception.ValidationException;
+import com.potato.exception.model.BadGatewayException;
+import com.potato.exception.model.ValidationException;
 import com.potato.external.s3.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,6 +13,8 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+
+import static com.potato.exception.ErrorCode.VALIDATION_FILE_FORMAT_EXCEPTION;
 
 @RequiredArgsConstructor
 @Service
@@ -40,7 +42,7 @@ public class FileUploadService {
 
     private void validateFileType(String contentType) {
         if (!imageContentTypes.contains(contentType)) {
-            throw new ValidationException(String.format("허용되지 않은 파일 형식 (%s) 입니다", contentType));
+            throw new ValidationException(String.format("허용되지 않은 파일 형식 (%s) 입니다", contentType), VALIDATION_FILE_FORMAT_EXCEPTION);
         }
     }
 
@@ -52,7 +54,7 @@ public class FileUploadService {
         try {
             return fileName.substring(fileName.lastIndexOf("."));
         } catch (StringIndexOutOfBoundsException e) {
-            throw new ValidationException(String.format("잘못된 형식의 파일 (%s) 입니다", fileName));
+            throw new ValidationException(String.format("잘못된 형식의 파일 (%s) 입니다", fileName), VALIDATION_FILE_FORMAT_EXCEPTION);
         }
     }
 

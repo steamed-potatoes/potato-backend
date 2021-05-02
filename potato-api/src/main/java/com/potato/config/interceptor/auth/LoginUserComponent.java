@@ -2,7 +2,7 @@ package com.potato.config.interceptor.auth;
 
 import com.potato.config.session.MemberSession;
 import com.potato.config.session.SessionConstants;
-import com.potato.exception.UnAuthorizedException;
+import com.potato.exception.model.UnAuthorizedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.session.Session;

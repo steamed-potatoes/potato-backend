@@ -1,5 +1,6 @@
 package com.potato.controller;
 
+import com.potato.exception.ErrorCode;
 import lombok.*;
 
 @ToString
@@ -18,8 +19,12 @@ public class ApiResponse<T> {
         return new ApiResponse<>("", "", data);
     }
 
-    public static <T> ApiResponse<T> error(String code, String message) {
-        return new ApiResponse<>(code, message, null);
+    public static ApiResponse<Object> error(ErrorCode errorCode) {
+        return new ApiResponse<>(errorCode.getCode(), errorCode.getMessage(), null);
+    }
+
+    public static ApiResponse<Object> error(ErrorCode errorCode, String message) {
+        return new ApiResponse<>(errorCode.getCode(), message, null);
     }
 
 }

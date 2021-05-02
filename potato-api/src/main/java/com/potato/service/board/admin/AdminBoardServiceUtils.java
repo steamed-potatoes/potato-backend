@@ -2,7 +2,7 @@ package com.potato.service.board.admin;
 
 import com.potato.domain.board.admin.AdminBoard;
 import com.potato.domain.board.admin.AdminBoardRepository;
-import com.potato.exception.NotFoundException;
+import com.potato.exception.model.NotFoundException;
 
 public class AdminBoardServiceUtils {
 
