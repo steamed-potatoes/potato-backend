@@ -15,6 +15,8 @@ import static com.potato.config.interceptor.auth.Auth.Role.ORGANIZATION_MEMBER;
 @Component
 public class AuthInterceptor extends HandlerInterceptorAdapter {
 
+    private static final String MEMBER_ID = "memberId";
+
     private final LoginUserComponent loginUserComponent;
     private final OrganizationComponent organizationComponent;
 
@@ -30,7 +32,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
             return true;
         }
         Long memberId = loginUserComponent.getMemberId(request);
-        request.setAttribute("memberId", memberId);
+        request.setAttribute(MEMBER_ID, memberId);
 
         // 그룹의 관리자인지 확인
         if (auth.role().compareTo(ORGANIZATION_ADMIN) == 0) {

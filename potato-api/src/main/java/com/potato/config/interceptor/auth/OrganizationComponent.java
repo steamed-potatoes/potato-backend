@@ -1,5 +1,7 @@
 package com.potato.config.interceptor.auth;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.potato.domain.organization.Organization;
 import com.potato.domain.organization.OrganizationRepository;
 import com.potato.service.organization.OrganizationServiceUtils;
@@ -14,6 +16,9 @@ import java.util.Map;
 @Component
 public class OrganizationComponent {
 
+    private static final String ORGANIZATION_SUBDOMAIN = "subDomain";
+
+    private final ObjectMapper objectMapper;
     private final OrganizationRepository organizationRepository;
 
     public void validateOrganizationAdmin(HttpServletRequest request, Long memberId) {
@@ -27,9 +32,10 @@ public class OrganizationComponent {
     }
 
     private Organization getOrganization(HttpServletRequest request) {
-        Object path = request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
-        final Map<String, String> pathVariables = (Map<String, String>) path;
-        String subDomain = pathVariables.get("subDomain");
+        final Map<String, String> pathVariables = objectMapper.convertValue(
+            request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE), new TypeReference<>() {
+            });
+        String subDomain = pathVariables.get(ORGANIZATION_SUBDOMAIN);
         return OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, subDomain);
     }
 

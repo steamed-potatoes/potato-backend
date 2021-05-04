@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SwaggerConfig {
 
-    private final static String securityKey = "BearerKey";
+    private static final String securityKey = "BearerKey";
 
     @Bean
     public OpenAPI customOpenAPI() {

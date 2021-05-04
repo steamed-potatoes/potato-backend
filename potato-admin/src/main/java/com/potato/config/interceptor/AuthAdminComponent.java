@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 @Component
 public class AuthAdminComponent {
 
-    private final static String BEARER_TOKEN = "Bearer ";
+    private static final String BEARER_TOKEN = "Bearer ";
 
     private final SessionRepository<? extends Session> sessionRepository;
     private final AdministratorRepository administratorRepository;

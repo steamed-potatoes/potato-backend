@@ -8,6 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.session.Session;
 import org.springframework.session.SessionRepository;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -15,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 @Component
 public class LoginUserComponent {
 
-    private final static String BEARER_TOKEN = "Bearer ";
+    private static final String BEARER_TOKEN = "Bearer ";
 
     private final SessionRepository<? extends Session> sessionRepository;
 
@@ -30,17 +31,14 @@ public class LoginUserComponent {
     }
 
     private Session extractSessionFromHeader(String header) {
-        if (header == null) {
-            throw new UnAuthorizedException("세션이 없습니다");
+        if (StringUtils.hasText(header) && header.startsWith(BEARER_TOKEN)) {
+            Session session = sessionRepository.getSession(header.split(BEARER_TOKEN)[1]);
+            if (session == null) {
+                throw new UnAuthorizedException(String.format("잘못된 세션입니다 (%s)", header));
+            }
+            return session;
         }
-        if (!header.startsWith(BEARER_TOKEN)) {
-            throw new UnAuthorizedException(String.format("잘못된 세션입니다 (%s)", header));
-        }
-        Session session = sessionRepository.getSession(header.split(BEARER_TOKEN)[1]);
-        if (session == null) {
-            throw new UnAuthorizedException(String.format("잘못된 세션입니다 (%s)", header));
-        }
-        return session;
+        throw new UnAuthorizedException(String.format("잘못된 세션입니다 (%s)", header));
     }
 
 }

@@ -16,8 +16,8 @@ import static com.potato.exception.ErrorCode.VALIDATION_CLASS_NUMBER_EXCEPTION;
 @Embeddable
 public class ClassNumber {
 
-    private final static int DIGIT = 100_000;
-    private final static int MIN_YEAR = 1953;
+    private static final int DIGIT = 100_000;
+    private static final int MIN_YEAR = 1953;
 
     @Column(length = 9)
     private Integer classNumber;

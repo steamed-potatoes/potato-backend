@@ -6,6 +6,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SessionConstants {
 
-    public final static String AUTH_SESSION = "ADMIN_SESSION";
+    public static final String AUTH_SESSION = "ADMIN_SESSION";
 
 }
