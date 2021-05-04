@@ -59,6 +59,24 @@ class OrganizationRetrieveServiceTest extends MemberSetupTest {
     }
 
     @Test
+    void 특정_그룹_조회시_가입_승인_대기중인_경우_동아리_멤버에서_조회되지_않는다() {
+        // given
+        Member pendingMember = memberRepository.save(MemberCreator.create("test@gmail.com"));
+
+        Organization organization = OrganizationCreator.create(subDomain);
+        organization.addAdmin(memberId);
+        organization.addPending(pendingMember.getId());
+        organizationRepository.save(organization);
+
+        // when
+        OrganizationWithMembersInfoResponse response = organizationRetrieveService.getDetailOrganizationInfo(subDomain);
+
+        // then
+        assertThat(response.getMembers()).hasSize(1);
+        assertThat(response.getMembers().get(0).getId()).isEqualTo(memberId);
+    }
+
+    @Test
     void 특정_그룹을_조회시_해당하는_그룹이_없는경우() {
         // when & then
         assertThatThrownBy(

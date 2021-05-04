@@ -193,6 +193,7 @@ public class Organization extends BaseTimeEntity {
 
     public List<Long> getMemberIds() {
         return this.organizationMemberMapperList.stream()
+            .filter(organizationMemberMapper -> organizationMemberMapper.isBelongToOrganization(organizationMemberMapper.getMemberId()))
             .map(OrganizationMemberMapper::getMemberId)
             .collect(Collectors.toList());
     }
