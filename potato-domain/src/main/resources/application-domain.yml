@@ -15,9 +15,6 @@ spring:
   datasource:
     hikari:
       auto-commit: false
-logging:
-  level:
-    org.hibernate.type: trace
 ---
 spring:
   profiles: local
@@ -38,6 +35,9 @@ spring:
       ddl-auto: create
   flyway:
     enabled: false
+logging:
+  level:
+    org.hibernate.type: trace
 ---
 spring:
   profiles: dev
