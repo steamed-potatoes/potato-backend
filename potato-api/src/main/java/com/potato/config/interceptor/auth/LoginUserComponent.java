@@ -32,7 +32,7 @@ public class LoginUserComponent {
 
     private Session extractSessionFromHeader(String header) {
         if (StringUtils.hasText(header) && header.startsWith(BEARER_TOKEN)) {
-            Session session = sessionRepository.getSession(header.split(BEARER_TOKEN)[1]);
+            Session session = sessionRepository.findById(header.split(BEARER_TOKEN)[1]);
             if (session == null) {
                 throw new UnAuthorizedException(String.format("잘못된 세션입니다 (%s)", header));
             }

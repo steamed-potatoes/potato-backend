@@ -25,7 +25,6 @@ spring:
       settings:
         web-allow-others: true
   datasource:
-    data: classpath:schema/schema-session.sql
     hikari:
       driver-class-name: org.h2.Driver
       jdbc-url: jdbc:h2:mem:potato;MODE=MYSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;

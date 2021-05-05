@@ -6,6 +6,9 @@ cat /GIT-TOKEN.txt | docker login ghcr.io -u USERNAME --password-stdin
 
 EXIST_BLUE=$(docker-compose -p ${DOCKER_APP_NAME}-blue -f docker-compose.blue.yml ps | grep Up)
 
+echo "레디스 Up"
+docker-compose up -d --build
+
 if [ -z "$EXIST_BLUE" ]; then
     echo "Blue Up"
     docker-compose -p ${DOCKER_APP_NAME}-blue -f docker-compose.blue.yml up -d --build
