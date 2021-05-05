@@ -9,5 +9,5 @@ spring:
 spring:
   profiles: dev
   redis:
-    host: localhost
+    host: redis
     port: 6379
