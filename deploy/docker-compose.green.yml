@@ -12,3 +12,8 @@ services:
       - 9002:9000
     environment:
       - "SPRING_PROFILES_ACTIVE=dev"
+  redis:
+    image: redis
+    command: redis-server --port 6379
+    ports:
+      - 6379:6379

@@ -8,6 +8,8 @@ spring:
       - thirdparty
       - rds
       - cloud
+  session:
+    store-type: redis
   servlet:
     multipart:
       max-file-size: 10MB
