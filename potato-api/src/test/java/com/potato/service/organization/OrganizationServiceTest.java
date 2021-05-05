@@ -245,6 +245,20 @@ class OrganizationServiceTest extends MemberSetupTest {
     }
 
     @Test
+    void 특정_그룹_팔로우를_이미_했는데_한번_더_팔로우하면_에러_발생() {
+        //given
+        Organization organization = OrganizationCreator.create(subDomain);
+        organization.addAdmin(memberId);
+        organization.addFollow(memberId);
+        organizationRepository.save(organization);
+
+        // when & then
+        assertThatThrownBy(
+            () -> organizationService.followOrganization(subDomain, memberId)
+        ).isInstanceOf(ConflictException.class);
+    }
+
+    @Test
     void 없는_조직을_팔로우하면_에러가_발생한다() {
         //given
         //when & then
