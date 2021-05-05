@@ -21,7 +21,6 @@ public class SwaggerConfig {
             .components(new Components()
                 .addSecuritySchemes(securityKey,
                     new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")))
-            .addSecurityItem(new SecurityRequirement().addList(securityKey))
             .info(new Info()
                 .title("Potato API Server")
                 .description("Potato API Documents"));

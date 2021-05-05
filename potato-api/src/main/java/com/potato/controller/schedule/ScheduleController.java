@@ -17,7 +17,7 @@ public class ScheduleController {
 
     private final ScheduleService scheduleService;
 
-    @Operation(summary = "캘린더에 보여질 스케쥴 정보 조회", description = "시작날짜와 종료날짜를 입력하세요")
+    @Operation(summary = "캘린더에 보여질 스케쥴 정보 조회")
     @GetMapping("/api/v1/schedule")
     public ApiResponse<ScheduleResponse> retrieveScheduleBetween(@Valid ScheduleRequest request) {
         return ApiResponse.success(scheduleService.getDefaultSchedule(request));
