@@ -11,14 +11,14 @@ import lombok.NoArgsConstructor;
 public final class OrganizationServiceUtils {
 
     static void validateNotExistsOrganization(OrganizationRepository organizationRepository, String subDomain) {
-        Organization organization = organizationRepository.findOrganizationBySubDomain(subDomain);
+        Organization organization = organizationRepository.findBySubDomain(subDomain);
         if (organization != null) {
             throw new ConflictException(String.format("이미 존재하는 Organization (%s) 입니다.", subDomain));
         }
     }
 
     public static Organization findOrganizationBySubDomain(OrganizationRepository organizationRepository, String subDomain) {
-        Organization organization = organizationRepository.findOrganizationBySubDomain(subDomain);
+        Organization organization = organizationRepository.findBySubDomain(subDomain);
         if (organization == null) {
             throw new NotFoundException(String.format("존재하지 않는 Organization (%s) 입니다.", subDomain));
         }

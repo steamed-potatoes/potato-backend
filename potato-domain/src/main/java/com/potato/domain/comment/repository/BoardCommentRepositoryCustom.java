@@ -7,10 +7,8 @@ import java.util.List;
 
 public interface BoardCommentRepositoryCustom {
 
-    BoardComment findBoardCommentById(Long boardCommentId);
-
-    List<BoardComment> findRootCommentByOrganizationBoardId(BoardCommentType type, Long boardId);
-
     BoardComment findBoardCommentByIdAndMemberId(Long boardCommentId, Long memberId);
+
+    List<BoardComment> findRootCommentByTypeAndBoardId(BoardCommentType type, Long boardId);
 
 }

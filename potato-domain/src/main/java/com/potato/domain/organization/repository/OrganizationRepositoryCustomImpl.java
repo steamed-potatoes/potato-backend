@@ -17,7 +17,7 @@ public class OrganizationRepositoryCustomImpl implements OrganizationRepositoryC
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Organization findOrganizationBySubDomain(String subDomain) {
+    public Organization findBySubDomain(String subDomain) {
         return queryFactory.selectFrom(organization)
             .innerJoin(organization.organizationMemberMapperList, organizationMemberMapper).fetchJoin()
             .where(
@@ -45,7 +45,7 @@ public class OrganizationRepositoryCustomImpl implements OrganizationRepositoryC
     }
 
     @Override
-    public List<Organization> findOrganizationOrderByFollowersCountLimit(int size) {
+    public List<Organization> findOrderByFollowersCountWithLimit(int size) {
         return queryFactory.selectFrom(organization)
             .orderBy(
                 organization.followersCount.desc(),
