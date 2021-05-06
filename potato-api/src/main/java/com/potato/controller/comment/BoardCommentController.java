@@ -8,6 +8,7 @@ import com.potato.service.comment.BoardCommentService;
 import com.potato.service.comment.dto.request.AddBoardCommentRequest;
 import com.potato.service.comment.dto.response.BoardCommentResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +22,7 @@ public class BoardCommentController {
 
     private final BoardCommentService boardCommentService;
 
-    @Operation(summary = "게시물에 댓글을 추가합니다.", description = "Bearer 토큰이 필요합니다")
+    @Operation(summary = "게시물에 댓글을 추가합니다.", security = {@SecurityRequirement(name = "BearerKey")})
     @Auth
     @PostMapping("/api/v2/board/comment")
     public ApiResponse<String> addBoardComment(@Valid @RequestBody AddBoardCommentRequest request, @MemberId Long memberId) {
@@ -35,7 +36,7 @@ public class BoardCommentController {
         return ApiResponse.success(boardCommentService.retrieveBoardCommentList(type, boardId));
     }
 
-    @Operation(summary = "작성한 댓글을 삭제합니다.", description = "Bearer 토큰이 필요합니다")
+    @Operation(summary = "작성한 댓글을 삭제합니다.", security = {@SecurityRequirement(name = "BearerKey")})
     @Auth
     @DeleteMapping("/api/v2/board/comment")
     public ApiResponse<String> deleteBoardComment(@RequestParam Long boardCommentId, @MemberId Long memberId) {

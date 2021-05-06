@@ -27,7 +27,7 @@ public class AdminBoardController {
 
     @Auth
     @PutMapping("/admin/v1/board/admin")
-    public ApiResponse<AdminBoardInfoResponse> updateAdminBoard(@Valid @RequestBody UpdateAdminBoardRequest request, @MemberId Long adminMemberId) {
+    public ApiResponse<AdminBoardInfoResponse> updateAdminBoard(@Valid @RequestBody UpdateAdminBoardRequest request) {
        return ApiResponse.success(adminBoardService.updateAdminBoard(request));
     }
 

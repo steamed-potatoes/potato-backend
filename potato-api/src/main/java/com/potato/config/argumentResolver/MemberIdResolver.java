@@ -11,6 +11,8 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @Component
 public class MemberIdResolver implements HandlerMethodArgumentResolver {
 
+    private static final String MEMBER_ID = "memberId";
+
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         boolean hasAnnotation = parameter.getParameterAnnotation(MemberId.class) != null;
@@ -23,7 +25,7 @@ public class MemberIdResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-        return webRequest.getAttribute("memberId", 0);
+        return webRequest.getAttribute(MEMBER_ID, 0);
     }
 
 }

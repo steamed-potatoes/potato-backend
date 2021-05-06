@@ -9,6 +9,7 @@ import com.potato.service.board.organization.dto.request.*;
 import com.potato.service.board.organization.dto.response.OrganizationBoardInfoResponse;
 import com.potato.service.board.organization.dto.response.OrganizationBoardWithCreatorInfoResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +26,7 @@ public class OrganizationBoardController {
     private final OrganizationBoardService organizationBoardService;
     private final OrganizationBoardRetrieveService organizationBoardRetrieveService;
 
-    @Operation(summary = "그룹의 관리자가 새로운 그룹의 게시물을 등록하는 API", description = "Bearer 토큰이 필요합니다")
+    @Operation(summary = "그룹의 관리자가 새로운 그룹의 게시물을 등록하는 API", security = {@SecurityRequirement(name = "BearerKey")})
     @Auth(role = ORGANIZATION_ADMIN)
     @PostMapping("/api/v2/organization/board/{subDomain}")
     public ApiResponse<OrganizationBoardInfoResponse> createOrganizationBoard(
@@ -39,7 +40,7 @@ public class OrganizationBoardController {
         return ApiResponse.success(organizationBoardRetrieveService.retrieveBoard(organizationBoardId));
     }
 
-    @Operation(summary = "그룹의 게시물을 스크롤 페이지네이션 기반으로 조회하는 API", description = "lastOrganizationBoardId = 가장 마지막 게시물의 id, size = 받아올 게시물의 개수")
+    @Operation(summary = "그룹의 게시물을 스크롤 페이지네이션 기반으로 조회하는 API")
     @GetMapping("/api/v2/organization/board/list")
     public ApiResponse<List<OrganizationBoardInfoResponse>> retrieveLatestOrganizationBoardList(@Valid RetrieveLatestBoardsRequest request) {
         return ApiResponse.success(organizationBoardRetrieveService.retrieveBoardsWithPagination(request.getType(), request.getLastOrganizationBoardId(), request.getSize()));
@@ -51,7 +52,7 @@ public class OrganizationBoardController {
         return ApiResponse.success(organizationBoardRetrieveService.retrieveImminentBoards(request));
     }
 
-    @Operation(summary = "그룹의 관리자가 그룹의 게시물을 수정하는 API", description = "Bearer 토큰이 필요합니다")
+    @Operation(summary = "그룹의 관리자가 그룹의 게시물을 수정하는 API", security = {@SecurityRequirement(name = "BearerKey")})
     @Auth(role = ORGANIZATION_ADMIN)
     @PutMapping("/api/v2/organization/board/{subDomain}")
     public ApiResponse<OrganizationBoardInfoResponse> updateOrganizationBoard(
@@ -59,7 +60,7 @@ public class OrganizationBoardController {
         return ApiResponse.success(organizationBoardService.updateBoard(subDomain, request, memberId));
     }
 
-    @Operation(summary = "그룹의 관리자가 그룹의 게시물을 삭제하는 API", description = "Bearer 토큰이 필요합니다")
+    @Operation(summary = "그룹의 관리자가 그룹의 게시물을 삭제하는 API", security = {@SecurityRequirement(name = "BearerKey")})
     @Auth(role = ORGANIZATION_ADMIN)
     @DeleteMapping("/api/v2/organization/board/{subDomain}")
     public ApiResponse<String> deleteOrganizationBoard(@PathVariable String subDomain, @Valid DeleteOrganizationBoardRequest request,
@@ -68,7 +69,7 @@ public class OrganizationBoardController {
         return ApiResponse.OK;
     }
 
-    @Operation(summary = "게시물의 좋아요를 추가하는 API", description = "Bearer 토큰이 필요합니다")
+    @Operation(summary = "게시물의 좋아요를 추가하는 API", security = {@SecurityRequirement(name = "BearerKey")})
     @Auth
     @PostMapping("/api/v2/organization/board/like")
     public ApiResponse<String> likeOrganizationBoard(@Valid @RequestBody LikeOrganizationBoardRequest request, @MemberId Long memberId) {
@@ -76,7 +77,7 @@ public class OrganizationBoardController {
         return ApiResponse.OK;
     }
 
-    @Operation(summary = "게시물의 좋아요를 취소하는 API", description = "Bearer 토큰이 필요합니다")
+    @Operation(summary = "게시물의 좋아요를 취소하는 API", security = {@SecurityRequirement(name = "BearerKey")})
     @Auth
     @DeleteMapping("/api/v2/organization/board/like")
     public ApiResponse<String> cancelOrganizationBoard(@Valid LikeOrganizationBoardRequest request, @MemberId Long memberId) {

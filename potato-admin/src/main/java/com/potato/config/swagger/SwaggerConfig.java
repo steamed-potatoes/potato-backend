@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SwaggerConfig {
 
-    private final static String securityKey = "BearerKey";
+    private static final String securityKey = "BearerKey";
 
     @Bean
     public OpenAPI customOpenAPI() {
@@ -22,7 +22,6 @@ public class SwaggerConfig {
             .addSecurityItem(new SecurityRequirement().addList(securityKey))
             .info(new Info()
                 .title("Potato Admin Server")
-                .version("v0.2.2")
                 .description("Potato API Documents"));
     }
 

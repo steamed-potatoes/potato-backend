@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 @Component
 public class AuthAdminComponent {
 
-    private final static String BEARER_TOKEN = "Bearer ";
+    private static final String BEARER_TOKEN = "Bearer ";
 
     private final SessionRepository<? extends Session> sessionRepository;
     private final AdministratorRepository administratorRepository;
@@ -41,7 +41,7 @@ public class AuthAdminComponent {
         if (!header.startsWith(BEARER_TOKEN)) {
             throw new UnAuthorizedException(String.format("잘못된 세션입니다 (%s)", header));
         }
-        Session session = sessionRepository.getSession(header.split(BEARER_TOKEN)[1]);
+        Session session = sessionRepository.findById(header.split(BEARER_TOKEN)[1]);
         if (session == null) {
             throw new UnAuthorizedException(String.format("잘못된 세션입니다 (%s)", header));
         }

@@ -124,8 +124,16 @@ public class Organization extends BaseTimeEntity {
     }
 
     public void addFollow(Long memberId) {
+        if (hasAlreadyFollow(memberId)) {
+            throw new ConflictException(String.format("이미 멤버 (%s)는 그룹 (%s)에 팔로우를 했습니다", memberId, this.subDomain));
+        }
         this.organizationFollowerList.add(OrganizationFollower.newFollow(this, memberId));
         this.followersCount++;
+    }
+
+    private boolean hasAlreadyFollow(Long memberId) {
+        return this.organizationFollowerList.stream()
+            .anyMatch(follow -> follow.isSameMember(memberId));
     }
 
     public void unFollow(Long memberId) {
@@ -193,6 +201,7 @@ public class Organization extends BaseTimeEntity {
 
     public List<Long> getMemberIds() {
         return this.organizationMemberMapperList.stream()
+            .filter(organizationMemberMapper -> organizationMemberMapper.isBelongToOrganization(organizationMemberMapper.getMemberId()))
             .map(OrganizationMemberMapper::getMemberId)
             .collect(Collectors.toList());
     }

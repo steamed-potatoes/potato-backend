@@ -2,7 +2,7 @@ server:
   port: 8080
 spring:
   session:
-    store-type: jdbc
+    store-type: redis
   servlet:
     multipart:
       max-file-size: 10MB
@@ -15,6 +15,7 @@ spring:
       - thirdparty
       - swagger
       - cloud
+      - redis
 logging:
   file:
     path: logs/api/
