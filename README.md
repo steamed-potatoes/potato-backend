@@ -1,6 +1,6 @@
 # Potato Backend 
 
-![Generic badge](https://img.shields.io/badge/version-0.3.1-orange.svg)
+![Generic badge](https://img.shields.io/badge/version-0.3.2-orange.svg)
 [![codecov](https://codecov.io/gh/steamed-potatoes/potato-backend/branch/develop/graph/badge.svg?token=ACoWRzqGBl)](https://codecov.io/gh/steamed-potatoes/potato-backend)
 
 ---
@@ -32,11 +32,13 @@
 ### Infra (Development Server)
 - AWS EC2
 - AWS RDS (MariaDB 10.4), flyway 6.4
+- Redis (Session)
 - Docker-compose
 - Nginx
 
 ### Infra (Local)
-- H2 InMemory DB
+- H2 Inmemory DB
+- Redis Embedded DB (Session)
 
 ### CI/CD
 - GitHub Action CI/CD
