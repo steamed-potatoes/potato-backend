@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 public abstract class CustomException extends RuntimeException {
 
-    private ErrorCode errorCode;
+    private final ErrorCode errorCode;
 
     public CustomException(String message, ErrorCode errorCode) {
         super(message);

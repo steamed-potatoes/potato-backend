@@ -58,8 +58,8 @@ class OrganizationMockMvc {
         );
     }
 
-    public ApiResponse<List<OrganizationInfoResponse>> getOrganizations(int expectedStatus) throws Exception {
-        MockHttpServletRequestBuilder builder = get("/api/v1/organization/list");
+    public ApiResponse<List<OrganizationInfoResponse>> getOrganizations(int size, int expectedStatus) throws Exception {
+        MockHttpServletRequestBuilder builder = get("/api/v1/organization/list?size=" + size);
         return objectMapper.readValue(
             mockMvc.perform(builder)
                 .andExpect(status().is(expectedStatus))

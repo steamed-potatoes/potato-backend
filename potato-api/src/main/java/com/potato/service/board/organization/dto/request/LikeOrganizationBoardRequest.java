@@ -5,17 +5,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Min;
 
 @ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class LikeOrganizationBoardRequest {
 
-    @NotNull
-    private Long organizationBoardId;
+    @Min(0)
+    private long organizationBoardId;
 
-    private LikeOrganizationBoardRequest(@NotNull Long organizationBoardId) {
+    private LikeOrganizationBoardRequest(long organizationBoardId) {
         this.organizationBoardId = organizationBoardId;
     }
 

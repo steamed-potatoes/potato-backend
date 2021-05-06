@@ -36,7 +36,7 @@ public class BoardCommentService {
     @Transactional(readOnly = true)
     public List<BoardCommentResponse> retrieveBoardCommentList(BoardCommentType type, Long boardId) {
         BoardCommentServiceUtils.validateExistBoard(organizationBoardRepository, adminBoardRepository, type, boardId);
-        List<BoardComment> rootComments = boardCommentRepository.findRootCommentByOrganizationBoardId(type, boardId);
+        List<BoardComment> rootComments = boardCommentRepository.findRootCommentByTypeAndBoardId(type, boardId);
         return rootComments.stream()
             .map(BoardCommentResponse::of)
             .collect(Collectors.toList());

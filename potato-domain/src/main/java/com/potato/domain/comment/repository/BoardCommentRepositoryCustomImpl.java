@@ -3,6 +3,7 @@ package com.potato.domain.comment.repository;
 import com.potato.domain.comment.BoardComment;
 import com.potato.domain.comment.BoardCommentType;
 import com.potato.domain.comment.QBoardComment;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -16,15 +17,23 @@ public class BoardCommentRepositoryCustomImpl implements BoardCommentRepositoryC
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public BoardComment findBoardCommentById(Long boardCommentId) {
+    public BoardComment findBoardCommentByIdAndMemberId(Long boardCommentId, Long memberId) {
         return queryFactory.selectFrom(boardComment)
             .where(
-                boardComment.id.eq(boardCommentId)
+                boardComment.id.eq(boardCommentId),
+                eqMemberId(memberId)
             ).fetchOne();
     }
 
+    private BooleanExpression eqMemberId(Long memberId) {
+        if (memberId == null) {
+            return null;
+        }
+        return boardComment.memberId.eq(memberId);
+    }
+
     @Override
-    public List<BoardComment> findRootCommentByOrganizationBoardId(BoardCommentType type, Long boardId) {
+    public List<BoardComment> findRootCommentByTypeAndBoardId(BoardCommentType type, Long boardId) {
         return queryFactory.selectFrom(boardComment).distinct()
             .leftJoin(boardComment.childComments, new QBoardComment("child")).fetchJoin()
             .where(
@@ -32,15 +41,6 @@ public class BoardCommentRepositoryCustomImpl implements BoardCommentRepositoryC
                 boardComment.boardId.eq(boardId),
                 boardComment.parentComment.isNull()
             ).fetch();
-    }
-
-    @Override
-    public BoardComment findBoardCommentByIdAndMemberId(Long boardCommentId, Long memberId) {
-        return queryFactory.selectFrom(boardComment)
-            .where(
-                boardComment.id.eq(boardCommentId),
-                boardComment.memberId.eq(memberId)
-            ).fetchOne();
     }
 
 }

@@ -134,7 +134,7 @@ class OrganizationControllerTest extends ControllerTestUtils {
         organizationRepository.save(organization);
 
         // when
-        ApiResponse<List<OrganizationInfoResponse>> response = organizationMockMvc.getOrganizations(200);
+        ApiResponse<List<OrganizationInfoResponse>> response = organizationMockMvc.getOrganizations(5,200);
 
         // then
         assertThat(response.getData()).hasSize(1);

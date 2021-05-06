@@ -7,6 +7,7 @@ import com.potato.service.member.dto.response.MemberInfoResponse;
 import com.potato.service.organization.OrganizationRetrieveService;
 import com.potato.service.organization.OrganizationService;
 import com.potato.service.organization.dto.request.CreateOrganizationRequest;
+import com.potato.service.organization.dto.request.RetrieveOrganizationsWithPaginationRequest;
 import com.potato.service.organization.dto.request.RetrievePopularOrganizationsRequest;
 import com.potato.service.organization.dto.response.OrganizationInfoResponse;
 import com.potato.service.organization.dto.response.OrganizationWithMembersInfoResponse;
@@ -43,8 +44,8 @@ public class OrganizationController {
 
     @Operation(summary = "등록된 그룹 리스트를 불러오는 API")
     @GetMapping("/api/v1/organization/list")
-    public ApiResponse<List<OrganizationInfoResponse>> getOrganizations() {
-        return ApiResponse.success(organizationRetrieveService.getOrganizationsInfo());
+    public ApiResponse<List<OrganizationInfoResponse>> retrieveOrganizationsWithPagination(@Valid RetrieveOrganizationsWithPaginationRequest request) {
+        return ApiResponse.success(organizationRetrieveService.retrieveOrganizationsWithPagination(request.getCategory(), request.getLastOrganizationId(), request.getSize()));
     }
 
     @Operation(summary = "인기있는 그룹 리스트를 조회한다")

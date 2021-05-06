@@ -3,6 +3,7 @@ package com.potato.service.board.organization;
 import com.potato.domain.board.organization.OrganizationBoard;
 import com.potato.domain.board.organization.OrganizationBoardRepository;
 import com.potato.domain.board.organization.OrganizationBoardType;
+import com.potato.domain.board.organization.repository.dto.BoardWithOrganizationDto;
 import com.potato.domain.member.Member;
 import com.potato.domain.member.MemberRepository;
 import com.potato.domain.organization.Organization;
@@ -28,7 +29,7 @@ public class OrganizationBoardRetrieveService {
     private final MemberRepository memberRepository;
 
     @Transactional(readOnly = true)
-    public OrganizationBoardWithCreatorInfoResponse retrieveBoard(Long organizationBoardId) {
+    public OrganizationBoardWithCreatorInfoResponse retrieveBoardWithOrganizationAndCreator(Long organizationBoardId) {
         OrganizationBoard organizationBoard = OrganizationBoardServiceUtils.findOrganizationBoardById(organizationBoardRepository, organizationBoardId);
         Organization organization = OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, organizationBoard.getSubDomain());
         Member creator = MemberServiceUtils.findMemberById(memberRepository, organizationBoard.getMemberId());
@@ -36,27 +37,20 @@ public class OrganizationBoardRetrieveService {
     }
 
     @Transactional(readOnly = true)
-    public List<OrganizationBoardInfoResponse> retrieveBoardsWithPagination(OrganizationBoardType type, long lastOrganizationBoardId, int size) {
-        if (type == null) {
-            return OrganizationBoardServiceUtils.findOrganizationBoardWithPagination(organizationBoardRepository, lastOrganizationBoardId, size).stream()
-                .map(OrganizationBoardInfoResponse::of)
-                .collect(Collectors.toList());
-        }
-        return OrganizationBoardServiceUtils.findOrganizationBoardWithPaginationByType(organizationBoardRepository, type, lastOrganizationBoardId, size).stream()
-            .map(OrganizationBoardInfoResponse::of)
-            .collect(Collectors.toList());
+    public List<BoardWithOrganizationDto> retrieveBoardsWithPagination(OrganizationBoardType type, long lastOrganizationBoardId, int size) {
+        return organizationBoardRepository.findAllWithOrganizationByTypeLessThanOrderByIdDescLimit(type, lastOrganizationBoardId, size);
     }
 
     @Transactional(readOnly = true)
     public List<OrganizationBoardInfoResponse> retrieveImminentBoards(RetrieveImminentBoardsRequest request) {
-        return organizationBoardRepository.findBetweenDateLimit(request.getDateTime(), request.getDateTime().plusWeeks(1), request.getSize()).stream()
+        return organizationBoardRepository.findAllByBetweenDateTimeWithLimit(request.getDateTime(), request.getDateTime().plusWeeks(1), request.getSize()).stream()
             .map(OrganizationBoardInfoResponse::of)
             .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public List<OrganizationBoardInfoResponse> retrievePopularBoard(int size) {
-        return organizationBoardRepository.findBoardsOrderByLikesCountLimitSize(size).stream()
+        return organizationBoardRepository.findAllOrderByLikesWithLimit(size).stream()
             .map(OrganizationBoardInfoResponse::of)
             .collect(Collectors.toList());
     }

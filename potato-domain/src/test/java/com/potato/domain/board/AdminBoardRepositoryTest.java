@@ -41,7 +41,7 @@ class AdminBoardRepositoryTest {
         adminBoardRepository.save(adminBoard);
 
         // when
-        List<AdminBoard> adminBoardList = adminBoardRepository.findBetweenDate(startDate, endDate);
+        List<AdminBoard> adminBoardList = adminBoardRepository.findAllBetweenDate(startDate, endDate);
 
         // then
         assertThat(adminBoardList).hasSize(1);
@@ -64,7 +64,7 @@ class AdminBoardRepositoryTest {
         adminBoardRepository.save(adminBoard);
 
         // when
-        List<AdminBoard> adminBoardList = adminBoardRepository.findBetweenDate(startDate, endDate);
+        List<AdminBoard> adminBoardList = adminBoardRepository.findAllBetweenDate(startDate, endDate);
 
         // then
         assertThat(adminBoardList).hasSize(1);
@@ -87,7 +87,7 @@ class AdminBoardRepositoryTest {
         adminBoardRepository.save(adminBoard);
 
         // when
-        List<AdminBoard> adminBoardList = adminBoardRepository.findBetweenDate(startDate, endDate);
+        List<AdminBoard> adminBoardList = adminBoardRepository.findAllBetweenDate(startDate, endDate);
 
         // then
         assertThat(adminBoardList).isEmpty();
@@ -110,7 +110,7 @@ class AdminBoardRepositoryTest {
         adminBoardRepository.save(adminBoard);
 
         // when
-        List<AdminBoard> adminBoardList = adminBoardRepository.findBetweenDate(startDate, endDate);
+        List<AdminBoard> adminBoardList = adminBoardRepository.findAllBetweenDate(startDate, endDate);
 
         // then
         assertThat(adminBoardList).isEmpty();
@@ -133,7 +133,7 @@ class AdminBoardRepositoryTest {
         adminBoardRepository.save(adminBoard);
 
         // when
-        List<AdminBoard> adminBoardList = adminBoardRepository.findBetweenDate(startDate, endDate);
+        List<AdminBoard> adminBoardList = adminBoardRepository.findAllBetweenDate(startDate, endDate);
 
         // then
         assertThat(adminBoardList).hasSize(1);

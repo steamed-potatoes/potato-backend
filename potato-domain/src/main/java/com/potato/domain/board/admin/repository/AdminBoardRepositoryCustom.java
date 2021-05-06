@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface AdminBoardRepositoryCustom {
 
-    List<AdminBoard> findBetweenDate(LocalDate startDate, LocalDate endDate);
+    List<AdminBoard> findAllBetweenDate(LocalDate startDate, LocalDate endDate);
 
     AdminBoard findAdminBoardById(Long adminBoardId);
 
