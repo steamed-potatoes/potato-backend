@@ -7,3 +7,5 @@ spring:
     open-in-view: false
   flyway:
     enabled: false
+  profiles:
+    active: local

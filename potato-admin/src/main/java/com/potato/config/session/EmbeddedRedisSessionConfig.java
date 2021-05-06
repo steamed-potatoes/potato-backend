@@ -1,9 +1,14 @@
-package com.potato.config;
+package com.potato.config.session;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
+import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 import org.springframework.util.StringUtils;
 import redis.embedded.RedisServer;
 
@@ -20,19 +25,29 @@ import java.io.InputStreamReader;
 @Profile("local")
 @RequiredArgsConstructor
 @Configuration
+@EnableRedisHttpSession(maxInactiveIntervalInSeconds = 60 * 60 * 24 * 30)
 public class EmbeddedRedisSessionConfig {
 
     private static final String OS = System.getProperty("os.name").toLowerCase();
 
-    private final RedisProperties redisProperties;
+    @Value("${spring.redis.host}")
+    private String host;
+
+    @Value("${spring.redis.port}")
+    private int redisPort;
 
     private RedisServer redisServer;
 
+    @Bean
+    public RedisConnectionFactory redisConnectionFactory() {
+        return new LettuceConnectionFactory(host, redisPort);
+    }
+
     @PostConstruct
     public void redisServer() throws IOException {
-        int port = isRedisRunning() ? findAvailablePort() : redisProperties.getPort();
-        log.info("임베디드 레디스 서버가 기동되었습니다. port {}", port);
-        redisServer = new RedisServer(port);
+        redisPort = isRedisRunning() ? findAvailablePort() : redisPort;
+        log.info("임베디드 레디스 서버가 기동되었습니다. port {}", redisPort);
+        redisServer = new RedisServer(redisPort);
         redisServer.start();
     }
 
@@ -44,7 +59,7 @@ public class EmbeddedRedisSessionConfig {
     }
 
     private boolean isRedisRunning() throws IOException {
-        return isRunning(executeGrepProcessCommand(redisProperties.getPort()));
+        return isRunning(executeGrepProcessCommand(redisPort));
     }
 
     public int findAvailablePort() throws IOException {
