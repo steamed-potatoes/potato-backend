@@ -96,7 +96,7 @@ class OrganizationRetrieveServiceTest extends MemberSetupTest {
         organizationRepository.saveAll(Arrays.asList(organization1, organization2));
 
         // when
-        List<OrganizationInfoResponse> responses = organizationRetrieveService.retrieveOrganizationsWithPagination(null, 3);
+        List<OrganizationInfoResponse> responses = organizationRetrieveService.retrieveOrganizationsWithPagination(null, 0, 3);
 
         // then
         assertThat(responses).hasSize(2);
@@ -116,7 +116,7 @@ class OrganizationRetrieveServiceTest extends MemberSetupTest {
         organizationRepository.saveAll(Arrays.asList(nonApprovedCircle, approvedCircle));
 
         // when
-        List<OrganizationInfoResponse> responses = organizationRetrieveService.retrieveOrganizationsWithPagination(OrganizationCategory.NON_APPROVED_CIRCLE, 3);
+        List<OrganizationInfoResponse> responses = organizationRetrieveService.retrieveOrganizationsWithPagination(OrganizationCategory.NON_APPROVED_CIRCLE, 0, 3);
 
         // then
         assertThat(responses).hasSize(1);
@@ -135,7 +135,7 @@ class OrganizationRetrieveServiceTest extends MemberSetupTest {
         organizationRepository.saveAll(Arrays.asList(organization1, organization2));
 
         // when
-        List<OrganizationInfoResponse> responses = organizationRetrieveService.retrieveOrganizationsWithPagination(null, 1);
+        List<OrganizationInfoResponse> responses = organizationRetrieveService.retrieveOrganizationsWithPagination(null, 0, 1);
 
         // then
         assertThat(responses).hasSize(1);
@@ -145,7 +145,7 @@ class OrganizationRetrieveServiceTest extends MemberSetupTest {
     @Test
     void 조직_리스트를_불러온다_아무_조직도_없으면_NULL_이아닌_빈배열을_반환한다() {
         // when
-        List<OrganizationInfoResponse> responses = organizationRetrieveService.retrieveOrganizationsWithPagination(null, 3);
+        List<OrganizationInfoResponse> responses = organizationRetrieveService.retrieveOrganizationsWithPagination(null, 0, 3);
 
         // then
         assertThat(responses).isEmpty();

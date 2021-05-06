@@ -15,6 +15,6 @@ public interface OrganizationRepositoryCustom {
 
     List<Organization> findAllOrderByFollowersCountWithLimit(int size);
 
-    List<Organization> findAllByCategoryOrderByIdDescWithLimit(OrganizationCategory category, int size);
+    List<Organization> findAllByCategoryAndLessThanIdOrderByIdDescWithLimit(OrganizationCategory category, Long lastOrganizationId, int size);
 
 }

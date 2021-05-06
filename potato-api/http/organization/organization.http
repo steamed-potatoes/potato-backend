@@ -17,7 +17,7 @@ GET {{host_api}}/api/v1/organization/potato
 
 
 ### 조직 리스트 조회 API
-GET {{host_api}}/api/v1/organization/list
+GET {{host_api}}/api/v1/organization/list?size=5&lastOrganizationId=0
 
 
 

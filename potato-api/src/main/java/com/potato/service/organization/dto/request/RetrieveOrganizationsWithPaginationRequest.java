@@ -14,6 +14,9 @@ public class RetrieveOrganizationsWithPaginationRequest {
 
     private OrganizationCategory category;
 
+    @Min(0)
+    private long lastOrganizationId;
+
     @Min(1)
     @NotNull
     private int size;

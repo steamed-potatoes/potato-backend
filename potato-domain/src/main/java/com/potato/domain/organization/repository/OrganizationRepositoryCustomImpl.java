@@ -58,10 +58,11 @@ public class OrganizationRepositoryCustomImpl implements OrganizationRepositoryC
     }
 
     @Override
-    public List<Organization> findAllByCategoryOrderByIdDescWithLimit(OrganizationCategory category, int size) {
+    public List<Organization> findAllByCategoryAndLessThanIdOrderByIdDescWithLimit(OrganizationCategory category, Long lastOrganizationId, int size) {
         return queryFactory.selectFrom(organization)
             .where(
-                eqCategory(category)
+                eqCategory(category),
+                lessThanId(lastOrganizationId)
             )
             .orderBy(organization.id.desc())
             .limit(size)
@@ -73,6 +74,13 @@ public class OrganizationRepositoryCustomImpl implements OrganizationRepositoryC
             return null;
         }
         return organization.category.eq(category);
+    }
+
+    private BooleanExpression lessThanId(Long organizationId) {
+        if (organizationId == 0) {
+            return null;
+        }
+        return organization.id.lt(organizationId);
     }
 
 }

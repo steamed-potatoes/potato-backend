@@ -35,8 +35,8 @@ public class OrganizationRetrieveService {
     }
 
     @Transactional(readOnly = true)
-    public List<OrganizationInfoResponse> retrieveOrganizationsWithPagination(OrganizationCategory category, int size) {
-        return organizationRepository.findAllByCategoryOrderByIdDescWithLimit(category, size).stream()
+    public List<OrganizationInfoResponse> retrieveOrganizationsWithPagination(OrganizationCategory category, long lastOrganizationId, int size) {
+        return organizationRepository.findAllByCategoryAndLessThanIdOrderByIdDescWithLimit(category, lastOrganizationId, size).stream()
             .map(OrganizationInfoResponse::of)
             .collect(Collectors.toList());
     }
