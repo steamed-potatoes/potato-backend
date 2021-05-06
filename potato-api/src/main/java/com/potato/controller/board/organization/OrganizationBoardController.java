@@ -3,6 +3,7 @@ package com.potato.controller.board.organization;
 import com.potato.config.argumentResolver.MemberId;
 import com.potato.config.interceptor.auth.Auth;
 import com.potato.controller.ApiResponse;
+import com.potato.domain.board.organization.repository.dto.BoardWithOrganizationDto;
 import com.potato.service.board.organization.OrganizationBoardRetrieveService;
 import com.potato.service.board.organization.OrganizationBoardService;
 import com.potato.service.board.organization.dto.request.*;
@@ -42,7 +43,7 @@ public class OrganizationBoardController {
 
     @Operation(summary = "그룹의 게시물을 스크롤 페이지네이션 기반으로 조회하는 API")
     @GetMapping("/api/v2/organization/board/list")
-    public ApiResponse<List<OrganizationBoardInfoResponse>> retrieveLatestOrganizationBoardList(@Valid RetrieveLatestBoardsRequest request) {
+    public ApiResponse<List<BoardWithOrganizationDto>> retrieveLatestOrganizationBoardList(@Valid RetrieveLatestBoardsRequest request) {
         return ApiResponse.success(organizationBoardRetrieveService.retrieveBoardsWithPagination(request.getType(), request.getLastOrganizationBoardId(), request.getSize()));
     }
 

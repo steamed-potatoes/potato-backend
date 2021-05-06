@@ -3,6 +3,7 @@ package com.potato.service.board.organization;
 import com.potato.domain.board.organization.OrganizationBoard;
 import com.potato.domain.board.organization.OrganizationBoardRepository;
 import com.potato.domain.board.organization.OrganizationBoardType;
+import com.potato.domain.board.organization.repository.dto.BoardWithOrganizationDto;
 import com.potato.exception.model.NotFoundException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -28,16 +29,16 @@ public final class OrganizationBoardServiceUtils {
         return organizationBoard;
     }
 
-    public static List<OrganizationBoard> findOrganizationBoardWithPagination(OrganizationBoardRepository organizationBoardRepository, long lastOrganizationBoardId, int size) {
+    public static List<BoardWithOrganizationDto> findOrganizationBoardWithPagination(OrganizationBoardRepository organizationBoardRepository, long lastOrganizationBoardId, int size) {
         if (lastOrganizationBoardId == 0) {
-            return organizationBoardRepository.findBoardsOrderByDesc(size);
+            return organizationBoardRepository.findAllBoardsOrderByDescWithLimit(size);
         }
-        return organizationBoardRepository.findBoardsLessThanOrderByIdDescLimit(lastOrganizationBoardId, size);
+        return organizationBoardRepository.findAllBoardsWithOrganizationLessThanIdOrderByIdDescWithLimit(lastOrganizationBoardId, size);
     }
 
-    public static List<OrganizationBoard> findOrganizationBoardWithPaginationByType(OrganizationBoardRepository organizationBoardRepository, OrganizationBoardType type, long lastOrganizationBoardId, int size) {
+    public static List<BoardWithOrganizationDto> findOrganizationBoardWithPaginationByType(OrganizationBoardRepository organizationBoardRepository, OrganizationBoardType type, long lastOrganizationBoardId, int size) {
         if (lastOrganizationBoardId == 0) {
-            return organizationBoardRepository.findBoardsByTypeOrderByDesc(type, size);
+            return organizationBoardRepository.findAllBoardsWithOrganizationByBoardTypeOrderByIdDesc(type, size);
         }
         return organizationBoardRepository.findBoardsByTypeLessThanOrderByIdDescLimit(type, lastOrganizationBoardId, size);
     }

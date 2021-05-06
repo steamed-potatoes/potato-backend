@@ -3,6 +3,7 @@ package com.potato.service.board.organization;
 import com.potato.domain.board.organization.OrganizationBoard;
 import com.potato.domain.board.organization.OrganizationBoardRepository;
 import com.potato.domain.board.organization.OrganizationBoardType;
+import com.potato.domain.board.organization.repository.dto.BoardWithOrganizationDto;
 import com.potato.domain.member.Member;
 import com.potato.domain.member.MemberRepository;
 import com.potato.domain.organization.Organization;
@@ -36,15 +37,11 @@ public class OrganizationBoardRetrieveService {
     }
 
     @Transactional(readOnly = true)
-    public List<OrganizationBoardInfoResponse> retrieveBoardsWithPagination(OrganizationBoardType type, long lastOrganizationBoardId, int size) {
+    public List<BoardWithOrganizationDto> retrieveBoardsWithPagination(OrganizationBoardType type, long lastOrganizationBoardId, int size) {
         if (type == null) {
-            return OrganizationBoardServiceUtils.findOrganizationBoardWithPagination(organizationBoardRepository, lastOrganizationBoardId, size).stream()
-                .map(OrganizationBoardInfoResponse::of)
-                .collect(Collectors.toList());
+            return OrganizationBoardServiceUtils.findOrganizationBoardWithPagination(organizationBoardRepository, lastOrganizationBoardId, size);
         }
-        return OrganizationBoardServiceUtils.findOrganizationBoardWithPaginationByType(organizationBoardRepository, type, lastOrganizationBoardId, size).stream()
-            .map(OrganizationBoardInfoResponse::of)
-            .collect(Collectors.toList());
+        return OrganizationBoardServiceUtils.findOrganizationBoardWithPaginationByType(organizationBoardRepository, type, lastOrganizationBoardId, size);
     }
 
     @Transactional(readOnly = true)
