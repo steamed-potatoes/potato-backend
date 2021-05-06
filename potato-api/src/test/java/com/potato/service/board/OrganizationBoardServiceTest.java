@@ -55,7 +55,7 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
     }
 
     @Test
-    void 그룹관리자가_게시물을_작성한다() {
+    void 새로운_게시물을_작성하면_DB에_게시물_정보가_저장된다() {
         // given
         String title = "감자 신입 회원 모집";
         String content = "감자 동아리에서 신입 회원을 모집합니다";
@@ -86,7 +86,7 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
     }
 
     @Test
-    void 그룹의_관리자가_게시글을_수정한다() {
+    void 게시글을_수정하면_DB에_저장된_게시물_정보가_수정된다() {
         // given
         String title = "이후의 게시글";
         String content = "변경 이후의 내용";
@@ -120,7 +120,7 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
     }
 
     @Test
-    void 그룹의_관리자가_게시글을_수정하면_수정한_사람으로_게시글_작성자가_변경된다() {
+    void 게시글을_수정하면_수정을_요청한_사람으로_게시글_작성자가_변경된다() {
         // given
         OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, 999L, "이전의 게시글", OrganizationBoardType.RECRUIT);
         organizationBoardRepository.save(organizationBoard);
@@ -144,7 +144,7 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
     }
 
     @Test
-    void 그룹_게시물을_좋아요한다() {
+    void 그룹_게시물을_좋아요하면_게시물_좋아요_테이블에_새로운_컬럼이_추가된다() {
         // given
         OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, 999L, "이전의 게시글", OrganizationBoardType.RECRUIT);
         organizationBoardRepository.save(organizationBoard);
@@ -184,7 +184,7 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
     }
 
     @Test
-    void 그룹_게시물_좋아요를_취소한다() {
+    void 그룹_게시물_좋아요를_취소요청하면_기존의_좋아요_컬럼이_사라진다() {
         // given
         OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, 999L, "이전의 게시글", OrganizationBoardType.RECRUIT);
         organizationBoard.addLike(memberId);
@@ -205,7 +205,7 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
     }
 
     @Test
-    void 그룹_게시물_좋아요를_취소할때_좋아요를_누르지_않은경우_에러가_발생() {
+    void 그룹_게시물_좋아요를_취소_요청시_좋아요를_누르지_않은경우_에러가_발생한다() {
         // given
         OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, 999L, "이전의 게시글", OrganizationBoardType.RECRUIT);
         organizationBoardRepository.save(organizationBoard);
@@ -217,7 +217,7 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
     }
 
     @Test
-    void 그룹_관리자가_게시물을_삭제하면_백업이_되고_삭제된다() {
+    void 게시물을_삭제하면_백업이_되고_삭제된다() {
         //given
         OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, memberId, "게시글", OrganizationBoardType.RECRUIT);
         organizationBoardRepository.save(organizationBoard);
@@ -239,7 +239,7 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
     }
 
     @Test
-    void 해당하는_그룹_게시글이_아닐경우_삭제되지_않고_애러뜬다() {
+    void 게시물을_삭제할때_해당_그룹의_게시물이_아닌경우_에러가_발생한다() {
         //given
         OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, memberId, "title", OrganizationBoardType.RECRUIT);
         organizationBoardRepository.save(organizationBoard);

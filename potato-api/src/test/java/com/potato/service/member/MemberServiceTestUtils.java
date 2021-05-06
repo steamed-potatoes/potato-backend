@@ -29,8 +29,4 @@ public final class MemberServiceTestUtils {
         assertThat(response.getEmail()).isEqualTo(email);
     }
 
-    public static void assertMemberInfoResponse(MemberInfoResponse response, Long memberId) {
-        assertThat(response.getId()).isEqualTo(memberId);
-    }
-
 }

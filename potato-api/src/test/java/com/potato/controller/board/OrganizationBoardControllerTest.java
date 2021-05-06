@@ -6,6 +6,7 @@ import com.potato.domain.board.organization.OrganizationBoard;
 import com.potato.domain.board.organization.OrganizationBoardCreator;
 import com.potato.domain.board.organization.OrganizationBoardRepository;
 import com.potato.domain.board.organization.OrganizationBoardType;
+import com.potato.domain.board.organization.repository.dto.BoardWithOrganizationDto;
 import com.potato.domain.member.Member;
 import com.potato.domain.organization.Organization;
 import com.potato.domain.organization.OrganizationCreator;
@@ -125,12 +126,12 @@ class OrganizationBoardControllerTest extends ControllerTestUtils {
         organizationBoardRepository.saveAll(Arrays.asList(board1, board2, board3));
 
         //when
-        ApiResponse<List<OrganizationBoardInfoResponse>> response = organizationBoardMockMvc.retrieveLatestOrganizationBoardList(0, 3, 200);
+        ApiResponse<List<BoardWithOrganizationDto>> response = organizationBoardMockMvc.retrieveLatestOrganizationBoardList(0, 3, 200);
 
         //then
-        assertThat(response.getData().get(0).getTitle()).isEqualTo(title3);
-        assertThat(response.getData().get(1).getTitle()).isEqualTo(title2);
-        assertThat(response.getData().get(2).getTitle()).isEqualTo(title1);
+        assertThat(response.getData().get(0).getBoardTitle()).isEqualTo(title3);
+        assertThat(response.getData().get(1).getBoardTitle()).isEqualTo(title2);
+        assertThat(response.getData().get(2).getBoardTitle()).isEqualTo(title1);
     }
 
     @Test
@@ -150,11 +151,11 @@ class OrganizationBoardControllerTest extends ControllerTestUtils {
         organizationBoardRepository.saveAll(Arrays.asList(board1, board2, board3));
 
         //when
-        ApiResponse<List<OrganizationBoardInfoResponse>> response = organizationBoardMockMvc.retrieveLatestOrganizationBoardList(board3.getId(), 2, 200);
+        ApiResponse<List<BoardWithOrganizationDto>> response = organizationBoardMockMvc.retrieveLatestOrganizationBoardList(board3.getId(), 2, 200);
 
         //then
-        assertThat(response.getData().get(0).getTitle()).isEqualTo(title2);
-        assertThat(response.getData().get(1).getTitle()).isEqualTo(title1);
+        assertThat(response.getData().get(0).getBoardTitle()).isEqualTo(title2);
+        assertThat(response.getData().get(1).getBoardTitle()).isEqualTo(title1);
     }
 
     @Test
@@ -162,7 +163,7 @@ class OrganizationBoardControllerTest extends ControllerTestUtils {
         //given
 
         //when
-        ApiResponse<List<OrganizationBoardInfoResponse>> response = organizationBoardMockMvc.retrieveLatestOrganizationBoardList(0, 3, 200);
+        ApiResponse<List<BoardWithOrganizationDto>> response = organizationBoardMockMvc.retrieveLatestOrganizationBoardList(0, 3, 200);
 
         //then
         assertThat(response.getData()).isEmpty();

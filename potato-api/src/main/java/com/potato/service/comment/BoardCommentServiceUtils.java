@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 final class BoardCommentServiceUtils {
 
     static BoardComment findBoardCommentById(BoardCommentRepository boardCommentRepository, Long boardCommentId) {
-        BoardComment boardComment = boardCommentRepository.findBoardCommentById(boardCommentId);
+        BoardComment boardComment = boardCommentRepository.findBoardCommentByIdAndMemberId(boardCommentId, null);
         if (boardComment == null) {
             throw new NotFoundException(String.format("해당하는 id (%s)를 가진 댓글이 없습니다", boardCommentId));
         }

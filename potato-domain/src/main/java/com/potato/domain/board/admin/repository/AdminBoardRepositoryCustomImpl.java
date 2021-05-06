@@ -18,7 +18,7 @@ public class AdminBoardRepositoryCustomImpl implements AdminBoardRepositoryCusto
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<AdminBoard> findBetweenDate(LocalDate startDate, LocalDate endDate) {
+    public List<AdminBoard> findAllBetweenDate(LocalDate startDate, LocalDate endDate) {
         return queryFactory.selectFrom(adminBoard)
             .innerJoin(adminBoard.board, board).fetchJoin()
             .where(

@@ -85,7 +85,7 @@ class OrganizationRetrieveServiceTest extends MemberSetupTest {
     }
 
     @Test
-    void 조직_리스트를_불러온다() {
+    void 모든_카테고리의_동아리_리스트를_조회한다() {
         // given
         Organization organization1 = OrganizationCreator.create(subDomain);
         organization1.addAdmin(memberId);
@@ -96,21 +96,60 @@ class OrganizationRetrieveServiceTest extends MemberSetupTest {
         organizationRepository.saveAll(Arrays.asList(organization1, organization2));
 
         // when
-        List<OrganizationInfoResponse> responses = organizationRetrieveService.getOrganizationsInfo();
+        List<OrganizationInfoResponse> responses = organizationRetrieveService.retrieveOrganizationsWithPagination(null, 3);
 
         // then
         assertThat(responses).hasSize(2);
-        assertOrganizationInfoResponse(responses.get(0), organization1.getSubDomain());
-        assertOrganizationInfoResponse(responses.get(1), organization2.getSubDomain());
+        assertOrganizationInfoResponse(responses.get(0), organization2.getSubDomain());
+        assertOrganizationInfoResponse(responses.get(1), organization1.getSubDomain());
     }
 
     @Test
-    void 조직_리스트를_불러온다_아무_조직도_없다() {
+    void 비인준동아리_리스트를_조회한다() {
+        // given
+        Organization nonApprovedCircle = OrganizationCreator.create(subDomain, OrganizationCategory.NON_APPROVED_CIRCLE);
+        nonApprovedCircle.addAdmin(memberId);
+
+        Organization approvedCircle = OrganizationCreator.create("subDomain2", OrganizationCategory.APPROVED_CIRCLE);
+        approvedCircle.addAdmin(memberId);
+
+        organizationRepository.saveAll(Arrays.asList(nonApprovedCircle, approvedCircle));
+
         // when
-        List<OrganizationInfoResponse> responses = organizationRetrieveService.getOrganizationsInfo();
+        List<OrganizationInfoResponse> responses = organizationRetrieveService.retrieveOrganizationsWithPagination(OrganizationCategory.NON_APPROVED_CIRCLE, 3);
+
+        // then
+        assertThat(responses).hasSize(1);
+        assertOrganizationInfoResponse(responses.get(0), nonApprovedCircle.getSubDomain());
+    }
+
+    @Test
+    void 전체_동아리_리스트_조회시_SIZE_로_넘어온_수만큼_최신순으로_조회한다() {
+        // given
+        Organization organization1 = OrganizationCreator.create(subDomain, OrganizationCategory.NON_APPROVED_CIRCLE);
+        organization1.addAdmin(memberId);
+
+        Organization organization2 = OrganizationCreator.create("subDomain2", OrganizationCategory.APPROVED_CIRCLE);
+        organization2.addAdmin(memberId);
+
+        organizationRepository.saveAll(Arrays.asList(organization1, organization2));
+
+        // when
+        List<OrganizationInfoResponse> responses = organizationRetrieveService.retrieveOrganizationsWithPagination(null, 1);
+
+        // then
+        assertThat(responses).hasSize(1);
+        assertOrganizationInfoResponse(responses.get(0), organization2.getSubDomain());
+    }
+
+    @Test
+    void 조직_리스트를_불러온다_아무_조직도_없으면_NULL_이아닌_빈배열을_반환한다() {
+        // when
+        List<OrganizationInfoResponse> responses = organizationRetrieveService.retrieveOrganizationsWithPagination(null, 3);
 
         // then
         assertThat(responses).isEmpty();
+        assertThat(responses).isNotNull();
     }
 
     @Test
@@ -135,7 +174,7 @@ class OrganizationRetrieveServiceTest extends MemberSetupTest {
     }
 
     @Test
-    void 내가_속한_조직의_리스트를_모두_불러올때_가입신청된_조직은_포함되지_않는다() {
+    void 내가_속한_동아리를_모두_불러올때_가입신청중인_동아리는_포함되지_않는다() {
         // given
         Organization organization = OrganizationCreator.create(subDomain);
         organization.addPending(memberId);
@@ -150,7 +189,7 @@ class OrganizationRetrieveServiceTest extends MemberSetupTest {
     }
 
     @Test
-    void 그룹을_팔로우한_유저들_불러오기() {
+    void 동아리를_팔로우한_유저들_불러오기() {
         //given
         String followingEmail1 = "tnswh1@gmail.com";
         String followingEmail2 = "tnswh2@gmail.com";
@@ -167,8 +206,8 @@ class OrganizationRetrieveServiceTest extends MemberSetupTest {
         List<MemberInfoResponse> responses = organizationRetrieveService.getOrganizationFollowMember(subDomain);
 
         //then
-        assertMemberInfoResponse(responses.get(0), followingEmail1, followingMember1.getName(), followingMember1.getProfileUrl(), followingMember1.getMajor(), followingMember1.getClassNumber());
-        assertMemberInfoResponse(responses.get(1), followingEmail2, followingMember2.getName(), followingMember2.getProfileUrl(), followingMember2.getMajor(), followingMember2.getClassNumber());
+        assertMemberInfoResponse(responses.get(0), followingMember1.getId(), followingEmail1);
+        assertMemberInfoResponse(responses.get(1), followingMember2.getId(), followingEmail2);
     }
 
     @Test
@@ -186,7 +225,7 @@ class OrganizationRetrieveServiceTest extends MemberSetupTest {
     }
 
     @Test
-    void 멤버가_팔로우한_조직들을_가져온다() {
+    void 해당_멤버가_팔로우한_그룹들을_가져온다() {
         //given
         Member member = MemberCreator.create("tnswh2023@naver.com");
         memberRepository.save(member);
@@ -207,7 +246,7 @@ class OrganizationRetrieveServiceTest extends MemberSetupTest {
     }
 
     @Test
-    void 멤버가_팔로우한_조직이_없을_경우_빈배열을_반환한다() {
+    void 해당_멤버가_팔로우한_그룹이_없을_경우_빈배열을_반환한다() {
         //given
         Member member = MemberCreator.create("tnswh2023@naver.com");
         memberRepository.save(member);
@@ -220,7 +259,7 @@ class OrganizationRetrieveServiceTest extends MemberSetupTest {
     }
 
     @Test
-    void 팔로우가_많은_그룹수부터_조회한다() {
+    void 인기있는_그룹_조회시_팔로우가_많은_그룹수_순서로_조회한다() {
         // given
         Organization organization1 = OrganizationCreator.create("first");
         organization1.addFollow(1L);
@@ -244,7 +283,7 @@ class OrganizationRetrieveServiceTest extends MemberSetupTest {
     }
 
     @Test
-    void 그룹의_팔로우_수가_같은_경우_최신순으로_조회된다() {
+    void 인기있는_그룹_조회시_그룹의_팔로우_수가_같은_경우_최신순으로_조회된다() {
         // given
         Organization organization1 = OrganizationCreator.create("first");
         Organization organization2 = OrganizationCreator.create("second");

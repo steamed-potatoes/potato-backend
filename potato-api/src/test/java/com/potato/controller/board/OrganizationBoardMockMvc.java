@@ -3,6 +3,7 @@ package com.potato.controller.board;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.potato.controller.ApiResponse;
+import com.potato.domain.board.organization.repository.dto.BoardWithOrganizationDto;
 import com.potato.service.board.organization.dto.request.CreateOrganizationBoardRequest;
 import com.potato.service.board.organization.dto.request.UpdateOrganizationBoardRequest;
 import com.potato.service.board.organization.dto.response.OrganizationBoardInfoResponse;
@@ -62,7 +63,7 @@ class OrganizationBoardMockMvc {
         );
     }
 
-    public ApiResponse<List<OrganizationBoardInfoResponse>> retrieveLatestOrganizationBoardList(long lastOrganizationBoardId, long size, int expectedStatus) throws Exception {
+    public ApiResponse<List<BoardWithOrganizationDto>> retrieveLatestOrganizationBoardList(long lastOrganizationBoardId, long size, int expectedStatus) throws Exception {
         MultiValueMap<String, String> retrieveLatestBoardsRequest = new LinkedMultiValueMap<>();
         retrieveLatestBoardsRequest.add("lastOrganizationBoardId", String.valueOf(lastOrganizationBoardId));
         retrieveLatestBoardsRequest.add("size", String.valueOf(size));
