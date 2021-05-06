@@ -11,3 +11,7 @@ spring:
   redis:
     host: redis
     port: 6379
+    
+---
+spring:
+  profiles: prod

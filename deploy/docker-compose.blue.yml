@@ -22,4 +22,3 @@ services:
     hostname: redis
     volumes:
       - ~/db/data:/data
-

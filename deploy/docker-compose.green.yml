@@ -18,7 +18,7 @@ services:
       - "db:redis"
   db:
     image: redis
-    command: redis-server --port 6380
+    command: redis-server --port 6379
     hostname: redis
     volumes:
       - ~/db/data:/data
