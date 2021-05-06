@@ -6,12 +6,12 @@ import java.util.List;
 
 public interface OrganizationRepositoryCustom {
 
-    Organization findBySubDomain(String subDomain);
+    Organization findOrganizationBySubDomain(String subDomain);
 
     List<Organization> findAllByMemberId(Long memberId);
 
-    List<Organization> findAllByFollowMemberId(Long memberId);
+    List<Organization> findAllByFollowMemberId(Long followerMemberId);
 
-    List<Organization> findOrderByFollowersCountWithLimit(int size);
+    List<Organization> findAllOrderByFollowersCountWithLimit(int size);
 
 }

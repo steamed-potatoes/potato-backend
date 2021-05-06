@@ -42,7 +42,7 @@ public class OrganizationRetrieveService {
 
     @Transactional(readOnly = true)
     public List<OrganizationInfoResponse> retrievePopularOrganizations(int size) {
-        return organizationRepository.findOrderByFollowersCountWithLimit(size).stream()
+        return organizationRepository.findAllOrderByFollowersCountWithLimit(size).stream()
             .map(OrganizationInfoResponse::of)
             .collect(Collectors.toList());
     }

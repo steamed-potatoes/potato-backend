@@ -43,7 +43,7 @@ public class OrganizationBoardRepositoryCustomImpl implements OrganizationBoardR
     }
 
     @Override
-    public List<BoardWithOrganizationDto> findAllBoardsWithOrganizationByTypeLessThanOrderByIdDescLimit(OrganizationBoardType type, long lastOrganizationBoardId, int size) {
+    public List<BoardWithOrganizationDto> findAllWithOrganizationByTypeLessThanOrderByIdDescLimit(OrganizationBoardType type, long lastOrganizationBoardId, int size) {
         return queryFactory.select(Projections.fields(BoardWithOrganizationDto.class,
             organizationBoard.subDomain.as("orgSubDomain"),
             organization.name.as("orgName"),
@@ -88,7 +88,7 @@ public class OrganizationBoardRepositoryCustomImpl implements OrganizationBoardR
     }
 
     @Override
-    public List<OrganizationBoard> findAllOrganizationBoardsBetweenDate(LocalDate startDate, LocalDate endDate) {
+    public List<OrganizationBoard> findAllBetweenDate(LocalDate startDate, LocalDate endDate) {
         return queryFactory.selectFrom(organizationBoard)
             .innerJoin(organizationBoard.board, board).fetchJoin()
             .where(
@@ -98,7 +98,7 @@ public class OrganizationBoardRepositoryCustomImpl implements OrganizationBoardR
     }
 
     @Override
-    public List<OrganizationBoard> findAllOrganizationBoardsBetweenDateTimeWithLimit(LocalDateTime startDateTime, LocalDateTime endDateTime, int size) {
+    public List<OrganizationBoard> findAllByBetweenDateTimeWithLimit(LocalDateTime startDateTime, LocalDateTime endDateTime, int size) {
         return queryFactory.selectFrom(organizationBoard)
             .innerJoin(organizationBoard.board, board).fetchJoin()
             .where(
@@ -110,7 +110,7 @@ public class OrganizationBoardRepositoryCustomImpl implements OrganizationBoardR
     }
 
     @Override
-    public List<OrganizationBoard> findAllBoardsOrderByLikesWithLimit(int size) {
+    public List<OrganizationBoard> findAllOrderByLikesWithLimit(int size) {
         return queryFactory.selectFrom(organizationBoard)
             .orderBy(
                 organizationBoard.likesCount.desc(),

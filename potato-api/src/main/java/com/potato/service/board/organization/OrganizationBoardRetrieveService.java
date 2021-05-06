@@ -38,19 +38,19 @@ public class OrganizationBoardRetrieveService {
 
     @Transactional(readOnly = true)
     public List<BoardWithOrganizationDto> retrieveBoardsWithPagination(OrganizationBoardType type, long lastOrganizationBoardId, int size) {
-        return organizationBoardRepository.findAllBoardsWithOrganizationByTypeLessThanOrderByIdDescLimit(type, lastOrganizationBoardId, size);
+        return organizationBoardRepository.findAllWithOrganizationByTypeLessThanOrderByIdDescLimit(type, lastOrganizationBoardId, size);
     }
 
     @Transactional(readOnly = true)
     public List<OrganizationBoardInfoResponse> retrieveImminentBoards(RetrieveImminentBoardsRequest request) {
-        return organizationBoardRepository.findAllOrganizationBoardsBetweenDateTimeWithLimit(request.getDateTime(), request.getDateTime().plusWeeks(1), request.getSize()).stream()
+        return organizationBoardRepository.findAllByBetweenDateTimeWithLimit(request.getDateTime(), request.getDateTime().plusWeeks(1), request.getSize()).stream()
             .map(OrganizationBoardInfoResponse::of)
             .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public List<OrganizationBoardInfoResponse> retrievePopularBoard(int size) {
-        return organizationBoardRepository.findAllBoardsOrderByLikesWithLimit(size).stream()
+        return organizationBoardRepository.findAllOrderByLikesWithLimit(size).stream()
             .map(OrganizationBoardInfoResponse::of)
             .collect(Collectors.toList());
     }

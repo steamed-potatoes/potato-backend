@@ -101,7 +101,7 @@ class OrganizationBoardRepositoryTest {
         organizationBoardRepository.save(organizationBoard);
 
         // when
-        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findAllOrganizationBoardsBetweenDate(startDate, endDate);
+        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findAllBetweenDate(startDate, endDate);
 
         // then
         assertThat(organizationBoardList).hasSize(1);
@@ -126,7 +126,7 @@ class OrganizationBoardRepositoryTest {
         organizationBoardRepository.save(organizationBoard);
 
         // when
-        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findAllOrganizationBoardsBetweenDate(startDate, endDate);
+        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findAllBetweenDate(startDate, endDate);
 
         // then
         assertThat(organizationBoardList).hasSize(1);
@@ -151,7 +151,7 @@ class OrganizationBoardRepositoryTest {
         organizationBoardRepository.save(organizationBoard);
 
         // when
-        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findAllOrganizationBoardsBetweenDate(startDate, endDate);
+        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findAllBetweenDate(startDate, endDate);
 
         // then
         assertThat(organizationBoardList).isEmpty();
@@ -176,7 +176,7 @@ class OrganizationBoardRepositoryTest {
         organizationBoardRepository.save(organizationBoard);
 
         // when
-        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findAllOrganizationBoardsBetweenDate(startDate, endDate);
+        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findAllBetweenDate(startDate, endDate);
 
         // then
         assertThat(organizationBoardList).isEmpty();
@@ -201,7 +201,7 @@ class OrganizationBoardRepositoryTest {
         organizationBoardRepository.save(organizationBoard);
 
         // when
-        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findAllOrganizationBoardsBetweenDate(startDate, endDate);
+        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findAllBetweenDate(startDate, endDate);
 
         // then
         assertThat(organizationBoardList).hasSize(1);
@@ -216,7 +216,7 @@ class OrganizationBoardRepositoryTest {
         organizationBoardRepository.save(organizationBoard);
 
         // when
-        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findAllOrganizationBoardsBetweenDateTimeWithLimit(LocalDateTime.of(2021, 4, 1, 0, 0), LocalDateTime.of(2021, 4, 3, 0, 0), 1);
+        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findAllByBetweenDateTimeWithLimit(LocalDateTime.of(2021, 4, 1, 0, 0), LocalDateTime.of(2021, 4, 3, 0, 0), 1);
 
         // then
         assertThat(organizationBoardList).hasSize(1);
@@ -231,7 +231,7 @@ class OrganizationBoardRepositoryTest {
         organizationBoardRepository.save(organizationBoard);
 
         // when
-        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findAllOrganizationBoardsBetweenDateTimeWithLimit(LocalDateTime.of(2021, 4, 1, 0, 0), LocalDateTime.of(2021, 4, 3, 0, 0), 1);
+        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findAllByBetweenDateTimeWithLimit(LocalDateTime.of(2021, 4, 1, 0, 0), LocalDateTime.of(2021, 4, 3, 0, 0), 1);
 
         // then
         assertThat(organizationBoardList).hasSize(1);
@@ -246,7 +246,7 @@ class OrganizationBoardRepositoryTest {
         organizationBoardRepository.save(organizationBoard);
 
         // when
-        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findAllOrganizationBoardsBetweenDateTimeWithLimit(LocalDateTime.of(2021, 4, 1, 0, 0), LocalDateTime.of(2021, 4, 3, 0, 0), 1);
+        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findAllByBetweenDateTimeWithLimit(LocalDateTime.of(2021, 4, 1, 0, 0), LocalDateTime.of(2021, 4, 3, 0, 0), 1);
 
         // then
         assertThat(organizationBoardList).isEmpty();
@@ -261,7 +261,7 @@ class OrganizationBoardRepositoryTest {
         organizationBoardRepository.save(organizationBoard);
 
         // when
-        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findAllOrganizationBoardsBetweenDateTimeWithLimit(LocalDateTime.of(2021, 4, 1, 0, 0), LocalDateTime.of(2021, 4, 3, 0, 0), 1);
+        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findAllByBetweenDateTimeWithLimit(LocalDateTime.of(2021, 4, 1, 0, 0), LocalDateTime.of(2021, 4, 3, 0, 0), 1);
 
         // then
         assertThat(organizationBoardList).isEmpty();
@@ -276,7 +276,7 @@ class OrganizationBoardRepositoryTest {
         organizationBoardRepository.save(organizationBoard);
 
         // when
-        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findAllOrganizationBoardsBetweenDateTimeWithLimit(LocalDateTime.of(2021, 4, 1, 0, 0), LocalDateTime.of(2021, 4, 3, 0, 0), 1);
+        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findAllByBetweenDateTimeWithLimit(LocalDateTime.of(2021, 4, 1, 0, 0), LocalDateTime.of(2021, 4, 3, 0, 0), 1);
 
         // then
         assertThat(organizationBoardList).hasSize(1);
@@ -291,7 +291,7 @@ class OrganizationBoardRepositoryTest {
         organizationBoardRepository.save(organizationBoard);
 
         // when
-        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findAllOrganizationBoardsBetweenDateTimeWithLimit(LocalDateTime.of(2021, 4, 1, 0, 0), LocalDateTime.of(2021, 4, 3, 0, 0), 1);
+        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findAllByBetweenDateTimeWithLimit(LocalDateTime.of(2021, 4, 1, 0, 0), LocalDateTime.of(2021, 4, 3, 0, 0), 1);
 
         // then
         assertThat(organizationBoardList).isEmpty();
