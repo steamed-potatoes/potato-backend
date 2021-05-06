@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
     uniqueConstraints = @UniqueConstraint(name = "uni_organization_1", columnNames = "subDomain"),
     indexes = {
         @Index(name = "idx_organization_1", columnList = "category"),
-        @Index(name = "idx_organization_2", columnList = "followersCount,id")
+        @Index(name = "idx_organization_2", columnList = "followersCount")
     }
 )
 public class Organization extends BaseTimeEntity {
