@@ -15,18 +15,12 @@ public interface OrganizationBoardRepositoryCustom {
 
     OrganizationBoard findOrganizationBoardByIdAndSubDomain(Long organizationBoardId, String subDomain);
 
-    List<BoardWithOrganizationDto> findAllBoardsOrderByDescWithLimit(int size);
+    List<BoardWithOrganizationDto> findAllBoardsWithOrganizationByTypeLessThanOrderByIdDescLimit(OrganizationBoardType type, long lastOrganizationBoardId, int size);
 
-    List<BoardWithOrganizationDto> findAllBoardsWithOrganizationLessThanIdOrderByIdDescWithLimit(long lastOrganizationBoardId, int size);
+    List<OrganizationBoard> findAllOrganizationBoardsBetweenDate(LocalDate startDate, LocalDate endDate);
 
-    List<BoardWithOrganizationDto> findAllBoardsWithOrganizationByBoardTypeOrderByIdDesc(OrganizationBoardType type, int size);
+    List<OrganizationBoard> findAllOrganizationBoardsBetweenDateTimeWithLimit(LocalDateTime startDateTime, LocalDateTime endDateTime, int size);
 
-    List<BoardWithOrganizationDto> findBoardsByTypeLessThanOrderByIdDescLimit(OrganizationBoardType type, long lastOrganizationBoardId, int size);
-
-    List<OrganizationBoard> findBetweenDateIncludeOverlapping(LocalDate startDate, LocalDate endDate);
-
-    List<OrganizationBoard> findBetweenDateLimit(LocalDateTime startDateTime, LocalDateTime endDateTime, int size);
-
-    List<OrganizationBoard> findBoardsOrderByLikesCountLimitSize(int size);
+    List<OrganizationBoard> findAllBoardsOrderByLikesWithLimit(int size);
 
 }

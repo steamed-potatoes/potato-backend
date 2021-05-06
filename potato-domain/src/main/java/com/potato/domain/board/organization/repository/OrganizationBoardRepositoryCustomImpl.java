@@ -4,6 +4,7 @@ import com.potato.domain.board.organization.OrganizationBoard;
 import com.potato.domain.board.organization.OrganizationBoardType;
 import com.potato.domain.board.organization.repository.dto.BoardWithOrganizationDto;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -42,34 +43,7 @@ public class OrganizationBoardRepositoryCustomImpl implements OrganizationBoardR
     }
 
     @Override
-    public List<BoardWithOrganizationDto> findAllBoardsOrderByDescWithLimit(int size) {
-        return queryFactory.select(Projections.fields(BoardWithOrganizationDto.class,
-            organizationBoard.subDomain.as("orgSubDomain"),
-            organization.name.as("orgName"),
-            organization.category.as("orgCategory"),
-            organization.profileUrl.as("orgProfileUrl"),
-            organization.description.as("orgDescription"),
-            organization.membersCount.as("orgMembersCount"),
-            organization.followersCount.as("orgFollowersCount"),
-            organizationBoard.id.as("boardId"),
-            organizationBoard.board.title.as("boardTitle"),
-            organizationBoard.content.as("boardContent"),
-            organizationBoard.imageUrl.as("boardImageUrl"),
-            organizationBoard.type.as("boardType"),
-            organizationBoard.board.dateTimeInterval.startDateTime.as("boardStartDateTime"),
-            organizationBoard.board.dateTimeInterval.endDateTime.as("boardEndDateTime"),
-            organizationBoard.createdDateTime,
-            organizationBoard.lastModifiedDateTime
-        ))
-            .from(organizationBoard)
-            .innerJoin(organization).on(organizationBoard.subDomain.eq(organization.subDomain))
-            .orderBy(organizationBoard.id.desc())
-            .limit(size)
-            .fetch();
-    }
-
-    @Override
-    public List<BoardWithOrganizationDto> findAllBoardsWithOrganizationLessThanIdOrderByIdDescWithLimit(long lastOrganizationBoardId, int size) {
+    public List<BoardWithOrganizationDto> findAllBoardsWithOrganizationByTypeLessThanOrderByIdDescLimit(OrganizationBoardType type, long lastOrganizationBoardId, int size) {
         return queryFactory.select(Projections.fields(BoardWithOrganizationDto.class,
             organizationBoard.subDomain.as("orgSubDomain"),
             organization.name.as("orgName"),
@@ -91,76 +65,30 @@ public class OrganizationBoardRepositoryCustomImpl implements OrganizationBoardR
             .from(organizationBoard)
             .innerJoin(organization).on(organizationBoard.subDomain.eq(organization.subDomain))
             .where(
-                organizationBoard.id.lt(lastOrganizationBoardId)
+                eqType(type),
+                lessThanId(lastOrganizationBoardId)
             )
             .orderBy(organizationBoard.id.desc())
             .limit(size)
             .fetch();
     }
 
-    @Override
-    public List<BoardWithOrganizationDto> findAllBoardsWithOrganizationByBoardTypeOrderByIdDesc(OrganizationBoardType type, int size) {
-        return queryFactory.select(Projections.fields(BoardWithOrganizationDto.class,
-            organizationBoard.subDomain.as("orgSubDomain"),
-            organization.name.as("orgName"),
-            organization.category.as("orgCategory"),
-            organization.profileUrl.as("orgProfileUrl"),
-            organization.description.as("orgDescription"),
-            organization.membersCount.as("orgMembersCount"),
-            organization.followersCount.as("orgFollowersCount"),
-            organizationBoard.id.as("boardId"),
-            organizationBoard.board.title.as("boardTitle"),
-            organizationBoard.content.as("boardContent"),
-            organizationBoard.imageUrl.as("boardImageUrl"),
-            organizationBoard.type.as("boardType"),
-            organizationBoard.board.dateTimeInterval.startDateTime.as("boardStartDateTime"),
-            organizationBoard.board.dateTimeInterval.endDateTime.as("boardEndDateTime"),
-            organizationBoard.createdDateTime,
-            organizationBoard.lastModifiedDateTime
-        ))
-            .from(organizationBoard)
-            .innerJoin(organization).on(organizationBoard.subDomain.eq(organization.subDomain))
-            .where(
-                organizationBoard.type.eq(type)
-            )
-            .orderBy(organizationBoard.id.desc())
-            .limit(size)
-            .fetch();
+    private BooleanExpression eqType(OrganizationBoardType type) {
+        if (type == null) {
+            return null;
+        }
+        return organizationBoard.type.eq(type);
+    }
+
+    private BooleanExpression lessThanId(Long organizationBoardId) {
+        if (organizationBoardId == 0) {
+            return null;
+        }
+        return organizationBoard.id.lt(organizationBoardId);
     }
 
     @Override
-    public List<BoardWithOrganizationDto> findBoardsByTypeLessThanOrderByIdDescLimit(OrganizationBoardType type, long lastOrganizationBoardId, int size) {
-        return queryFactory.select(Projections.fields(BoardWithOrganizationDto.class,
-            organizationBoard.subDomain.as("orgSubDomain"),
-            organization.name.as("orgName"),
-            organization.category.as("orgCategory"),
-            organization.profileUrl.as("orgProfileUrl"),
-            organization.description.as("orgDescription"),
-            organization.membersCount.as("orgMembersCount"),
-            organization.followersCount.as("orgFollowersCount"),
-            organizationBoard.id.as("boardId"),
-            organizationBoard.board.title.as("boardTitle"),
-            organizationBoard.content.as("boardContent"),
-            organizationBoard.imageUrl.as("boardImageUrl"),
-            organizationBoard.type.as("boardType"),
-            organizationBoard.board.dateTimeInterval.startDateTime.as("boardStartDateTime"),
-            organizationBoard.board.dateTimeInterval.endDateTime.as("boardEndDateTime"),
-            organizationBoard.createdDateTime,
-            organizationBoard.lastModifiedDateTime
-        ))
-            .from(organizationBoard)
-            .innerJoin(organization).on(organizationBoard.subDomain.eq(organization.subDomain))
-            .where(
-                organizationBoard.id.lt(lastOrganizationBoardId),
-                organizationBoard.type.eq(type)
-            )
-            .orderBy(organizationBoard.id.desc())
-            .limit(size)
-            .fetch();
-    }
-
-    @Override
-    public List<OrganizationBoard> findBetweenDateIncludeOverlapping(LocalDate startDate, LocalDate endDate) {
+    public List<OrganizationBoard> findAllOrganizationBoardsBetweenDate(LocalDate startDate, LocalDate endDate) {
         return queryFactory.selectFrom(organizationBoard)
             .innerJoin(organizationBoard.board, board).fetchJoin()
             .where(
@@ -170,7 +98,7 @@ public class OrganizationBoardRepositoryCustomImpl implements OrganizationBoardR
     }
 
     @Override
-    public List<OrganizationBoard> findBetweenDateLimit(LocalDateTime startDateTime, LocalDateTime endDateTime, int size) {
+    public List<OrganizationBoard> findAllOrganizationBoardsBetweenDateTimeWithLimit(LocalDateTime startDateTime, LocalDateTime endDateTime, int size) {
         return queryFactory.selectFrom(organizationBoard)
             .innerJoin(organizationBoard.board, board).fetchJoin()
             .where(
@@ -182,7 +110,7 @@ public class OrganizationBoardRepositoryCustomImpl implements OrganizationBoardR
     }
 
     @Override
-    public List<OrganizationBoard> findBoardsOrderByLikesCountLimitSize(int size) {
+    public List<OrganizationBoard> findAllBoardsOrderByLikesWithLimit(int size) {
         return queryFactory.selectFrom(organizationBoard)
             .orderBy(
                 organizationBoard.likesCount.desc(),

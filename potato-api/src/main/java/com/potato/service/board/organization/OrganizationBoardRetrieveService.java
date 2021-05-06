@@ -29,7 +29,7 @@ public class OrganizationBoardRetrieveService {
     private final MemberRepository memberRepository;
 
     @Transactional(readOnly = true)
-    public OrganizationBoardWithCreatorInfoResponse retrieveBoard(Long organizationBoardId) {
+    public OrganizationBoardWithCreatorInfoResponse retrieveBoardWithOrganizationAndCreator(Long organizationBoardId) {
         OrganizationBoard organizationBoard = OrganizationBoardServiceUtils.findOrganizationBoardById(organizationBoardRepository, organizationBoardId);
         Organization organization = OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, organizationBoard.getSubDomain());
         Member creator = MemberServiceUtils.findMemberById(memberRepository, organizationBoard.getMemberId());
@@ -38,22 +38,19 @@ public class OrganizationBoardRetrieveService {
 
     @Transactional(readOnly = true)
     public List<BoardWithOrganizationDto> retrieveBoardsWithPagination(OrganizationBoardType type, long lastOrganizationBoardId, int size) {
-        if (type == null) {
-            return OrganizationBoardServiceUtils.findOrganizationBoardWithPagination(organizationBoardRepository, lastOrganizationBoardId, size);
-        }
-        return OrganizationBoardServiceUtils.findOrganizationBoardWithPaginationByType(organizationBoardRepository, type, lastOrganizationBoardId, size);
+        return organizationBoardRepository.findAllBoardsWithOrganizationByTypeLessThanOrderByIdDescLimit(type, lastOrganizationBoardId, size);
     }
 
     @Transactional(readOnly = true)
     public List<OrganizationBoardInfoResponse> retrieveImminentBoards(RetrieveImminentBoardsRequest request) {
-        return organizationBoardRepository.findBetweenDateLimit(request.getDateTime(), request.getDateTime().plusWeeks(1), request.getSize()).stream()
+        return organizationBoardRepository.findAllOrganizationBoardsBetweenDateTimeWithLimit(request.getDateTime(), request.getDateTime().plusWeeks(1), request.getSize()).stream()
             .map(OrganizationBoardInfoResponse::of)
             .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public List<OrganizationBoardInfoResponse> retrievePopularBoard(int size) {
-        return organizationBoardRepository.findBoardsOrderByLikesCountLimitSize(size).stream()
+        return organizationBoardRepository.findAllBoardsOrderByLikesWithLimit(size).stream()
             .map(OrganizationBoardInfoResponse::of)
             .collect(Collectors.toList());
     }
