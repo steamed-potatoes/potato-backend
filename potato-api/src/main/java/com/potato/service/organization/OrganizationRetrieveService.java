@@ -2,6 +2,7 @@ package com.potato.service.organization;
 
 import com.potato.domain.member.MemberRepository;
 import com.potato.domain.organization.Organization;
+import com.potato.domain.organization.OrganizationCategory;
 import com.potato.domain.organization.OrganizationRepository;
 import com.potato.service.member.dto.response.MemberInfoResponse;
 import com.potato.service.organization.dto.response.OrganizationWithMembersInfoResponse;
@@ -34,8 +35,8 @@ public class OrganizationRetrieveService {
     }
 
     @Transactional(readOnly = true)
-    public List<OrganizationInfoResponse> getOrganizationsInfo() {
-        return organizationRepository.findAll().stream()
+    public List<OrganizationInfoResponse> retrieveOrganizationsWithPagination(OrganizationCategory category, int size) {
+        return organizationRepository.findAllByCategoryOrderByIdDescWithLimit(category, size).stream()
             .map(OrganizationInfoResponse::of)
             .collect(Collectors.toList());
     }

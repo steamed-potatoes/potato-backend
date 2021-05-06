@@ -17,6 +17,14 @@ public class OrganizationCreator {
             .build();
     }
 
+    public static Organization create(String subDomain, OrganizationCategory category) {
+        return Organization.builder()
+            .subDomain(subDomain)
+            .name("조직")
+            .category(category)
+            .build();
+    }
+
     public static Organization create(String subDomain, String name, String description, String profileUrl, OrganizationCategory category) {
         return Organization.builder()
             .subDomain(subDomain)

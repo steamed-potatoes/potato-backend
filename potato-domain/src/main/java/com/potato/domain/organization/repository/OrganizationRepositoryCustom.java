@@ -1,6 +1,7 @@
 package com.potato.domain.organization.repository;
 
 import com.potato.domain.organization.Organization;
+import com.potato.domain.organization.OrganizationCategory;
 
 import java.util.List;
 
@@ -13,5 +14,7 @@ public interface OrganizationRepositoryCustom {
     List<Organization> findAllByFollowMemberId(Long followerMemberId);
 
     List<Organization> findAllOrderByFollowersCountWithLimit(int size);
+
+    List<Organization> findAllByCategoryOrderByIdDescWithLimit(OrganizationCategory category, int size);
 
 }

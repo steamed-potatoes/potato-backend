@@ -1,7 +1,9 @@
 package com.potato.domain.organization.repository;
 
 import com.potato.domain.organization.Organization;
+import com.potato.domain.organization.OrganizationCategory;
 import com.potato.domain.organization.OrganizationRole;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -53,6 +55,24 @@ public class OrganizationRepositoryCustomImpl implements OrganizationRepositoryC
             )
             .limit(size)
             .fetch();
+    }
+
+    @Override
+    public List<Organization> findAllByCategoryOrderByIdDescWithLimit(OrganizationCategory category, int size) {
+        return queryFactory.selectFrom(organization)
+            .where(
+                eqCategory(category)
+            )
+            .orderBy(organization.id.desc())
+            .limit(size)
+            .fetch();
+    }
+
+    private BooleanExpression eqCategory(OrganizationCategory category) {
+        if (category == null) {
+            return null;
+        }
+        return organization.category.eq(category);
     }
 
 }

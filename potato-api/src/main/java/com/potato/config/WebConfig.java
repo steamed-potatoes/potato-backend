@@ -22,8 +22,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
             .allowedOrigins(
-                "https://ourpotato.netlify.app", "http://ourpotato.netlify.app", "https://potato-front.netlify.app",
-                "https://potato-admin.netlify.app", "http://potato-admin.netlify.app",
+                "https://ourpotato.netlify.app", "https://potato-front.netlify.app", "https://potato-admin.netlify.app",
                 "http://localhost:3000", "http://localhost:6500"
             )
             .allowedMethods("GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS", "PATCH")
