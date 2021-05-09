@@ -1,14 +1,15 @@
 package com.potato.domain.comment;
 
 import com.potato.domain.BaseTimeEntity;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Entity
-@NoArgsConstructor
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
 public class BoardCommentLike extends BaseTimeEntity {
 
     @Id
@@ -16,12 +17,13 @@ public class BoardCommentLike extends BaseTimeEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="board_comment_id")
+    @JoinColumn(name = "board_comment_id", nullable = false)
     private BoardComment boardComment;
 
+    @Column(nullable = false)
     private Long memberId;
 
-    public BoardCommentLike(BoardComment boardComment, Long memberId) {
+    private BoardCommentLike(BoardComment boardComment, Long memberId) {
         this.boardComment = boardComment;
         this.memberId = memberId;
     }
@@ -33,4 +35,5 @@ public class BoardCommentLike extends BaseTimeEntity {
     public boolean isSameMember(Long memberId) {
         return this.memberId.equals(memberId);
     }
+
 }

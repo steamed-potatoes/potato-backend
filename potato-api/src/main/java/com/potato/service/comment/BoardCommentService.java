@@ -59,4 +59,5 @@ public class BoardCommentService {
         BoardComment boardComment = BoardCommentServiceUtils.findBoardCommentById(boardCommentRepository, boardCommentId);
         boardComment.deleteLike(memberId);
     }
+
 }

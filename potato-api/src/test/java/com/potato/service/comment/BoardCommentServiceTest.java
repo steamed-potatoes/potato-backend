@@ -16,6 +16,7 @@ import com.potato.service.comment.dto.request.AddBoardCommentRequest;
 import com.potato.service.comment.dto.response.BoardCommentResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -406,6 +407,19 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
         assertThatThrownBy(
             () -> boardCommentService.unLikeBoardComment(comment.getId(), memberId)
         ).isInstanceOf(NotFoundException.class);
+    }
+
+    @DisplayName("이미 삭제된 댓글에 누른 좋아요를 취소하려하면 NOT FOUND EXCEPTION이 발생하면서 취소할 수 없다")
+    @Test
+    void 이미_삭제된_댓글에_누른_좋아요를_취소할_수없다() {
+        //given
+        organizationBoardRepository.save(organizationBoard);
+        BoardComment comment = BoardCommentCreator.createRootComment(BoardCommentType.ORGANIZATION_BOARD, organizationBoard.getId(), memberId, "댓글");
+        comment.delete();
+        boardCommentRepository.save(comment);
+
+        // when & then
+        assertThatThrownBy(() -> boardCommentService.unLikeBoardComment(comment.getId(), memberId)).isInstanceOf(NotFoundException.class);
     }
 
     private void assertBoardCommentLike(BoardCommentLike boardCommentLike, Long boardCommentId, Long memberId) {
