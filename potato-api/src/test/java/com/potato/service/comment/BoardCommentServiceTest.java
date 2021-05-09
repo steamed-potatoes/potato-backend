@@ -221,6 +221,7 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
         rootComment1.addChildComment(memberId, "자식 댓글1-1");
         rootComment1.addChildComment(memberId, "자식 댓글1-2");
         BoardComment rootComment2 = BoardCommentCreator.createRootComment(type, adminBoard.getId(), memberId, "부모 댓글2");
+        rootComment2.addLike(memberId);
         rootComment2.addChildComment(memberId, "자식 댓글2-1");
         boardCommentRepository.saveAll(Arrays.asList(rootComment1, rootComment2));
 
@@ -238,6 +239,8 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
 
         assertThat(responses.get(1).getChildren()).hasSize(1);
         assertBoardCommentResponse(responses.get(1).getChildren().get(0), "자식 댓글2-1");
+
+        assertThat(responses.get(1).getBoardCommentLikeCounts()).isEqualTo(1);
     }
 
     @Test
