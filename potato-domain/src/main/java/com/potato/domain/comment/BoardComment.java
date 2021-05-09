@@ -103,4 +103,17 @@ public class BoardComment extends BaseTimeEntity {
             .anyMatch(boardCommentLike -> boardCommentLike.isSameMember(memberId));
     }
 
+    public void deleteLike(Long memberId) {
+        BoardCommentLike boardCommentLike = findBoardComment(memberId);
+        this.boardCommentLikeList.remove(boardCommentLike);
+        this.commentLikeCounts--;
+    }
+
+    private BoardCommentLike findBoardComment(Long memberId) {
+        return this.boardCommentLikeList.stream()
+            .filter(boardCommentLike -> boardCommentLike.isSameMember(memberId))
+            .findFirst()
+            .orElseThrow(() -> new NotFoundException(String.format("(%s)가 좋아요 한 댓글 (%s)을 찾을 수 없습니다.", memberId, this.id)));
+    }
+
 }

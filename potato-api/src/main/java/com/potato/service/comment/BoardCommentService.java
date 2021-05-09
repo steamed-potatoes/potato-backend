@@ -54,4 +54,9 @@ public class BoardCommentService {
         boardComment.addLike(memberId);
     }
 
+    @Transactional
+    public void unLikeBoardComment(Long boardCommentId, Long memberId) {
+        BoardComment boardComment = BoardCommentServiceUtils.findBoardCommentById(boardCommentRepository, boardCommentId);
+        boardComment.deleteLike(memberId);
+    }
 }
