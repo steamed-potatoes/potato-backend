@@ -24,6 +24,8 @@ public class BoardCommentResponse {
 
     private String content;
 
+    private int boardCommentLikeCounts;
+
     private final List<BoardCommentResponse> children = new ArrayList<>();
 
     public static BoardCommentResponse of(BoardComment comment) {
@@ -43,11 +45,11 @@ public class BoardCommentResponse {
     }
 
     private static BoardCommentResponse inActiveComment(BoardComment comment) {
-        return new BoardCommentResponse(comment.getId(), comment.getType(), comment.getBoardId(), null, "삭제된 메시지입니다");
+        return new BoardCommentResponse(comment.getId(), comment.getType(), comment.getBoardId(), null, "삭제된 메시지입니다", 0);
     }
 
     private static BoardCommentResponse activeComment(BoardComment comment) {
-        return new BoardCommentResponse(comment.getId(), comment.getType(), comment.getBoardId(), comment.getMemberId(), comment.getContent());
+        return new BoardCommentResponse(comment.getId(), comment.getType(), comment.getBoardId(), comment.getMemberId(), comment.getContent(), comment.getCommentLikeCounts());
     }
 
 }

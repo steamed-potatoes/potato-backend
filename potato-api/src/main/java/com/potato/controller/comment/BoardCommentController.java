@@ -6,6 +6,7 @@ import com.potato.controller.ApiResponse;
 import com.potato.domain.comment.BoardCommentType;
 import com.potato.service.comment.BoardCommentService;
 import com.potato.service.comment.dto.request.AddBoardCommentRequest;
+import com.potato.service.comment.dto.request.LikeBoardCommentRequest;
 import com.potato.service.comment.dto.response.BoardCommentResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -41,6 +42,22 @@ public class BoardCommentController {
     @DeleteMapping("/api/v2/board/comment")
     public ApiResponse<String> deleteBoardComment(@RequestParam Long boardCommentId, @MemberId Long memberId) {
         boardCommentService.deleteBoardComment(boardCommentId, memberId);
+        return ApiResponse.OK;
+    }
+
+    @Operation(summary = "댓글에 좋아요를 합니다.", security = {@SecurityRequirement(name = "BearerKey")})
+    @Auth
+    @PostMapping("/api/v2/board/comment/like")
+    public ApiResponse<String> likeBoardComment(@Valid @RequestBody LikeBoardCommentRequest request, @MemberId Long memberId) {
+        boardCommentService.likeBoardComment(request.getBoardCommentId(), memberId);
+        return ApiResponse.OK;
+    }
+
+    @Operation(summary = "댓글에 좋아요를 취소합니다.", security = {@SecurityRequirement(name = "BearerKey")})
+    @Auth
+    @DeleteMapping("/api/v2/board/comment/like")
+    public ApiResponse<String> unlikeBoardComment(@Valid LikeBoardCommentRequest request, @MemberId Long memberId) {
+        boardCommentService.unLikeBoardComment(request.getBoardCommentId(), memberId);
         return ApiResponse.OK;
     }
 
