@@ -47,6 +47,5 @@ Authorization: Bearer {{AUTHORIZATION}}
 
 ### 게시물의 댓글에 좋아요를 취소한다
 DELETE {{host_api}}/api/v2/board/comment/like?boardCommentId=1
-Content-Type: application/json
 Authorization: Bearer {{AUTHORIZATION}}
 

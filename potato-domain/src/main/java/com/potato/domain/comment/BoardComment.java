@@ -90,9 +90,7 @@ public class BoardComment extends BaseTimeEntity {
         if (alreadyLike(memberId)) {
             throw new ConflictException(String.format("멤버 (%s)는 (%s) 댓글에 좋아요를 누른 상태입니다.", memberId, this.id));
         }
-        if (this.isDeleted) {
-            throw new NotFoundException(String.format("댓글 (%s)는 삭제된 댓글입니다.", this.id));
-        }
+        validateNotDeletedBoardComment();
         BoardCommentLike boardCommentLike = BoardCommentLike.of(this, memberId);
         this.boardCommentLikeList.add(boardCommentLike);
         this.commentLikeCounts++;
@@ -104,9 +102,16 @@ public class BoardComment extends BaseTimeEntity {
     }
 
     public void deleteLike(Long memberId) {
+        validateNotDeletedBoardComment();
         BoardCommentLike boardCommentLike = findBoardComment(memberId);
         this.boardCommentLikeList.remove(boardCommentLike);
         this.commentLikeCounts--;
+    }
+
+    private void validateNotDeletedBoardComment() {
+        if (this.isDeleted) {
+            throw new NotFoundException(String.format("댓글 (%s)는 삭제된 댓글입니다.", this.id));
+        }
     }
 
     private BoardCommentLike findBoardComment(Long memberId) {
