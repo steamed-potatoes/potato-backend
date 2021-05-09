@@ -54,6 +54,7 @@ public class BoardComment extends BaseTimeEntity {
     @OneToMany(mappedBy = "boardComment", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<BoardCommentLike> boardCommentLikeList = new ArrayList<>();
 
+    @Column(nullable = false)
     private int commentLikeCounts;
 
     private BoardComment(BoardComment parentComment, BoardCommentType type, Long boardId, Long memberId, String content, int depth) {
