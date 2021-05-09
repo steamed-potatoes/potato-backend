@@ -2,6 +2,8 @@ package com.potato.domain.comment;
 
 import com.potato.domain.BaseTimeEntity;
 import com.potato.exception.ErrorCode;
+import com.potato.exception.model.ConflictException;
+import com.potato.exception.model.NotFoundException;
 import com.potato.exception.model.ValidationException;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -49,6 +51,11 @@ public class BoardComment extends BaseTimeEntity {
     @Column(nullable = false)
     private boolean isDeleted;
 
+    @OneToMany(mappedBy = "boardComment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<BoardCommentLike> boardCommentLikeList = new ArrayList<>();
+
+    private int commentLikeCounts;
+
     private BoardComment(BoardComment parentComment, BoardCommentType type, Long boardId, Long memberId, String content, int depth) {
         this.parentComment = parentComment;
         this.type = type;
@@ -57,6 +64,7 @@ public class BoardComment extends BaseTimeEntity {
         this.content = content;
         this.depth = depth;
         this.isDeleted = false;
+        this.commentLikeCounts = 0;
     }
 
     public static BoardComment newRootComment(BoardCommentType type, Long boardId, Long memberId, String content) {
@@ -76,6 +84,23 @@ public class BoardComment extends BaseTimeEntity {
 
     public void delete() {
         this.isDeleted = true;
+    }
+
+    public void addLike(Long memberId) {
+        if (alreadyLike(memberId)) {
+            throw new ConflictException(String.format("멤버 (%s)는 (%s) 댓글에 좋아요를 누른 상태입니다.", memberId, this.id));
+        }
+        if (this.isDeleted) {
+            throw new NotFoundException(String.format("댓글 (%s)는 삭제된 댓글입니다.", this.id));
+        }
+        BoardCommentLike boardCommentLike = BoardCommentLike.of(this, memberId);
+        this.boardCommentLikeList.add(boardCommentLike);
+        this.commentLikeCounts++;
+    }
+
+    private boolean alreadyLike(Long memberId) {
+        return this.boardCommentLikeList.stream()
+            .anyMatch(boardCommentLike -> boardCommentLike.isSameMember(memberId));
     }
 
 }

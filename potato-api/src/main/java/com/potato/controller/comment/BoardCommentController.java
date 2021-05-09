@@ -44,4 +44,12 @@ public class BoardCommentController {
         return ApiResponse.OK;
     }
 
+    @Operation(summary = "댓글에 좋아요를 합니다.", security = {@SecurityRequirement(name = "BearerKey")})
+    @Auth
+    @PostMapping("/api/v2/board/comment/like")
+    public ApiResponse<String> likeBoardComment(@RequestParam Long boardCommentId, @MemberId Long memberId) {
+        boardCommentService.likeBoardComment(boardCommentId, memberId);
+        return ApiResponse.OK;
+    }
+
 }

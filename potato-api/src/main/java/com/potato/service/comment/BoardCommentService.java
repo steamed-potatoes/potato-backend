@@ -48,4 +48,10 @@ public class BoardCommentService {
         comment.delete();
     }
 
+    @Transactional
+    public void likeBoardComment(Long boardCommentId, Long memberId) {
+        BoardComment boardComment = BoardCommentServiceUtils.findBoardCommentById(boardCommentRepository, boardCommentId);
+        boardComment.addLike(memberId);
+    }
+
 }

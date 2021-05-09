@@ -8,10 +8,8 @@ import com.potato.domain.board.organization.OrganizationBoard;
 import com.potato.domain.board.organization.OrganizationBoardCreator;
 import com.potato.domain.board.organization.OrganizationBoardRepository;
 import com.potato.domain.board.organization.OrganizationBoardType;
-import com.potato.domain.comment.BoardComment;
-import com.potato.domain.comment.BoardCommentCreator;
-import com.potato.domain.comment.BoardCommentRepository;
-import com.potato.domain.comment.BoardCommentType;
+import com.potato.domain.comment.*;
+import com.potato.exception.model.ConflictException;
 import com.potato.exception.model.NotFoundException;
 import com.potato.service.OrganizationMemberSetUpTest;
 import com.potato.service.comment.dto.request.AddBoardCommentRequest;
@@ -45,6 +43,9 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
 
     @Autowired
     private BoardRepository boardRepository;
+
+    @Autowired
+    private BoardCommentLikeRepository boardCommentLikeRepository;
 
     @AfterEach
     void cleanUp() {
@@ -302,6 +303,78 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
         assertThat(responses).hasSize(1);
         assertThat(responses.get(0).getContent()).isNotEqualTo(comment.getContent());
         assertThat(responses.get(0).getMemberId()).isNull();
+    }
+
+    @Test
+    void 댓글에_좋아요를_한다_댓글에_좋아요수가_올라간다() {
+        //given
+        organizationBoardRepository.save(organizationBoard);
+        BoardCommentType type = BoardCommentType.ORGANIZATION_BOARD;
+        BoardComment comment = BoardCommentCreator.createRootComment(type, organizationBoard.getId(), memberId, "댓글");
+        boardCommentRepository.save(comment);
+
+        //when
+        boardCommentService.likeBoardComment(comment.getId(), memberId);
+
+        //then
+        List<BoardCommentLike> boardCommentLikeList = boardCommentLikeRepository.findAll();
+        assertThat(boardCommentLikeList).hasSize(1);
+        assertBoardCommentLike(boardCommentLikeList.get(0), comment.getId(), memberId);
+        List<BoardComment> boardCommentList = boardCommentRepository.findAll();
+        assertThat(boardCommentList.get(0).getCommentLikeCounts()).isEqualTo(1);
+    }
+
+    @Test
+    void 대댓글에_좋아요를_하면_대댓글_좋아요수가_올라간다() {
+        //given
+        organizationBoardRepository.save(organizationBoard);
+        BoardCommentType type = BoardCommentType.ORGANIZATION_BOARD;
+        BoardComment comment = BoardCommentCreator.createRootComment(type, organizationBoard.getId(), memberId, "댓글");
+        comment.addChildComment(memberId, "대댓글_좋아요");
+        boardCommentRepository.save(comment);
+
+        //when
+        boardCommentService.likeBoardComment(comment.getChildComments().get(0).getId(), memberId);
+
+        //then
+        List<BoardCommentLike> boardCommentLikeList = boardCommentLikeRepository.findAll();
+        assertThat(boardCommentLikeList).hasSize(1);
+        assertBoardCommentLike(boardCommentLikeList.get(0), comment.getChildComments().get(0).getId(), memberId);
+        List<BoardComment> boardCommentList = boardCommentRepository.findAll();
+        assertThat(boardCommentList.get(1).getCommentLikeCounts()).isEqualTo(1);
+    }
+
+    @Test
+    void 댓글에_이미_좋아요를_했을경우_애러발생() {
+        //given
+        organizationBoardRepository.save(organizationBoard);
+        BoardCommentType type = BoardCommentType.ORGANIZATION_BOARD;
+        BoardComment comment = BoardCommentCreator.createRootComment(type, organizationBoard.getId(), memberId, "댓글");
+        comment.addLike(memberId);
+        boardCommentRepository.save(comment);
+
+        assertThatThrownBy(
+            () -> boardCommentService.likeBoardComment(comment.getId(), memberId)
+        ).isInstanceOf(ConflictException.class);
+    }
+
+    @Test
+    void 댓글이_삭제된_댓글일_경우_애러발생() {
+        //given
+        organizationBoardRepository.save(organizationBoard);
+        BoardCommentType type = BoardCommentType.ORGANIZATION_BOARD;
+        BoardComment comment = BoardCommentCreator.createRootComment(type, organizationBoard.getId(), memberId, "댓글");
+        comment.delete();
+        boardCommentRepository.save(comment);
+
+        assertThatThrownBy(
+            () -> boardCommentService.likeBoardComment(comment.getId(), memberId)
+        ).isInstanceOf(NotFoundException.class);
+    }
+
+    private void assertBoardCommentLike(BoardCommentLike boardCommentLike, Long boardCommentId, Long memberId) {
+        assertThat(boardCommentLike.getMemberId()).isEqualTo(memberId);
+        assertThat(boardCommentLike.getBoardComment().getId()).isEqualTo(boardCommentId);
     }
 
     private void assertBoardCommentResponse(BoardCommentResponse response, String content) {
