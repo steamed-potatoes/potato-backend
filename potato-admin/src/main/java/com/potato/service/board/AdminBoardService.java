@@ -35,7 +35,7 @@ public class AdminBoardService {
     }
 
     @Transactional
-    public void deleteOrganizationBoard(String subDomain, Long adminMemberId, Long organizationBoardId) {
+    public void deleteOrganizationBoard(String subDomain, Long organizationBoardId, Long adminMemberId) {
         OrganizationBoard organizationBoard = OrganizationBoardServiceUtils.findOrganizationBoardBySubDomainAndId(organizationBoardRepository, subDomain, organizationBoardId);
         deleteOrganizationBoardRepository.save(organizationBoard.deleteByAdmin(adminMemberId));
         organizationBoardRepository.delete(organizationBoard);

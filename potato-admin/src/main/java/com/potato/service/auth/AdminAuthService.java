@@ -6,7 +6,7 @@ import com.potato.external.google.GoogleApiCaller;
 import com.potato.external.google.dto.response.GoogleAccessTokenResponse;
 import com.potato.external.google.dto.response.GoogleUserInfoResponse;
 import com.potato.service.auth.dto.request.GoogleAuthRequest;
-import com.potato.config.session.AdminMemberSession;
+import com.potato.config.session.AdminSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +28,7 @@ public class AdminAuthService {
 
         Administrator administrator = AdminAuthServiceUtils.findAdminMemberByEmail(administratorRepository, googleAdminProfileInfo.getEmail());
 
-        httpSession.setAttribute(AUTH_SESSION, AdminMemberSession.of(administrator.getId()));
+        httpSession.setAttribute(AUTH_SESSION, AdminSession.of(administrator.getId()));
         return httpSession.getId();
     }
 
