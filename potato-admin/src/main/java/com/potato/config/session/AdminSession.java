@@ -8,12 +8,12 @@ import java.io.Serializable;
 
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public class AdminMemberSession implements Serializable {
+public class AdminSession implements Serializable {
 
-    private final Long memberId;
+    private final Long adminId;
 
-    public static AdminMemberSession of(Long memberId) {
-        return new AdminMemberSession(memberId);
+    public static AdminSession of(Long memberId) {
+        return new AdminSession(memberId);
     }
 
 }
