@@ -1,6 +1,9 @@
 package com.potato.domain.board.organization;
 
 import com.potato.domain.BaseTimeEntity;
+import com.potato.domain.board.BoardInfo;
+import com.potato.domain.common.delete.DeletedTrackingInfo;
+import com.potato.domain.common.delete.BackUpInfo;
 import com.potato.domain.common.DateTimeInterval;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -29,40 +32,29 @@ public class DeleteOrganizationBoard extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private OrganizationBoardCategory category;
 
-    @Column(nullable = false)
-    private String title;
-
-    private String content;
+    @Embedded
+    private BoardInfo boardInfo;
 
     @Embedded
     private DateTimeInterval dateTimeInterval;
 
-    private String imageUrl;
+    @Embedded
+    private DeletedTrackingInfo deletedTrackingInfo;
 
-    @Column(nullable = false)
-    private Long backUpId;
-
-    private Long deletedMemberId;
-
-    private Long deletedAdminMemberId;
-
-    @Column(nullable = false)
-    private LocalDateTime backUpCreatedDateTime;
+    @Embedded
+    private BackUpInfo backUpInfo;
 
     @Builder
     public DeleteOrganizationBoard(Long backUpId, String subDomain, Long memberId, OrganizationBoardCategory category, String title,
-                                   String content, String imageUrl, LocalDateTime startDateTime, LocalDateTime endDateTime, LocalDateTime backUpCreatedDateTime, Long deletedMemberId, Long deletedAdminMemberId) {
-        this.backUpId = backUpId;
+                                   String content, String imageUrl, LocalDateTime startDateTime, LocalDateTime endDateTime,
+                                   LocalDateTime backUpCreatedDateTime, Long deletedMemberId, Long deletedAdminMemberId) {
         this.memberId = memberId;
-        this.title = title;
         this.dateTimeInterval = DateTimeInterval.of(startDateTime, endDateTime);
         this.subDomain = subDomain;
         this.category = category;
-        this.content = content;
-        this.imageUrl = imageUrl;
-        this.backUpCreatedDateTime = backUpCreatedDateTime;
-        this.deletedMemberId = deletedMemberId;
-        this.deletedAdminMemberId = deletedAdminMemberId;
+        this.boardInfo = BoardInfo.of(title, content, imageUrl);
+        this.backUpInfo = BackUpInfo.of(backUpId, backUpCreatedDateTime);
+        this.deletedTrackingInfo = DeletedTrackingInfo.of(deletedMemberId, deletedAdminMemberId);
     }
 
     public static DeleteOrganizationBoard newBackUpInstance(OrganizationBoard organizationBoard, Long memberId) {
@@ -103,6 +95,26 @@ public class DeleteOrganizationBoard extends BaseTimeEntity {
 
     public LocalDateTime getEndDateTime() {
         return this.dateTimeInterval.getEndDateTime();
+    }
+
+    public String getTitle() {
+        return boardInfo.getTitle();
+    }
+
+    public String getContent() {
+        return boardInfo.getContent();
+    }
+
+    public String getImageUrl() {
+        return boardInfo.getImageUrl();
+    }
+
+    public Long getBackUpId() {
+        return backUpInfo.getBackUpId();
+    }
+
+    public Long getDeletedMemberId() {
+        return deletedTrackingInfo.getDeletedMemberId();
     }
 
 }
