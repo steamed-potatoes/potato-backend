@@ -1,10 +1,10 @@
 package com.potato.service.comment;
 
+import com.potato.domain.board.BoardType;
 import com.potato.domain.board.admin.AdminBoardRepository;
 import com.potato.domain.board.organization.OrganizationBoardRepository;
 import com.potato.domain.comment.BoardComment;
 import com.potato.domain.comment.BoardCommentRepository;
-import com.potato.domain.comment.BoardCommentType;
 import com.potato.exception.model.NotFoundException;
 import com.potato.service.board.admin.AdminBoardServiceUtils;
 import com.potato.service.board.organization.OrganizationBoardServiceUtils;
@@ -30,10 +30,10 @@ final class BoardCommentServiceUtils {
         return boardComment;
     }
 
-    static void validateExistBoard(OrganizationBoardRepository organizationBoardRepository, AdminBoardRepository adminBoardRepository, BoardCommentType type, Long boardId) {
-        if (type.equals(BoardCommentType.ORGANIZATION_BOARD)) {
+    static void validateExistBoard(OrganizationBoardRepository organizationBoardRepository, AdminBoardRepository adminBoardRepository, BoardType type, Long boardId) {
+        if (type.equals(BoardType.ORGANIZATION_BOARD)) {
             OrganizationBoardServiceUtils.validateExistsBoard(organizationBoardRepository, boardId);
-        } else if (type.equals(BoardCommentType.ADMIN_BOARD)) {
+        } else if (type.equals(BoardType.ADMIN_BOARD)) {
             AdminBoardServiceUtils.validateExistBoard(adminBoardRepository, boardId);
         }
     }

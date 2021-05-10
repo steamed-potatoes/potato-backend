@@ -1,6 +1,6 @@
 package com.potato.domain.board.organization;
 
-public enum OrganizationBoardType {
+public enum OrganizationBoardCategory {
 
     RECRUIT,
     EVENT

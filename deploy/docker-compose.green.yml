@@ -6,6 +6,8 @@ services:
       - 8082:8080
     environment:
       - "SPRING_PROFILES_ACTIVE=dev"
+    volumes:
+      - ~/logs/api:/logs/api
     links:
       - "db:redis"
   admin:
@@ -14,6 +16,8 @@ services:
       - 9002:9000
     environment:
       - "SPRING_PROFILES_ACTIVE=dev"
+    volumes:
+      - ~/logs/admin:/logs/admin
     links:
       - "db:redis"
   db:

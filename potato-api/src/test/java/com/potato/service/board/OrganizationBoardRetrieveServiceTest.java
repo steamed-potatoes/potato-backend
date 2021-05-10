@@ -41,9 +41,9 @@ class OrganizationBoardRetrieveServiceTest extends OrganizationMemberSetUpTest {
     @Test
     void 게시물_조회시_카테고리가_정해지지_않으면_전체_카테고리에서_조회한다() {
         //given
-        OrganizationBoard organizationBoard1 = OrganizationBoardCreator.create(subDomain, memberId, "title1", OrganizationBoardType.RECRUIT);
-        OrganizationBoard organizationBoard2 = OrganizationBoardCreator.create(subDomain, memberId, "title2", OrganizationBoardType.EVENT);
-        OrganizationBoard organizationBoard3 = OrganizationBoardCreator.create(subDomain, memberId, "title3", OrganizationBoardType.RECRUIT);
+        OrganizationBoard organizationBoard1 = OrganizationBoardCreator.create(subDomain, memberId, "title1", OrganizationBoardCategory.RECRUIT);
+        OrganizationBoard organizationBoard2 = OrganizationBoardCreator.create(subDomain, memberId, "title2", OrganizationBoardCategory.EVENT);
+        OrganizationBoard organizationBoard3 = OrganizationBoardCreator.create(subDomain, memberId, "title3", OrganizationBoardCategory.RECRUIT);
 
         organizationBoardRepository.saveAll(Arrays.asList(organizationBoard1, organizationBoard2, organizationBoard3));
 
@@ -61,8 +61,8 @@ class OrganizationBoardRetrieveServiceTest extends OrganizationMemberSetUpTest {
     @Test
     void 게시물_조회시_마지막_게시물의_PK_가_0으로_지정되면_가장_최신의_게시물을_조회한다() {
         //given
-        OrganizationBoard organizationBoard1 = OrganizationBoardCreator.create(subDomain, memberId, "title1", OrganizationBoardType.RECRUIT);
-        OrganizationBoard organizationBoard2 = OrganizationBoardCreator.create(subDomain, memberId, "title2", OrganizationBoardType.EVENT);
+        OrganizationBoard organizationBoard1 = OrganizationBoardCreator.create(subDomain, memberId, "title1", OrganizationBoardCategory.RECRUIT);
+        OrganizationBoard organizationBoard2 = OrganizationBoardCreator.create(subDomain, memberId, "title2", OrganizationBoardCategory.EVENT);
 
         organizationBoardRepository.saveAll(Arrays.asList(organizationBoard1, organizationBoard2));
 
@@ -87,9 +87,9 @@ class OrganizationBoardRetrieveServiceTest extends OrganizationMemberSetUpTest {
     @Test
     void 게시물_조회시_마지막_게시물의_PK_이전의_게시물_N개가_조회된다() {
         //given
-        OrganizationBoard organizationBoard1 = OrganizationBoardCreator.create(subDomain, memberId, "title1", OrganizationBoardType.RECRUIT);
-        OrganizationBoard organizationBoard2 = OrganizationBoardCreator.create(subDomain, memberId, "title2", OrganizationBoardType.RECRUIT);
-        OrganizationBoard organizationBoard3 = OrganizationBoardCreator.create(subDomain, memberId, "title3", OrganizationBoardType.RECRUIT);
+        OrganizationBoard organizationBoard1 = OrganizationBoardCreator.create(subDomain, memberId, "title1", OrganizationBoardCategory.RECRUIT);
+        OrganizationBoard organizationBoard2 = OrganizationBoardCreator.create(subDomain, memberId, "title2", OrganizationBoardCategory.RECRUIT);
+        OrganizationBoard organizationBoard3 = OrganizationBoardCreator.create(subDomain, memberId, "title3", OrganizationBoardCategory.RECRUIT);
 
         organizationBoardRepository.saveAll(Arrays.asList(organizationBoard1, organizationBoard2, organizationBoard3));
 
@@ -104,14 +104,14 @@ class OrganizationBoardRetrieveServiceTest extends OrganizationMemberSetUpTest {
     @Test
     void 게시물_조회시_마지막_게시물의_PK_이전의_해당하는_카테고리의_게시물_N개가_조회된다() {
         //given
-        OrganizationBoard organizationBoard1 = OrganizationBoardCreator.create(subDomain, memberId, "title1", OrganizationBoardType.RECRUIT);
-        OrganizationBoard organizationBoard2 = OrganizationBoardCreator.create(subDomain, memberId, "title2", OrganizationBoardType.EVENT);
-        OrganizationBoard organizationBoard3 = OrganizationBoardCreator.create(subDomain, memberId, "title3", OrganizationBoardType.RECRUIT);
+        OrganizationBoard organizationBoard1 = OrganizationBoardCreator.create(subDomain, memberId, "title1", OrganizationBoardCategory.RECRUIT);
+        OrganizationBoard organizationBoard2 = OrganizationBoardCreator.create(subDomain, memberId, "title2", OrganizationBoardCategory.EVENT);
+        OrganizationBoard organizationBoard3 = OrganizationBoardCreator.create(subDomain, memberId, "title3", OrganizationBoardCategory.RECRUIT);
 
         organizationBoardRepository.saveAll(Arrays.asList(organizationBoard1, organizationBoard2, organizationBoard3));
 
         //when
-        List<BoardWithOrganizationDto> responses = organizationBoardService.retrieveBoardsWithPagination(OrganizationBoardType.RECRUIT, organizationBoard3.getId(), 1);
+        List<BoardWithOrganizationDto> responses = organizationBoardService.retrieveBoardsWithPagination(OrganizationBoardCategory.RECRUIT, organizationBoard3.getId(), 1);
 
         //then
         assertThat(responses).hasSize(1);
@@ -121,7 +121,7 @@ class OrganizationBoardRetrieveServiceTest extends OrganizationMemberSetUpTest {
     @Test
     void 게시물_스크롤_페이지네이션하는데_더이상_게시물이_존재하지_않을경우() {
         //given
-        OrganizationBoard organizationBoard1 = OrganizationBoardCreator.create(subDomain, memberId, "title1", OrganizationBoardType.RECRUIT);
+        OrganizationBoard organizationBoard1 = OrganizationBoardCreator.create(subDomain, memberId, "title1", OrganizationBoardCategory.RECRUIT);
         organizationBoardRepository.save(organizationBoard1);
 
         //when
@@ -135,7 +135,7 @@ class OrganizationBoardRetrieveServiceTest extends OrganizationMemberSetUpTest {
     @ParameterizedTest
     void 얼마남지_않은_게시물_조회시_아직_시작하지_않고_일주일_이전에_종료되는_그룹_게시물들이_포함된다(LocalDateTime startDateTime, LocalDateTime endDateTime, String title) {
         // given
-        OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, memberId, title, startDateTime, endDateTime, OrganizationBoardType.RECRUIT);
+        OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, memberId, title, startDateTime, endDateTime, OrganizationBoardCategory.RECRUIT);
         organizationBoardRepository.save(organizationBoard);
 
         RetrieveImminentBoardsRequest request = RetrieveImminentBoardsRequest.testInstance(LocalDateTime.of(2021, 4, 23, 0, 0), 3);
@@ -159,7 +159,7 @@ class OrganizationBoardRetrieveServiceTest extends OrganizationMemberSetUpTest {
     @ParameterizedTest
     void 얼마남지_않은_게시물_조회시_아직_시작하지_않고_일주일_이후로_종료되는_그룹_게시물들이_포함되지_않는다(LocalDateTime startDateTime, LocalDateTime endDateTime) {
         // given
-        OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, memberId, "게시물", startDateTime, endDateTime, OrganizationBoardType.RECRUIT);
+        OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, memberId, "게시물", startDateTime, endDateTime, OrganizationBoardCategory.RECRUIT);
         organizationBoardRepository.save(organizationBoard);
 
         RetrieveImminentBoardsRequest request = RetrieveImminentBoardsRequest.testInstance(LocalDateTime.of(2021, 4, 23, 0, 0), 3);
@@ -182,7 +182,7 @@ class OrganizationBoardRetrieveServiceTest extends OrganizationMemberSetUpTest {
     @ParameterizedTest
     void 얼마남지_않은_게시물_조회시_이미_시작하였고_일주일_이전에_종료되는_그룹_게시물들이_포함된다(LocalDateTime startDateTime, LocalDateTime endDateTime, String title) {
         // given
-        OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, memberId, title, startDateTime, endDateTime, OrganizationBoardType.RECRUIT);
+        OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, memberId, title, startDateTime, endDateTime, OrganizationBoardCategory.RECRUIT);
         organizationBoardRepository.save(organizationBoard);
 
         RetrieveImminentBoardsRequest request = RetrieveImminentBoardsRequest.testInstance(LocalDateTime.of(2021, 4, 23, 0, 0), 3);
@@ -206,7 +206,7 @@ class OrganizationBoardRetrieveServiceTest extends OrganizationMemberSetUpTest {
     @ParameterizedTest
     void 얼마남지_않은_게시물_조회시_이미_끝난경우_조회되지_않는다(LocalDateTime startDateTime, LocalDateTime endDateTime) {
         // given
-        OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, memberId, "게시물", startDateTime, endDateTime, OrganizationBoardType.RECRUIT);
+        OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, memberId, "게시물", startDateTime, endDateTime, OrganizationBoardCategory.RECRUIT);
         organizationBoardRepository.save(organizationBoard);
 
         RetrieveImminentBoardsRequest request = RetrieveImminentBoardsRequest.testInstance(LocalDateTime.of(2021, 4, 23, 0, 0), 3);
@@ -227,9 +227,9 @@ class OrganizationBoardRetrieveServiceTest extends OrganizationMemberSetUpTest {
     @Test
     void 인기있는_게시물_조회시_좋아요가_많은_순으로_조회한다() {
         // given
-        OrganizationBoard organizationBoard1 = OrganizationBoardCreator.create(subDomain, memberId, "title2", OrganizationBoardType.RECRUIT);
+        OrganizationBoard organizationBoard1 = OrganizationBoardCreator.create(subDomain, memberId, "title2", OrganizationBoardCategory.RECRUIT);
         organizationBoard1.addLike(2L);
-        OrganizationBoard organizationBoard2 = OrganizationBoardCreator.create(subDomain, memberId, "title3", OrganizationBoardType.RECRUIT);
+        OrganizationBoard organizationBoard2 = OrganizationBoardCreator.create(subDomain, memberId, "title3", OrganizationBoardCategory.RECRUIT);
 
         organizationBoardRepository.saveAll(Arrays.asList(organizationBoard1, organizationBoard2));
 
@@ -245,8 +245,8 @@ class OrganizationBoardRetrieveServiceTest extends OrganizationMemberSetUpTest {
     @Test
     void 인기있는_게시물_조회시_좋아요수가_같으면_최신순부터_조회한다() {
         // given
-        OrganizationBoard organizationBoard1 = OrganizationBoardCreator.create(subDomain, memberId, "더 오래된 게시물", OrganizationBoardType.RECRUIT);
-        OrganizationBoard organizationBoard2 = OrganizationBoardCreator.create(subDomain, memberId, "더 최신의 게시물", OrganizationBoardType.RECRUIT);
+        OrganizationBoard organizationBoard1 = OrganizationBoardCreator.create(subDomain, memberId, "더 오래된 게시물", OrganizationBoardCategory.RECRUIT);
+        OrganizationBoard organizationBoard2 = OrganizationBoardCreator.create(subDomain, memberId, "더 최신의 게시물", OrganizationBoardCategory.RECRUIT);
 
         organizationBoardRepository.saveAll(Arrays.asList(organizationBoard1, organizationBoard2));
 
@@ -262,9 +262,9 @@ class OrganizationBoardRetrieveServiceTest extends OrganizationMemberSetUpTest {
     @Test
     void 인기있는_게시물_조회시_SIZE_로_넘어온_수만큼_조회된다() {
         // given
-        OrganizationBoard organizationBoard1 = OrganizationBoardCreator.create(subDomain, memberId, "게시물1", OrganizationBoardType.RECRUIT);
-        OrganizationBoard organizationBoard2 = OrganizationBoardCreator.create(subDomain, memberId, "게시물2", OrganizationBoardType.RECRUIT);
-        OrganizationBoard organizationBoard3 = OrganizationBoardCreator.create(subDomain, memberId, "게시물3", OrganizationBoardType.RECRUIT);
+        OrganizationBoard organizationBoard1 = OrganizationBoardCreator.create(subDomain, memberId, "게시물1", OrganizationBoardCategory.RECRUIT);
+        OrganizationBoard organizationBoard2 = OrganizationBoardCreator.create(subDomain, memberId, "게시물2", OrganizationBoardCategory.RECRUIT);
+        OrganizationBoard organizationBoard3 = OrganizationBoardCreator.create(subDomain, memberId, "게시물3", OrganizationBoardCategory.RECRUIT);
 
         organizationBoardRepository.saveAll(Arrays.asList(organizationBoard1, organizationBoard2, organizationBoard3));
 
@@ -283,7 +283,7 @@ class OrganizationBoardRetrieveServiceTest extends OrganizationMemberSetUpTest {
         assertThat(boardWithOrganizationDto.getBoardTitle()).isEqualTo(organizationBoard.getTitle());
         assertThat(boardWithOrganizationDto.getBoardStartDateTime()).isEqualTo(organizationBoard.getStartDateTime());
         assertThat(boardWithOrganizationDto.getBoardEndDateTime()).isEqualTo(organizationBoard.getEndDateTime());
-        assertThat(boardWithOrganizationDto.getBoardType()).isEqualTo(organizationBoard.getType());
+        assertThat(boardWithOrganizationDto.getBoardCategory()).isEqualTo(organizationBoard.getCategory());
     }
 
     private void assertOrganizationBoardInfo(OrganizationBoardInfoResponse organizationBoardInfoResponse, OrganizationBoard organizationBoard) {
@@ -292,7 +292,7 @@ class OrganizationBoardRetrieveServiceTest extends OrganizationMemberSetUpTest {
         assertThat(organizationBoardInfoResponse.getTitle()).isEqualTo(organizationBoard.getTitle());
         assertThat(organizationBoardInfoResponse.getStartDateTime()).isEqualTo(organizationBoard.getStartDateTime());
         assertThat(organizationBoardInfoResponse.getEndDateTime()).isEqualTo(organizationBoard.getEndDateTime());
-        assertThat(organizationBoardInfoResponse.getType()).isEqualTo(organizationBoard.getType());
+        assertThat(organizationBoardInfoResponse.getType()).isEqualTo(organizationBoard.getCategory());
     }
 
 }

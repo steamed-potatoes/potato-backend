@@ -1,5 +1,6 @@
 package com.potato.domain.comment;
 
+import com.potato.domain.board.BoardType;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BoardCommentCreator {
 
-    public static BoardComment createRootComment(BoardCommentType type, Long boardId, Long memberId, String content) {
+    public static BoardComment createRootComment(BoardType type, Long boardId, Long memberId, String content) {
         return BoardComment.newRootComment(type, boardId, memberId, content);
     }
 

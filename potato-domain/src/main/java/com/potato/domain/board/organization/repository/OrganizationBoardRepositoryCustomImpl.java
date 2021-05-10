@@ -1,7 +1,7 @@
 package com.potato.domain.board.organization.repository;
 
 import com.potato.domain.board.organization.OrganizationBoard;
-import com.potato.domain.board.organization.OrganizationBoardType;
+import com.potato.domain.board.organization.OrganizationBoardCategory;
 import com.potato.domain.board.organization.repository.dto.BoardWithOrganizationDto;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -14,7 +14,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-import static com.potato.domain.board.QBoard.board;
 import static com.potato.domain.board.organization.QOrganizationBoard.organizationBoard;
 import static com.potato.domain.organization.QOrganization.organization;
 
@@ -26,7 +25,6 @@ public class OrganizationBoardRepositoryCustomImpl implements OrganizationBoardR
     @Override
     public OrganizationBoard findOrganizationBoardById(Long id) {
         return queryFactory.selectFrom(organizationBoard)
-            .innerJoin(organizationBoard.board, board).fetchJoin()
             .where(
                 organizationBoard.id.eq(id)
             ).fetchOne();
@@ -35,7 +33,6 @@ public class OrganizationBoardRepositoryCustomImpl implements OrganizationBoardR
     @Override
     public OrganizationBoard findOrganizationBoardByIdAndSubDomain(Long organizationBoardId, String subDomain) {
         return queryFactory.selectFrom(organizationBoard)
-            .innerJoin(organizationBoard.board, board).fetchJoin()
             .where(
                 organizationBoard.id.eq(organizationBoardId),
                 organizationBoard.subDomain.eq(subDomain)
@@ -43,7 +40,7 @@ public class OrganizationBoardRepositoryCustomImpl implements OrganizationBoardR
     }
 
     @Override
-    public List<BoardWithOrganizationDto> findAllWithOrganizationByTypeLessThanOrderByIdDescLimit(OrganizationBoardType type, long lastOrganizationBoardId, int size) {
+    public List<BoardWithOrganizationDto> findAllWithOrganizationByTypeLessThanOrderByIdDescLimit(OrganizationBoardCategory category, long lastOrganizationBoardId, int size) {
         return queryFactory.select(Projections.fields(BoardWithOrganizationDto.class,
             organizationBoard.subDomain.as("orgSubDomain"),
             organization.name.as("orgName"),
@@ -53,19 +50,19 @@ public class OrganizationBoardRepositoryCustomImpl implements OrganizationBoardR
             organization.membersCount.as("orgMembersCount"),
             organization.followersCount.as("orgFollowersCount"),
             organizationBoard.id.as("boardId"),
-            organizationBoard.board.title.as("boardTitle"),
-            organizationBoard.content.as("boardContent"),
-            organizationBoard.imageUrl.as("boardImageUrl"),
-            organizationBoard.type.as("boardType"),
-            organizationBoard.board.dateTimeInterval.startDateTime.as("boardStartDateTime"),
-            organizationBoard.board.dateTimeInterval.endDateTime.as("boardEndDateTime"),
+            organizationBoard.boardInfo.title.as("boardTitle"),
+            organizationBoard.boardInfo.content.as("boardContent"),
+            organizationBoard.boardInfo.imageUrl.as("boardImageUrl"),
+            organizationBoard.category.as("boardCategory"),
+            organizationBoard.dateTimeInterval.startDateTime.as("boardStartDateTime"),
+            organizationBoard.dateTimeInterval.endDateTime.as("boardEndDateTime"),
             organizationBoard.createdDateTime,
             organizationBoard.lastModifiedDateTime
         ))
             .from(organizationBoard)
             .innerJoin(organization).on(organizationBoard.subDomain.eq(organization.subDomain))
             .where(
-                eqType(type),
+                eqCategory(category),
                 lessThanId(lastOrganizationBoardId)
             )
             .orderBy(organizationBoard.id.desc())
@@ -73,11 +70,11 @@ public class OrganizationBoardRepositoryCustomImpl implements OrganizationBoardR
             .fetch();
     }
 
-    private BooleanExpression eqType(OrganizationBoardType type) {
-        if (type == null) {
+    private BooleanExpression eqCategory(OrganizationBoardCategory category) {
+        if (category == null) {
             return null;
         }
-        return organizationBoard.type.eq(type);
+        return organizationBoard.category.eq(category);
     }
 
     private BooleanExpression lessThanId(Long organizationBoardId) {
@@ -90,21 +87,19 @@ public class OrganizationBoardRepositoryCustomImpl implements OrganizationBoardR
     @Override
     public List<OrganizationBoard> findAllBetweenDate(LocalDate startDate, LocalDate endDate) {
         return queryFactory.selectFrom(organizationBoard)
-            .innerJoin(organizationBoard.board, board).fetchJoin()
             .where(
-                board.dateTimeInterval.startDateTime.before(LocalDateTime.of(endDate, LocalTime.MAX)),
-                board.dateTimeInterval.endDateTime.after(LocalDateTime.of(startDate, LocalTime.MIN))
+                organizationBoard.dateTimeInterval.startDateTime.before(LocalDateTime.of(endDate, LocalTime.MAX)),
+                organizationBoard.dateTimeInterval.endDateTime.after(LocalDateTime.of(startDate, LocalTime.MIN))
             ).fetch();
     }
 
     @Override
     public List<OrganizationBoard> findAllByBetweenDateTimeWithLimit(LocalDateTime startDateTime, LocalDateTime endDateTime, int size) {
         return queryFactory.selectFrom(organizationBoard)
-            .innerJoin(organizationBoard.board, board).fetchJoin()
             .where(
-                board.dateTimeInterval.endDateTime.between(startDateTime, endDateTime)
+                organizationBoard.dateTimeInterval.endDateTime.between(startDateTime, endDateTime)
             )
-            .orderBy(board.dateTimeInterval.endDateTime.asc())
+            .orderBy(organizationBoard.dateTimeInterval.endDateTime.asc())
             .limit(size)
             .fetch();
     }

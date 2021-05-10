@@ -1,6 +1,6 @@
 package com.potato.config.interceptor;
 
-import com.potato.config.session.AdminMemberSession;
+import com.potato.config.session.AdminSession;
 import com.potato.config.session.SessionConstants;
 import com.potato.domain.administrator.AdministratorRepository;
 import com.potato.exception.model.UnAuthorizedException;
@@ -23,12 +23,12 @@ public class AuthAdminComponent {
     private final AdministratorRepository administratorRepository;
 
     public Long getAdminMemberId(HttpServletRequest request) {
-        Long memberId = getAdminMemberSession(request).getMemberId();
+        Long memberId = getAdminMemberSession(request).getAdminId();
         AdminAuthServiceUtils.validateExistAdminMember(administratorRepository, memberId);
         return memberId;
     }
 
-    private AdminMemberSession getAdminMemberSession(HttpServletRequest request) {
+    private AdminSession getAdminMemberSession(HttpServletRequest request) {
         String header = request.getHeader(HttpHeaders.AUTHORIZATION);
         Session session = extractSessionFromHeader(header);
         return session.getAttribute(SessionConstants.AUTH_SESSION);

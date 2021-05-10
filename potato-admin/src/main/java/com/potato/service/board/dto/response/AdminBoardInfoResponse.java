@@ -10,19 +10,22 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class AdminBoardInfoResponse {
+
     private Long id;
 
     private String title;
+
+    private String content;
+
+    private String imageUrl;
 
     private LocalDateTime startDateTime;
 
     private LocalDateTime endDateTime;
 
-    private String content;
-
     public static AdminBoardInfoResponse of(AdminBoard adminBoard) {
-        return new AdminBoardInfoResponse(adminBoard.getId(), adminBoard.getTitle(),
-            adminBoard.getStartDateTime(), adminBoard.getEndDateTime(), adminBoard.getContent());
+        return new AdminBoardInfoResponse(adminBoard.getId(), adminBoard.getTitle(), adminBoard.getContent(), adminBoard.getImageUrl(),
+            adminBoard.getStartDateTime(), adminBoard.getEndDateTime());
     }
 
 }

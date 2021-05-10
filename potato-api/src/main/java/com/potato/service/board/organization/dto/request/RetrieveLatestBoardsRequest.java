@@ -1,15 +1,13 @@
 package com.potato.service.board.organization.dto.request;
 
-import com.potato.domain.board.organization.OrganizationBoardType;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import com.potato.domain.board.organization.OrganizationBoardCategory;
+import lombok.*;
 
 import javax.validation.constraints.Min;
 
 @ToString
 @Getter
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class RetrieveLatestBoardsRequest {
 
@@ -19,6 +17,6 @@ public class RetrieveLatestBoardsRequest {
     @Min(1)
     private int size;
 
-    private OrganizationBoardType type;
+    private OrganizationBoardCategory type;
 
 }

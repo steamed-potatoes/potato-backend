@@ -1,6 +1,6 @@
 package com.potato.controller;
 
-import com.potato.config.session.AdminMemberSession;
+import com.potato.config.session.AdminSession;
 import com.potato.domain.administrator.Administrator;
 import com.potato.domain.administrator.AdministratorCreator;
 import com.potato.domain.administrator.AdministratorRepository;
@@ -24,7 +24,7 @@ public class LocalController {
     @GetMapping("/test-session")
     public ApiResponse<String> getSession() {
         Administrator administrator = administratorRepository.save(AdministratorCreator.create("admin.test@gmail.com", "테스트 관리자"));
-        httpSession.setAttribute(AUTH_SESSION, AdminMemberSession.of(administrator.getId()));
+        httpSession.setAttribute(AUTH_SESSION, AdminSession.of(administrator.getId()));
         return ApiResponse.success(httpSession.getId());
     }
 

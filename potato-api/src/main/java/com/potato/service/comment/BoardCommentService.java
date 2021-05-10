@@ -4,7 +4,7 @@ import com.potato.domain.board.admin.AdminBoardRepository;
 import com.potato.domain.board.organization.OrganizationBoardRepository;
 import com.potato.domain.comment.BoardComment;
 import com.potato.domain.comment.BoardCommentRepository;
-import com.potato.domain.comment.BoardCommentType;
+import com.potato.domain.board.BoardType;
 import com.potato.service.comment.dto.request.AddBoardCommentRequest;
 import com.potato.service.comment.dto.response.BoardCommentResponse;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +34,7 @@ public class BoardCommentService {
     }
 
     @Transactional(readOnly = true)
-    public List<BoardCommentResponse> retrieveBoardCommentList(BoardCommentType type, Long boardId) {
+    public List<BoardCommentResponse> retrieveBoardCommentList(BoardType type, Long boardId) {
         BoardCommentServiceUtils.validateExistBoard(organizationBoardRepository, adminBoardRepository, type, boardId);
         List<BoardComment> rootComments = boardCommentRepository.findRootCommentByTypeAndBoardId(type, boardId);
         return rootComments.stream()
@@ -46,6 +46,18 @@ public class BoardCommentService {
     public void deleteBoardComment(Long boardCommentId, Long memberId) {
         BoardComment comment = BoardCommentServiceUtils.findBoardCommentByIdAndMemberId(boardCommentRepository, boardCommentId, memberId);
         comment.delete();
+    }
+
+    @Transactional
+    public void likeBoardComment(Long boardCommentId, Long memberId) {
+        BoardComment boardComment = BoardCommentServiceUtils.findBoardCommentById(boardCommentRepository, boardCommentId);
+        boardComment.addLike(memberId);
+    }
+
+    @Transactional
+    public void unLikeBoardComment(Long boardCommentId, Long memberId) {
+        BoardComment boardComment = BoardCommentServiceUtils.findBoardCommentById(boardCommentRepository, boardCommentId);
+        boardComment.deleteLike(memberId);
     }
 
 }

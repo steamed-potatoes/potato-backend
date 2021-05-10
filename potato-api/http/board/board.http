@@ -4,12 +4,12 @@ Content-Type: application/json
 Authorization: Bearer {{AUTHORIZATION}}
 
 {
-    "title": "감자 신규 회원 모집",
-    "content": "감지 동아리에서 신규 회원을 모집합니다",
-    "startDateTime": "2021-03-01T00:00:00",
-    "endDateTime": "2021-03-08T11:59:59",
-    "imageUrl": "http://image.url",
-    "type": "RECRUIT"
+    "title": "감자 모각코 이벤트",
+    "content": "감자 모각코",
+    "startDateTime": "2021-05-01T00:00:00",
+    "endDateTime": "2021-05-08T11:59:59",
+    "imageUrl": "https://avatars.githubusercontent.com/u/48153675?v=4",
+    "type": "EVENT"
 }
 
 ### 특정 그룹의 게시물을 조회하는 API

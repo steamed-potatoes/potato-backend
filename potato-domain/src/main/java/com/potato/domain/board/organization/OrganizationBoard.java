@@ -1,7 +1,8 @@
 package com.potato.domain.board.organization;
 
 import com.potato.domain.BaseTimeEntity;
-import com.potato.domain.board.Board;
+import com.potato.domain.board.BoardInfo;
+import com.potato.domain.common.DateTimeInterval;
 import com.potato.exception.model.ConflictException;
 import com.potato.exception.model.NotFoundException;
 import lombok.AccessLevel;
@@ -20,8 +21,9 @@ import java.util.List;
 @Table(
     indexes = {
         @Index(name = "idx_organization_board_1", columnList = "subDomain"),
-        @Index(name = "idx_organization_board_2", columnList = "likesCount,id"),
-        @Index(name = "idx_organization_board_3", columnList = "type")
+        @Index(name = "idx_organization_board_2", columnList = "likesCount"),
+        @Index(name = "idx_organization_board_3", columnList = "category"),
+        @Index(name = "idx_organization_board_4", columnList = "startDateTime,endDateTime")
     }
 )
 public class OrganizationBoard extends BaseTimeEntity {
@@ -30,46 +32,42 @@ public class OrganizationBoard extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "board_id", nullable = false)
-    private Board board;
-
     @Column(nullable = false, length = 50)
     private String subDomain;
 
     @Column(nullable = false)
     private Long memberId;
 
-    private String content;
-
-    private String imageUrl;
-
     @Column(nullable = false, length = 30)
     @Enumerated(EnumType.STRING)
-    private OrganizationBoardType type;
+    private OrganizationBoardCategory category;
+
+    @Embedded
+    private BoardInfo boardInfo;
+
+    @Embedded
+    private DateTimeInterval dateTimeInterval;
+
+    private int likesCount;
 
     @OneToMany(mappedBy = "organizationBoard", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<OrganizationBoardLike> organizationBoardLikeList = new ArrayList<>();
 
-    private int likesCount;
-
     @Builder
-    public OrganizationBoard(String subDomain, Long memberId, String title, LocalDateTime startDateTime, LocalDateTime endDateTime, String content, String imageUrl, OrganizationBoardType type) {
+    public OrganizationBoard(String subDomain, Long memberId, String title, LocalDateTime startDateTime, LocalDateTime endDateTime, String content, String imageUrl, OrganizationBoardCategory category) {
         this.subDomain = subDomain;
         this.memberId = memberId;
-        this.board = Board.of(title, startDateTime, endDateTime);
-        this.content = content;
-        this.imageUrl = imageUrl;
-        this.type = type;
+        this.category = category;
+        this.boardInfo = BoardInfo.of(title, content, imageUrl);
+        this.dateTimeInterval = DateTimeInterval.of(startDateTime, endDateTime);
         this.likesCount = 0;
     }
 
-    public void updateInfo(String title, String content, String imageUrl, LocalDateTime startDateTime, LocalDateTime endDateTime, OrganizationBoardType type, Long memberId) {
-        this.content = content;
-        this.imageUrl = imageUrl;
-        this.type = type;
+    public void updateInfo(String title, String content, String imageUrl, LocalDateTime startDateTime, LocalDateTime endDateTime, OrganizationBoardCategory category, Long memberId) {
+        this.boardInfo = BoardInfo.of(title, content, imageUrl);
+        this.category = category;
         this.memberId = memberId;
-        this.board = Board.of(title, startDateTime, endDateTime);
+        this.dateTimeInterval = DateTimeInterval.of(startDateTime, endDateTime);
     }
 
     public void addLike(Long memberId) {
@@ -99,24 +97,32 @@ public class OrganizationBoard extends BaseTimeEntity {
             .orElseThrow(() -> new NotFoundException(String.format("멤버 (%s)는 게시물 (%s)에 좋아요를 누른 적이 없습니다", memberId, this.id)));
     }
 
-    public String getTitle() {
-        return this.board.getTitle();
-    }
-
-    public LocalDateTime getStartDateTime() {
-        return this.board.getStartDateTime();
-    }
-
-    public LocalDateTime getEndDateTime() {
-        return this.board.getEndDateTime();
-    }
-
     public DeleteOrganizationBoard delete(Long memberId) {
         return DeleteOrganizationBoard.newBackUpInstance(this, memberId);
     }
 
     public DeleteOrganizationBoard deleteByAdmin(Long adminMemberId) {
         return DeleteOrganizationBoard.newBackUpInstanceByAdmin(this, adminMemberId);
+    }
+
+    public LocalDateTime getStartDateTime() {
+        return this.dateTimeInterval.getStartDateTime();
+    }
+
+    public LocalDateTime getEndDateTime() {
+        return this.dateTimeInterval.getEndDateTime();
+    }
+
+    public String getTitle() {
+        return boardInfo.getTitle();
+    }
+
+    public String getContent() {
+        return boardInfo.getContent();
+    }
+
+    public String getImageUrl() {
+        return boardInfo.getImageUrl();
     }
 
 }

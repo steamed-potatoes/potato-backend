@@ -1,16 +1,16 @@
-package com.potato.service.board.dto.request;
+package com.potato.service.comment.dto.request;
 
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
 
-@ToString
 @Getter
+@ToString
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class DeleteOrganizationBoardRequest {
+public class LikeBoardCommentRequest {
 
     @NotNull
-    private Long organizationBoardId;
+    private Long boardCommentId;
 
 }

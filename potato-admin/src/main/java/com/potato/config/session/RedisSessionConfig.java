@@ -12,7 +12,7 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
 @Profile("!local")
 @RequiredArgsConstructor
 @Configuration
-@EnableRedisHttpSession(maxInactiveIntervalInSeconds = 60 * 60 * 24 * 30)
+@EnableRedisHttpSession(maxInactiveIntervalInSeconds = 60 * 60 * 24) // 1일
 public class RedisSessionConfig {
 
     private final RedisProperties redisProperties;

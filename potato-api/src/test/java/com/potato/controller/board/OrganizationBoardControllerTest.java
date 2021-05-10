@@ -3,9 +3,9 @@ package com.potato.controller.board;
 import com.potato.controller.ApiResponse;
 import com.potato.controller.ControllerTestUtils;
 import com.potato.domain.board.organization.OrganizationBoard;
+import com.potato.domain.board.organization.OrganizationBoardCategory;
 import com.potato.domain.board.organization.OrganizationBoardCreator;
 import com.potato.domain.board.organization.OrganizationBoardRepository;
-import com.potato.domain.board.organization.OrganizationBoardType;
 import com.potato.domain.board.organization.repository.dto.BoardWithOrganizationDto;
 import com.potato.domain.member.Member;
 import com.potato.domain.organization.Organization;
@@ -74,7 +74,7 @@ class OrganizationBoardControllerTest extends ControllerTestUtils {
             .content(content)
             .startDateTime(startTime)
             .endDateTime(endTime)
-            .type(OrganizationBoardType.RECRUIT)
+            .type(OrganizationBoardCategory.RECRUIT)
             .build();
 
         //when
@@ -85,7 +85,7 @@ class OrganizationBoardControllerTest extends ControllerTestUtils {
         assertThat(response.getData().getContent()).isEqualTo(content);
         assertThat(response.getData().getStartDateTime()).isEqualTo(startTime);
         assertThat(response.getData().getEndDateTime()).isEqualTo(endTime);
-        assertThat(response.getData().getType()).isEqualTo(OrganizationBoardType.RECRUIT);
+        assertThat(response.getData().getType()).isEqualTo(OrganizationBoardCategory.RECRUIT);
     }
 
     @Test
@@ -97,7 +97,7 @@ class OrganizationBoardControllerTest extends ControllerTestUtils {
         organizationRepository.save(organization);
 
         String title = "title";
-        OrganizationBoard board = OrganizationBoardCreator.create(subDomain, testMember.getId(), title, OrganizationBoardType.RECRUIT);
+        OrganizationBoard board = OrganizationBoardCreator.create(subDomain, testMember.getId(), title, OrganizationBoardCategory.RECRUIT);
         organizationBoardRepository.save(board);
 
         //when
@@ -120,9 +120,9 @@ class OrganizationBoardControllerTest extends ControllerTestUtils {
         String title1 = "title1";
         String title2 = "title2";
         String title3 = "title3";
-        OrganizationBoard board1 = OrganizationBoardCreator.create(subDomain, testMember.getId(), title1, OrganizationBoardType.RECRUIT);
-        OrganizationBoard board2 = OrganizationBoardCreator.create(subDomain, testMember.getId(), title2, OrganizationBoardType.RECRUIT);
-        OrganizationBoard board3 = OrganizationBoardCreator.create(subDomain, testMember.getId(), title3, OrganizationBoardType.RECRUIT);
+        OrganizationBoard board1 = OrganizationBoardCreator.create(subDomain, testMember.getId(), title1, OrganizationBoardCategory.RECRUIT);
+        OrganizationBoard board2 = OrganizationBoardCreator.create(subDomain, testMember.getId(), title2, OrganizationBoardCategory.RECRUIT);
+        OrganizationBoard board3 = OrganizationBoardCreator.create(subDomain, testMember.getId(), title3, OrganizationBoardCategory.RECRUIT);
         organizationBoardRepository.saveAll(Arrays.asList(board1, board2, board3));
 
         //when
@@ -145,9 +145,9 @@ class OrganizationBoardControllerTest extends ControllerTestUtils {
         String title1 = "title1";
         String title2 = "title2";
         String title3 = "title3";
-        OrganizationBoard board1 = OrganizationBoardCreator.create(subDomain, testMember.getId(), title1, OrganizationBoardType.RECRUIT);
-        OrganizationBoard board2 = OrganizationBoardCreator.create(subDomain, testMember.getId(), title2, OrganizationBoardType.RECRUIT);
-        OrganizationBoard board3 = OrganizationBoardCreator.create(subDomain, testMember.getId(), title3, OrganizationBoardType.RECRUIT);
+        OrganizationBoard board1 = OrganizationBoardCreator.create(subDomain, testMember.getId(), title1, OrganizationBoardCategory.RECRUIT);
+        OrganizationBoard board2 = OrganizationBoardCreator.create(subDomain, testMember.getId(), title2, OrganizationBoardCategory.RECRUIT);
+        OrganizationBoard board3 = OrganizationBoardCreator.create(subDomain, testMember.getId(), title3, OrganizationBoardCategory.RECRUIT);
         organizationBoardRepository.saveAll(Arrays.asList(board1, board2, board3));
 
         //when
@@ -182,7 +182,7 @@ class OrganizationBoardControllerTest extends ControllerTestUtils {
         organizationRepository.save(organization);
 
         String title = "title";
-        OrganizationBoard board = OrganizationBoardCreator.create(subDomain, testMember.getId(), title, OrganizationBoardType.RECRUIT);
+        OrganizationBoard board = OrganizationBoardCreator.create(subDomain, testMember.getId(), title, OrganizationBoardCategory.RECRUIT);
         organizationBoardRepository.save(board);
 
         String updateTitle = "updateTitle";
@@ -191,7 +191,7 @@ class OrganizationBoardControllerTest extends ControllerTestUtils {
             .title(updateTitle)
             .startDateTime(LocalDateTime.of(2021, 3, 30, 0, 0))
             .endDateTime(LocalDateTime.of(2021, 3, 31, 0, 0))
-            .type(OrganizationBoardType.RECRUIT)
+            .type(OrganizationBoardCategory.RECRUIT)
             .build();
 
         //when
@@ -205,14 +205,14 @@ class OrganizationBoardControllerTest extends ControllerTestUtils {
     void 인기있는_게시글_5개를_가져오는_경우() throws Exception {
         //given
         String subDomain = "potato";
-        OrganizationBoard organizationBoard1 = OrganizationBoardCreator.create(subDomain, 1L, "title1", OrganizationBoardType.RECRUIT);
+        OrganizationBoard organizationBoard1 = OrganizationBoardCreator.create(subDomain, 1L, "title1", OrganizationBoardCategory.RECRUIT);
         organizationBoard1.addLike(2L);
         organizationBoard1.addLike(3L);
-        OrganizationBoard organizationBoard2 = OrganizationBoardCreator.create(subDomain, 1L, "title2", OrganizationBoardType.RECRUIT);
+        OrganizationBoard organizationBoard2 = OrganizationBoardCreator.create(subDomain, 1L, "title2", OrganizationBoardCategory.RECRUIT);
         organizationBoard2.addLike(2L);
-        OrganizationBoard organizationBoard3 = OrganizationBoardCreator.create(subDomain, 1L, "title3", OrganizationBoardType.RECRUIT);
-        OrganizationBoard organizationBoard4 = OrganizationBoardCreator.create(subDomain, 1L, "title4", OrganizationBoardType.RECRUIT);
-        OrganizationBoard organizationBoard5 = OrganizationBoardCreator.create(subDomain, 1L, "title5", OrganizationBoardType.RECRUIT);
+        OrganizationBoard organizationBoard3 = OrganizationBoardCreator.create(subDomain, 1L, "title3", OrganizationBoardCategory.RECRUIT);
+        OrganizationBoard organizationBoard4 = OrganizationBoardCreator.create(subDomain, 1L, "title4", OrganizationBoardCategory.RECRUIT);
+        OrganizationBoard organizationBoard5 = OrganizationBoardCreator.create(subDomain, 1L, "title5", OrganizationBoardCategory.RECRUIT);
 
         organizationBoardRepository.saveAll(Arrays.asList(organizationBoard1, organizationBoard2, organizationBoard3, organizationBoard4, organizationBoard5));
 

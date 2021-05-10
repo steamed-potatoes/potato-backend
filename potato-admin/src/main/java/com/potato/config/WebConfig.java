@@ -1,7 +1,7 @@
 package com.potato.config;
 
 import com.potato.config.interceptor.AuthInterceptor;
-import com.potato.config.resolver.MemberIdResolver;
+import com.potato.config.resolver.AdminIdResolver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -16,7 +16,7 @@ import java.util.List;
 public class WebConfig implements WebMvcConfigurer {
 
     private final AuthInterceptor authInterceptor;
-    private final MemberIdResolver memberIdResolver;
+    private final AdminIdResolver adminIdResolver;
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
@@ -34,7 +34,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(memberIdResolver);
+        resolvers.add(adminIdResolver);
     }
 
 }

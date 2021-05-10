@@ -2,7 +2,6 @@ package com.potato.service.board;
 
 import com.potato.domain.board.admin.AdminBoard;
 import com.potato.domain.board.admin.AdminBoardRepository;
-import com.potato.domain.board.admin.DeleteAdminBoardRepository;
 import com.potato.domain.board.organization.DeleteOrganizationBoardRepository;
 import com.potato.domain.board.organization.OrganizationBoard;
 import com.potato.domain.board.organization.OrganizationBoardRepository;
@@ -19,8 +18,6 @@ public class AdminBoardService {
 
     private final AdminBoardRepository adminBoardRepository;
 
-    private final DeleteAdminBoardRepository deleteAdminBoardRepository;
-
     private final OrganizationBoardRepository organizationBoardRepository;
 
     private final DeleteOrganizationBoardRepository deleteOrganizationBoardRepository;
@@ -33,21 +30,15 @@ public class AdminBoardService {
     @Transactional
     public AdminBoardInfoResponse updateAdminBoard(UpdateAdminBoardRequest request) {
         AdminBoard adminBoard = AdminBoardServiceUtils.findAdminBoardById(adminBoardRepository, request.getAdminBoardId());
-        adminBoard.updateInfo(request.getTitle(), request.getContent(), request.getStartDateTime(), request.getEndDateTime());
+        adminBoard.updateInfo(request.getTitle(), request.getContent(), request.getImageUrl(), request.getStartDateTime(), request.getEndDateTime());
         return AdminBoardInfoResponse.of(adminBoard);
     }
 
     @Transactional
-    public void deleteAdminBoard(Long adminBoardId, Long adminMemberId) {
-        AdminBoard adminBoard = AdminBoardServiceUtils.findAdminBoardById(adminBoardRepository, adminBoardId);
-        deleteAdminBoardRepository.save(adminBoard.delete(adminMemberId));
-        adminBoardRepository.delete(adminBoard);
-    }
-
-    @Transactional
-    public void deleteOrganizationBoard(String subDomain, Long adminMemberId, Long organizationBoardId) {
+    public void deleteOrganizationBoard(String subDomain, Long organizationBoardId, Long adminMemberId) {
         OrganizationBoard organizationBoard = OrganizationBoardServiceUtils.findOrganizationBoardBySubDomainAndId(organizationBoardRepository, subDomain, organizationBoardId);
         deleteOrganizationBoardRepository.save(organizationBoard.deleteByAdmin(adminMemberId));
         organizationBoardRepository.delete(organizationBoard);
     }
+
 }

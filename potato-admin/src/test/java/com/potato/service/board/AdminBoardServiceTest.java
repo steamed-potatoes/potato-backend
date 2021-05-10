@@ -1,13 +1,7 @@
 package com.potato.service.board;
 
-import com.potato.domain.board.Board;
-import com.potato.domain.board.BoardRepository;
-import com.potato.domain.board.DeleteBoard;
-import com.potato.domain.board.DeleteBoardRepository;
 import com.potato.domain.board.admin.AdminBoard;
 import com.potato.domain.board.admin.AdminBoardRepository;
-import com.potato.domain.board.admin.DeleteAdminBoard;
-import com.potato.domain.board.admin.DeleteAdminBoardRepository;
 import com.potato.domain.board.organization.*;
 import com.potato.exception.model.NotFoundException;
 import com.potato.service.AdminSetupTest;
@@ -34,15 +28,6 @@ public class AdminBoardServiceTest extends AdminSetupTest {
     private AdminBoardService adminBoardService;
 
     @Autowired
-    private BoardRepository boardRepository;
-
-    @Autowired
-    private DeleteAdminBoardRepository deleteAdminBoardRepository;
-
-    @Autowired
-    private DeleteBoardRepository deleteBoardRepository;
-
-    @Autowired
     private OrganizationBoardRepository organizationBoardRepository;
 
     @Autowired
@@ -52,11 +37,8 @@ public class AdminBoardServiceTest extends AdminSetupTest {
     void cleanup() {
         super.cleanUp();
         adminBoardRepository.deleteAllInBatch();
-        boardRepository.deleteAllInBatch();
         organizationBoardRepository.deleteAllInBatch();
-        deleteAdminBoardRepository.deleteAllInBatch();
         deleteOrganizationBoardRepository.deleteAllInBatch();
-        deleteBoardRepository.deleteAllInBatch();
     }
 
     @Test
@@ -64,11 +46,13 @@ public class AdminBoardServiceTest extends AdminSetupTest {
         // given
         String content = "content";
         String title = "title";
+        String imageUrl = "http://image.com";
         LocalDateTime startDateTime = LocalDateTime.of(2021, 9, 3, 12, 12);
         LocalDateTime endDateTime = LocalDateTime.of(2021, 9, 5, 12, 12);
         CreateAdminBoardRequest request = CreateAdminBoardRequest.testBuilder()
-            .content(content)
             .title(title)
+            .content(content)
+            .imageUrl(imageUrl)
             .startDateTime(startDateTime)
             .endDateTime(endDateTime)
             .build();
@@ -79,36 +63,32 @@ public class AdminBoardServiceTest extends AdminSetupTest {
         // then
         List<AdminBoard> adminBoardList = adminBoardRepository.findAll();
         assertThat(adminBoardList).hasSize(1);
-        assertThat(adminBoardList.get(0).getContent()).isEqualTo(content);
-        assertThat(adminBoardList.get(0).getAdministratorId()).isEqualTo(adminMemberId);
-
-        List<Board> boardList = boardRepository.findAll();
-        assertThat(boardList).hasSize(1);
-        assertThat(boardList.get(0).getTitle()).isEqualTo(title);
-        assertThat(boardList.get(0).getStartDateTime()).isEqualTo(startDateTime);
-        assertThat(boardList.get(0).getEndDateTime()).isEqualTo(endDateTime);
+        assertAdminBoard(adminBoardList.get(0), title, content, imageUrl, startDateTime, endDateTime, adminMemberId);
     }
 
     @Test
     void 관리자가_게시글을_수정한다() {
         // given
-        LocalDateTime startDateTime = LocalDateTime.of(2021, 4, 1, 0, 0);
-        LocalDateTime endDateTime = LocalDateTime.of(2021, 4, 3, 0, 0);
         AdminBoard adminBoard = AdminBoard.builder()
             .administratorId(adminMemberId)
             .title("학사")
             .content("학사행정입니다.")
-            .startDateTime(LocalDateTime.of(2020,3,30,0, 0))
-            .endDateTime(LocalDateTime.of(2020,4,30,0, 0))
+            .startDateTime(LocalDateTime.of(2020, 3, 30, 0, 0))
+            .endDateTime(LocalDateTime.of(2020, 4, 30, 0, 0))
             .build();
         adminBoardRepository.save(adminBoard);
 
         String title = "학사행정";
         String content = "내용";
+        String imageUrl = "imageUrl";
+        LocalDateTime startDateTime = LocalDateTime.of(2021, 4, 1, 0, 0);
+        LocalDateTime endDateTime = LocalDateTime.of(2021, 4, 3, 0, 0);
+
         UpdateAdminBoardRequest request = UpdateAdminBoardRequest.testBuilder()
             .adminBoardId(adminBoard.getId())
             .title(title)
             .content(content)
+            .imageUrl(imageUrl)
             .startDateTime(startDateTime)
             .endDateTime(endDateTime)
             .build();
@@ -119,14 +99,7 @@ public class AdminBoardServiceTest extends AdminSetupTest {
         // then
         List<AdminBoard> adminBoardList = adminBoardRepository.findAll();
         assertThat(adminBoardList).hasSize(1);
-        assertThat(adminBoardList.get(0).getContent()).isEqualTo(content);
-        assertThat(adminBoardList.get(0).getAdministratorId()).isEqualTo(adminMemberId);
-
-        List<Board> boardList = boardRepository.findAll();
-        assertThat(boardList).hasSize(1);
-        assertThat(boardList.get(0).getTitle()).isEqualTo(title);
-        assertThat(boardList.get(0).getStartDateTime()).isEqualTo(startDateTime);
-        assertThat(boardList.get(0).getEndDateTime()).isEqualTo(endDateTime);
+        assertAdminBoard(adminBoardList.get(0), title, content, imageUrl, startDateTime, endDateTime, adminMemberId);
     }
 
     @Test
@@ -142,76 +115,54 @@ public class AdminBoardServiceTest extends AdminSetupTest {
     }
 
     @Test
-    void 관리자가_게시글을_삭제하면_백업되고_삭제한다() {
-        // given
-        String title = "학사";
-        String content = "학사행정입니다.";
-        AdminBoard adminBoard = AdminBoard.builder()
-            .administratorId(adminMemberId)
-            .title(title)
-            .content(content)
-            .startDateTime(LocalDateTime.of(2021, 4, 1, 0, 0))
-            .endDateTime(LocalDateTime.of(2021, 4, 3, 0, 0))
-            .build();
-        adminBoardRepository.save(adminBoard);
-
-        // when
-        adminBoardService.deleteAdminBoard(adminBoard.getId(), adminMemberId);
-
-        // then
-        List<DeleteAdminBoard> deleteAdminBoardList = deleteAdminBoardRepository.findAll();
-        assertThat(deleteAdminBoardList).hasSize(1);
-        assertDeleteAdminBoard(deleteAdminBoardList.get(0), content, adminMemberId, adminBoard.getId());
-
-        List<AdminBoard> adminBoardList = adminBoardRepository.findAll();
-        assertThat(adminBoardList).isEmpty();
-
-        List<DeleteBoard> deleteBoardList = deleteBoardRepository.findAll();
-        assertThat(deleteBoardList).hasSize(1);
-        assertDeleteBoard(deleteBoardList.get(0), title, adminMemberId);
-    }
-
-    @Test
-    void 관리자_게시물을_삭제할때_해당하는_게시물이_없는경우_에러가_발생한다() {
-        // when & then
-        assertThatThrownBy(() -> adminBoardService.deleteAdminBoard(999L, adminMemberId)).isInstanceOf(NotFoundException.class);
-    }
-
-    @Test
     public void 관리자가_일반유저들의_게시글을_삭제한다() {
         //given
         String subDomain = "subDomain";
-        OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, 1L, "title", OrganizationBoardType.RECRUIT);
+        OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, 1L, "title", OrganizationBoardCategory.RECRUIT);
         organizationBoardRepository.save(organizationBoard);
 
         //when
-        adminBoardService.deleteOrganizationBoard(subDomain, 2L, organizationBoard.getId());
+        adminBoardService.deleteOrganizationBoard(subDomain, organizationBoard.getId(), adminMemberId);
 
         //then
         List<DeleteOrganizationBoard> deleteOrganizationBoardList = deleteOrganizationBoardRepository.findAll();
-        List<DeleteBoard> deleteBoardList = deleteBoardRepository.findAll();
-        assertThat(deleteBoardList).hasSize(1);
         assertThat(deleteOrganizationBoardList).hasSize(1);
+        assertDeleteOrganizationBoard(deleteOrganizationBoardList.get(0), organizationBoard, adminMemberId);
         assertThat(deleteOrganizationBoardList.get(0).getSubDomain()).isEqualTo(subDomain);
+        assertDeleteInfo(deleteOrganizationBoardList.get(0), adminMemberId);
     }
 
     @Test
     public void 그룹게시물이_없을_경우에_관리자가_삭제하려고_하면_애러가_발생한다() {
         // when & then
         assertThatThrownBy(
-            () -> adminBoardService.deleteOrganizationBoard("subDomain", 1L, 1L)
+            () -> adminBoardService.deleteOrganizationBoard("subDomain", 1L, adminMemberId)
         ).isInstanceOf(NotFoundException.class);
     }
 
-    private void assertDeleteAdminBoard(DeleteAdminBoard deleteAdminBoard, String content, Long adminMemberId, Long adminBoardId) {
-        assertThat(deleteAdminBoard.getContent()).isEqualTo(content);
-        assertThat(deleteAdminBoard.getBackUpId()).isEqualTo(adminBoardId);
-        assertThat(deleteAdminBoard.getDeleteAdministratorId()).isEqualTo(adminMemberId);
+    private void assertAdminBoard(AdminBoard adminBoard, String title, String content, String imageUrl, LocalDateTime startDateTime, LocalDateTime endDateTime, Long adminMemberId) {
+        assertThat(adminBoard.getAdministratorId()).isEqualTo(adminMemberId);
+        assertThat(adminBoard.getTitle()).isEqualTo(title);
+        assertThat(adminBoard.getContent()).isEqualTo(content);
+        assertThat(adminBoard.getImageUrl()).isEqualTo(imageUrl);
+        assertThat(adminBoard.getStartDateTime()).isEqualTo(startDateTime);
+        assertThat(adminBoard.getEndDateTime()).isEqualTo(endDateTime);
     }
 
-    private void assertDeleteBoard(DeleteBoard deleteBoard, String title, Long adminMemberId) {
-        assertThat(deleteBoard.getTitle()).isEqualTo(title);
-        assertThat(deleteBoard.getMemberId()).isEqualTo(adminMemberId);
+    private void assertDeleteInfo(DeleteOrganizationBoard deleteOrganizationBoard, Long adminMemberId) {
+        assertThat(deleteOrganizationBoard.getDeletedMemberId()).isNull();
+        assertThat(deleteOrganizationBoard.getDeletedAdminMemberId()).isEqualTo(adminMemberId);
+    }
+
+    private void assertDeleteOrganizationBoard(DeleteOrganizationBoard deleteOrganizationBoard, OrganizationBoard organizationBoard, Long adminMemberId) {
+        assertThat(deleteOrganizationBoard.getSubDomain()).isEqualTo(organizationBoard.getSubDomain());
+        assertThat(deleteOrganizationBoard.getMemberId()).isEqualTo(organizationBoard.getMemberId());
+        assertThat(deleteOrganizationBoard.getCategory()).isEqualTo(organizationBoard.getCategory());
+        assertThat(deleteOrganizationBoard.getTitle()).isEqualTo(organizationBoard.getTitle());
+        assertThat(deleteOrganizationBoard.getContent()).isEqualTo(organizationBoard.getContent());
+        assertThat(deleteOrganizationBoard.getImageUrl()).isEqualTo(organizationBoard.getImageUrl());
+        assertThat(deleteOrganizationBoard.getLikesCount()).isEqualTo(organizationBoard.getLikesCount());
+        assertThat(deleteOrganizationBoard.getBackUpId()).isEqualTo(organizationBoard.getId());
     }
 
 }

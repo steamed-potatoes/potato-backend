@@ -1,7 +1,8 @@
 package com.potato.domain.board.admin;
 
 import com.potato.domain.BaseTimeEntity;
-import com.potato.domain.board.Board;
+import com.potato.domain.board.BoardInfo;
+import com.potato.domain.common.DateTimeInterval;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,47 +14,56 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@Table(
+    indexes = {
+        @Index(name = "idx_admin_board_1", columnList = "startDateTime,endDateTime"),
+    }
+)
 public class AdminBoard extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "board_id", nullable = false)
-    private Board board;
-
     @Column(nullable = false)
     private Long administratorId;
 
-    private String content;
+    @Embedded
+    private BoardInfo boardInfo;
+
+    @Embedded
+    private DateTimeInterval dateTimeInterval;
 
     @Builder
-    public AdminBoard(Long administratorId, String title, LocalDateTime startDateTime, LocalDateTime endDateTime, String content) {
+    public AdminBoard(Long administratorId, String title, String content, String imageUrl, LocalDateTime startDateTime, LocalDateTime endDateTime) {
         this.administratorId = administratorId;
-        this.board = Board.of(title, startDateTime, endDateTime);
-        this.content = content;
-    }
-
-    public String getTitle() {
-        return this.board.getTitle();
+        this.boardInfo = BoardInfo.of(title, content, imageUrl);
+        this.dateTimeInterval = DateTimeInterval.of(startDateTime, endDateTime);
     }
 
     public LocalDateTime getStartDateTime() {
-        return this.board.getStartDateTime();
+        return this.dateTimeInterval.getStartDateTime();
     }
 
     public LocalDateTime getEndDateTime() {
-        return this.board.getEndDateTime();
+        return this.dateTimeInterval.getEndDateTime();
     }
 
-    public void updateInfo(String title, String content, LocalDateTime startDateTime, LocalDateTime endDateTime) {
-        this.board = Board.of(title, startDateTime, endDateTime);
-        this.content = content;
+    public void updateInfo(String title, String content, String imageUrl, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        this.boardInfo = BoardInfo.of(title, content, imageUrl);
+        this.dateTimeInterval = DateTimeInterval.of(startDateTime, endDateTime);
     }
 
-    public DeleteAdminBoard delete(Long adminMemberId) {
-        return DeleteAdminBoard.newBackupInstance(this, adminMemberId);
+    public String getTitle() {
+        return boardInfo.getTitle();
+    }
+
+    public String getContent() {
+        return boardInfo.getContent();
+    }
+
+    public String getImageUrl() {
+        return boardInfo.getImageUrl();
     }
 
 }
