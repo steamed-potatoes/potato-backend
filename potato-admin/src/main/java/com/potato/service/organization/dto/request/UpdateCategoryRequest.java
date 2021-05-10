@@ -1,24 +1,18 @@
 package com.potato.service.organization.dto.request;
 
 import com.potato.domain.organization.OrganizationCategory;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
 
 @ToString
 @Getter
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UpdateCategoryRequest {
 
     @NotNull
-    OrganizationCategory category;
-
-    private UpdateCategoryRequest(@NotNull OrganizationCategory category) {
-        this.category = category;
-    }
+    private OrganizationCategory category;
 
     public static UpdateCategoryRequest testInstance(OrganizationCategory category) {
         return new UpdateCategoryRequest(category);
