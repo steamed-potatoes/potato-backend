@@ -5,8 +5,8 @@ Authorization: Bearer {{AUTHORIZATION}}
 
 {
     "subDomain": "potato",
-    "name": "감자팀",
-    "description": "테스트2 그룹입니다.",
+    "name": "감자",
+    "description": "개발의 감을 잡자",
     "profileUrl": "https://avatars.githubusercontent.com/u/48153675?v=4"
 }
 
@@ -43,4 +43,10 @@ Authorization: Bearer {{AUTHORIZATION}}
 
 ### 동아리에서 탈퇴하는 API
 DELETE {{host_api}}/api/v1/organization/leave/potato
+Authorization: Bearer {{AUTHORIZATION}}
+
+
+### 동아리 팔로우 하기
+POST {{host_api}}/api/v1/organization/follow/potato
+Content-Type: application/json
 Authorization: Bearer {{AUTHORIZATION}}

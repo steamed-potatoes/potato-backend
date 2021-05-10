@@ -5,9 +5,9 @@ Content-Type: application/json
 {
     "email": "will.seungho@gmail.com",
     "name": "강승호",
-    "profileUrl": "http://profile.com",
-    "major": "IT_COMPUTER",
-    "classNumber": 201610323
+    "profileUrl": "https://avatars.githubusercontent.com/u/48153675?v=4",
+    "major": "IT_ICT",
+    "classNumber": 201610302
 }
 > {%
 client.global.set("AUTHORIZATION", response.body["data"])
