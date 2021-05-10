@@ -38,6 +38,8 @@ public class DeleteOrganizationBoard extends BaseTimeEntity {
     @Embedded
     private DateTimeInterval dateTimeInterval;
 
+    private int likesCount;
+
     @Embedded
     private DeletedTrackingInfo deletedTrackingInfo;
 
@@ -46,21 +48,20 @@ public class DeleteOrganizationBoard extends BaseTimeEntity {
 
     @Builder
     public DeleteOrganizationBoard(Long backUpId, String subDomain, Long memberId, OrganizationBoardCategory category, String title,
-                                   String content, String imageUrl, LocalDateTime startDateTime, LocalDateTime endDateTime,
+                                   String content, String imageUrl, LocalDateTime startDateTime, LocalDateTime endDateTime, int likesCount,
                                    LocalDateTime backUpCreatedDateTime, Long deletedMemberId, Long deletedAdminMemberId) {
         this.memberId = memberId;
         this.dateTimeInterval = DateTimeInterval.of(startDateTime, endDateTime);
         this.subDomain = subDomain;
         this.category = category;
         this.boardInfo = BoardInfo.of(title, content, imageUrl);
+        this.likesCount = likesCount;
         this.backUpInfo = BackUpInfo.of(backUpId, backUpCreatedDateTime);
         this.deletedTrackingInfo = DeletedTrackingInfo.of(deletedMemberId, deletedAdminMemberId);
     }
 
     public static DeleteOrganizationBoard newBackUpInstance(OrganizationBoard organizationBoard, Long memberId) {
         return DeleteOrganizationBoard.builder()
-            .backUpId(organizationBoard.getId())
-            .deletedMemberId(memberId)
             .memberId(organizationBoard.getMemberId())
             .subDomain(organizationBoard.getSubDomain())
             .category(organizationBoard.getCategory())
@@ -69,14 +70,15 @@ public class DeleteOrganizationBoard extends BaseTimeEntity {
             .imageUrl(organizationBoard.getImageUrl())
             .startDateTime(organizationBoard.getStartDateTime())
             .endDateTime(organizationBoard.getEndDateTime())
+            .likesCount(builder().likesCount)
             .backUpCreatedDateTime(organizationBoard.getCreatedDateTime())
+            .backUpId(organizationBoard.getId())
+            .deletedMemberId(memberId)
             .build();
     }
 
     public static DeleteOrganizationBoard newBackUpInstanceByAdmin(OrganizationBoard organizationBoard, Long adminMemberId) {
         return DeleteOrganizationBoard.builder()
-            .backUpId(organizationBoard.getId())
-            .deletedAdminMemberId(adminMemberId)
             .memberId(organizationBoard.getMemberId())
             .subDomain(organizationBoard.getSubDomain())
             .category(organizationBoard.getCategory())
@@ -85,7 +87,9 @@ public class DeleteOrganizationBoard extends BaseTimeEntity {
             .imageUrl(organizationBoard.getImageUrl())
             .startDateTime(organizationBoard.getStartDateTime())
             .endDateTime(organizationBoard.getEndDateTime())
+            .backUpId(organizationBoard.getId())
             .backUpCreatedDateTime(organizationBoard.getCreatedDateTime())
+            .deletedAdminMemberId(adminMemberId)
             .build();
     }
 
@@ -115,6 +119,10 @@ public class DeleteOrganizationBoard extends BaseTimeEntity {
 
     public Long getDeletedMemberId() {
         return deletedTrackingInfo.getDeletedMemberId();
+    }
+
+    public Long getDeletedAdminMemberId() {
+        return deletedTrackingInfo.getDeletedAdminMemberId();
     }
 
 }

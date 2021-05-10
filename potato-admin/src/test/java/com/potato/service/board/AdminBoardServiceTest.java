@@ -122,19 +122,21 @@ public class AdminBoardServiceTest extends AdminSetupTest {
         organizationBoardRepository.save(organizationBoard);
 
         //when
-        adminBoardService.deleteOrganizationBoard(subDomain, 2L, organizationBoard.getId());
+        adminBoardService.deleteOrganizationBoard(subDomain, organizationBoard.getId(), adminMemberId);
 
         //then
         List<DeleteOrganizationBoard> deleteOrganizationBoardList = deleteOrganizationBoardRepository.findAll();
         assertThat(deleteOrganizationBoardList).hasSize(1);
+        assertDeleteOrganizationBoard(deleteOrganizationBoardList.get(0), organizationBoard, adminMemberId);
         assertThat(deleteOrganizationBoardList.get(0).getSubDomain()).isEqualTo(subDomain);
+        assertDeleteInfo(deleteOrganizationBoardList.get(0), adminMemberId);
     }
 
     @Test
     public void 그룹게시물이_없을_경우에_관리자가_삭제하려고_하면_애러가_발생한다() {
         // when & then
         assertThatThrownBy(
-            () -> adminBoardService.deleteOrganizationBoard("subDomain", 1L, 1L)
+            () -> adminBoardService.deleteOrganizationBoard("subDomain", 1L, adminMemberId)
         ).isInstanceOf(NotFoundException.class);
     }
 
@@ -145,6 +147,22 @@ public class AdminBoardServiceTest extends AdminSetupTest {
         assertThat(adminBoard.getImageUrl()).isEqualTo(imageUrl);
         assertThat(adminBoard.getStartDateTime()).isEqualTo(startDateTime);
         assertThat(adminBoard.getEndDateTime()).isEqualTo(endDateTime);
+    }
+
+    private void assertDeleteInfo(DeleteOrganizationBoard deleteOrganizationBoard, Long adminMemberId) {
+        assertThat(deleteOrganizationBoard.getDeletedMemberId()).isNull();
+        assertThat(deleteOrganizationBoard.getDeletedAdminMemberId()).isEqualTo(adminMemberId);
+    }
+
+    private void assertDeleteOrganizationBoard(DeleteOrganizationBoard deleteOrganizationBoard, OrganizationBoard organizationBoard, Long adminMemberId) {
+        assertThat(deleteOrganizationBoard.getSubDomain()).isEqualTo(organizationBoard.getSubDomain());
+        assertThat(deleteOrganizationBoard.getMemberId()).isEqualTo(organizationBoard.getMemberId());
+        assertThat(deleteOrganizationBoard.getCategory()).isEqualTo(organizationBoard.getCategory());
+        assertThat(deleteOrganizationBoard.getTitle()).isEqualTo(organizationBoard.getTitle());
+        assertThat(deleteOrganizationBoard.getContent()).isEqualTo(organizationBoard.getContent());
+        assertThat(deleteOrganizationBoard.getImageUrl()).isEqualTo(organizationBoard.getImageUrl());
+        assertThat(deleteOrganizationBoard.getLikesCount()).isEqualTo(organizationBoard.getLikesCount());
+        assertThat(deleteOrganizationBoard.getBackUpId()).isEqualTo(organizationBoard.getId());
     }
 
 }

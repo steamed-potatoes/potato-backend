@@ -28,13 +28,13 @@ public class AdminBoardController {
     @Auth
     @PutMapping("/admin/v1/board/admin")
     public ApiResponse<AdminBoardInfoResponse> updateAdminBoard(@Valid @RequestBody UpdateAdminBoardRequest request) {
-       return ApiResponse.success(adminBoardService.updateAdminBoard(request));
+        return ApiResponse.success(adminBoardService.updateAdminBoard(request));
     }
 
     @Auth
     @DeleteMapping("/admin/v1/board/organization/{subDomain}")
-    public ApiResponse<String> deleteOrganizationBoard(@PathVariable String subDomain, @MemberId Long adminMemberId, DeleteOrganizationBoardRequest request) {
-        adminBoardService.deleteOrganizationBoard(subDomain, adminMemberId, request.getOrganizationBoardId());
+    public ApiResponse<String> deleteOrganizationBoard(@PathVariable String subDomain, @Valid DeleteOrganizationBoardRequest request, @MemberId Long adminMemberId) {
+        adminBoardService.deleteOrganizationBoard(subDomain, request.getOrganizationBoardId(), adminMemberId);
         return ApiResponse.OK;
     }
 
