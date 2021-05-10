@@ -20,6 +20,8 @@ public class UpdateAdminBoardRequest {
 
     private String content;
 
+    private String imageUrl;
+
     @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime startDateTime;
@@ -29,10 +31,11 @@ public class UpdateAdminBoardRequest {
     private LocalDateTime endDateTime;
 
     @Builder(builderMethodName = "testBuilder")
-    public UpdateAdminBoardRequest(@NotNull Long adminBoardId, @NotBlank String title, String content, @NotNull LocalDateTime startDateTime, @NotNull LocalDateTime endDateTime) {
+    public UpdateAdminBoardRequest(@NotNull Long adminBoardId, @NotBlank String title, String content, String imageUrl, @NotNull LocalDateTime startDateTime, @NotNull LocalDateTime endDateTime) {
         this.adminBoardId = adminBoardId;
         this.title = title;
         this.content = content;
+        this.imageUrl = imageUrl;
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
     }

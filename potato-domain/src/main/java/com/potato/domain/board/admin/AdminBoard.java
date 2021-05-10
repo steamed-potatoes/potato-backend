@@ -1,6 +1,7 @@
 package com.potato.domain.board.admin;
 
 import com.potato.domain.BaseTimeEntity;
+import com.potato.domain.board.BoardInfo;
 import com.potato.domain.common.DateTimeInterval;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -27,19 +28,16 @@ public class AdminBoard extends BaseTimeEntity {
     @Column(nullable = false)
     private Long administratorId;
 
-    @Column(nullable = false)
-    private String title;
-
-    private String content;
+    @Embedded
+    private BoardInfo boardInfo;
 
     @Embedded
     private DateTimeInterval dateTimeInterval;
 
     @Builder
-    public AdminBoard(Long administratorId, String title, LocalDateTime startDateTime, LocalDateTime endDateTime, String content) {
+    public AdminBoard(Long administratorId, String title, String content, String imageUrl, LocalDateTime startDateTime, LocalDateTime endDateTime) {
         this.administratorId = administratorId;
-        this.title = title;
-        this.content = content;
+        this.boardInfo = BoardInfo.of(title, content, imageUrl);
         this.dateTimeInterval = DateTimeInterval.of(startDateTime, endDateTime);
     }
 
@@ -51,10 +49,21 @@ public class AdminBoard extends BaseTimeEntity {
         return this.dateTimeInterval.getEndDateTime();
     }
 
-    public void updateInfo(String title, String content, LocalDateTime startDateTime, LocalDateTime endDateTime) {
-        this.title = title;
+    public void updateInfo(String title, String content, String imageUrl, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        this.boardInfo = BoardInfo.of(title, content, imageUrl);
         this.dateTimeInterval = DateTimeInterval.of(startDateTime, endDateTime);
-        this.content = content;
+    }
+
+    public String getTitle() {
+        return boardInfo.getTitle();
+    }
+
+    public String getContent() {
+        return boardInfo.getContent();
+    }
+
+    public String getImageUrl() {
+        return boardInfo.getImageUrl();
     }
 
 }

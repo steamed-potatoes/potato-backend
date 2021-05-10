@@ -18,6 +18,8 @@ public class CreateAdminBoardRequest {
 
     private String content;
 
+    private String imageUrl;
+
     @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime startDateTime;
@@ -27,9 +29,10 @@ public class CreateAdminBoardRequest {
     private LocalDateTime endDateTime;
 
     @Builder(builderMethodName = "testBuilder")
-    public CreateAdminBoardRequest(@NotBlank String title, @NotBlank String content, @NotBlank LocalDateTime startDateTime, @NotBlank LocalDateTime endDateTime) {
+    public CreateAdminBoardRequest(@NotBlank String title, @NotBlank String content, String imageUrl, @NotBlank LocalDateTime startDateTime, @NotBlank LocalDateTime endDateTime) {
         this.title = title;
         this.content = content;
+        this.imageUrl = imageUrl;
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
     }
@@ -39,6 +42,7 @@ public class CreateAdminBoardRequest {
             .administratorId(administratorId)
             .title(title)
             .content(content)
+            .imageUrl(imageUrl)
             .startDateTime(startDateTime)
             .endDateTime(endDateTime)
             .build();

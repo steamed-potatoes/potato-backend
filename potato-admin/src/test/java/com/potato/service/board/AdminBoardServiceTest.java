@@ -46,11 +46,13 @@ public class AdminBoardServiceTest extends AdminSetupTest {
         // given
         String content = "content";
         String title = "title";
+        String imageUrl = "http://image.com";
         LocalDateTime startDateTime = LocalDateTime.of(2021, 9, 3, 12, 12);
         LocalDateTime endDateTime = LocalDateTime.of(2021, 9, 5, 12, 12);
         CreateAdminBoardRequest request = CreateAdminBoardRequest.testBuilder()
-            .content(content)
             .title(title)
+            .content(content)
+            .imageUrl(imageUrl)
             .startDateTime(startDateTime)
             .endDateTime(endDateTime)
             .build();
@@ -61,18 +63,12 @@ public class AdminBoardServiceTest extends AdminSetupTest {
         // then
         List<AdminBoard> adminBoardList = adminBoardRepository.findAll();
         assertThat(adminBoardList).hasSize(1);
-        assertThat(adminBoardList.get(0).getAdministratorId()).isEqualTo(adminMemberId);
-        assertThat(adminBoardList.get(0).getTitle()).isEqualTo(title);
-        assertThat(adminBoardList.get(0).getContent()).isEqualTo(content);
-        assertThat(adminBoardList.get(0).getStartDateTime()).isEqualTo(startDateTime);
-        assertThat(adminBoardList.get(0).getEndDateTime()).isEqualTo(endDateTime);
+        assertAdminBoard(adminBoardList.get(0), title, content, imageUrl, startDateTime, endDateTime, adminMemberId);
     }
 
     @Test
     void 관리자가_게시글을_수정한다() {
         // given
-        LocalDateTime startDateTime = LocalDateTime.of(2021, 4, 1, 0, 0);
-        LocalDateTime endDateTime = LocalDateTime.of(2021, 4, 3, 0, 0);
         AdminBoard adminBoard = AdminBoard.builder()
             .administratorId(adminMemberId)
             .title("학사")
@@ -84,10 +80,15 @@ public class AdminBoardServiceTest extends AdminSetupTest {
 
         String title = "학사행정";
         String content = "내용";
+        String imageUrl = "imageUrl";
+        LocalDateTime startDateTime = LocalDateTime.of(2021, 4, 1, 0, 0);
+        LocalDateTime endDateTime = LocalDateTime.of(2021, 4, 3, 0, 0);
+
         UpdateAdminBoardRequest request = UpdateAdminBoardRequest.testBuilder()
             .adminBoardId(adminBoard.getId())
             .title(title)
             .content(content)
+            .imageUrl(imageUrl)
             .startDateTime(startDateTime)
             .endDateTime(endDateTime)
             .build();
@@ -98,11 +99,7 @@ public class AdminBoardServiceTest extends AdminSetupTest {
         // then
         List<AdminBoard> adminBoardList = adminBoardRepository.findAll();
         assertThat(adminBoardList).hasSize(1);
-        assertThat(adminBoardList.get(0).getAdministratorId()).isEqualTo(adminMemberId);
-        assertThat(adminBoardList.get(0).getTitle()).isEqualTo(title);
-        assertThat(adminBoardList.get(0).getContent()).isEqualTo(content);
-        assertThat(adminBoardList.get(0).getStartDateTime()).isEqualTo(startDateTime);
-        assertThat(adminBoardList.get(0).getEndDateTime()).isEqualTo(endDateTime);
+        assertAdminBoard(adminBoardList.get(0), title, content, imageUrl, startDateTime, endDateTime, adminMemberId);
     }
 
     @Test
@@ -139,6 +136,15 @@ public class AdminBoardServiceTest extends AdminSetupTest {
         assertThatThrownBy(
             () -> adminBoardService.deleteOrganizationBoard("subDomain", 1L, 1L)
         ).isInstanceOf(NotFoundException.class);
+    }
+
+    private void assertAdminBoard(AdminBoard adminBoard, String title, String content, String imageUrl, LocalDateTime startDateTime, LocalDateTime endDateTime, Long adminMemberId) {
+        assertThat(adminBoard.getAdministratorId()).isEqualTo(adminMemberId);
+        assertThat(adminBoard.getTitle()).isEqualTo(title);
+        assertThat(adminBoard.getContent()).isEqualTo(content);
+        assertThat(adminBoard.getImageUrl()).isEqualTo(imageUrl);
+        assertThat(adminBoard.getStartDateTime()).isEqualTo(startDateTime);
+        assertThat(adminBoard.getEndDateTime()).isEqualTo(endDateTime);
     }
 
 }

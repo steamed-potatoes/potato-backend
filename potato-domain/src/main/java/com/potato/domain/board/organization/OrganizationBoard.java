@@ -1,6 +1,7 @@
 package com.potato.domain.board.organization;
 
 import com.potato.domain.BaseTimeEntity;
+import com.potato.domain.board.BoardInfo;
 import com.potato.domain.common.DateTimeInterval;
 import com.potato.exception.model.ConflictException;
 import com.potato.exception.model.NotFoundException;
@@ -41,15 +42,11 @@ public class OrganizationBoard extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private OrganizationBoardCategory category;
 
-    @Column(nullable = false)
-    private String title;
-
-    private String content;
+    @Embedded
+    private BoardInfo boardInfo;
 
     @Embedded
     private DateTimeInterval dateTimeInterval;
-
-    private String imageUrl;
 
     private int likesCount;
 
@@ -61,19 +58,15 @@ public class OrganizationBoard extends BaseTimeEntity {
         this.subDomain = subDomain;
         this.memberId = memberId;
         this.category = category;
-        this.title = title;
-        this.content = content;
+        this.boardInfo = BoardInfo.of(title, content, imageUrl);
         this.dateTimeInterval = DateTimeInterval.of(startDateTime, endDateTime);
-        this.imageUrl = imageUrl;
         this.likesCount = 0;
     }
 
     public void updateInfo(String title, String content, String imageUrl, LocalDateTime startDateTime, LocalDateTime endDateTime, OrganizationBoardCategory category, Long memberId) {
-        this.content = content;
-        this.imageUrl = imageUrl;
+        this.boardInfo = BoardInfo.of(title, content, imageUrl);
         this.category = category;
         this.memberId = memberId;
-        this.title = title;
         this.dateTimeInterval = DateTimeInterval.of(startDateTime, endDateTime);
     }
 
@@ -104,6 +97,14 @@ public class OrganizationBoard extends BaseTimeEntity {
             .orElseThrow(() -> new NotFoundException(String.format("멤버 (%s)는 게시물 (%s)에 좋아요를 누른 적이 없습니다", memberId, this.id)));
     }
 
+    public DeleteOrganizationBoard delete(Long memberId) {
+        return DeleteOrganizationBoard.newBackUpInstance(this, memberId);
+    }
+
+    public DeleteOrganizationBoard deleteByAdmin(Long adminMemberId) {
+        return DeleteOrganizationBoard.newBackUpInstanceByAdmin(this, adminMemberId);
+    }
+
     public LocalDateTime getStartDateTime() {
         return this.dateTimeInterval.getStartDateTime();
     }
@@ -112,12 +113,16 @@ public class OrganizationBoard extends BaseTimeEntity {
         return this.dateTimeInterval.getEndDateTime();
     }
 
-    public DeleteOrganizationBoard delete(Long memberId) {
-        return DeleteOrganizationBoard.newBackUpInstance(this, memberId);
+    public String getTitle() {
+        return boardInfo.getTitle();
     }
 
-    public DeleteOrganizationBoard deleteByAdmin(Long adminMemberId) {
-        return DeleteOrganizationBoard.newBackUpInstanceByAdmin(this, adminMemberId);
+    public String getContent() {
+        return boardInfo.getContent();
+    }
+
+    public String getImageUrl() {
+        return boardInfo.getImageUrl();
     }
 
 }
