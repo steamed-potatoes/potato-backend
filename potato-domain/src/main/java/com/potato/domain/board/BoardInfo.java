@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import java.util.Objects;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -29,4 +30,17 @@ public class BoardInfo {
         return new BoardInfo(title, content, imageUrl);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BoardInfo boardInfo = (BoardInfo) o;
+        return Objects.equals(title, boardInfo.title) && Objects.equals(content, boardInfo.content) && Objects.equals(imageUrl, boardInfo.imageUrl);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(title, content, imageUrl);
+    }
+    
 }
