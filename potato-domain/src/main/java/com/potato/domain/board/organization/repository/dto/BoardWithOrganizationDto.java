@@ -1,6 +1,6 @@
 package com.potato.domain.board.organization.repository.dto;
 
-import com.potato.domain.board.organization.OrganizationBoardType;
+import com.potato.domain.board.organization.OrganizationBoardCategory;
 import com.potato.domain.organization.OrganizationCategory;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -26,7 +26,7 @@ public class BoardWithOrganizationDto {
     private String boardTitle;
     private String boardContent;
     private String boardImageUrl;
-    private OrganizationBoardType boardType;
+    private OrganizationBoardCategory boardCategory;
     private LocalDateTime boardStartDateTime;
     private LocalDateTime boardEndDateTime;
     private LocalDateTime createdDateTime;

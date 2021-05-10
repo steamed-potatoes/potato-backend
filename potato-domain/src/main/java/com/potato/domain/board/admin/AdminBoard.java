@@ -1,7 +1,7 @@
 package com.potato.domain.board.admin;
 
 import com.potato.domain.BaseTimeEntity;
-import com.potato.domain.board.Board;
+import com.potato.domain.common.DateTimeInterval;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,47 +13,48 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@Table(
+    indexes = {
+        @Index(name = "idx_admin_board_1", columnList = "startDateTime,endDateTime"),
+    }
+)
 public class AdminBoard extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "board_id", nullable = false)
-    private Board board;
-
     @Column(nullable = false)
     private Long administratorId;
 
+    @Column(nullable = false)
+    private String title;
+
     private String content;
+
+    @Embedded
+    private DateTimeInterval dateTimeInterval;
 
     @Builder
     public AdminBoard(Long administratorId, String title, LocalDateTime startDateTime, LocalDateTime endDateTime, String content) {
         this.administratorId = administratorId;
-        this.board = Board.of(title, startDateTime, endDateTime);
+        this.title = title;
         this.content = content;
-    }
-
-    public String getTitle() {
-        return this.board.getTitle();
+        this.dateTimeInterval = DateTimeInterval.of(startDateTime, endDateTime);
     }
 
     public LocalDateTime getStartDateTime() {
-        return this.board.getStartDateTime();
+        return this.dateTimeInterval.getStartDateTime();
     }
 
     public LocalDateTime getEndDateTime() {
-        return this.board.getEndDateTime();
+        return this.dateTimeInterval.getEndDateTime();
     }
 
     public void updateInfo(String title, String content, LocalDateTime startDateTime, LocalDateTime endDateTime) {
-        this.board = Board.of(title, startDateTime, endDateTime);
+        this.title = title;
+        this.dateTimeInterval = DateTimeInterval.of(startDateTime, endDateTime);
         this.content = content;
-    }
-
-    public DeleteAdminBoard delete(Long adminMemberId) {
-        return DeleteAdminBoard.newBackupInstance(this, adminMemberId);
     }
 
 }

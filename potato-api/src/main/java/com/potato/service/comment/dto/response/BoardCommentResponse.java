@@ -1,7 +1,7 @@
 package com.potato.service.comment.dto.response;
 
+import com.potato.domain.board.BoardType;
 import com.potato.domain.comment.BoardComment;
-import com.potato.domain.comment.BoardCommentType;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ public class BoardCommentResponse {
 
     private Long id;
 
-    private BoardCommentType type;
+    private BoardType type;
 
     private Long boardId;
 

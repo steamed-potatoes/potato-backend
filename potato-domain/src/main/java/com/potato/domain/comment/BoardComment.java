@@ -1,6 +1,7 @@
 package com.potato.domain.comment;
 
 import com.potato.domain.BaseTimeEntity;
+import com.potato.domain.board.BoardType;
 import com.potato.exception.ErrorCode;
 import com.potato.exception.model.ConflictException;
 import com.potato.exception.model.NotFoundException;
@@ -27,7 +28,7 @@ public class BoardComment extends BaseTimeEntity {
 
     @Column(nullable = false, length = 30)
     @Enumerated(EnumType.STRING)
-    private BoardCommentType type;
+    private BoardType type;
 
     @Column(nullable = false)
     private Long boardId;
@@ -36,7 +37,7 @@ public class BoardComment extends BaseTimeEntity {
     private Long memberId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "board_comment_id")
+    @JoinColumn(name = "parent_id")
     private BoardComment parentComment;
 
     @OneToMany(mappedBy = "parentComment", cascade = CascadeType.PERSIST)
@@ -57,7 +58,7 @@ public class BoardComment extends BaseTimeEntity {
     @Column(nullable = false)
     private int commentLikeCounts;
 
-    private BoardComment(BoardComment parentComment, BoardCommentType type, Long boardId, Long memberId, String content, int depth) {
+    private BoardComment(BoardComment parentComment, BoardType type, Long boardId, Long memberId, String content, int depth) {
         this.parentComment = parentComment;
         this.type = type;
         this.boardId = boardId;
@@ -68,7 +69,7 @@ public class BoardComment extends BaseTimeEntity {
         this.commentLikeCounts = 0;
     }
 
-    public static BoardComment newRootComment(BoardCommentType type, Long boardId, Long memberId, String content) {
+    public static BoardComment newRootComment(BoardType type, Long boardId, Long memberId, String content) {
         return new BoardComment(null, type, boardId, memberId, content, 0);
     }
 

@@ -1,7 +1,7 @@
 package com.potato.domain.comment.repository;
 
 import com.potato.domain.comment.BoardComment;
-import com.potato.domain.comment.BoardCommentType;
+import com.potato.domain.board.BoardType;
 import com.potato.domain.comment.QBoardComment;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -33,7 +33,7 @@ public class BoardCommentRepositoryCustomImpl implements BoardCommentRepositoryC
     }
 
     @Override
-    public List<BoardComment> findRootCommentByTypeAndBoardId(BoardCommentType type, Long boardId) {
+    public List<BoardComment> findRootCommentByTypeAndBoardId(BoardType type, Long boardId) {
         return queryFactory.selectFrom(boardComment).distinct()
             .leftJoin(boardComment.childComments, new QBoardComment("child")).fetchJoin()
             .where(

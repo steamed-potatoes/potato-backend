@@ -32,13 +32,6 @@ public class AdminBoardController {
     }
 
     @Auth
-    @DeleteMapping("/admin/v1/board/admin/{adminBoardId}")
-    public ApiResponse<String> deleteAdminBoard(@PathVariable Long adminBoardId, @MemberId Long adminMemberId) {
-        adminBoardService.deleteAdminBoard(adminBoardId, adminMemberId);
-        return ApiResponse.OK;
-    }
-
-    @Auth
     @DeleteMapping("/admin/v1/board/organization/{subDomain}")
     public ApiResponse<String> deleteOrganizationBoard(@PathVariable String subDomain, @MemberId Long adminMemberId, DeleteOrganizationBoardRequest request) {
         adminBoardService.deleteOrganizationBoard(subDomain, adminMemberId, request.getOrganizationBoardId());

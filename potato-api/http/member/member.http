@@ -33,5 +33,5 @@ Authorization: Bearer {{AUTHORIZATION}}
 
 
 ### 특정 회원의 정보를 불러오는 API
-GET {{host_api}}/api/v1/member/2
+GET {{host_api}}/api/v1/member/1
 Authorization: Bearer {{AUTHORIZATION}}

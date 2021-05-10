@@ -1,7 +1,7 @@
 package com.potato.domain.board.organization;
 
 import com.potato.domain.BaseTimeEntity;
-import com.potato.domain.board.DeleteBoard;
+import com.potato.domain.common.DateTimeInterval;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,38 +19,45 @@ public class DeleteOrganizationBoard extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private Long backUpId;
-
-    @Column(nullable = false)
-    private LocalDateTime backUpCreatedDateTime;
-
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "board_id", nullable = false)
-    private DeleteBoard board;
-
     @Column(nullable = false, length = 50)
     private String subDomain;
 
+    @Column(nullable = false)
+    private Long memberId;
+
     @Column(nullable = false, length = 30)
     @Enumerated(EnumType.STRING)
-    private OrganizationBoardType organizationBoardType;
+    private OrganizationBoardCategory category;
+
+    @Column(nullable = false)
+    private String title;
+
+    private String content;
+
+    @Embedded
+    private DateTimeInterval dateTimeInterval;
+
+    private String imageUrl;
+
+    @Column(nullable = false)
+    private Long backUpId;
 
     private Long deletedMemberId;
 
     private Long deletedAdminMemberId;
 
-    private String content;
-
-    private String imageUrl;
+    @Column(nullable = false)
+    private LocalDateTime backUpCreatedDateTime;
 
     @Builder
-    public DeleteOrganizationBoard(Long backUpId, String subDomain, Long memberId, OrganizationBoardType organizationBoardType, String title,
+    public DeleteOrganizationBoard(Long backUpId, String subDomain, Long memberId, OrganizationBoardCategory category, String title,
                                    String content, String imageUrl, LocalDateTime startDateTime, LocalDateTime endDateTime, LocalDateTime backUpCreatedDateTime, Long deletedMemberId, Long deletedAdminMemberId) {
         this.backUpId = backUpId;
-        this.board = DeleteBoard.of(memberId, title, startDateTime, endDateTime);
+        this.memberId = memberId;
+        this.title = title;
+        this.dateTimeInterval = DateTimeInterval.of(startDateTime, endDateTime);
         this.subDomain = subDomain;
-        this.organizationBoardType = organizationBoardType;
+        this.category = category;
         this.content = content;
         this.imageUrl = imageUrl;
         this.backUpCreatedDateTime = backUpCreatedDateTime;
@@ -64,7 +71,7 @@ public class DeleteOrganizationBoard extends BaseTimeEntity {
             .deletedMemberId(memberId)
             .memberId(organizationBoard.getMemberId())
             .subDomain(organizationBoard.getSubDomain())
-            .organizationBoardType(organizationBoard.getType())
+            .category(organizationBoard.getCategory())
             .title(organizationBoard.getTitle())
             .content(organizationBoard.getContent())
             .imageUrl(organizationBoard.getImageUrl())
@@ -80,7 +87,7 @@ public class DeleteOrganizationBoard extends BaseTimeEntity {
             .deletedAdminMemberId(adminMemberId)
             .memberId(organizationBoard.getMemberId())
             .subDomain(organizationBoard.getSubDomain())
-            .organizationBoardType(organizationBoard.getType())
+            .category(organizationBoard.getCategory())
             .title(organizationBoard.getTitle())
             .content(organizationBoard.getContent())
             .imageUrl(organizationBoard.getImageUrl())
@@ -88,6 +95,14 @@ public class DeleteOrganizationBoard extends BaseTimeEntity {
             .endDateTime(organizationBoard.getEndDateTime())
             .backUpCreatedDateTime(organizationBoard.getCreatedDateTime())
             .build();
+    }
+
+    public LocalDateTime getStartDateTime() {
+        return this.dateTimeInterval.getStartDateTime();
+    }
+
+    public LocalDateTime getEndDateTime() {
+        return this.dateTimeInterval.getEndDateTime();
     }
 
 }

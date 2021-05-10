@@ -1,7 +1,7 @@
 package com.potato.service.board.organization.dto.request;
 
 import com.potato.domain.board.organization.OrganizationBoard;
-import com.potato.domain.board.organization.OrganizationBoardType;
+import com.potato.domain.board.organization.OrganizationBoardCategory;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -31,10 +31,10 @@ public class CreateOrganizationBoardRequest {
     private LocalDateTime endDateTime;
 
     @NotNull
-    private OrganizationBoardType type;
+    private OrganizationBoardCategory type;
 
     @Builder(builderMethodName = "testBuilder")
-    public CreateOrganizationBoardRequest(String title, String content, String imageUrl, LocalDateTime startDateTime, LocalDateTime endDateTime, OrganizationBoardType type) {
+    public CreateOrganizationBoardRequest(String title, String content, String imageUrl, LocalDateTime startDateTime, LocalDateTime endDateTime, OrganizationBoardCategory type) {
         this.title = title;
         this.content = content;
         this.imageUrl = imageUrl;
@@ -52,7 +52,7 @@ public class CreateOrganizationBoardRequest {
             .imageUrl(imageUrl)
             .startDateTime(startDateTime)
             .endDateTime(endDateTime)
-            .type(type)
+            .category(type)
             .build();
     }
 

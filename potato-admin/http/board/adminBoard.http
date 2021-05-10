@@ -22,8 +22,3 @@ Authorization: Bearer {{AUTHORIZATION}}
     "startDateTime": "2021-03-01T00:00:00",
     "endDateTime": "2021-03-08T11:59:59"
 }
-
-### 관리자가 게시글 삭제
-DELETE {{host_admin}}/admin/v1/board/admin/1
-Content-Type: application/json
-Authorization: Bearer {{AUTHORIZATION}}

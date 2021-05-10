@@ -4,7 +4,7 @@ import com.potato.domain.board.admin.AdminBoard;
 import com.potato.domain.board.admin.AdminBoardRepository;
 import com.potato.domain.board.organization.OrganizationBoard;
 import com.potato.domain.board.organization.OrganizationBoardRepository;
-import com.potato.domain.board.organization.OrganizationBoardType;
+import com.potato.domain.board.organization.OrganizationBoardCategory;
 import com.potato.service.OrganizationMemberSetUpTest;
 import com.potato.service.schedule.dto.request.ScheduleRequest;
 import com.potato.service.schedule.dto.response.ScheduleResponse;
@@ -47,7 +47,7 @@ class ScheduleServiceTest extends OrganizationMemberSetUpTest {
             .endDateTime(LocalDateTime.of(2021, 3, 7, 0, 0))
             .title("감자 신입회원 모집")
             .content("감자팀 신입회원을 모집합니다. 많은 참여바랍니다")
-            .type(OrganizationBoardType.RECRUIT)
+            .category(OrganizationBoardCategory.RECRUIT)
             .build();
         organizationBoardRepository.save(organizationBoard);
 

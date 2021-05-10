@@ -1,7 +1,7 @@
 package com.potato.domain.board.organization.repository;
 
 import com.potato.domain.board.organization.OrganizationBoard;
-import com.potato.domain.board.organization.OrganizationBoardType;
+import com.potato.domain.board.organization.OrganizationBoardCategory;
 import com.potato.domain.board.organization.repository.dto.BoardWithOrganizationDto;
 
 import java.time.LocalDateTime;
@@ -15,7 +15,7 @@ public interface OrganizationBoardRepositoryCustom {
 
     OrganizationBoard findOrganizationBoardByIdAndSubDomain(Long organizationBoardId, String subDomain);
 
-    List<BoardWithOrganizationDto> findAllWithOrganizationByTypeLessThanOrderByIdDescLimit(OrganizationBoardType type, long lastOrganizationBoardId, int size);
+    List<BoardWithOrganizationDto> findAllWithOrganizationByTypeLessThanOrderByIdDescLimit(OrganizationBoardCategory type, long lastOrganizationBoardId, int size);
 
     List<OrganizationBoard> findAllBetweenDate(LocalDate startDate, LocalDate endDate);
 

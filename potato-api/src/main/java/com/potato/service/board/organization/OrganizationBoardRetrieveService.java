@@ -2,7 +2,7 @@ package com.potato.service.board.organization;
 
 import com.potato.domain.board.organization.OrganizationBoard;
 import com.potato.domain.board.organization.OrganizationBoardRepository;
-import com.potato.domain.board.organization.OrganizationBoardType;
+import com.potato.domain.board.organization.OrganizationBoardCategory;
 import com.potato.domain.board.organization.repository.dto.BoardWithOrganizationDto;
 import com.potato.domain.member.Member;
 import com.potato.domain.member.MemberRepository;
@@ -37,7 +37,7 @@ public class OrganizationBoardRetrieveService {
     }
 
     @Transactional(readOnly = true)
-    public List<BoardWithOrganizationDto> retrieveBoardsWithPagination(OrganizationBoardType type, long lastOrganizationBoardId, int size) {
+    public List<BoardWithOrganizationDto> retrieveBoardsWithPagination(OrganizationBoardCategory type, long lastOrganizationBoardId, int size) {
         return organizationBoardRepository.findAllWithOrganizationByTypeLessThanOrderByIdDescLimit(type, lastOrganizationBoardId, size);
     }
 

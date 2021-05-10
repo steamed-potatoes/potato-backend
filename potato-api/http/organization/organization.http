@@ -11,36 +11,36 @@ Authorization: Bearer {{AUTHORIZATION}}
 }
 
 
-### 조직 조회 API
+### 특정 동아리 상세 조회 API
 GET {{host_api}}/api/v1/organization/potato
 
 
 
-### 조직 리스트 조회 API
+### 동아리 리스트 조회 API
 GET {{host_api}}/api/v1/organization/list?size=5&lastOrganizationId=0
 
 
 
-### 조직 리스트 조회 API
+### 내가 속한 동아리 리스트 조회 API
 GET {{host_api}}/api/v1/organization/my
 Authorization: Bearer {{AUTHORIZATION}}
 
 
 
-### 조직에 가입 신청을 하는 API
+### 동아리에 가입 신청을 하는 API
 POST {{host_api}}/api/v1/organization/join/apply/potato
 Content-Type: application/json
 Authorization: Bearer {{AUTHORIZATION}}
 
 
 
-### 그룹 가입 신청을 취소하는 API
+### 동아리 가입 신청을 취소하는 API
 PUT {{host_api}}/api/v1/organization/join/cancel/potato
 Content-Type: application/json
 Authorization: Bearer {{AUTHORIZATION}}
 
 
 
-### 조직에서 탈퇴하는 API
+### 동아리에서 탈퇴하는 API
 DELETE {{host_api}}/api/v1/organization/leave/potato
 Authorization: Bearer {{AUTHORIZATION}}

@@ -2,7 +2,7 @@ GET {{host_admin}}/admin/v1/organization/list
 Authorization: Bearer {{AUTHORIZATION}}
 
 ### 비인준_동아리를_인준동아리로(현재 category 넘겨주기)
-PATCH {{host_admin}}/admin/v1/organization/potato/category
+PUT {{host_admin}}/admin/v1/organization/potato/category
 Content-Type: application/json
 Authorization: Bearer {{AUTHORIZATION}}
 

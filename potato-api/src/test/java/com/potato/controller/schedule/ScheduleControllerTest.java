@@ -6,7 +6,7 @@ import com.potato.domain.board.admin.AdminBoard;
 import com.potato.domain.board.admin.AdminBoardRepository;
 import com.potato.domain.board.organization.OrganizationBoard;
 import com.potato.domain.board.organization.OrganizationBoardRepository;
-import com.potato.domain.board.organization.OrganizationBoardType;
+import com.potato.domain.board.organization.OrganizationBoardCategory;
 import com.potato.service.schedule.dto.request.ScheduleRequest;
 import com.potato.service.schedule.dto.response.ScheduleResponse;
 import org.junit.jupiter.api.AfterEach;
@@ -86,7 +86,7 @@ public class ScheduleControllerTest extends ControllerTestUtils {
             .subDomain(subDomain)
             .startDateTime(startDateTime)
             .endDateTime(endDateTime)
-            .type(OrganizationBoardType.RECRUIT)
+            .category(OrganizationBoardCategory.RECRUIT)
             .memberId(testMember.getId())
             .build();
         organizationBoardRepository.save(organizationBoard);

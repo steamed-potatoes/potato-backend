@@ -3,7 +3,7 @@ package com.potato.controller.comment;
 import com.potato.config.argumentResolver.MemberId;
 import com.potato.config.interceptor.auth.Auth;
 import com.potato.controller.ApiResponse;
-import com.potato.domain.comment.BoardCommentType;
+import com.potato.domain.board.BoardType;
 import com.potato.service.comment.BoardCommentService;
 import com.potato.service.comment.dto.request.AddBoardCommentRequest;
 import com.potato.service.comment.dto.request.LikeBoardCommentRequest;
@@ -33,7 +33,7 @@ public class BoardCommentController {
 
     @Operation(summary = "게시물의 댓글 리스트를 조회합니다.")
     @GetMapping("/api/v2/board/comment/list")
-    public ApiResponse<List<BoardCommentResponse>> retrieveBoardComments(@RequestParam BoardCommentType type, @RequestParam Long boardId) {
+    public ApiResponse<List<BoardCommentResponse>> retrieveBoardComments(@RequestParam BoardType type, @RequestParam Long boardId) {
         return ApiResponse.success(boardCommentService.retrieveBoardCommentList(type, boardId));
     }
 

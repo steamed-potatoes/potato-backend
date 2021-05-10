@@ -1,13 +1,13 @@
 package com.potato.service.comment;
 
-import com.potato.domain.board.BoardRepository;
+import com.potato.domain.board.BoardType;
 import com.potato.domain.board.admin.AdminBoard;
 import com.potato.domain.board.admin.AdminBoardCreator;
 import com.potato.domain.board.admin.AdminBoardRepository;
 import com.potato.domain.board.organization.OrganizationBoard;
+import com.potato.domain.board.organization.OrganizationBoardCategory;
 import com.potato.domain.board.organization.OrganizationBoardCreator;
 import com.potato.domain.board.organization.OrganizationBoardRepository;
-import com.potato.domain.board.organization.OrganizationBoardType;
 import com.potato.domain.comment.*;
 import com.potato.exception.model.ConflictException;
 import com.potato.exception.model.NotFoundException;
@@ -43,9 +43,6 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
     private AdminBoardRepository adminBoardRepository;
 
     @Autowired
-    private BoardRepository boardRepository;
-
-    @Autowired
     private BoardCommentLikeRepository boardCommentLikeRepository;
 
     @AfterEach
@@ -53,7 +50,6 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
         super.cleanup();
         organizationBoardRepository.deleteAllInBatch();
         adminBoardRepository.deleteAllInBatch();
-        boardRepository.deleteAllInBatch();
         boardCommentRepository.deleteAll();
     }
 
@@ -62,7 +58,7 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
 
     @BeforeEach
     void setUpOrganizationBoard() {
-        organizationBoard = OrganizationBoardCreator.create(subDomain, memberId, "게시물", OrganizationBoardType.RECRUIT);
+        organizationBoard = OrganizationBoardCreator.create(subDomain, memberId, "게시물", OrganizationBoardCategory.RECRUIT);
         adminBoard = AdminBoardCreator.create("관리자 공지 게시물", memberId);
     }
 
@@ -71,7 +67,7 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
         // given
         organizationBoardRepository.save(organizationBoard);
 
-        BoardCommentType type = BoardCommentType.ORGANIZATION_BOARD;
+        BoardType type = BoardType.ORGANIZATION_BOARD;
         String content = "부모 댓글";
         AddBoardCommentRequest request = AddBoardCommentRequest.testInstance(type, organizationBoard.getId(), null, content);
 
@@ -90,7 +86,7 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
         // given
         adminBoardRepository.save(adminBoard);
 
-        BoardCommentType type = BoardCommentType.ADMIN_BOARD;
+        BoardType type = BoardType.ADMIN_BOARD;
         String content = "부모 댓글";
         AddBoardCommentRequest request = AddBoardCommentRequest.testInstance(type, adminBoard.getId(), null, content);
 
@@ -109,7 +105,7 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
         // given
         organizationBoardRepository.save(organizationBoard);
 
-        BoardCommentType type = BoardCommentType.ORGANIZATION_BOARD;
+        BoardType type = BoardType.ORGANIZATION_BOARD;
         String content = "자식 댓글";
         BoardComment rootComment = BoardCommentCreator.createRootComment(type, organizationBoard.getId(), memberId, "부모 댓글");
         boardCommentRepository.save(rootComment);
@@ -134,7 +130,7 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
         // given
         adminBoardRepository.save(adminBoard);
 
-        BoardCommentType type = BoardCommentType.ADMIN_BOARD;
+        BoardType type = BoardType.ADMIN_BOARD;
         String content = "자식 댓글";
         BoardComment rootComment = BoardCommentCreator.createRootComment(type, adminBoard.getId(), memberId, "부모 댓글");
         boardCommentRepository.save(rootComment);
@@ -157,7 +153,7 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
     @Test
     void 존재하지_않는_게시물에_댓글을_추가할_수_없다() {
         // given
-        AddBoardCommentRequest request = AddBoardCommentRequest.testInstance(BoardCommentType.ORGANIZATION_BOARD, 999L, null, "없는 게시물에 댓글");
+        AddBoardCommentRequest request = AddBoardCommentRequest.testInstance(BoardType.ORGANIZATION_BOARD, 999L, null, "없는 게시물에 댓글");
 
         // when & then
         assertThatThrownBy(() -> boardCommentService.addBoardComment(request, memberId)).isInstanceOf(NotFoundException.class);
@@ -167,7 +163,7 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
     void boardId가_같더라도_타입이_다른경우_존재하지_않는_게시물에_취급된다() {
         // given
         adminBoardRepository.save(adminBoard);
-        AddBoardCommentRequest request = AddBoardCommentRequest.testInstance(BoardCommentType.ORGANIZATION_BOARD, adminBoard.getId(), null, "없는 게시물에 댓글");
+        AddBoardCommentRequest request = AddBoardCommentRequest.testInstance(BoardType.ORGANIZATION_BOARD, adminBoard.getId(), null, "없는 게시물에 댓글");
 
         // when & then
         assertThatThrownBy(() -> boardCommentService.addBoardComment(request, memberId)).isInstanceOf(NotFoundException.class);
@@ -177,7 +173,7 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
     void 존재하지_않는_댓글에_대댓글을_추가할_수_없다() {
         // given
         organizationBoardRepository.save(organizationBoard);
-        AddBoardCommentRequest request = AddBoardCommentRequest.testInstance(BoardCommentType.ORGANIZATION_BOARD, organizationBoard.getId(), 999L, "대댓글");
+        AddBoardCommentRequest request = AddBoardCommentRequest.testInstance(BoardType.ORGANIZATION_BOARD, organizationBoard.getId(), 999L, "대댓글");
 
         // when & then
         assertThatThrownBy(() -> boardCommentService.addBoardComment(request, memberId)).isInstanceOf(NotFoundException.class);
@@ -188,7 +184,7 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
         // given
         organizationBoardRepository.save(organizationBoard);
 
-        BoardCommentType type = BoardCommentType.ORGANIZATION_BOARD;
+        BoardType type = BoardType.ORGANIZATION_BOARD;
         BoardComment rootComment1 = BoardCommentCreator.createRootComment(type, organizationBoard.getId(), memberId, "부모 댓글1");
         rootComment1.addChildComment(memberId, "자식 댓글1-1");
         rootComment1.addChildComment(memberId, "자식 댓글1-2");
@@ -217,7 +213,7 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
         // given
         adminBoardRepository.save(adminBoard);
 
-        BoardCommentType type = BoardCommentType.ADMIN_BOARD;
+        BoardType type = BoardType.ADMIN_BOARD;
         BoardComment rootComment1 = BoardCommentCreator.createRootComment(type, adminBoard.getId(), memberId, "부모 댓글1");
         rootComment1.addChildComment(memberId, "자식 댓글1-1");
         rootComment1.addChildComment(memberId, "자식 댓글1-2");
@@ -249,24 +245,24 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
         // given
         organizationBoardRepository.save(organizationBoard);
 
-        BoardComment rootComment1 = BoardCommentCreator.createRootComment(BoardCommentType.ORGANIZATION_BOARD, organizationBoard.getId(), memberId, "부모 댓글1");
+        BoardComment rootComment1 = BoardCommentCreator.createRootComment(BoardType.ORGANIZATION_BOARD, organizationBoard.getId(), memberId, "부모 댓글1");
         boardCommentRepository.save(rootComment1);
 
         // when & then
-        assertThatThrownBy(() -> boardCommentService.retrieveBoardCommentList(BoardCommentType.ADMIN_BOARD, 999L)).isInstanceOf(NotFoundException.class);
+        assertThatThrownBy(() -> boardCommentService.retrieveBoardCommentList(BoardType.ADMIN_BOARD, 999L)).isInstanceOf(NotFoundException.class);
     }
 
     @Test
     void 존재하지_않는_게시물의_댓글을_불러올_수_없다() {
         // when & then
-        assertThatThrownBy(() -> boardCommentService.retrieveBoardCommentList(BoardCommentType.ADMIN_BOARD, 999L)).isInstanceOf(NotFoundException.class);
+        assertThatThrownBy(() -> boardCommentService.retrieveBoardCommentList(BoardType.ADMIN_BOARD, 999L)).isInstanceOf(NotFoundException.class);
     }
 
     @Test
     void 작성한_댓글을_삭제한다() {
         // given
         organizationBoardRepository.save(organizationBoard);
-        BoardCommentType type = BoardCommentType.ORGANIZATION_BOARD;
+        BoardType type = BoardType.ORGANIZATION_BOARD;
         BoardComment comment = BoardCommentCreator.createRootComment(type, organizationBoard.getId(), memberId, "댓글");
         boardCommentRepository.save(comment);
 
@@ -284,7 +280,7 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
     void 내가_작성하지_않은_댓글을_삭제할_수_없다() {
         // given
         organizationBoardRepository.save(organizationBoard);
-        BoardComment comment = BoardCommentCreator.createRootComment(BoardCommentType.ORGANIZATION_BOARD, organizationBoard.getId(), memberId, "댓글");
+        BoardComment comment = BoardCommentCreator.createRootComment(BoardType.ORGANIZATION_BOARD, organizationBoard.getId(), memberId, "댓글");
         boardCommentRepository.save(comment);
 
         // when & then
@@ -295,7 +291,7 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
     void 삭제된_댓글은_작성자가_보이지않고_삭제된_메시지가_보인다() {
         // given
         organizationBoardRepository.save(organizationBoard);
-        BoardCommentType type = BoardCommentType.ORGANIZATION_BOARD;
+        BoardType type = BoardType.ORGANIZATION_BOARD;
         BoardComment comment = BoardCommentCreator.createRootComment(type, organizationBoard.getId(), memberId, "댓글");
         comment.delete();
         boardCommentRepository.save(comment);
@@ -313,7 +309,7 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
     void 댓글에_좋아요를_한다_댓글에_좋아요수가_올라간다() {
         //given
         organizationBoardRepository.save(organizationBoard);
-        BoardCommentType type = BoardCommentType.ORGANIZATION_BOARD;
+        BoardType type = BoardType.ORGANIZATION_BOARD;
         BoardComment comment = BoardCommentCreator.createRootComment(type, organizationBoard.getId(), memberId, "댓글");
         boardCommentRepository.save(comment);
 
@@ -332,7 +328,7 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
     void 대댓글에_좋아요를_하면_대댓글_좋아요수가_올라간다() {
         //given
         organizationBoardRepository.save(organizationBoard);
-        BoardCommentType type = BoardCommentType.ORGANIZATION_BOARD;
+        BoardType type = BoardType.ORGANIZATION_BOARD;
         BoardComment comment = BoardCommentCreator.createRootComment(type, organizationBoard.getId(), memberId, "댓글");
         comment.addChildComment(memberId, "대댓글_좋아요");
         boardCommentRepository.save(comment);
@@ -352,7 +348,7 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
     void 댓글에_이미_좋아요를_했을경우_애러발생() {
         //given
         organizationBoardRepository.save(organizationBoard);
-        BoardCommentType type = BoardCommentType.ORGANIZATION_BOARD;
+        BoardType type = BoardType.ORGANIZATION_BOARD;
         BoardComment comment = BoardCommentCreator.createRootComment(type, organizationBoard.getId(), memberId, "댓글");
         comment.addLike(memberId);
         boardCommentRepository.save(comment);
@@ -366,7 +362,7 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
     void 댓글이_삭제된_댓글일_경우_애러발생() {
         //given
         organizationBoardRepository.save(organizationBoard);
-        BoardCommentType type = BoardCommentType.ORGANIZATION_BOARD;
+        BoardType type = BoardType.ORGANIZATION_BOARD;
         BoardComment comment = BoardCommentCreator.createRootComment(type, organizationBoard.getId(), memberId, "댓글");
         comment.delete();
         boardCommentRepository.save(comment);
@@ -380,7 +376,7 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
     void 댓글에_좋아요한것을_좋아요_취소한다() {
         //given
         organizationBoardRepository.save(organizationBoard);
-        BoardCommentType type = BoardCommentType.ORGANIZATION_BOARD;
+        BoardType type = BoardType.ORGANIZATION_BOARD;
         BoardComment comment = BoardCommentCreator.createRootComment(type, organizationBoard.getId(), memberId, "댓글");
         comment.addLike(memberId);
         boardCommentRepository.save(comment);
@@ -399,7 +395,7 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
     void 댓글에_좋아요를_하지않았는데_좋아요취소하면_애러발생() {
         //given
         organizationBoardRepository.save(organizationBoard);
-        BoardCommentType type = BoardCommentType.ORGANIZATION_BOARD;
+        BoardType type = BoardType.ORGANIZATION_BOARD;
         BoardComment comment = BoardCommentCreator.createRootComment(type, organizationBoard.getId(), memberId, "댓글");
         boardCommentRepository.save(comment);
 
@@ -414,7 +410,7 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
     void 이미_삭제된_댓글에_누른_좋아요를_취소할_수없다() {
         //given
         organizationBoardRepository.save(organizationBoard);
-        BoardComment comment = BoardCommentCreator.createRootComment(BoardCommentType.ORGANIZATION_BOARD, organizationBoard.getId(), memberId, "댓글");
+        BoardComment comment = BoardCommentCreator.createRootComment(BoardType.ORGANIZATION_BOARD, organizationBoard.getId(), memberId, "댓글");
         comment.delete();
         boardCommentRepository.save(comment);
 
@@ -431,7 +427,7 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
         assertThat(response.getContent()).isEqualTo(content);
     }
 
-    private void assertBoardComment(BoardComment boardComment, BoardCommentType type, Long boardId, Long memberId, String content, int depth) {
+    private void assertBoardComment(BoardComment boardComment, BoardType type, Long boardId, Long memberId, String content, int depth) {
         assertThat(boardComment.getType()).isEqualTo(type);
         assertThat(boardComment.getBoardId()).isEqualTo(boardId);
         assertThat(boardComment.getMemberId()).isEqualTo(memberId);
