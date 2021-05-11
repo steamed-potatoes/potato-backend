@@ -11,6 +11,9 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@Table(indexes = {
+    @Index(name = "idx_board_hash_tag_1", columnList = "boardId,type")
+})
 public class BoardHashTag extends BaseTimeEntity {
 
     @Id
@@ -27,7 +30,7 @@ public class BoardHashTag extends BaseTimeEntity {
     @Column(nullable = false)
     private Long memberId;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private String hashTag;
 
     private BoardHashTag(BoardType type, Long boardId, Long memberId, String hashTag) {
