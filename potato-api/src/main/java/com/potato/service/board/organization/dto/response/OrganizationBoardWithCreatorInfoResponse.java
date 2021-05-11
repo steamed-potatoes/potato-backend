@@ -7,6 +7,8 @@ import com.potato.service.member.dto.response.MemberInfoResponse;
 import com.potato.service.organization.dto.response.OrganizationInfoResponse;
 import lombok.*;
 
+import java.util.List;
+
 @ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -19,9 +21,11 @@ public class OrganizationBoardWithCreatorInfoResponse {
 
     private MemberInfoResponse creator;
 
-    public static OrganizationBoardWithCreatorInfoResponse of(OrganizationBoard organizationBoard, Organization organization, Member creator) {
+    private List<String> hashTags;
+
+    public static OrganizationBoardWithCreatorInfoResponse of(OrganizationBoard organizationBoard, Organization organization, Member creator, List<String> hashTags) {
         return new OrganizationBoardWithCreatorInfoResponse(OrganizationBoardInfoResponse.of(organizationBoard),
-            OrganizationInfoResponse.of(organization), MemberInfoResponse.of(creator));
+            OrganizationInfoResponse.of(organization), MemberInfoResponse.of(creator), hashTags);
     }
 
 }

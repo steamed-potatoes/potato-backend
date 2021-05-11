@@ -8,6 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @ToString
 @Getter
@@ -33,14 +34,19 @@ public class CreateOrganizationBoardRequest {
     @NotNull
     private OrganizationBoardCategory type;
 
+    @NotNull
+    private List<String> hashTags;
+
     @Builder(builderMethodName = "testBuilder")
-    public CreateOrganizationBoardRequest(String title, String content, String imageUrl, LocalDateTime startDateTime, LocalDateTime endDateTime, OrganizationBoardCategory type) {
+    public CreateOrganizationBoardRequest(String title, String content, String imageUrl, LocalDateTime startDateTime,
+                                          LocalDateTime endDateTime, OrganizationBoardCategory type, List<String> hashTags) {
         this.title = title;
         this.content = content;
         this.imageUrl = imageUrl;
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
         this.type = type;
+        this.hashTags = hashTags;
     }
 
     public OrganizationBoard toEntity(String subDomain, Long memberId) {

@@ -30,4 +30,15 @@ public class BoardHashTag extends BaseTimeEntity {
     @Column(nullable = false)
     private String hashTag;
 
+    private BoardHashTag(BoardType type, Long boardId, Long memberId, String hashTag) {
+        this.type = type;
+        this.boardId = boardId;
+        this.memberId = memberId;
+        this.hashTag = hashTag;
+    }
+
+    public static BoardHashTag newInstance(BoardType type, Long boardId, Long memberId, String hashTag) {
+        return new BoardHashTag(type, boardId, memberId, hashTag);
+    }
+
 }

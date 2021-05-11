@@ -7,6 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @ToString
 @Getter
@@ -34,8 +35,12 @@ public class UpdateOrganizationBoardRequest {
     @NotNull
     private OrganizationBoardCategory type;
 
+    @NotNull
+    private List<String> hashTags;
+
     @Builder(builderMethodName = "testBuilder")
-    public UpdateOrganizationBoardRequest(Long organizationBoardId, String title, String content, String imageUrl, LocalDateTime startDateTime, LocalDateTime endDateTime, OrganizationBoardCategory type) {
+    public UpdateOrganizationBoardRequest(Long organizationBoardId, String title, String content, String imageUrl,
+                                          LocalDateTime startDateTime, LocalDateTime endDateTime, OrganizationBoardCategory type, List<String> hashTags) {
         this.organizationBoardId = organizationBoardId;
         this.title = title;
         this.content = content;
@@ -43,6 +48,7 @@ public class UpdateOrganizationBoardRequest {
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
         this.type = type;
+        this.hashTags = hashTags;
     }
 
 }
