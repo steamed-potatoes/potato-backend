@@ -1,6 +1,9 @@
 package com.potato.service.board;
 
+import com.potato.domain.board.BoardType;
 import com.potato.domain.board.organization.*;
+import com.potato.domain.hashtag.BoardHashTag;
+import com.potato.domain.hashtag.BoardHashTagRepository;
 import com.potato.exception.model.ConflictException;
 import com.potato.exception.model.NotFoundException;
 import com.potato.service.OrganizationMemberSetUpTest;
@@ -14,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,12 +39,16 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
     @Autowired
     private DeleteOrganizationBoardRepository deleteOrganizationBoardRepository;
 
+    @Autowired
+    private BoardHashTagRepository boardHashTagRepository;
+
     @AfterEach
     void cleanUp() {
         super.cleanup();
         organizationBoardLikeRepository.deleteAllInBatch();
         organizationBoardRepository.deleteAllInBatch();
         deleteOrganizationBoardRepository.deleteAll();
+        boardHashTagRepository.deleteAll();
     }
 
     @Test
@@ -57,6 +66,7 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
             .startDateTime(startDateTime)
             .endDateTime(endDateTime)
             .type(type)
+            .hashTags(Collections.emptyList())
             .build();
 
         // when
@@ -67,6 +77,30 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
         assertThat(organizationBoardList).hasSize(1);
         assertThat(organizationBoardList.get(0).getLikesCount()).isEqualTo(0);
         assertOrganizationBoard(organizationBoardList.get(0), title, content, type, startDateTime, endDateTime, subDomain, memberId);
+    }
+
+    @Test
+    void 게시글_추가시_해시태그를_지정하면_해시태그_정보가_DB_에_저장된다() {
+        // given
+        List<String> hashTags = Arrays.asList("감자", "백엔드");
+
+        CreateOrganizationBoardRequest request = CreateOrganizationBoardRequest.testBuilder()
+            .title("감자 신입 회원 모집")
+            .content("감자 동아리에서 신입 회원을 모집합니다")
+            .startDateTime(LocalDateTime.of(2021, 3, 1, 0, 0))
+            .endDateTime(LocalDateTime.of(2021, 3, 5, 0, 0))
+            .type(OrganizationBoardCategory.RECRUIT)
+            .hashTags(hashTags)
+            .build();
+
+        // when
+        organizationBoardService.createBoard(subDomain, request, memberId);
+
+        // then
+        List<BoardHashTag> boardHashTags = boardHashTagRepository.findAll();
+        assertThat(boardHashTags).hasSize(2);
+        assertHashTag(boardHashTags.get(0), memberId, "감자");
+        assertHashTag(boardHashTags.get(1), memberId, "백엔드");
     }
 
     @Test
@@ -88,6 +122,7 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
             .startDateTime(startDateTime)
             .endDateTime(endDateTime)
             .type(type)
+            .hashTags(Collections.emptyList())
             .build();
 
         // when
@@ -112,6 +147,7 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
             .startDateTime(LocalDateTime.of(2021, 4, 1, 0, 0))
             .endDateTime(LocalDateTime.of(2021, 4, 7, 0, 0))
             .type(OrganizationBoardCategory.EVENT)
+            .hashTags(Collections.emptyList())
             .build();
 
         // when
@@ -121,6 +157,34 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
         List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findAll();
         assertThat(organizationBoardList).hasSize(1);
         assertThat(organizationBoardList.get(0).getMemberId()).isEqualTo(memberId);
+    }
+
+    @Test
+    void 올린_게시글을_수정하면_해시태그도_수정된다() {
+        // given
+        OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, 999L, "이전의 게시글", OrganizationBoardCategory.RECRUIT);
+        organizationBoardRepository.save(organizationBoard);
+        boardHashTagRepository.saveAll(Collections.singletonList(BoardHashTag.newInstance(BoardType.ORGANIZATION_BOARD, organizationBoard.getId(), memberId, "감자")));
+
+        UpdateOrganizationBoardRequest request = UpdateOrganizationBoardRequest.testBuilder()
+            .organizationBoardId(organizationBoard.getId())
+            .title("이후의 게시글")
+            .content("변경 이후의 내용")
+            .startDateTime(LocalDateTime.of(2021, 4, 1, 0, 0))
+            .endDateTime(LocalDateTime.of(2021, 4, 7, 0, 0))
+            .type(OrganizationBoardCategory.EVENT)
+            .hashTags(Arrays.asList("강승호", "고예림", "유순조"))
+            .build();
+
+        // when
+        organizationBoardService.updateBoard(subDomain, request, memberId);
+
+        // then
+        List<BoardHashTag> boardHashTags = boardHashTagRepository.findAll();
+        assertThat(boardHashTags).hasSize(3);
+        assertHashTag(boardHashTags.get(0), memberId, "강승호");
+        assertHashTag(boardHashTags.get(1), memberId, "고예림");
+        assertHashTag(boardHashTags.get(2), memberId, "유순조");
     }
 
     @Test
@@ -259,6 +323,11 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
         assertThat(deletedBoard.getTitle()).isEqualTo(title);
         assertThat(deletedBoard.getStartDateTime()).isEqualTo(startDateTime);
         assertThat(deletedBoard.getEndDateTime()).isEqualTo(endDateTime);
+    }
+
+    private void assertHashTag(BoardHashTag boardHashTag, Long memberId, String hashtag) {
+        assertThat(boardHashTag.getMemberId()).isEqualTo(memberId);
+        assertThat(boardHashTag.getHashTag()).isEqualTo(hashtag);
     }
 
 }
