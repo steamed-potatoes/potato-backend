@@ -82,9 +82,7 @@ class OrganizationAdminServiceTest extends MemberSetupTest {
         organization.addPending(targetMemberId);
         organizationRepository.save(organization);
 
-        ManageOrganizationMemberRequest request = ManageOrganizationMemberRequest.testBuilder()
-            .targetMemberId(targetMemberId)
-            .build();
+        ManageOrganizationMemberRequest request = ManageOrganizationMemberRequest.of(targetMemberId);
 
         // when
         organizationAdminService.approveOrganizationMember(subDomain, request);
@@ -107,9 +105,7 @@ class OrganizationAdminServiceTest extends MemberSetupTest {
         organization.addAdmin(memberId);
         organizationRepository.save(organization);
 
-        ManageOrganizationMemberRequest request = ManageOrganizationMemberRequest.testBuilder()
-            .targetMemberId(targetMemberId)
-            .build();
+        ManageOrganizationMemberRequest request = ManageOrganizationMemberRequest.of(targetMemberId);
 
         // when & then
         assertThatThrownBy(
@@ -125,9 +121,7 @@ class OrganizationAdminServiceTest extends MemberSetupTest {
         organization.addUser(targetMemberId);
         organizationRepository.save(organization);
 
-        ManageOrganizationMemberRequest request = ManageOrganizationMemberRequest.testBuilder()
-            .targetMemberId(targetMemberId)
-            .build();
+        ManageOrganizationMemberRequest request = ManageOrganizationMemberRequest.of(targetMemberId);
 
         // when & then
         assertThatThrownBy(
@@ -142,9 +136,7 @@ class OrganizationAdminServiceTest extends MemberSetupTest {
         organization.addAdmin(memberId);
         organizationRepository.save(organization);
 
-        ManageOrganizationMemberRequest request = ManageOrganizationMemberRequest.testBuilder()
-            .targetMemberId(memberId)
-            .build();
+        ManageOrganizationMemberRequest request = ManageOrganizationMemberRequest.of(targetMemberId);
 
         // when & then
         assertThatThrownBy(
@@ -160,9 +152,7 @@ class OrganizationAdminServiceTest extends MemberSetupTest {
         organization.addPending(targetMemberId);
         organizationRepository.save(organization);
 
-        ManageOrganizationMemberRequest request = ManageOrganizationMemberRequest.testBuilder()
-            .targetMemberId(targetMemberId)
-            .build();
+        ManageOrganizationMemberRequest request = ManageOrganizationMemberRequest.of(targetMemberId);
 
         // when
         organizationAdminService.denyOrganizationMember(subDomain, request);
@@ -184,9 +174,7 @@ class OrganizationAdminServiceTest extends MemberSetupTest {
         organization.addAdmin(memberId);
         organizationRepository.save(organization);
 
-        ManageOrganizationMemberRequest request = ManageOrganizationMemberRequest.testBuilder()
-            .targetMemberId(targetMemberId)
-            .build();
+        ManageOrganizationMemberRequest request = ManageOrganizationMemberRequest.of(targetMemberId);
 
         // when & then
         assertThatThrownBy(
