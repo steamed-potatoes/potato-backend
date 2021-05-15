@@ -27,10 +27,8 @@ public class AddBoardCommentRequest {
         return this.parentCommentId == null;
     }
 
-
     public static AddBoardCommentRequest testInstance(BoardType type, Long boardId, Long parentCommentId, String content) {
         return new AddBoardCommentRequest(type, boardId, parentCommentId, content);
     }
-
 
 }
