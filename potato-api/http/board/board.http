@@ -10,7 +10,10 @@ Authorization: Bearer {{AUTHORIZATION}}
     "endDateTime": "2021-05-08T11:59:59",
     "imageUrl": "https://avatars.githubusercontent.com/u/48153675?v=4",
     "type": "EVENT",
-    "hashTags": ["감자", "고구마"]
+    "hashTags": [
+        "감자",
+        "고구마"
+    ]
 }
 
 ### 특정 그룹의 게시물을 조회하는 API
@@ -32,7 +35,9 @@ Authorization: Bearer {{AUTHORIZATION}}
     "endDateTime": "2021-03-13T11:59:59",
     "imageUrl": "http://image.url",
     "type": "RECRUIT",
-    "hashTags": ["백엔드"]
+    "hashTags": [
+        "백엔드"
+    ]
 }
 
 ### 게시물의 좋아요를 추가하는 API
