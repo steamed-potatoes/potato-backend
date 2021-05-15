@@ -49,7 +49,7 @@ class OrganizationControllerTest extends ControllerTestUtils {
         String subDomain = "potato";
         String name = "감자";
         String description = "개발의 감을 잡자";
-        String profileUrl = "http://profile.com";
+        String profileUrl = "https://profile.com";
         String token = memberMockMvc.getMockMemberToken();
 
         CreateOrganizationRequest request = CreateOrganizationRequest.testBuilder()
@@ -76,7 +76,7 @@ class OrganizationControllerTest extends ControllerTestUtils {
         String subDomain = "potato";
         String name = "감자";
         String description = "개발의 감을 잡자";
-        String profileUrl = "http://profile.com";
+        String profileUrl = "https://profile.com";
 
         CreateOrganizationRequest request = CreateOrganizationRequest.testBuilder()
             .subDomain(subDomain)
@@ -98,7 +98,7 @@ class OrganizationControllerTest extends ControllerTestUtils {
         String subDomain = "potato";
         String name = "감자";
         String description = "개발의 감을 잡자";
-        String profileUrl = "http://profile.com";
+        String profileUrl = "https://profile.com";
 
         Organization organization = OrganizationCreator.create(subDomain, name, description, profileUrl, OrganizationCategory.NON_APPROVED_CIRCLE);
         organization.addAdmin(testMember.getId());

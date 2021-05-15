@@ -35,11 +35,11 @@ class MemberControllerTest extends ControllerTestUtils {
     void 회원가입_API_호출시_생성된_토큰이_반환된다() throws Exception {
         // given
         SignUpMemberRequest request = SignUpMemberRequest.testBuilder()
-            .email("test.seungho@gmail.com")
+            .email("will.seungho@gmail.com")
             .name("강승호")
             .major(MemberMajor.IT_ICT)
             .classNumber(201610302)
-            .profileUrl("http://profile.com")
+            .profileUrl("https://profile.com")
             .build();
 
         // when
@@ -59,7 +59,7 @@ class MemberControllerTest extends ControllerTestUtils {
             .name("강승호")
             .major(MemberMajor.IT_ICT)
             .classNumber(201610302)
-            .profileUrl("http://profile.com")
+            .profileUrl("https://profile.com")
             .build();
 
         // when
@@ -78,7 +78,7 @@ class MemberControllerTest extends ControllerTestUtils {
             .name("강승호")
             .major(MemberMajor.IT_ICT)
             .classNumber(201610302)
-            .profileUrl("http://profile.com")
+            .profileUrl("https://profile.com")
             .build();
 
         // when
@@ -97,7 +97,7 @@ class MemberControllerTest extends ControllerTestUtils {
             .email("will.seungho@gmail.com")
             .major(MemberMajor.IT_ICT)
             .classNumber(201610302)
-            .profileUrl("http://profile.com")
+            .profileUrl("https://profile.com")
             .build();
 
         // when
@@ -136,7 +136,7 @@ class MemberControllerTest extends ControllerTestUtils {
     void 내정보를_수정한다() throws Exception {
         // given
         String name = "승호강";
-        String profileUrl = "http://abc.com";
+        String profileUrl = "https://abc.com";
         MemberMajor major = MemberMajor.IT_COMPUTER;
         Integer classNumber = 201710302;
 

@@ -43,7 +43,7 @@ class OrganizationRetrieveServiceTest extends MemberSetupTest {
         // given
         String name = "찐 감자";
         String description = "개발 동아리 입니다";
-        String profileUrl = "http://image.com";
+        String profileUrl = "https://image.com";
         OrganizationCategory category = OrganizationCategory.NON_APPROVED_CIRCLE;
 
         Organization organization = OrganizationCreator.create(subDomain, name, description, profileUrl, category);
