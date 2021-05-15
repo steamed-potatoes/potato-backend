@@ -92,7 +92,7 @@ public class MemberMockMvc {
             .name("강승호")
             .major(MemberMajor.IT_ICT)
             .classNumber(201610302)
-            .profileUrl("http://profile.com")
+            .profileUrl("https://profile.com")
             .build();
         return signUpMember(request, 200).getData();
     }
@@ -103,7 +103,7 @@ public class MemberMockMvc {
             .name("강승호")
             .major(MemberMajor.IT_ICT)
             .classNumber(201610302)
-            .profileUrl("http://profile.com")
+            .profileUrl("https://profile.com")
             .build();
         return signUpMember(request, 200).getData();
     }
