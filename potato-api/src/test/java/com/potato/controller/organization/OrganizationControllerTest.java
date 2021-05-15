@@ -3,11 +3,9 @@ package com.potato.controller.organization;
 import com.potato.controller.ApiResponse;
 import com.potato.controller.ControllerTestUtils;
 import com.potato.exception.ErrorCode;
-import com.potato.domain.member.Member;
-import com.potato.domain.member.MemberCreator;
 import com.potato.domain.organization.*;
-import com.potato.service.member.dto.response.MemberInfoResponse;
 import com.potato.service.organization.dto.request.CreateOrganizationRequest;
+import com.potato.service.organization.dto.request.RetrievePopularOrganizationsRequest;
 import com.potato.service.organization.dto.response.MemberInOrganizationResponse;
 import com.potato.service.organization.dto.response.OrganizationInfoResponse;
 import com.potato.service.organization.dto.response.OrganizationWithMembersInfoResponse;
@@ -131,6 +129,27 @@ class OrganizationControllerTest extends ControllerTestUtils {
     }
 
     @Test
+    void 인기있는_그룹들을_조회하면_그룹들의_정보가_반환된다() throws Exception {
+        // given
+        organization.addAdmin(testMember.getId());
+        organization.addFollow(100L);
+
+        Organization organization2 = OrganizationCreator.create("subDomain1");
+        organization2.addAdmin(testMember.getId());
+
+        organizationRepository.saveAll(Arrays.asList(organization, organization2));
+
+        // when
+        RetrievePopularOrganizationsRequest request = RetrievePopularOrganizationsRequest.testInstance(5);
+        ApiResponse<List<OrganizationInfoResponse>> response = organizationMockMvc.getPopularOrganizations(request, 200);
+
+        // then
+        assertThat(response.getData()).hasSize(2);
+        assertOrganizationInfoResponse(response.getData().get(0), subDomain, name, description, profileUrl, 1, OrganizationCategory.NON_APPROVED_CIRCLE);
+        assertOrganizationInfoResponse(response.getData().get(1), organization2.getSubDomain(), organization2.getName(), organization2.getDescription(), organization2.getProfileUrl(), 1, OrganizationCategory.NON_APPROVED_CIRCLE);
+    }
+
+    @Test
     void 내가_가입하거나_생성한_그룹들을_조회하면_그룹들의_간단한_정보가_조회된다() throws Exception {
         // given
         organization.addAdmin(testMember.getId());
@@ -145,7 +164,7 @@ class OrganizationControllerTest extends ControllerTestUtils {
     }
 
     @Test
-    void 특정그룹에_가입신청을_하는_경우() throws Exception {
+    void 특정그룹에_가입신청을_하는_경우_200_OK() throws Exception {
         //given
         organization.addAdmin(100L);
         organizationRepository.save(organization);
@@ -158,7 +177,7 @@ class OrganizationControllerTest extends ControllerTestUtils {
     }
 
     @Test
-    void 특정_그룹에_가입신청을_취소하는_경우() throws Exception {
+    void 특정_그룹에_가입신청을_취소하는_경우_200_OK() throws Exception {
         // given
         organization.addAdmin(100L);
         organization.addPending(testMember.getId());
@@ -172,7 +191,7 @@ class OrganizationControllerTest extends ControllerTestUtils {
     }
 
     @Test
-    void 특정_그룹에서_회장과_회원이_있을때_회원이_탈퇴하는_경우() throws Exception {
+    void 특정_그룹에서_회장과_회원이_있을때_회원이_탈퇴하는_경우_200_OK() throws Exception {
         // given
         organization.addAdmin(100L);
         organization.addUser(testMember.getId());
@@ -196,85 +215,6 @@ class OrganizationControllerTest extends ControllerTestUtils {
 
         //then
         assertThat(response.getCode()).isEqualTo(ErrorCode.FORBIDDEN_EXCEPTION.getCode());
-    }
-
-    @Test
-    void 특정_조직을_팔로우하려는_경우() throws Exception {
-        //given
-        organization.addAdmin(testMember.getId());
-        organizationRepository.save(organization);
-
-        //when
-        ApiResponse<String> response = organizationMockMvc.followOrganization(subDomain, token, 200);
-
-        //then
-        assertThat(response.getData()).isEqualTo("OK");
-    }
-
-    @Test
-    void 특정_조직을_팔로우_취소하는_경우() throws Exception {
-        //given
-        organization.addAdmin(testMember.getId());
-        organization.addFollow(testMember.getId());
-        organizationRepository.save(organization);
-
-        //when
-        ApiResponse<String> response = organizationMockMvc.unFollowOrganization(subDomain, token, 200);
-
-        //then
-        assertThat(response.getData()).isEqualTo("OK");
-    }
-
-    @Test
-    void 특정_조직_팔로우하지_않은_사람이_팔로우_취소하는_경우_애러발생() throws Exception {
-        //given
-        organization.addAdmin(testMember.getId());
-        organizationRepository.save(organization);
-
-        //when
-        ApiResponse<String> response = organizationMockMvc.unFollowOrganization(subDomain, token, 404);
-
-        //then
-        assertThat(response.getCode()).isEqualTo(ErrorCode.NOT_FOUND_EXCEPTION.getCode());
-    }
-
-    @Test
-    void 그룹을_팔로우한_멤버_리스트를_불러오는_경우() throws Exception {
-        //given
-        String email1 = "tnswh1@gmail.com";
-        String email2 = "tnswh2@gmail.com";
-        Member member1 = MemberCreator.create(email1);
-        Member member2 = MemberCreator.create(email2);
-        memberRepository.saveAll(Arrays.asList(member1, member2));
-
-        String subDomain = "potato";
-        organization.addAdmin(testMember.getId());
-        organization.addFollow(member1.getId());
-        organization.addFollow(member2.getId());
-        organizationRepository.save(organization);
-
-        //when
-        ApiResponse<List<MemberInfoResponse>> response = organizationMockMvc.getOrganizationFollowMember(subDomain, 200);
-
-        //then
-        assertThat(response.getData()).hasSize(2);
-        assertThat(response.getData().get(0).getEmail()).isEqualTo(email1);
-        assertThat(response.getData().get(1).getEmail()).isEqualTo(email2);
-    }
-
-    @Test
-    void 내가_팔로우한_그룹들을_가져오는_경우() throws Exception {
-        // given
-        organization.addAdmin(testMember.getId());
-        organization.addFollow(testMember.getId());
-        organizationRepository.save(organization);
-
-        // when
-        ApiResponse<List<OrganizationInfoResponse>> response = organizationMockMvc.retrieveFollowingOrganization(token, 200);
-
-        // then
-        assertThat(response.getData()).hasSize(1);
-        assertThat(response.getData().get(0).getSubDomain()).isEqualTo(subDomain);
     }
 
     private void assertOrganizationInfoResponse(OrganizationInfoResponse response, String subDomain, String name, String description, String profileUrl, int membersCount, OrganizationCategory category) {

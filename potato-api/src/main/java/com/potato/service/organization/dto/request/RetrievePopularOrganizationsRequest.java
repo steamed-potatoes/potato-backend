@@ -15,4 +15,8 @@ public class RetrievePopularOrganizationsRequest {
     @NotNull
     private int size;
 
+    public static RetrievePopularOrganizationsRequest testInstance(int size) {
+        return new RetrievePopularOrganizationsRequest(size);
+    }
+
 }
