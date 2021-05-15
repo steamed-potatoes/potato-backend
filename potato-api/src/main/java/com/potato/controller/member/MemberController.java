@@ -39,27 +39,27 @@ public class MemberController {
         return ApiResponse.success(httpSession.getId());
     }
 
-    @Operation(summary = "내 정보를 불러오는 API", security = {@SecurityRequirement(name = "BearerKey")})
+    @Operation(summary = "나의 회원 정보를 불러오는 API", security = {@SecurityRequirement(name = "BearerKey")})
     @Auth
     @GetMapping("/api/v1/member")
     public ApiResponse<MemberInfoResponse> getMyMemberInfo(@MemberId Long memberId) {
         return ApiResponse.success(memberService.getMemberInfo(memberId));
     }
 
-    @Operation(summary = "내 정보를 수정하는 API", security = {@SecurityRequirement(name = "BearerKey")})
+    @Operation(summary = "나의 회원 정보를 수정하는 API", security = {@SecurityRequirement(name = "BearerKey")})
     @Auth
     @PutMapping("/api/v1/member")
     public ApiResponse<MemberInfoResponse> updateMemberInfo(@Valid @RequestBody UpdateMemberRequest request, @MemberId Long memberId) {
         return ApiResponse.success(memberService.updateMemberInfo(request, memberId));
     }
 
-    @Operation(summary = "특정 상대방 회원 정보를 불러오는 API")
+    @Operation(summary = "특정 멤버의 회원 정보를 불러오는 API")
     @GetMapping("/api/v1/member/{targetId}")
     public ApiResponse<MemberInfoResponse> getMemberInfo(@PathVariable Long targetId) {
         return ApiResponse.success(memberService.getMemberInfo(targetId));
     }
 
-    @Operation(summary = "전공 리스트를 조회하는 API")
+    @Operation(summary = "등록된 전공 리스트를 조회하는 API")
     @GetMapping("/api/v1/major/list")
     public List<MajorInfoResponse> getMajorList() {
         return Arrays.stream(MemberMajor.values())

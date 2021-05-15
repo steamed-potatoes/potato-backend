@@ -137,7 +137,7 @@ class MemberControllerTest extends ControllerTestUtils {
     }
 
     @Test
-    void 내정보를_수정한다() throws Exception {
+    void 내정보를_수정요청시_성공시_변경된_회원정보가_반환된다() throws Exception {
         // given
         String name = "승호강";
         String profileUrl = "https://abc.com";
@@ -161,7 +161,7 @@ class MemberControllerTest extends ControllerTestUtils {
     }
 
     @Test
-    void 특정_유저의_정보를_불러온다() throws Exception {
+    void 특정_유저의_정보를_요청하면_회원의_정보가_조회된다() throws Exception {
         // given
         Member member = memberRepository.save(MemberCreator.create("ksh980212@gmail.com"));
 
