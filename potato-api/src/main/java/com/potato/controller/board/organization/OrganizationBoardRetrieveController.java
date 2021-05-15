@@ -44,7 +44,7 @@ public class OrganizationBoardRetrieveController {
     }
 
     @Operation(summary = "특정 그룹의 게시물을 스크롤 페이지네이션 기반으로 조회하는 API")
-    @GetMapping("/api/v2/organization/board/list/{subDomain}")
+    @GetMapping("/api/v2/organization/board/list/in/{subDomain}")
     public ApiResponse<List<BoardWithOrganizationDto>> getBoardsInOrganization(@PathVariable String subDomain, @Valid RetrieveLatestBoardsRequest request) {
         return ApiResponse.success(organizationBoardRetrieveService.getBoardsInOrganization(subDomain, request.getType(), request.getLastOrganizationBoardId(), request.getSize()));
     }
