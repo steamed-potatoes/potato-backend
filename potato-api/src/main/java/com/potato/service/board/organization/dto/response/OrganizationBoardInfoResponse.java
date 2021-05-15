@@ -9,25 +9,26 @@ import java.time.LocalDateTime;
 
 @ToString
 @Getter
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class OrganizationBoardInfoResponse extends BaseTimeResponse {
 
-    private final Long id;
+    private Long id;
 
-    private final String subDomain;
+    private String subDomain;
 
-    private final String title;
+    private String title;
 
-    private final LocalDateTime startDateTime;
+    private LocalDateTime startDateTime;
 
-    private final LocalDateTime endDateTime;
+    private LocalDateTime endDateTime;
 
-    private final String content;
+    private String content;
 
-    private final String imageUrl;
+    private String imageUrl;
 
-    private final int likesCount;
+    private int likesCount;
 
-    private final OrganizationBoardCategory type;
+    private OrganizationBoardCategory type;
 
     @Builder
     private OrganizationBoardInfoResponse(Long id, String subDomain, String title, LocalDateTime startDateTime, LocalDateTime endDateTime, String content, String imageUrl, int likesCount, OrganizationBoardCategory type) {

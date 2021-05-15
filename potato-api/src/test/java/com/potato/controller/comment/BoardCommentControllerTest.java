@@ -37,7 +37,7 @@ class BoardCommentControllerTest extends ControllerTestUtils {
     private BoardCommentRepository boardCommentRepository;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws Exception {
         super.setup();
         boardCommentMockMvc = new BoardCommentMockMvc(mockMvc, objectMapper);
     }

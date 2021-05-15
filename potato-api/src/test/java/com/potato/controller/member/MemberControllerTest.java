@@ -3,8 +3,6 @@ package com.potato.controller.member;
 import com.potato.controller.ApiResponse;
 import com.potato.controller.ControllerTestUtils;
 import com.potato.exception.ErrorCode;
-import com.potato.domain.member.Member;
-import com.potato.domain.member.MemberCreator;
 import com.potato.domain.member.MemberMajor;
 import com.potato.service.member.dto.request.SignUpMemberRequest;
 import com.potato.service.member.dto.request.UpdateMemberRequest;
@@ -22,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class MemberControllerTest extends ControllerTestUtils {
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws Exception {
         super.setup();
     }
 
@@ -52,10 +50,8 @@ class MemberControllerTest extends ControllerTestUtils {
     @Test
     void 회원가입_요청시_이미_존재하는_이메일의경우_CONFLICT_에러() throws Exception {
         // given
-        memberRepository.save(MemberCreator.create("test.seungho@gmail.com"));
-
         SignUpMemberRequest request = SignUpMemberRequest.testBuilder()
-            .email("test.seungho@gmail.com")
+            .email(testMember.getEmail())
             .name("강승호")
             .major(MemberMajor.IT_ICT)
             .classNumber(201610302)
@@ -72,8 +68,6 @@ class MemberControllerTest extends ControllerTestUtils {
     @Test
     void 회원가입_요청시_이메일을_입력하지_않으면_BAD_REQUEST_에러() throws Exception {
         // given
-        memberRepository.save(MemberCreator.create("will.seungho@gmail.com"));
-
         SignUpMemberRequest request = SignUpMemberRequest.testBuilder()
             .name("강승호")
             .major(MemberMajor.IT_ICT)
@@ -91,8 +85,6 @@ class MemberControllerTest extends ControllerTestUtils {
     @Test
     void 회원가입_요청시_이름을_입력하지_않으면_BAD_REQUEST_에러() throws Exception {
         // given
-        memberRepository.save(MemberCreator.create("will.seungho@gmail.com"));
-
         SignUpMemberRequest request = SignUpMemberRequest.testBuilder()
             .email("will.seungho@gmail.com")
             .major(MemberMajor.IT_ICT)
@@ -109,22 +101,11 @@ class MemberControllerTest extends ControllerTestUtils {
 
     @Test
     void SESSION_ID_를_이용해서_나의_정보를_조회한다() throws Exception {
-        // given
-        String token = memberMockMvc.getMockMemberToken();
-
         // when
         ApiResponse<MemberInfoResponse> response = memberMockMvc.getMyMemberInfo(token, 200);
 
         // then
-        assertMemberInfoResponse(response.getData(), "will.seungho@gmail.com", "강승호", "ICT융합학과", 201610302, "https://profile.com");
-    }
-
-    private void assertMemberInfoResponse(MemberInfoResponse response, String email, String name, String major, int classNumber, String profileUrl) {
-        assertThat(response.getEmail()).isEqualTo(email);
-        assertThat(response.getName()).isEqualTo(name);
-        assertThat(response.getMajor()).isEqualTo(major);
-        assertThat(response.getClassNumber()).isEqualTo(classNumber);
-        assertThat(response.getProfileUrl()).isEqualTo(profileUrl);
+        assertMemberInfoResponse(response.getData(), testMember.getEmail(), testMember.getName(), testMember.getMajorName(), testMember.getClassNumber(), testMember.getProfileUrl());
     }
 
     @Test
@@ -151,25 +132,20 @@ class MemberControllerTest extends ControllerTestUtils {
             .classNumber(classNumber)
             .build();
 
-        String token = memberMockMvc.getMockMemberToken();
-
         // when
         ApiResponse<MemberInfoResponse> response = memberMockMvc.updateMemberInfo(request, token, 200);
 
         // then
-        assertMemberInfoResponse(response.getData(), "will.seungho@gmail.com", name, major.getName(), classNumber, profileUrl);
+        assertMemberInfoResponse(response.getData(), testMember.getEmail(), name, major.getName(), classNumber, profileUrl);
     }
 
     @Test
     void 특정_유저의_정보를_요청하면_회원의_정보가_조회된다() throws Exception {
-        // given
-        Member member = memberRepository.save(MemberCreator.create("ksh980212@gmail.com"));
-
         // when
-        ApiResponse<MemberInfoResponse> response = memberMockMvc.getMemberInfo(member.getId(), 200);
+        ApiResponse<MemberInfoResponse> response = memberMockMvc.getMemberInfo(testMember.getId(), 200);
 
         // then
-        assertMemberInfoResponse(response.getData(), member.getEmail(), member.getName(), member.getMajorName(), member.getClassNumber(), member.getProfileUrl());
+        assertMemberInfoResponse(response.getData(), testMember.getEmail(), testMember.getName(), testMember.getMajorName(), testMember.getClassNumber(), testMember.getProfileUrl());
     }
 
     @Test
@@ -179,6 +155,14 @@ class MemberControllerTest extends ControllerTestUtils {
 
         // then
         assertThat(response.getCode()).isEqualTo(ErrorCode.NOT_FOUND_EXCEPTION.getCode());
+    }
+
+    private void assertMemberInfoResponse(MemberInfoResponse response, String email, String name, String major, int classNumber, String profileUrl) {
+        assertThat(response.getEmail()).isEqualTo(email);
+        assertThat(response.getName()).isEqualTo(name);
+        assertThat(response.getMajor()).isEqualTo(major);
+        assertThat(response.getClassNumber()).isEqualTo(classNumber);
+        assertThat(response.getProfileUrl()).isEqualTo(profileUrl);
     }
 
 }

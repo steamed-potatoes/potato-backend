@@ -8,17 +8,18 @@ import java.time.LocalDateTime;
 
 @ToString
 @Getter
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AdminBoardInfoResponse extends BaseTimeResponse {
 
-    private final Long id;
+    private Long id;
 
-    private final String title;
+    private String title;
 
-    private final LocalDateTime startDateTime;
+    private LocalDateTime startDateTime;
 
-    private final LocalDateTime endDateTime;
+    private LocalDateTime endDateTime;
 
-    private final String content;
+    private String content;
 
     @Builder
     private AdminBoardInfoResponse(Long id, String title, LocalDateTime startDateTime, LocalDateTime endDateTime, String content) {

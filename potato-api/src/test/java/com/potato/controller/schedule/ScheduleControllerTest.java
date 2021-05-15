@@ -34,7 +34,7 @@ public class ScheduleControllerTest extends ControllerTestUtils {
     private OrganizationBoardRepository organizationBoardRepository;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws Exception {
         super.setup();
         scheduleMockMvc = new ScheduleMockMvc(mockMvc, objectMapper);
     }
