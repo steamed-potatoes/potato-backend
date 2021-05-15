@@ -11,19 +11,20 @@ import java.util.stream.Collectors;
 
 @ToString
 @Getter
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BoardCommentResponse extends BaseTimeResponse {
 
-    private final Long id;
+    private Long id;
 
-    private final BoardType type;
+    private BoardType type;
 
-    private final Long boardId;
+    private Long boardId;
 
-    private final Long memberId;
+    private Long memberId;
 
-    private final String content;
+    private String content;
 
-    private final int boardCommentLikeCounts;
+    private int boardCommentLikeCounts;
 
     private final List<BoardCommentResponse> children = new ArrayList<>();
 

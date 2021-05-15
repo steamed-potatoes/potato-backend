@@ -39,26 +39,6 @@ class OrganizationRetrieveServiceTest extends MemberSetupTest {
     private final String subDomain = "potato";
 
     @Test
-    void 서브도메인을_통해_특정_조직의_자세한_정보를_불러온다() {
-        // given
-        String name = "찐 감자";
-        String description = "개발 동아리 입니다";
-        String profileUrl = "http://image.com";
-        OrganizationCategory category = OrganizationCategory.NON_APPROVED_CIRCLE;
-
-        Organization organization = OrganizationCreator.create(subDomain, name, description, profileUrl, category);
-        organization.addAdmin(memberId);
-        organizationRepository.save(organization);
-
-        // when
-        OrganizationWithMembersInfoResponse response = organizationRetrieveService.getDetailOrganizationInfo(subDomain);
-
-        // then
-        assertOrganizationInfoResponse(response.getOrganization(), organization.getId(), subDomain, name, description, profileUrl, category, organization.getMembersCount());
-        assertThat(response.getMembers()).hasSize(1);
-    }
-
-    @Test
     void 특정_그룹_조회시_가입_승인_대기중인_경우_동아리_멤버에서_조회되지_않는다() {
         // given
         Member pendingMember = memberRepository.save(MemberCreator.create("test@gmail.com"));
@@ -73,7 +53,7 @@ class OrganizationRetrieveServiceTest extends MemberSetupTest {
 
         // then
         assertThat(response.getMembers()).hasSize(1);
-        assertThat(response.getMembers().get(0).getId()).isEqualTo(memberId);
+        assertThat(response.getMembers().get(0).getMemberId()).isEqualTo(memberId);
     }
 
     @Test

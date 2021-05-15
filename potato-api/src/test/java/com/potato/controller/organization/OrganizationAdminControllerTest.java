@@ -26,7 +26,7 @@ public class OrganizationAdminControllerTest extends ControllerTestUtils {
     private OrganizationRepository organizationRepository;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws Exception {
         super.setup();
         organizationMockMvc = new OrganizationMockMvc(mockMvc, objectMapper);
     }

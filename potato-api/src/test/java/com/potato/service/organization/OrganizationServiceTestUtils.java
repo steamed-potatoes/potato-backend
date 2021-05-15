@@ -22,9 +22,8 @@ final class OrganizationServiceTestUtils {
         assertThat(organizationMemberMapper.getRole()).isEqualTo(role);
     }
 
-    static void assertOrganizationInfoResponse(OrganizationInfoResponse response, Long id, String subDomain, String name,
+    static void assertOrganizationInfoResponse(OrganizationInfoResponse response, String subDomain, String name,
                                                String description, String profileUrl, OrganizationCategory category, int membersCount) {
-        assertThat(response.getId()).isEqualTo(id);
         assertThat(response.getSubDomain()).isEqualTo(subDomain);
         assertThat(response.getName()).isEqualTo(name);
         assertThat(response.getDescription()).isEqualTo(description);

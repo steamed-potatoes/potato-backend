@@ -12,15 +12,16 @@ import java.util.List;
 
 @ToString
 @Getter
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class OrganizationBoardWithCreatorInfoResponse extends BaseTimeResponse {
 
-    private final OrganizationBoardInfoResponse board;
+    private OrganizationBoardInfoResponse board;
 
-    private final OrganizationInfoResponse organization;
+    private OrganizationInfoResponse organization;
 
-    private final MemberInfoResponse creator;
+    private MemberInfoResponse creator;
 
-    private final List<String> hashTags;
+    private List<String> hashTags;
 
     @Builder
     private OrganizationBoardWithCreatorInfoResponse(OrganizationBoardInfoResponse board, OrganizationInfoResponse organization, MemberInfoResponse creator, List<String> hashTags) {

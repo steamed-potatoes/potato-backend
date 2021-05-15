@@ -49,7 +49,7 @@ class OrganizationBoardControllerTest extends ControllerTestUtils {
     private BoardHashTagRepository boardHashTagRepository;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws Exception {
         super.setup();
         organizationBoardMockMvc = new OrganizationBoardMockMvc(mockMvc, objectMapper);
     }
