@@ -7,6 +7,7 @@ import com.potato.domain.board.BoardType;
 import com.potato.service.comment.BoardCommentService;
 import com.potato.service.comment.dto.request.AddBoardCommentRequest;
 import com.potato.service.comment.dto.request.LikeBoardCommentRequest;
+import com.potato.service.comment.dto.request.UpdateBoardCommentRequest;
 import com.potato.service.comment.dto.response.BoardCommentResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -35,6 +36,14 @@ public class BoardCommentController {
     @GetMapping("/api/v2/board/comment/list")
     public ApiResponse<List<BoardCommentResponse>> retrieveBoardComments(@RequestParam BoardType type, @RequestParam Long boardId) {
         return ApiResponse.success(boardCommentService.retrieveBoardCommentList(type, boardId));
+    }
+
+    @Operation(summary = "게시물의 댓글을 수정합니다.", security = {@SecurityRequirement(name = "BearerKey")})
+    @Auth
+    @PutMapping("/api/v2/board/comment")
+    public ApiResponse<String> updateBoardComment(@RequestBody UpdateBoardCommentRequest request, @MemberId Long memberId) {
+        boardCommentService.updateBoardComment(request, memberId);
+        return ApiResponse.OK;
     }
 
     @Operation(summary = "작성한 댓글을 삭제합니다.", security = {@SecurityRequirement(name = "BearerKey")})
