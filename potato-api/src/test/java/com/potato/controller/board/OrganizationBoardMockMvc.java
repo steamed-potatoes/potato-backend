@@ -114,7 +114,7 @@ class OrganizationBoardMockMvc {
     }
 
     public ApiResponse<List<BoardWithOrganizationDto>> getBoardsInOrganization(String subDomain, RetrieveLatestBoardsRequest request, int expectedStatus) throws Exception {
-        MockHttpServletRequestBuilder builder = get("/api/v2/organization/board/list/".concat(subDomain))
+        MockHttpServletRequestBuilder builder = get("/api/v2/organization/board/list/in/".concat(subDomain))
             .param("lastOrganizationBoardId", String.valueOf(request.getLastOrganizationBoardId()))
             .param("size", String.valueOf(request.getSize()));
 
