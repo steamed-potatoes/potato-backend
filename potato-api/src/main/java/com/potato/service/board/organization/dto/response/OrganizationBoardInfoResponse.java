@@ -18,11 +18,11 @@ public class OrganizationBoardInfoResponse extends BaseTimeResponse {
 
     private String title;
 
+    private String content;
+
     private LocalDateTime startDateTime;
 
     private LocalDateTime endDateTime;
-
-    private String content;
 
     private String imageUrl;
 

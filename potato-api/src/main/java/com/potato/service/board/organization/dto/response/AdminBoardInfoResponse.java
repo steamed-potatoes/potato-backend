@@ -15,11 +15,11 @@ public class AdminBoardInfoResponse extends BaseTimeResponse {
 
     private String title;
 
+    private String content;
+
     private LocalDateTime startDateTime;
 
     private LocalDateTime endDateTime;
-
-    private String content;
 
     @Builder
     private AdminBoardInfoResponse(Long id, String title, LocalDateTime startDateTime, LocalDateTime endDateTime, String content) {
