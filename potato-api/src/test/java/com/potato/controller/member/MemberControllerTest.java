@@ -6,12 +6,15 @@ import com.potato.exception.ErrorCode;
 import com.potato.domain.member.MemberMajor;
 import com.potato.service.member.dto.request.SignUpMemberRequest;
 import com.potato.service.member.dto.request.UpdateMemberRequest;
+import com.potato.service.member.dto.response.MajorInfoResponse;
 import com.potato.service.member.dto.response.MemberInfoResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -155,6 +158,15 @@ class MemberControllerTest extends ControllerTestUtils {
 
         // then
         assertThat(response.getCode()).isEqualTo(ErrorCode.NOT_FOUND_EXCEPTION.getCode());
+    }
+
+    @Test
+    void 등록된_전공_리스트를_조회한다() throws Exception {
+        // when
+        ApiResponse<List<MajorInfoResponse>> response = memberMockMvc.getMajors(200);
+
+        // then
+        assertThat(response.getData()).hasSize(MemberMajor.values().length);
     }
 
     private void assertMemberInfoResponse(MemberInfoResponse response, String email, String name, String major, int classNumber, String profileUrl) {

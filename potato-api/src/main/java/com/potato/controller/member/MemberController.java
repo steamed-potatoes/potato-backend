@@ -4,7 +4,6 @@ import com.potato.config.interceptor.auth.Auth;
 import com.potato.config.argumentResolver.MemberId;
 import com.potato.config.session.MemberSession;
 import com.potato.controller.ApiResponse;
-import com.potato.domain.member.MemberMajor;
 import com.potato.service.member.MemberService;
 import com.potato.service.member.dto.request.SignUpMemberRequest;
 import com.potato.service.member.dto.request.UpdateMemberRequest;
@@ -18,9 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.potato.config.session.SessionConstants.AUTH_SESSION;
 
@@ -61,10 +58,8 @@ public class MemberController {
 
     @Operation(summary = "등록된 전공 리스트를 조회하는 API")
     @GetMapping("/api/v1/major/list")
-    public List<MajorInfoResponse> getMajorList() {
-        return Arrays.stream(MemberMajor.values())
-            .map(MajorInfoResponse::of)
-            .collect(Collectors.toList());
+    public ApiResponse<List<MajorInfoResponse>> getMajorList() {
+        return ApiResponse.success(memberService.getMajors());
     }
 
 }

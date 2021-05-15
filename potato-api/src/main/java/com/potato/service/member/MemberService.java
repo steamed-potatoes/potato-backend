@@ -1,13 +1,19 @@
 package com.potato.service.member;
 
 import com.potato.domain.member.Member;
+import com.potato.domain.member.MemberMajor;
 import com.potato.domain.member.MemberRepository;
 import com.potato.service.member.dto.request.SignUpMemberRequest;
 import com.potato.service.member.dto.request.UpdateMemberRequest;
+import com.potato.service.member.dto.response.MajorInfoResponse;
 import com.potato.service.member.dto.response.MemberInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -32,6 +38,12 @@ public class MemberService {
         Member member = MemberServiceUtils.findMemberById(memberRepository, memberId);
         member.updateMemberInfo(request.getName(), request.getProfileUrl(), request.getMajor(), request.getClassNumber());
         return MemberInfoResponse.of(member);
+    }
+
+    public List<MajorInfoResponse> getMajors() {
+        return Arrays.stream(MemberMajor.values())
+            .map(MajorInfoResponse::of)
+            .collect(Collectors.toList());
     }
 
 }

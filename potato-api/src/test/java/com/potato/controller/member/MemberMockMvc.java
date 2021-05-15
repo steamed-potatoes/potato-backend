@@ -6,6 +6,7 @@ import com.potato.controller.ApiResponse;
 import com.potato.domain.member.MemberMajor;
 import com.potato.service.member.dto.request.SignUpMemberRequest;
 import com.potato.service.member.dto.request.UpdateMemberRequest;
+import com.potato.service.member.dto.response.MajorInfoResponse;
 import com.potato.service.member.dto.response.MemberInfoResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -13,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -75,6 +77,19 @@ public class MemberMockMvc {
 
     public ApiResponse<MemberInfoResponse> getMemberInfo(Long memberId, int expectedStatus) throws Exception {
         MockHttpServletRequestBuilder builder = get("/api/v1/member/" + memberId);
+
+        return objectMapper.readValue(
+            mockMvc.perform(builder)
+                .andExpect(status().is(expectedStatus))
+                .andReturn()
+                .getResponse()
+                .getContentAsString(StandardCharsets.UTF_8), new TypeReference<>() {
+            }
+        );
+    }
+
+    public ApiResponse<List<MajorInfoResponse>> getMajors(int expectedStatus) throws Exception {
+        MockHttpServletRequestBuilder builder = get("/api/v1/major/list");
 
         return objectMapper.readValue(
             mockMvc.perform(builder)
