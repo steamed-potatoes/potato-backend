@@ -15,6 +15,7 @@ import com.potato.domain.organization.Organization;
 import com.potato.domain.organization.OrganizationCreator;
 import com.potato.domain.organization.OrganizationRepository;
 import com.potato.service.board.organization.dto.request.CreateOrganizationBoardRequest;
+import com.potato.service.board.organization.dto.request.RetrieveLatestBoardsRequest;
 import com.potato.service.board.organization.dto.request.UpdateOrganizationBoardRequest;
 import com.potato.service.board.organization.dto.response.OrganizationBoardInfoResponse;
 import com.potato.service.board.organization.dto.response.OrganizationBoardWithCreatorInfoResponse;
@@ -238,6 +239,29 @@ class OrganizationBoardControllerTest extends ControllerTestUtils {
         assertThat(response.getData().get(2).getTitle()).isEqualTo(organizationBoard5.getTitle());
         assertThat(response.getData().get(3).getTitle()).isEqualTo(organizationBoard4.getTitle());
         assertThat(response.getData().get(4).getTitle()).isEqualTo(organizationBoard3.getTitle());
+    }
+
+    @Test
+    void 특정_동아리에_속한_게시물만을_조회한다() throws Exception {
+        // given
+        String subDomain = "potato";
+        organizationRepository.save(OrganizationCreator.create(subDomain));
+        OrganizationBoard organizationBoard1 = OrganizationBoardCreator.create(subDomain, 1L, "title1", OrganizationBoardCategory.RECRUIT);
+        OrganizationBoard organizationBoard2 = OrganizationBoardCreator.create(subDomain, 1L, "title2", OrganizationBoardCategory.RECRUIT);
+        organizationBoardRepository.saveAll(Arrays.asList(organizationBoard1, organizationBoard2));
+
+        RetrieveLatestBoardsRequest request = RetrieveLatestBoardsRequest.testBuilder()
+            .size(5)
+            .lastOrganizationBoardId(0)
+            .build();
+
+        // when
+        ApiResponse<List<BoardWithOrganizationDto>> response = organizationBoardMockMvc.getBoardsInOrganization(subDomain, request, 200);
+
+        // then
+        assertThat(response.getData()).hasSize(2);
+        assertThat(response.getData().get(0).getBoardId()).isEqualTo(organizationBoard2.getId());
+        assertThat(response.getData().get(1).getBoardId()).isEqualTo(organizationBoard1.getId());
     }
 
 }

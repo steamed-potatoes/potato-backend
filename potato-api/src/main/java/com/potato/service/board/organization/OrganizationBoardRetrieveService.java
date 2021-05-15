@@ -50,7 +50,7 @@ public class OrganizationBoardRetrieveService {
 
     @Transactional(readOnly = true)
     public List<BoardWithOrganizationDto> retrieveBoardsWithPagination(OrganizationBoardCategory type, long lastOrganizationBoardId, int size) {
-        return organizationBoardRepository.findAllWithOrganizationByTypeLessThanOrderByIdDescLimit(type, lastOrganizationBoardId, size);
+        return organizationBoardRepository.findAllWithOrganizationByTypeLessThanOrderByIdDescLimit(null, type, lastOrganizationBoardId, size);
     }
 
     @Transactional(readOnly = true)
@@ -65,6 +65,11 @@ public class OrganizationBoardRetrieveService {
         return organizationBoardRepository.findAllOrderByLikesWithLimit(size).stream()
             .map(OrganizationBoardInfoResponse::of)
             .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<BoardWithOrganizationDto> getBoardsInOrganization(String subDomain, OrganizationBoardCategory type, long lastOrganizationBoardId, int size) {
+        return organizationBoardRepository.findAllWithOrganizationByTypeLessThanOrderByIdDescLimit(subDomain, type, lastOrganizationBoardId, size);
     }
 
 }
