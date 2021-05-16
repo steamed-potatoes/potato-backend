@@ -15,11 +15,12 @@ allprojects {
 }
 
 subprojects {
-    apply plugin: 'java-library'
-    apply plugin: 'eclipse'
-    apply plugin: 'org.springframework.boot'
-    apply plugin: 'io.spring.dependency-management'
-    apply plugin: 'jacoco'
+    apply {
+        plugin('java-library')
+        plugin('eclipse')
+        plugin('org.springframework.boot')
+        plugin('io.spring.dependency-management')
+    }
 
     sourceCompatibility = '11'
 
@@ -30,15 +31,11 @@ subprojects {
     dependencies {
         compileOnly 'org.projectlombok:lombok'
         annotationProcessor 'org.projectlombok:lombok'
-        implementation 'org.springframework.boot:spring-boot-starter-security'
-        testImplementation 'org.springframework.security:spring-security-test'
-        testImplementation('org.springframework.boot:spring-boot-starter-test') {
-            exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-        }
-        implementation 'org.springframework.boot:spring-boot-starter-validation'
         implementation 'org.springframework.boot:spring-boot-starter-data-redis'
         implementation 'org.springframework.session:spring-session-data-redis'
         implementation 'it.ozimov:embedded-redis:0.7.2'
+
+        testImplementation('org.springframework.boot:spring-boot-starter-test')
     }
 
     configurations {
@@ -47,25 +44,35 @@ subprojects {
         }
     }
 
+    test {
+        useJUnitPlatform()
+    }
+}
+
+def testProjects = [
+    project(':potato-api'),
+    project(':potato-domain')
+]
+
+configure(testProjects) {
+    apply {
+        plugin('jacoco')
+    }
+
     jacoco {
         toolVersion = '0.8.5'
-        reportsDir = file("$buildDir/jacoco-report")
     }
 
     jacocoTestReport {
+        executionData(fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec"))
         reports {
             html.enabled true
             xml.enabled true
             csv.enabled false
         }
-    }
-
-    test {
-        jacoco {
-            destinationFile = file("$buildDir/jacoco/jacoco.exec")
+        testProjects.forEach {
+            sourceSets(it.sourceSets["main"] as SourceSet)
         }
-        useJUnitPlatform()
-        finalizedBy 'jacocoTestReport'
     }
 
 }

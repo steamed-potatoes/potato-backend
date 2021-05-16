@@ -1,5 +1,10 @@
-bootJar { enabled = false }
-jar { enabled = true }
+tasks.jar {
+    enabled = true
+}
+
+tasks.bootJar {
+    enabled = false
+}
 
 dependencies {
     api group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '2.3.8.RELEASE'
