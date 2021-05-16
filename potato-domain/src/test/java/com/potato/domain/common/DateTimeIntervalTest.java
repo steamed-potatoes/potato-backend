@@ -48,4 +48,34 @@ class DateTimeIntervalTest {
         assertThat(dateTimeInterval.getEndDateTime()).isEqualTo(endDateTime);
     }
 
+    @Test
+    void DateTime_Interval_동등성비교_같은경우_true() {
+        // given
+        LocalDateTime startDateTime = LocalDateTime.of(2021, 3, 5, 0, 0);
+        LocalDateTime endDateTime = LocalDateTime.of(2021, 3, 6, 0, 0, 0);
+
+        DateTimeInterval dateTimeInterval = DateTimeInterval.of(startDateTime, endDateTime);
+
+        // when
+        boolean result = DateTimeInterval.of(startDateTime, endDateTime).equals(dateTimeInterval);
+
+        // then
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    void DateTime_Interval_동등성비교_다른경우_false() {
+        // given
+        LocalDateTime startDateTime = LocalDateTime.of(2021, 3, 5, 0, 0);
+        LocalDateTime endDateTime = LocalDateTime.of(2021, 3, 6, 0, 0, 0);
+
+        DateTimeInterval dateTimeInterval = DateTimeInterval.of(startDateTime, endDateTime);
+
+        // when
+        boolean result = DateTimeInterval.of(startDateTime, LocalDateTime.of(2021, 3, 6, 0, 0, 1)).equals(dateTimeInterval);
+
+        // then
+        assertThat(result).isFalse();
+    }
+
 }

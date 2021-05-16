@@ -75,4 +75,28 @@ class ClassNumberTest {
         assertThat(classNumber1.getClassNumber()).isEqualTo(classNumber);
     }
 
+    @Test
+    void 학번_동등성비교_같은_학번일경우() {
+        // given
+        ClassNumber classNumber = ClassNumber.of(201610302);
+
+        // when
+        boolean result = ClassNumber.of(201610302).equals(classNumber);
+
+        // then
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    void 학번_동등성비교_다른_학번일경우() {
+        // given
+        ClassNumber classNumber = ClassNumber.of(201610302);
+
+        // when
+        boolean result = ClassNumber.of(201710302).equals(classNumber);
+
+        // then
+        assertThat(result).isFalse();
+    }
+
 }
