@@ -40,7 +40,7 @@ public class OrganizationBoardRepositoryCustomImpl implements OrganizationBoardR
     }
 
     @Override
-    public List<BoardWithOrganizationDto> findAllWithOrganizationByTypeLessThanOrderByIdDescLimit(OrganizationBoardCategory category, long lastOrganizationBoardId, int size) {
+    public List<BoardWithOrganizationDto> findAllWithOrganizationByTypeLessThanOrderByIdDescLimit(String subDomain, OrganizationBoardCategory category, long lastOrganizationBoardId, int size) {
         return queryFactory.select(Projections.fields(BoardWithOrganizationDto.class,
             organizationBoard.subDomain.as("orgSubDomain"),
             organization.name.as("orgName"),
@@ -62,12 +62,20 @@ public class OrganizationBoardRepositoryCustomImpl implements OrganizationBoardR
             .from(organizationBoard)
             .innerJoin(organization).on(organizationBoard.subDomain.eq(organization.subDomain))
             .where(
+                eqSubDomain(subDomain),
                 eqCategory(category),
                 lessThanId(lastOrganizationBoardId)
             )
             .orderBy(organizationBoard.id.desc())
             .limit(size)
             .fetch();
+    }
+
+    private BooleanExpression eqSubDomain(String subDomain) {
+        if (subDomain == null) {
+            return null;
+        }
+        return organizationBoard.subDomain.eq(subDomain);
     }
 
     private BooleanExpression eqCategory(OrganizationBoardCategory category) {

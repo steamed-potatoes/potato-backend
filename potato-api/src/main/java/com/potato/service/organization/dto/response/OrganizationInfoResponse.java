@@ -2,15 +2,13 @@ package com.potato.service.organization.dto.response;
 
 import com.potato.domain.organization.Organization;
 import com.potato.domain.organization.OrganizationCategory;
+import com.potato.service.common.dto.response.BaseTimeResponse;
 import lombok.*;
 
 @ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class OrganizationInfoResponse {
-
-    private Long id;
+public class OrganizationInfoResponse extends BaseTimeResponse {
 
     private String subDomain;
 
@@ -24,9 +22,28 @@ public class OrganizationInfoResponse {
 
     private OrganizationCategory category;
 
+    @Builder
+    private OrganizationInfoResponse(String subDomain, String name, String description, String profileUrl,
+                                     int membersCount, OrganizationCategory category) {
+        this.subDomain = subDomain;
+        this.name = name;
+        this.description = description;
+        this.profileUrl = profileUrl;
+        this.membersCount = membersCount;
+        this.category = category;
+    }
+
     public static OrganizationInfoResponse of(Organization organization) {
-        return new OrganizationInfoResponse(organization.getId(), organization.getSubDomain(), organization.getName(),
-            organization.getDescription(), organization.getProfileUrl(), organization.getMembersCount(), organization.getCategory());
+        OrganizationInfoResponse response = OrganizationInfoResponse.builder()
+            .subDomain(organization.getSubDomain())
+            .name(organization.getName())
+            .description(organization.getDescription())
+            .profileUrl(organization.getProfileUrl())
+            .membersCount(organization.getMembersCount())
+            .category(organization.getCategory())
+            .build();
+        response.setBaseTime(organization);
+        return response;
     }
 
 }

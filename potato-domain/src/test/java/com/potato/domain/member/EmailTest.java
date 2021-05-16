@@ -47,4 +47,29 @@ class EmailTest {
         assertThatThrownBy(() -> Email.of(email)).isInstanceOf(ValidationException.class);
     }
 
+    @Test
+    void 이메일_동등성비교_이메일이_같은경우_true() {
+        // given
+        String value = "will.seungho@gmail.com";
+        Email email = Email.of(value);
+
+        // when
+        boolean result = Email.of(value).equals(email);
+
+        // then
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    void 이메일_동등성비교_이메일이_다른경우_false() {
+        // given
+        Email email = Email.of("will.seungho@gmail.com");
+
+        // when
+        boolean result = Email.of("ksh980212@gmail.com").equals(email);
+
+        // then
+        assertThat(result).isFalse();
+    }
+
 }

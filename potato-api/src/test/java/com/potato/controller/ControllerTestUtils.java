@@ -23,9 +23,13 @@ public abstract class ControllerTestUtils {
 
     protected Member testMember;
 
-    protected void setup() {
-        testMember = memberRepository.save(MemberCreator.create("test.potato@gmail.com"));
+    protected String token;
+
+    protected void setup() throws Exception {
         memberMockMvc = new MemberMockMvc(mockMvc, objectMapper);
+        String email = "potato@gmail.com";
+        token = memberMockMvc.getMockMemberToken(email);
+        testMember = memberRepository.findMemberByEmail(email);
     }
 
     protected void cleanup() {

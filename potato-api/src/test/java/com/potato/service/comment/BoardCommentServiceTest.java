@@ -13,6 +13,7 @@ import com.potato.exception.model.ConflictException;
 import com.potato.exception.model.NotFoundException;
 import com.potato.service.OrganizationMemberSetUpTest;
 import com.potato.service.comment.dto.request.AddBoardCommentRequest;
+import com.potato.service.comment.dto.request.UpdateBoardCommentRequest;
 import com.potato.service.comment.dto.response.BoardCommentResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -256,6 +257,27 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
     void 존재하지_않는_게시물의_댓글을_불러올_수_없다() {
         // when & then
         assertThatThrownBy(() -> boardCommentService.retrieveBoardCommentList(BoardType.ADMIN_BOARD, 999L)).isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
+    void 작성한_댓글을_수정하면_db에_수정이_된다() {
+        // given
+        organizationBoardRepository.save(organizationBoard);
+        BoardComment comment = BoardCommentCreator.createRootComment(BoardType.ORGANIZATION_BOARD, organizationBoard.getId(), memberId, "변경되기 전 댓글입니다.");
+        boardCommentRepository.save(comment);
+        String content = "변경한 댓글입니다.";
+        UpdateBoardCommentRequest request = UpdateBoardCommentRequest.testInstance(comment.getId(), content);
+
+        // when
+        boardCommentService.updateBoardComment(request, memberId);
+
+        // then
+        List<BoardComment> findBoardComments = boardCommentRepository.findAll();
+        assertThat(findBoardComments).hasSize(1);
+        assertThat(findBoardComments.get(0).getContent()).isEqualTo(content);
+        assertThat(findBoardComments.get(0).getBoardId()).isEqualTo(comment.getBoardId());
+        assertThat(findBoardComments.get(0).getMemberId()).isEqualTo(memberId);
+        assertThat(findBoardComments.get(0).isDeleted()).isFalse();
     }
 
     @Test

@@ -7,7 +7,6 @@ import javax.validation.constraints.Min;
 
 @ToString
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class RetrieveLatestBoardsRequest {
 
@@ -18,5 +17,12 @@ public class RetrieveLatestBoardsRequest {
     private int size;
 
     private OrganizationBoardCategory type;
+
+    @Builder(builderClassName = "TestBuilder", builderMethodName = "testBuilder")
+    public RetrieveLatestBoardsRequest(long lastOrganizationBoardId, int size, OrganizationBoardCategory type) {
+        this.lastOrganizationBoardId = lastOrganizationBoardId;
+        this.size = size;
+        this.type = type;
+    }
 
 }

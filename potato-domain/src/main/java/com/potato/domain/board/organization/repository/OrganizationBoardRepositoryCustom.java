@@ -15,7 +15,7 @@ public interface OrganizationBoardRepositoryCustom {
 
     OrganizationBoard findOrganizationBoardByIdAndSubDomain(Long organizationBoardId, String subDomain);
 
-    List<BoardWithOrganizationDto> findAllWithOrganizationByTypeLessThanOrderByIdDescLimit(OrganizationBoardCategory type, long lastOrganizationBoardId, int size);
+    List<BoardWithOrganizationDto> findAllWithOrganizationByTypeLessThanOrderByIdDescLimit(String subDomain, OrganizationBoardCategory type, long lastOrganizationBoardId, int size);
 
     List<OrganizationBoard> findAllBetweenDate(LocalDate startDate, LocalDate endDate);
 

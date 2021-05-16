@@ -1,13 +1,17 @@
 package com.potato.service.board.organization;
 
+import com.potato.domain.board.BoardType;
 import com.potato.domain.board.organization.DeleteOrganizationBoardRepository;
 import com.potato.domain.board.organization.OrganizationBoard;
 import com.potato.domain.board.organization.OrganizationBoardRepository;
+import com.potato.event.board.BoardCreatedEvent;
+import com.potato.event.board.BoardUpdatedEvent;
 import com.potato.service.board.organization.dto.request.CreateOrganizationBoardRequest;
 import com.potato.service.board.organization.dto.request.LikeOrganizationBoardRequest;
 import com.potato.service.board.organization.dto.request.UpdateOrganizationBoardRequest;
 import com.potato.service.board.organization.dto.response.OrganizationBoardInfoResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,18 +19,22 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class OrganizationBoardService {
 
+    private final ApplicationEventPublisher eventPublisher;
     private final OrganizationBoardRepository organizationBoardRepository;
     private final DeleteOrganizationBoardRepository deleteOrganizationBoardRepository;
 
     @Transactional
     public OrganizationBoardInfoResponse createBoard(String subDomain, CreateOrganizationBoardRequest request, Long memberId) {
-        return OrganizationBoardInfoResponse.of(organizationBoardRepository.save(request.toEntity(subDomain, memberId)));
+        OrganizationBoard organizationBoard = organizationBoardRepository.save(request.toEntity(subDomain, memberId));
+        eventPublisher.publishEvent(BoardCreatedEvent.of(BoardType.ORGANIZATION_BOARD, organizationBoard.getId(), memberId, request.getHashTags()));
+        return OrganizationBoardInfoResponse.of(organizationBoard);
     }
 
     @Transactional
     public OrganizationBoardInfoResponse updateBoard(String subDomain, UpdateOrganizationBoardRequest request, Long memberId) {
         OrganizationBoard organizationBoard = OrganizationBoardServiceUtils.findOrganizationBoardByIdAndSubDomain(organizationBoardRepository, subDomain, request.getOrganizationBoardId());
         organizationBoard.updateInfo(request.getTitle(), request.getContent(), request.getImageUrl(), request.getStartDateTime(), request.getEndDateTime(), request.getType(), memberId);
+        eventPublisher.publishEvent(BoardUpdatedEvent.of(BoardType.ORGANIZATION_BOARD, organizationBoard.getId(), memberId, request.getHashTags()));
         return OrganizationBoardInfoResponse.of(organizationBoard);
     }
 

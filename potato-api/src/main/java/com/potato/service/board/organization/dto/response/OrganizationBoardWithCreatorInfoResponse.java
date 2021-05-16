@@ -3,15 +3,17 @@ package com.potato.service.board.organization.dto.response;
 import com.potato.domain.board.organization.OrganizationBoard;
 import com.potato.domain.member.Member;
 import com.potato.domain.organization.Organization;
+import com.potato.service.common.dto.response.BaseTimeResponse;
 import com.potato.service.member.dto.response.MemberInfoResponse;
 import com.potato.service.organization.dto.response.OrganizationInfoResponse;
 import lombok.*;
 
+import java.util.List;
+
 @ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class OrganizationBoardWithCreatorInfoResponse {
+public class OrganizationBoardWithCreatorInfoResponse extends BaseTimeResponse {
 
     private OrganizationBoardInfoResponse board;
 
@@ -19,9 +21,25 @@ public class OrganizationBoardWithCreatorInfoResponse {
 
     private MemberInfoResponse creator;
 
-    public static OrganizationBoardWithCreatorInfoResponse of(OrganizationBoard organizationBoard, Organization organization, Member creator) {
-        return new OrganizationBoardWithCreatorInfoResponse(OrganizationBoardInfoResponse.of(organizationBoard),
-            OrganizationInfoResponse.of(organization), MemberInfoResponse.of(creator));
+    private List<String> hashTags;
+
+    @Builder
+    private OrganizationBoardWithCreatorInfoResponse(OrganizationBoardInfoResponse board, OrganizationInfoResponse organization, MemberInfoResponse creator, List<String> hashTags) {
+        this.board = board;
+        this.organization = organization;
+        this.creator = creator;
+        this.hashTags = hashTags;
+    }
+
+    public static OrganizationBoardWithCreatorInfoResponse of(OrganizationBoard organizationBoard, Organization organization, Member creator, List<String> hashTags) {
+        OrganizationBoardWithCreatorInfoResponse response = OrganizationBoardWithCreatorInfoResponse.builder()
+            .board(OrganizationBoardInfoResponse.of(organizationBoard))
+            .organization(OrganizationInfoResponse.of(organization))
+            .creator(MemberInfoResponse.of(creator))
+            .hashTags(hashTags)
+            .build();
+        response.setBaseTime(organizationBoard);
+        return response;
     }
 
 }

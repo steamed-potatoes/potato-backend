@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.potato.controller.ApiResponse;
 import com.potato.service.member.dto.response.MemberInfoResponse;
 import com.potato.service.organization.dto.request.CreateOrganizationRequest;
+import com.potato.service.organization.dto.request.RetrievePopularOrganizationsRequest;
 import com.potato.service.organization.dto.request.UpdateOrganizationInfoRequest;
 import com.potato.service.organization.dto.response.OrganizationInfoResponse;
 import com.potato.service.organization.dto.response.OrganizationWithMembersInfoResponse;
@@ -58,8 +59,10 @@ class OrganizationMockMvc {
         );
     }
 
-    public ApiResponse<List<OrganizationInfoResponse>> getOrganizations(int size, int expectedStatus) throws Exception {
-        MockHttpServletRequestBuilder builder = get("/api/v1/organization/list?size=" + size);
+    public ApiResponse<List<OrganizationInfoResponse>> getPopularOrganizations(RetrievePopularOrganizationsRequest request, int expectedStatus) throws Exception {
+        MockHttpServletRequestBuilder builder = get("/api/v1/organization/list/popular")
+            .param("size", String.valueOf(request.getSize()));
+
         return objectMapper.readValue(
             mockMvc.perform(builder)
                 .andExpect(status().is(expectedStatus))
@@ -84,6 +87,19 @@ class OrganizationMockMvc {
             }
         );
     }
+
+    public ApiResponse<List<OrganizationInfoResponse>> getOrganizations(int size, int expectedStatus) throws Exception {
+        MockHttpServletRequestBuilder builder = get("/api/v1/organization/list?size=" + size);
+        return objectMapper.readValue(
+            mockMvc.perform(builder)
+                .andExpect(status().is(expectedStatus))
+                .andReturn()
+                .getResponse()
+                .getContentAsString(StandardCharsets.UTF_8), new TypeReference<>() {
+            }
+        );
+    }
+
 
     public ApiResponse<String> applyJoiningOrganization(String subDomain, String token, int expectedStatus) throws Exception {
         MockHttpServletRequestBuilder builder = post("/api/v1/organization/join/apply/" + subDomain)

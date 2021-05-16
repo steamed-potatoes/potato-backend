@@ -1,6 +1,6 @@
 # Potato Backend 
 
-![Generic badge](https://img.shields.io/badge/version-0.3.2-orange.svg)
+![Generic badge](https://img.shields.io/badge/version-0.3.3-orange.svg)
 [![codecov](https://codecov.io/gh/steamed-potatoes/potato-backend/branch/develop/graph/badge.svg?token=ACoWRzqGBl)](https://codecov.io/gh/steamed-potatoes/potato-backend)
 
 ## Test Server

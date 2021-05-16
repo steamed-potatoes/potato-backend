@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.potato.controller.ApiResponse;
 import com.potato.domain.board.organization.repository.dto.BoardWithOrganizationDto;
 import com.potato.service.board.organization.dto.request.CreateOrganizationBoardRequest;
+import com.potato.service.board.organization.dto.request.RetrieveLatestBoardsRequest;
 import com.potato.service.board.organization.dto.request.UpdateOrganizationBoardRequest;
 import com.potato.service.board.organization.dto.response.OrganizationBoardInfoResponse;
 import com.potato.service.board.organization.dto.response.OrganizationBoardWithCreatorInfoResponse;
@@ -101,6 +102,21 @@ class OrganizationBoardMockMvc {
         MockHttpServletRequestBuilder builder = get("/api/v2/organization/board/popular/list")
             .param("size", String.valueOf(5))
             .contentType(MediaType.APPLICATION_JSON);
+
+        return objectMapper.readValue(
+            mockMvc.perform(builder)
+                .andExpect(status().is(expectedStatus))
+                .andReturn()
+                .getResponse()
+                .getContentAsString(StandardCharsets.UTF_8), new TypeReference<>() {
+            }
+        );
+    }
+
+    public ApiResponse<List<BoardWithOrganizationDto>> getBoardsInOrganization(String subDomain, RetrieveLatestBoardsRequest request, int expectedStatus) throws Exception {
+        MockHttpServletRequestBuilder builder = get("/api/v2/organization/board/list/in/".concat(subDomain))
+            .param("lastOrganizationBoardId", String.valueOf(request.getLastOrganizationBoardId()))
+            .param("size", String.valueOf(request.getSize()));
 
         return objectMapper.readValue(
             mockMvc.perform(builder)

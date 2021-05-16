@@ -6,6 +6,7 @@ import com.potato.domain.comment.BoardComment;
 import com.potato.domain.comment.BoardCommentRepository;
 import com.potato.domain.board.BoardType;
 import com.potato.service.comment.dto.request.AddBoardCommentRequest;
+import com.potato.service.comment.dto.request.UpdateBoardCommentRequest;
 import com.potato.service.comment.dto.response.BoardCommentResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -40,6 +41,12 @@ public class BoardCommentService {
         return rootComments.stream()
             .map(BoardCommentResponse::of)
             .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void updateBoardComment(UpdateBoardCommentRequest request, Long memberId) {
+        BoardComment comment = BoardCommentServiceUtils.findBoardCommentByIdAndMemberId(boardCommentRepository, request.getBoardCommentId(), memberId);
+        comment.update(request.getContent());
     }
 
     @Transactional

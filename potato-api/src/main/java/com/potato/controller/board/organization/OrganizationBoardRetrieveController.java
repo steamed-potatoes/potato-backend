@@ -19,13 +19,13 @@ public class OrganizationBoardRetrieveController {
 
     private final OrganizationBoardRetrieveService organizationBoardRetrieveService;
 
-    @Operation(summary = "특정 그룹의 게시물을 조회하는 API")
+    @Operation(summary = "특정 그룹 게시물을 조회하는 API")
     @GetMapping("/api/v2/organization/board")
     public ApiResponse<OrganizationBoardWithCreatorInfoResponse> retrieveBoardWithOrganizationAndCreator(@RequestParam Long organizationBoardId) {
         return ApiResponse.success(organizationBoardRetrieveService.retrieveBoardWithOrganizationAndCreator(organizationBoardId));
     }
 
-    @Operation(summary = "그룹의 게시물을 스크롤 페이지네이션 기반으로 조회하는 API")
+    @Operation(summary = "전체 그룹 게시물을 스크롤 페이지네이션 기반으로 조회하는 API")
     @GetMapping("/api/v2/organization/board/list")
     public ApiResponse<List<BoardWithOrganizationDto>> retrieveLatestOrganizationBoardList(@Valid RetrieveLatestBoardsRequest request) {
         return ApiResponse.success(organizationBoardRetrieveService.retrieveBoardsWithPagination(request.getType(), request.getLastOrganizationBoardId(), request.getSize()));
@@ -41,6 +41,12 @@ public class OrganizationBoardRetrieveController {
     @GetMapping("/api/v2/organization/board/popular/list")
     public ApiResponse<List<OrganizationBoardInfoResponse>> retrievePopularBoard(@Valid RetrievePopularOrganizationBoardRequest request) {
         return ApiResponse.success(organizationBoardRetrieveService.retrievePopularBoard(request.getSize()));
+    }
+
+    @Operation(summary = "특정 그룹의 게시물을 스크롤 페이지네이션 기반으로 조회하는 API")
+    @GetMapping("/api/v2/organization/board/list/in/{subDomain}")
+    public ApiResponse<List<BoardWithOrganizationDto>> getBoardsInOrganization(@PathVariable String subDomain, @Valid RetrieveLatestBoardsRequest request) {
+        return ApiResponse.success(organizationBoardRetrieveService.getBoardsInOrganization(subDomain, request.getType(), request.getLastOrganizationBoardId(), request.getSize()));
     }
 
 }

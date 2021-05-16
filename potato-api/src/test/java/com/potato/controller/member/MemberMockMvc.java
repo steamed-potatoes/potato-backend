@@ -6,6 +6,7 @@ import com.potato.controller.ApiResponse;
 import com.potato.domain.member.MemberMajor;
 import com.potato.service.member.dto.request.SignUpMemberRequest;
 import com.potato.service.member.dto.request.UpdateMemberRequest;
+import com.potato.service.member.dto.response.MajorInfoResponse;
 import com.potato.service.member.dto.response.MemberInfoResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -13,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -86,13 +88,26 @@ public class MemberMockMvc {
         );
     }
 
+    public ApiResponse<List<MajorInfoResponse>> getMajors(int expectedStatus) throws Exception {
+        MockHttpServletRequestBuilder builder = get("/api/v1/major/list");
+
+        return objectMapper.readValue(
+            mockMvc.perform(builder)
+                .andExpect(status().is(expectedStatus))
+                .andReturn()
+                .getResponse()
+                .getContentAsString(StandardCharsets.UTF_8), new TypeReference<>() {
+            }
+        );
+    }
+
     public String getMockMemberToken() throws Exception {
         SignUpMemberRequest request = SignUpMemberRequest.testBuilder()
             .email("will.seungho@gmail.com")
             .name("강승호")
             .major(MemberMajor.IT_ICT)
             .classNumber(201610302)
-            .profileUrl("http://profile.com")
+            .profileUrl("https://profile.com")
             .build();
         return signUpMember(request, 200).getData();
     }
@@ -103,7 +118,7 @@ public class MemberMockMvc {
             .name("강승호")
             .major(MemberMajor.IT_ICT)
             .classNumber(201610302)
-            .profileUrl("http://profile.com")
+            .profileUrl("https://profile.com")
             .build();
         return signUpMember(request, 200).getData();
     }

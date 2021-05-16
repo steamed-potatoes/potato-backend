@@ -10,7 +10,7 @@ import lombok.*;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class MemberInOrganizationResponse {
 
-    private Long id;
+    private Long memberId;
 
     private String email;
 

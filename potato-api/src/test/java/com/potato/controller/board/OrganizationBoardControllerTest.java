@@ -2,16 +2,20 @@ package com.potato.controller.board;
 
 import com.potato.controller.ApiResponse;
 import com.potato.controller.ControllerTestUtils;
+import com.potato.domain.board.BoardType;
 import com.potato.domain.board.organization.OrganizationBoard;
 import com.potato.domain.board.organization.OrganizationBoardCategory;
 import com.potato.domain.board.organization.OrganizationBoardCreator;
 import com.potato.domain.board.organization.OrganizationBoardRepository;
 import com.potato.domain.board.organization.repository.dto.BoardWithOrganizationDto;
+import com.potato.domain.hashtag.BoardHashTag;
+import com.potato.domain.hashtag.BoardHashTagRepository;
 import com.potato.domain.member.Member;
 import com.potato.domain.organization.Organization;
 import com.potato.domain.organization.OrganizationCreator;
 import com.potato.domain.organization.OrganizationRepository;
 import com.potato.service.board.organization.dto.request.CreateOrganizationBoardRequest;
+import com.potato.service.board.organization.dto.request.RetrieveLatestBoardsRequest;
 import com.potato.service.board.organization.dto.request.UpdateOrganizationBoardRequest;
 import com.potato.service.board.organization.dto.response.OrganizationBoardInfoResponse;
 import com.potato.service.board.organization.dto.response.OrganizationBoardWithCreatorInfoResponse;
@@ -24,6 +28,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -40,8 +45,11 @@ class OrganizationBoardControllerTest extends ControllerTestUtils {
     @Autowired
     private OrganizationRepository organizationRepository;
 
+    @Autowired
+    private BoardHashTagRepository boardHashTagRepository;
+
     @BeforeEach
-    void setUp() {
+    void setUp() throws Exception {
         super.setup();
         organizationBoardMockMvc = new OrganizationBoardMockMvc(mockMvc, objectMapper);
     }
@@ -51,6 +59,7 @@ class OrganizationBoardControllerTest extends ControllerTestUtils {
         super.cleanup();
         organizationBoardRepository.deleteAll();
         organizationRepository.deleteAll();
+        boardHashTagRepository.deleteAll();
     }
 
     @Test
@@ -75,6 +84,7 @@ class OrganizationBoardControllerTest extends ControllerTestUtils {
             .startDateTime(startTime)
             .endDateTime(endTime)
             .type(OrganizationBoardCategory.RECRUIT)
+            .hashTags(Arrays.asList("감자", "고구마"))
             .build();
 
         //when
@@ -100,6 +110,8 @@ class OrganizationBoardControllerTest extends ControllerTestUtils {
         OrganizationBoard board = OrganizationBoardCreator.create(subDomain, testMember.getId(), title, OrganizationBoardCategory.RECRUIT);
         organizationBoardRepository.save(board);
 
+        boardHashTagRepository.saveAll(Collections.singletonList(BoardHashTag.newInstance(BoardType.ORGANIZATION_BOARD, board.getId(), testMember.getId(), "감자")));
+
         //when
         ApiResponse<OrganizationBoardWithCreatorInfoResponse> response = organizationBoardMockMvc.retrieveOrganizationBoard(board.getId(), 200);
 
@@ -107,6 +119,7 @@ class OrganizationBoardControllerTest extends ControllerTestUtils {
         assertThat(response.getData().getBoard().getTitle()).isEqualTo(title);
         assertThat(response.getData().getCreator().getEmail()).isEqualTo(testMember.getEmail());
         assertThat(response.getData().getOrganization().getSubDomain()).isEqualTo(subDomain);
+        assertThat(response.getData().getHashTags()).isEqualTo(Collections.singletonList("감자"));
     }
 
     @Test
@@ -192,6 +205,7 @@ class OrganizationBoardControllerTest extends ControllerTestUtils {
             .startDateTime(LocalDateTime.of(2021, 3, 30, 0, 0))
             .endDateTime(LocalDateTime.of(2021, 3, 31, 0, 0))
             .type(OrganizationBoardCategory.RECRUIT)
+            .hashTags(Collections.emptyList())
             .build();
 
         //when
@@ -225,6 +239,29 @@ class OrganizationBoardControllerTest extends ControllerTestUtils {
         assertThat(response.getData().get(2).getTitle()).isEqualTo(organizationBoard5.getTitle());
         assertThat(response.getData().get(3).getTitle()).isEqualTo(organizationBoard4.getTitle());
         assertThat(response.getData().get(4).getTitle()).isEqualTo(organizationBoard3.getTitle());
+    }
+
+    @Test
+    void 특정_동아리에_속한_게시물만을_조회한다() throws Exception {
+        // given
+        String subDomain = "potato";
+        organizationRepository.save(OrganizationCreator.create(subDomain));
+        OrganizationBoard organizationBoard1 = OrganizationBoardCreator.create(subDomain, 1L, "title1", OrganizationBoardCategory.RECRUIT);
+        OrganizationBoard organizationBoard2 = OrganizationBoardCreator.create(subDomain, 1L, "title2", OrganizationBoardCategory.RECRUIT);
+        organizationBoardRepository.saveAll(Arrays.asList(organizationBoard1, organizationBoard2));
+
+        RetrieveLatestBoardsRequest request = RetrieveLatestBoardsRequest.testBuilder()
+            .size(5)
+            .lastOrganizationBoardId(0)
+            .build();
+
+        // when
+        ApiResponse<List<BoardWithOrganizationDto>> response = organizationBoardMockMvc.getBoardsInOrganization(subDomain, request, 200);
+
+        // then
+        assertThat(response.getData()).hasSize(2);
+        assertThat(response.getData().get(0).getBoardId()).isEqualTo(organizationBoard2.getId());
+        assertThat(response.getData().get(1).getBoardId()).isEqualTo(organizationBoard1.getId());
     }
 
 }
