@@ -52,7 +52,6 @@ public class OrganizationBoardRepositoryCustomImpl implements OrganizationBoardR
             organizationBoard.id.as("boardId"),
             organizationBoard.boardInfo.title.as("boardTitle"),
             organizationBoard.boardInfo.content.as("boardContent"),
-            organizationBoard.boardInfo.imageUrl.as("boardImageUrl"),
             organizationBoard.category.as("boardCategory"),
             organizationBoard.dateTimeInterval.startDateTime.as("boardStartDateTime"),
             organizationBoard.dateTimeInterval.endDateTime.as("boardEndDateTime"),

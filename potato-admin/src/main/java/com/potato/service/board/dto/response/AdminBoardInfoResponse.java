@@ -17,14 +17,12 @@ public class AdminBoardInfoResponse {
 
     private String content;
 
-    private String imageUrl;
-
     private LocalDateTime startDateTime;
 
     private LocalDateTime endDateTime;
 
     public static AdminBoardInfoResponse of(AdminBoard adminBoard) {
-        return new AdminBoardInfoResponse(adminBoard.getId(), adminBoard.getTitle(), adminBoard.getContent(), adminBoard.getImageUrl(),
+        return new AdminBoardInfoResponse(adminBoard.getId(), adminBoard.getTitle(), adminBoard.getContent(),
             adminBoard.getStartDateTime(), adminBoard.getEndDateTime());
     }
 

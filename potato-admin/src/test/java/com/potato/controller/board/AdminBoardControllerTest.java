@@ -46,14 +46,12 @@ public class AdminBoardControllerTest extends ControllerTestUtils {
 
         String title = "title";
         String content = "content";
-        String imageUrl = "http://image.com";
         LocalDateTime startDateTime = LocalDateTime.of(2021, 4, 1, 0, 0);
         LocalDateTime endDateTime = LocalDateTime.of(2021, 4, 3, 0, 0);
 
         CreateAdminBoardRequest request = CreateAdminBoardRequest.testBuilder()
             .title(title)
             .content(content)
-            .imageUrl(imageUrl)
             .startDateTime(startDateTime)
             .endDateTime(endDateTime)
             .build();
@@ -62,7 +60,7 @@ public class AdminBoardControllerTest extends ControllerTestUtils {
         ApiResponse<AdminBoardInfoResponse> response = adminBoardMockMvc.createAdminBoard(request, token, 200);
 
         // then
-        assertAdminBoardResponse(response.getData(), title, content, imageUrl, startDateTime, endDateTime);
+        assertAdminBoardResponse(response.getData(), title, content, startDateTime, endDateTime);
     }
 
     @Test
@@ -96,14 +94,12 @@ public class AdminBoardControllerTest extends ControllerTestUtils {
 
         String title = "updateTitle";
         String content = "content";
-        String imageUrl = "http://image.com";
         LocalDateTime startDateTime = LocalDateTime.of(2021, 4, 1, 0, 0);
         LocalDateTime endDateTime = LocalDateTime.of(2021, 4, 3, 0, 0);
 
         UpdateAdminBoardRequest request = UpdateAdminBoardRequest.testBuilder()
             .title(title)
             .content(content)
-            .imageUrl(imageUrl)
             .adminBoardId(adminBoard.getId())
             .startDateTime(startDateTime)
             .endDateTime(endDateTime)
@@ -113,7 +109,7 @@ public class AdminBoardControllerTest extends ControllerTestUtils {
         ApiResponse<AdminBoardInfoResponse> response = adminBoardMockMvc.updateAdminBoard(request, token, 200);
 
         // then
-        assertAdminBoardResponse(response.getData(), title, content, imageUrl, startDateTime, endDateTime);
+        assertAdminBoardResponse(response.getData(), title, content, startDateTime, endDateTime);
     }
 
     @Test
@@ -133,10 +129,9 @@ public class AdminBoardControllerTest extends ControllerTestUtils {
         assertThat(response.getCode()).isEqualTo(ErrorCode.UNAUTHORIZED_EXCEPTION.getCode());
     }
 
-    private void assertAdminBoardResponse(AdminBoardInfoResponse response, String title, String content, String imageUrl, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+    private void assertAdminBoardResponse(AdminBoardInfoResponse response, String title, String content, LocalDateTime startDateTime, LocalDateTime endDateTime) {
         assertThat(response.getTitle()).isEqualTo(title);
         assertThat(response.getContent()).isEqualTo(content);
-        assertThat(response.getImageUrl()).isEqualTo(imageUrl);
         assertThat(response.getStartDateTime()).isEqualTo(startDateTime);
         assertThat(response.getEndDateTime()).isEqualTo(endDateTime);
     }

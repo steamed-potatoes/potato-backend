@@ -94,7 +94,6 @@ class ScheduleControllerTest extends ControllerTestUtils {
             .content(content)
             .startDateTime(startDateTime)
             .endDateTime(endDateTime)
-            .imageUrl(imageUrl)
             .category(category)
             .memberId(testMember.getId())
             .build();
@@ -142,7 +141,6 @@ class ScheduleControllerTest extends ControllerTestUtils {
         assertThat(response.getContent()).isEqualTo(organizationBoard.getContent());
         assertThat(response.getStartDateTime()).isEqualTo(organizationBoard.getStartDateTime());
         assertThat(response.getEndDateTime()).isEqualTo(organizationBoard.getEndDateTime());
-        assertThat(response.getImageUrl()).isEqualTo(organizationBoard.getImageUrl());
         assertThat(response.getLikesCount()).isEqualTo(organizationBoard.getLikesCount());
         assertThat(response.getType()).isEqualTo(organizationBoard.getCategory());
     }

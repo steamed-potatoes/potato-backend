@@ -24,21 +24,18 @@ public class OrganizationBoardInfoResponse extends BaseTimeResponse {
 
     private LocalDateTime endDateTime;
 
-    private String imageUrl;
-
     private int likesCount;
 
     private OrganizationBoardCategory type;
 
     @Builder
-    private OrganizationBoardInfoResponse(Long id, String subDomain, String title, LocalDateTime startDateTime, LocalDateTime endDateTime, String content, String imageUrl, int likesCount, OrganizationBoardCategory type) {
+    private OrganizationBoardInfoResponse(Long id, String subDomain, String title, LocalDateTime startDateTime, LocalDateTime endDateTime, String content, int likesCount, OrganizationBoardCategory type) {
         this.id = id;
         this.subDomain = subDomain;
         this.title = title;
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
         this.content = content;
-        this.imageUrl = imageUrl;
         this.likesCount = likesCount;
         this.type = type;
     }
@@ -51,7 +48,6 @@ public class OrganizationBoardInfoResponse extends BaseTimeResponse {
             .content(organizationBoard.getContent())
             .startDateTime(organizationBoard.getStartDateTime())
             .endDateTime(organizationBoard.getEndDateTime())
-            .imageUrl(organizationBoard.getImageUrl())
             .likesCount(organizationBoard.getLikesCount())
             .type(organizationBoard.getCategory())
             .build();

@@ -144,7 +144,6 @@ public class AdminBoardServiceTest extends AdminSetupTest {
         assertThat(adminBoard.getAdministratorId()).isEqualTo(adminMemberId);
         assertThat(adminBoard.getTitle()).isEqualTo(title);
         assertThat(adminBoard.getContent()).isEqualTo(content);
-        assertThat(adminBoard.getImageUrl()).isEqualTo(imageUrl);
         assertThat(adminBoard.getStartDateTime()).isEqualTo(startDateTime);
         assertThat(adminBoard.getEndDateTime()).isEqualTo(endDateTime);
     }
@@ -160,7 +159,6 @@ public class AdminBoardServiceTest extends AdminSetupTest {
         assertThat(deleteOrganizationBoard.getCategory()).isEqualTo(organizationBoard.getCategory());
         assertThat(deleteOrganizationBoard.getTitle()).isEqualTo(organizationBoard.getTitle());
         assertThat(deleteOrganizationBoard.getContent()).isEqualTo(organizationBoard.getContent());
-        assertThat(deleteOrganizationBoard.getImageUrl()).isEqualTo(organizationBoard.getImageUrl());
         assertThat(deleteOrganizationBoard.getLikesCount()).isEqualTo(organizationBoard.getLikesCount());
         assertThat(deleteOrganizationBoard.getBackUpId()).isEqualTo(organizationBoard.getId());
     }

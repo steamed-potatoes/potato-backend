@@ -21,7 +21,7 @@ public class CreateOrganizationBoardRequest {
     @NotBlank
     private String content;
 
-    private String imageUrl;
+    private List<String> imageUrlList;
 
     @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
@@ -38,11 +38,11 @@ public class CreateOrganizationBoardRequest {
     private List<String> hashTags;
 
     @Builder(builderMethodName = "testBuilder")
-    public CreateOrganizationBoardRequest(String title, String content, String imageUrl, LocalDateTime startDateTime,
+    public CreateOrganizationBoardRequest(String title, String content, List<String> imageUrlList, LocalDateTime startDateTime,
                                           LocalDateTime endDateTime, OrganizationBoardCategory type, List<String> hashTags) {
         this.title = title;
         this.content = content;
-        this.imageUrl = imageUrl;
+        this.imageUrlList = imageUrlList;
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
         this.type = type;
@@ -55,7 +55,6 @@ public class CreateOrganizationBoardRequest {
             .memberId(memberId)
             .title(title)
             .content(content)
-            .imageUrl(imageUrl)
             .startDateTime(startDateTime)
             .endDateTime(endDateTime)
             .category(type)

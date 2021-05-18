@@ -54,7 +54,7 @@ public class DeleteOrganizationBoard extends BaseTimeEntity {
         this.dateTimeInterval = DateTimeInterval.of(startDateTime, endDateTime);
         this.subDomain = subDomain;
         this.category = category;
-        this.boardInfo = BoardInfo.of(title, content, imageUrl);
+        this.boardInfo = BoardInfo.of(title, content);
         this.likesCount = likesCount;
         this.backUpInfo = BackUpInfo.of(backUpId, backUpCreatedDateTime);
         this.deletedTrackingInfo = DeletedTrackingInfo.of(deletedMemberId, deletedAdminMemberId);
@@ -67,7 +67,6 @@ public class DeleteOrganizationBoard extends BaseTimeEntity {
             .category(organizationBoard.getCategory())
             .title(organizationBoard.getTitle())
             .content(organizationBoard.getContent())
-            .imageUrl(organizationBoard.getImageUrl())
             .startDateTime(organizationBoard.getStartDateTime())
             .endDateTime(organizationBoard.getEndDateTime())
             .likesCount(builder().likesCount)
@@ -84,7 +83,6 @@ public class DeleteOrganizationBoard extends BaseTimeEntity {
             .category(organizationBoard.getCategory())
             .title(organizationBoard.getTitle())
             .content(organizationBoard.getContent())
-            .imageUrl(organizationBoard.getImageUrl())
             .startDateTime(organizationBoard.getStartDateTime())
             .endDateTime(organizationBoard.getEndDateTime())
             .backUpId(organizationBoard.getId())
@@ -107,10 +105,6 @@ public class DeleteOrganizationBoard extends BaseTimeEntity {
 
     public String getContent() {
         return boardInfo.getContent();
-    }
-
-    public String getImageUrl() {
-        return boardInfo.getImageUrl();
     }
 
     public Long getBackUpId() {

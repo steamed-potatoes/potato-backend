@@ -85,6 +85,7 @@ class OrganizationBoardControllerTest extends ControllerTestUtils {
             .endDateTime(endTime)
             .type(OrganizationBoardCategory.RECRUIT)
             .hashTags(Arrays.asList("감자", "고구마"))
+            .imageUrlList(Collections.emptyList())
             .build();
 
         //when

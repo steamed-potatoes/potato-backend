@@ -1,5 +1,7 @@
 package com.potato.service.board;
 
+import com.potato.domain.board.BoardImage;
+import com.potato.domain.board.BoardImageRepository;
 import com.potato.domain.board.BoardType;
 import com.potato.domain.board.organization.*;
 import com.potato.domain.hashtag.BoardHashTag;
@@ -42,6 +44,9 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
     @Autowired
     private BoardHashTagRepository boardHashTagRepository;
 
+    @Autowired
+    private BoardImageRepository boardImageRepository;
+
     @AfterEach
     void cleanUp() {
         super.cleanup();
@@ -49,6 +54,7 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
         organizationBoardRepository.deleteAllInBatch();
         deleteOrganizationBoardRepository.deleteAll();
         boardHashTagRepository.deleteAll();
+        boardImageRepository.deleteAll();
     }
 
     @Test
@@ -67,6 +73,7 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
             .endDateTime(endDateTime)
             .type(type)
             .hashTags(Collections.emptyList())
+            .imageUrlList(Collections.emptyList())
             .build();
 
         // when
@@ -91,6 +98,7 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
             .endDateTime(LocalDateTime.of(2021, 3, 5, 0, 0))
             .type(OrganizationBoardCategory.RECRUIT)
             .hashTags(hashTags)
+            .imageUrlList(Collections.emptyList())
             .build();
 
         // when
@@ -101,6 +109,31 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
         assertThat(boardHashTags).hasSize(2);
         assertHashTag(boardHashTags.get(0), memberId, "감자");
         assertHashTag(boardHashTags.get(1), memberId, "백엔드");
+    }
+
+    @Test
+    void 게시글_추가시_이미지_여러개를_지정하면_이미지_정보가_DB_에_저장된다() {
+        // given
+        List<String> imageUrlList = Arrays.asList("image.png", "potato.png");
+
+        CreateOrganizationBoardRequest request = CreateOrganizationBoardRequest.testBuilder()
+            .title("감자 신입 회원 모집")
+            .content("감자 동아리에서 신입 회원을 모집합니다")
+            .startDateTime(LocalDateTime.of(2021, 3, 1, 0, 0))
+            .endDateTime(LocalDateTime.of(2021, 3, 5, 0, 0))
+            .type(OrganizationBoardCategory.RECRUIT)
+            .hashTags(Collections.emptyList())
+            .imageUrlList(imageUrlList)
+            .build();
+
+        // when
+        organizationBoardService.createBoard(subDomain, request, memberId);
+
+        // then
+        List<BoardImage> boardImageList = boardImageRepository.findAll();
+        assertThat(boardImageList).hasSize(2);
+        assertThat(boardImageList.get(0).getImageUrl()).isEqualTo("image.png");
+        assertThat(boardImageList.get(1).getImageUrl()).isEqualTo("potato.png");
     }
 
     @Test
