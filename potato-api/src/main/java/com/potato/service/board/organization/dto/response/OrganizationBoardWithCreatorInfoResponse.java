@@ -31,9 +31,9 @@ public class OrganizationBoardWithCreatorInfoResponse extends BaseTimeResponse {
         this.hashTags = hashTags;
     }
 
-    public static OrganizationBoardWithCreatorInfoResponse of(OrganizationBoard organizationBoard, Organization organization, Member creator, List<String> hashTags, List<String> imageUrlList) {
+    public static OrganizationBoardWithCreatorInfoResponse of(OrganizationBoard organizationBoard, Organization organization, Member creator, List<String> hashTags) {
         OrganizationBoardWithCreatorInfoResponse response = OrganizationBoardWithCreatorInfoResponse.builder()
-            .board(OrganizationBoardInfoResponse.of(organizationBoard, imageUrlList))
+            .board(OrganizationBoardInfoResponse.of(organizationBoard))
             .organization(OrganizationInfoResponse.of(organization))
             .creator(MemberInfoResponse.of(creator))
             .hashTags(hashTags)

@@ -6,6 +6,7 @@ import com.potato.controller.ApiResponse;
 import com.potato.service.board.organization.OrganizationBoardService;
 import com.potato.service.board.organization.dto.request.*;
 import com.potato.service.board.organization.dto.response.OrganizationBoardInfoResponse;
+import com.potato.service.board.organization.dto.response.OrganizationBoardInfoResponseWithImage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,7 @@ public class OrganizationBoardController {
     @Operation(summary = "그룹의 관리자가 새로운 그룹의 게시물을 등록하는 API", security = {@SecurityRequirement(name = "BearerKey")})
     @Auth(role = ORGANIZATION_ADMIN)
     @PostMapping("/api/v2/organization/board/{subDomain}")
-    public ApiResponse<OrganizationBoardInfoResponse> createOrganizationBoard(
+    public ApiResponse<OrganizationBoardInfoResponseWithImage> createOrganizationBoard(
         @PathVariable String subDomain, @Valid @RequestBody CreateOrganizationBoardRequest request, @MemberId Long memberId) {
         return ApiResponse.success(organizationBoardService.createBoard(subDomain, request, memberId));
     }
@@ -32,7 +33,7 @@ public class OrganizationBoardController {
     @Operation(summary = "그룹의 관리자가 그룹의 게시물을 수정하는 API", security = {@SecurityRequirement(name = "BearerKey")})
     @Auth(role = ORGANIZATION_ADMIN)
     @PutMapping("/api/v2/organization/board/{subDomain}")
-    public ApiResponse<OrganizationBoardInfoResponse> updateOrganizationBoard(
+    public ApiResponse<OrganizationBoardInfoResponseWithImage> updateOrganizationBoard(
         @PathVariable String subDomain, @Valid @RequestBody UpdateOrganizationBoardRequest request, @MemberId Long memberId) {
         return ApiResponse.success(organizationBoardService.updateBoard(subDomain, request, memberId));
     }

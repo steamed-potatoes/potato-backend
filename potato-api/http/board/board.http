@@ -41,6 +41,10 @@ Authorization: Bearer {{AUTHORIZATION}}
     "type": "RECRUIT",
     "hashTags": [
         "백엔드"
+    ],
+    "imageUrlList": [
+        "potato.png",
+        "hello.png"
     ]
 }
 

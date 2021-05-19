@@ -207,6 +207,7 @@ class OrganizationBoardControllerTest extends ControllerTestUtils {
             .endDateTime(LocalDateTime.of(2021, 3, 31, 0, 0))
             .type(OrganizationBoardCategory.RECRUIT)
             .hashTags(Collections.emptyList())
+            .imageUrlList(Collections.emptyList())
             .build();
 
         //when

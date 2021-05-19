@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface BoardImageRepositoryCustom {
 
-    List<BoardImage> findBoardImageByOrganizationBoardId(Long id);
+    List<BoardImage> findBoardImageByOrganizationBoardId(Long boardId);
 
 }

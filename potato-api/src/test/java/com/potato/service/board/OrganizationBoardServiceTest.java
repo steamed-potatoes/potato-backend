@@ -156,6 +156,7 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
             .endDateTime(endDateTime)
             .type(type)
             .hashTags(Collections.emptyList())
+            .imageUrlList(Collections.emptyList())
             .build();
 
         // when
@@ -181,6 +182,7 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
             .endDateTime(LocalDateTime.of(2021, 4, 7, 0, 0))
             .type(OrganizationBoardCategory.EVENT)
             .hashTags(Collections.emptyList())
+            .imageUrlList(Collections.emptyList())
             .build();
 
         // when
@@ -207,6 +209,7 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
             .endDateTime(LocalDateTime.of(2021, 4, 7, 0, 0))
             .type(OrganizationBoardCategory.EVENT)
             .hashTags(Arrays.asList("강승호", "고예림", "유순조"))
+            .imageUrlList(Collections.emptyList())
             .build();
 
         // when
