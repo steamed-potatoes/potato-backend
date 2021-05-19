@@ -47,4 +47,8 @@ public final class OrganizationBoardServiceUtils {
             .collect(Collectors.toList());
     }
 
+    public static BoardImage findOrganizationBoardMainImage(BoardImageRepository boardImageRepository, Long organizationBoardId) {
+        return boardImageRepository.findMainImageByOrganizationBoardId(organizationBoardId);
+    }
+
 }

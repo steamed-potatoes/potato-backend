@@ -1,5 +1,6 @@
 package com.potato.service.board.organization;
 
+import com.potato.domain.board.BoardImage;
 import com.potato.domain.board.BoardImageRepository;
 import com.potato.domain.board.BoardType;
 import com.potato.domain.board.organization.OrganizationBoard;
@@ -33,13 +34,15 @@ public class OrganizationBoardRetrieveService {
     private final OrganizationRepository organizationRepository;
     private final MemberRepository memberRepository;
     private final BoardHashTagRepository boardHashTagRepository;
+    private final BoardImageRepository boardImageRepository;
 
     @Transactional(readOnly = true)
     public OrganizationBoardWithCreatorInfoResponse retrieveBoardWithOrganizationAndCreator(Long organizationBoardId) {
         OrganizationBoard organizationBoard = OrganizationBoardServiceUtils.findOrganizationBoardById(organizationBoardRepository, organizationBoardId);
         Organization organization = OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, organizationBoard.getSubDomain());
         Member creator = MemberServiceUtils.findMemberById(memberRepository, organizationBoard.getMemberId());
-        return OrganizationBoardWithCreatorInfoResponse.of(organizationBoard, organization, creator, getBoardHashTags(organizationBoard.getId()));
+        List<String> imageUrlList = OrganizationBoardServiceUtils.findOrganizationBoardImage(boardImageRepository, organizationBoard.getId());
+        return OrganizationBoardWithCreatorInfoResponse.of(organizationBoard, organization, creator, getBoardHashTags(organizationBoard.getId()), imageUrlList);
     }
 
     private List<String> getBoardHashTags(Long boardId) {

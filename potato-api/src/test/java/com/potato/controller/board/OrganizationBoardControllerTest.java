@@ -2,6 +2,8 @@ package com.potato.controller.board;
 
 import com.potato.controller.ApiResponse;
 import com.potato.controller.ControllerTestUtils;
+import com.potato.domain.board.BoardImage;
+import com.potato.domain.board.BoardImageRepository;
 import com.potato.domain.board.BoardType;
 import com.potato.domain.board.organization.OrganizationBoard;
 import com.potato.domain.board.organization.OrganizationBoardCategory;
@@ -48,6 +50,9 @@ class OrganizationBoardControllerTest extends ControllerTestUtils {
     @Autowired
     private BoardHashTagRepository boardHashTagRepository;
 
+    @Autowired
+    private BoardImageRepository boardImageRepository;
+
     @BeforeEach
     void setUp() throws Exception {
         super.setup();
@@ -60,6 +65,7 @@ class OrganizationBoardControllerTest extends ControllerTestUtils {
         organizationBoardRepository.deleteAll();
         organizationRepository.deleteAll();
         boardHashTagRepository.deleteAll();
+        boardImageRepository.deleteAll();
     }
 
     @Test
@@ -107,9 +113,15 @@ class OrganizationBoardControllerTest extends ControllerTestUtils {
         organization.addAdmin(testMember.getId());
         organizationRepository.save(organization);
 
+
+
         String title = "title";
         OrganizationBoard board = OrganizationBoardCreator.create(subDomain, testMember.getId(), title, OrganizationBoardCategory.RECRUIT);
         organizationBoardRepository.save(board);
+
+        String imageUrl = "potato.png";
+        BoardImage boardImage = new BoardImage(imageUrl, board.getId());
+        boardImageRepository.save(boardImage);
 
         boardHashTagRepository.saveAll(Collections.singletonList(BoardHashTag.newInstance(BoardType.ORGANIZATION_BOARD, board.getId(), testMember.getId(), "감자")));
 
