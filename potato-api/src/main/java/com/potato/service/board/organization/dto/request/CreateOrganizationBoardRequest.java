@@ -21,6 +21,7 @@ public class CreateOrganizationBoardRequest {
     @NotBlank
     private String content;
 
+    @NotNull
     private List<String> imageUrlList;
 
     @NotNull

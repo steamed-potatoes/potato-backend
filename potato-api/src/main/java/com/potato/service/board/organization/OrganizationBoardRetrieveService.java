@@ -1,5 +1,6 @@
 package com.potato.service.board.organization;
 
+import com.potato.domain.board.BoardImageRepository;
 import com.potato.domain.board.BoardType;
 import com.potato.domain.board.organization.OrganizationBoard;
 import com.potato.domain.board.organization.OrganizationBoardRepository;
@@ -32,13 +33,15 @@ public class OrganizationBoardRetrieveService {
     private final OrganizationRepository organizationRepository;
     private final MemberRepository memberRepository;
     private final BoardHashTagRepository boardHashTagRepository;
+    private final BoardImageRepository boardImageRepository;
 
     @Transactional(readOnly = true)
     public OrganizationBoardWithCreatorInfoResponse retrieveBoardWithOrganizationAndCreator(Long organizationBoardId) {
         OrganizationBoard organizationBoard = OrganizationBoardServiceUtils.findOrganizationBoardById(organizationBoardRepository, organizationBoardId);
         Organization organization = OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, organizationBoard.getSubDomain());
         Member creator = MemberServiceUtils.findMemberById(memberRepository, organizationBoard.getMemberId());
-        return OrganizationBoardWithCreatorInfoResponse.of(organizationBoard, organization, creator, getBoardHashTags(organizationBoard.getId()));
+        List<String> imageUrlList = OrganizationBoardServiceUtils.findOrganizationBoardImage(boardImageRepository, organizationBoard.getId());
+        return OrganizationBoardWithCreatorInfoResponse.of(organizationBoard, organization, creator, getBoardHashTags(organizationBoard.getId()), imageUrlList);
     }
 
     private List<String> getBoardHashTags(Long boardId) {
@@ -56,14 +59,14 @@ public class OrganizationBoardRetrieveService {
     @Transactional(readOnly = true)
     public List<OrganizationBoardInfoResponse> retrieveImminentBoards(RetrieveImminentBoardsRequest request) {
         return organizationBoardRepository.findAllByBetweenDateTimeWithLimit(request.getDateTime(), request.getDateTime().plusWeeks(1), request.getSize()).stream()
-            .map(OrganizationBoardInfoResponse::of)
+            .map(organizationBoard -> OrganizationBoardInfoResponse.of(organizationBoard, OrganizationBoardServiceUtils.findOrganizationBoardImage(boardImageRepository, organizationBoard.getId())))
             .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public List<OrganizationBoardInfoResponse> retrievePopularBoard(int size) {
         return organizationBoardRepository.findAllOrderByLikesWithLimit(size).stream()
-            .map(OrganizationBoardInfoResponse::of)
+            .map(organizationBoard -> OrganizationBoardInfoResponse.of(organizationBoard, OrganizationBoardServiceUtils.findOrganizationBoardImage(boardImageRepository, organizationBoard.getId())))
             .collect(Collectors.toList());
     }
 

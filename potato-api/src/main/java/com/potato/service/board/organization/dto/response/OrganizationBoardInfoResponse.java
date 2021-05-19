@@ -6,6 +6,8 @@ import com.potato.service.common.dto.response.BaseTimeResponse;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @ToString
 @Getter
@@ -28,8 +30,10 @@ public class OrganizationBoardInfoResponse extends BaseTimeResponse {
 
     private OrganizationBoardCategory type;
 
+    private List<String> imageUrlList = new ArrayList<>();
+
     @Builder
-    private OrganizationBoardInfoResponse(Long id, String subDomain, String title, LocalDateTime startDateTime, LocalDateTime endDateTime, String content, int likesCount, OrganizationBoardCategory type) {
+    private OrganizationBoardInfoResponse(Long id, String subDomain, String title, LocalDateTime startDateTime, LocalDateTime endDateTime, String content, int likesCount, OrganizationBoardCategory type, List<String> imageUrlList) {
         this.id = id;
         this.subDomain = subDomain;
         this.title = title;
@@ -38,9 +42,10 @@ public class OrganizationBoardInfoResponse extends BaseTimeResponse {
         this.content = content;
         this.likesCount = likesCount;
         this.type = type;
+        this.imageUrlList = imageUrlList;
     }
 
-    public static OrganizationBoardInfoResponse of(OrganizationBoard organizationBoard) {
+    public static OrganizationBoardInfoResponse of(OrganizationBoard organizationBoard, List<String> imageUrlList) {
         OrganizationBoardInfoResponse organizationBoardInfoResponse = OrganizationBoardInfoResponse.builder()
             .id(organizationBoard.getId())
             .subDomain(organizationBoard.getSubDomain())
@@ -50,6 +55,7 @@ public class OrganizationBoardInfoResponse extends BaseTimeResponse {
             .endDateTime(organizationBoard.getEndDateTime())
             .likesCount(organizationBoard.getLikesCount())
             .type(organizationBoard.getCategory())
+            .imageUrlList(imageUrlList)
             .build();
         organizationBoardInfoResponse.setBaseTime(organizationBoard);
         return organizationBoardInfoResponse;
