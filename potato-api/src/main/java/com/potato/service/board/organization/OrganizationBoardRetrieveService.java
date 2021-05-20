@@ -15,6 +15,7 @@ import com.potato.domain.organization.Organization;
 import com.potato.domain.organization.OrganizationRepository;
 import com.potato.service.board.organization.dto.request.RetrieveImminentBoardsRequest;
 import com.potato.service.board.organization.dto.response.OrganizationBoardInfoResponse;
+import com.potato.service.board.organization.dto.response.OrganizationBoardInfoResponseWithImage;
 import com.potato.service.board.organization.dto.response.OrganizationBoardWithCreatorInfoResponse;
 import com.potato.service.hashtag.BoardHashTagServiceUtils;
 import com.potato.service.member.MemberServiceUtils;
@@ -61,10 +62,11 @@ public class OrganizationBoardRetrieveService {
     }
 
     @Transactional(readOnly = true)
-    public List<OrganizationBoardInfoResponse> retrieveImminentBoards(RetrieveImminentBoardsRequest request) {
+    public List<OrganizationBoardInfoResponseWithImage> retrieveImminentBoards(RetrieveImminentBoardsRequest request) {
         return organizationBoardRepository.findAllByBetweenDateTimeWithLimit(request.getDateTime(), request.getDateTime().plusWeeks(1), request.getSize()).stream()
-            .map(OrganizationBoardInfoResponse::of)
+            .map(organizationBoard -> OrganizationBoardInfoResponseWithImage.of(organizationBoard, OrganizationBoardServiceUtils.findOrganizationBoardImage(boardImageRepository, organizationBoard.getId())))
             .collect(Collectors.toList());
+
     }
 
     @Transactional(readOnly = true)

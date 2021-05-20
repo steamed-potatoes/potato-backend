@@ -6,6 +6,7 @@ import com.potato.domain.board.organization.repository.dto.BoardWithOrganization
 import com.potato.service.board.organization.OrganizationBoardRetrieveService;
 import com.potato.service.board.organization.dto.request.*;
 import com.potato.service.board.organization.dto.response.OrganizationBoardInfoResponse;
+import com.potato.service.board.organization.dto.response.OrganizationBoardInfoResponseWithImage;
 import com.potato.service.board.organization.dto.response.OrganizationBoardWithCreatorInfoResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +35,7 @@ public class OrganizationBoardRetrieveController {
 
     @Operation(summary = "얼마 남지 않은 게시물을 조회하는 API", description = "dateTime = 현재 시간, size = 불러올 개수")
     @GetMapping("/api/v2/organization/board/list/imminentBoards")
-    public ApiResponse<List<OrganizationBoardInfoResponse>> retrieveImminentBoards(@Valid RetrieveImminentBoardsRequest request) {
+    public ApiResponse<List<OrganizationBoardInfoResponseWithImage>> retrieveImminentBoards(@Valid RetrieveImminentBoardsRequest request) {
         return ApiResponse.success(organizationBoardRetrieveService.retrieveImminentBoards(request));
     }
 
