@@ -1,5 +1,6 @@
 package com.potato.service.image;
 
+import com.potato.domain.board.BoardType;
 import com.potato.domain.image.BoardImage;
 import com.potato.domain.image.BoardImageRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,18 +17,18 @@ public class BoardImageService {
     private final BoardImageRepository boardImageRepository;
 
     @Transactional
-    public void addImage(Long boardId, List<String> imageUrlList) {
+    public void addImage(Long boardId, List<String> imageUrlList, BoardType type) {
         List<BoardImage> boardImageList = imageUrlList.stream()
-            .map(imageUrl -> BoardImage.newInstance(boardId, imageUrl))
+            .map(imageUrl -> BoardImage.newInstance(boardId, imageUrl, type))
             .collect(Collectors.toList());
         boardImageRepository.saveAll(boardImageList);
     }
 
     @Transactional
-    public void updateImage(Long boardId, List<String> imageUrlList) {
+    public void updateImage(Long boardId, List<String> imageUrlList, BoardType type) {
         List<BoardImage> boardImages = BoardImageServiceUtils.findBoardImages(boardImageRepository, boardId);
         boardImageRepository.deleteAll(boardImages);
-        addImage(boardId, imageUrlList);
+        addImage(boardId, imageUrlList, type);
     }
 
 }

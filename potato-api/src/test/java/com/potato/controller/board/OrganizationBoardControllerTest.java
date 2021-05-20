@@ -121,7 +121,7 @@ class OrganizationBoardControllerTest extends ControllerTestUtils {
         organizationBoardRepository.save(board);
 
         String imageUrl = "potato.png";
-        BoardImage boardImage = new BoardImage(imageUrl, board.getId());
+        BoardImage boardImage = new BoardImage(imageUrl, board.getId(), BoardType.ORGANIZATION_BOARD);
         boardImageRepository.save(boardImage);
 
         boardHashTagRepository.saveAll(Collections.singletonList(BoardHashTag.newInstance(BoardType.ORGANIZATION_BOARD, board.getId(), testMember.getId(), "감자")));
