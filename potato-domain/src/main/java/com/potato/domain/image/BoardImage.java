@@ -1,4 +1,4 @@
-package com.potato.domain.board;
+package com.potato.domain.image;
 
 import com.potato.domain.BaseTimeEntity;
 import lombok.Getter;

@@ -1,6 +1,5 @@
 package com.potato.service.board.organization.dto.response;
 
-import com.potato.domain.board.BoardImage;
 import com.potato.domain.board.organization.OrganizationBoard;
 import com.potato.domain.member.Member;
 import com.potato.domain.organization.Organization;

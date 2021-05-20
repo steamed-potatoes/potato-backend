@@ -5,7 +5,6 @@ import com.potato.config.interceptor.auth.Auth;
 import com.potato.controller.ApiResponse;
 import com.potato.service.board.organization.OrganizationBoardService;
 import com.potato.service.board.organization.dto.request.*;
-import com.potato.service.board.organization.dto.response.OrganizationBoardInfoResponse;
 import com.potato.service.board.organization.dto.response.OrganizationBoardInfoResponseWithImage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;

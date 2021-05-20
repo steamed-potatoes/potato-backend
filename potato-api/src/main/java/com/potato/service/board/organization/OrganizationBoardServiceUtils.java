@@ -1,7 +1,7 @@
 package com.potato.service.board.organization;
 
-import com.potato.domain.board.BoardImage;
-import com.potato.domain.board.BoardImageRepository;
+import com.potato.domain.image.BoardImage;
+import com.potato.domain.image.BoardImageRepository;
 import com.potato.domain.board.organization.OrganizationBoard;
 import com.potato.domain.board.organization.OrganizationBoardRepository;
 import com.potato.exception.model.NotFoundException;

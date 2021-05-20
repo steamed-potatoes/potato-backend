@@ -1,7 +1,7 @@
 package com.potato.service.image;
 
-import com.potato.domain.board.BoardImage;
-import com.potato.domain.board.BoardImageRepository;
+import com.potato.domain.image.BoardImage;
+import com.potato.domain.image.BoardImageRepository;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 

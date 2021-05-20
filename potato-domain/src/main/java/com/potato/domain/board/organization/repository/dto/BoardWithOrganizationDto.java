@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -31,5 +32,7 @@ public class BoardWithOrganizationDto {
     private LocalDateTime boardEndDateTime;
     private LocalDateTime createdDateTime;
     private LocalDateTime lastModifiedDateTime;
+
+    private List<String> imageUrlList;
 
 }

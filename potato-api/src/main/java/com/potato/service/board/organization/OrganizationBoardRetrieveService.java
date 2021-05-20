@@ -1,7 +1,7 @@
 package com.potato.service.board.organization;
 
-import com.potato.domain.board.BoardImage;
-import com.potato.domain.board.BoardImageRepository;
+import com.potato.domain.board.organization.repository.dto.BoardWithOrganizationDtoWithImage;
+import com.potato.domain.image.BoardImageRepository;
 import com.potato.domain.board.BoardType;
 import com.potato.domain.board.organization.OrganizationBoard;
 import com.potato.domain.board.organization.OrganizationBoardRepository;
@@ -53,8 +53,11 @@ public class OrganizationBoardRetrieveService {
     }
 
     @Transactional(readOnly = true)
-    public List<BoardWithOrganizationDto> retrieveBoardsWithPagination(OrganizationBoardCategory type, long lastOrganizationBoardId, int size) {
-        return organizationBoardRepository.findAllWithOrganizationByTypeLessThanOrderByIdDescLimit(null, type, lastOrganizationBoardId, size);
+    public List<BoardWithOrganizationDtoWithImage> retrieveBoardsWithPagination(OrganizationBoardCategory type, long lastOrganizationBoardId, int size) {
+        return organizationBoardRepository.findAllWithOrganizationByTypeLessThanOrderByIdDescLimit(null, type, lastOrganizationBoardId, size)
+            .stream().map(boardWithOrganizationDto -> BoardWithOrganizationDtoWithImage.of(boardWithOrganizationDto, OrganizationBoardServiceUtils.findOrganizationBoardImage(boardImageRepository, boardWithOrganizationDto.getBoardId())))
+            .collect(Collectors.toList());
+
     }
 
     @Transactional(readOnly = true)
@@ -72,8 +75,10 @@ public class OrganizationBoardRetrieveService {
     }
 
     @Transactional(readOnly = true)
-    public List<BoardWithOrganizationDto> getBoardsInOrganization(String subDomain, OrganizationBoardCategory type, long lastOrganizationBoardId, int size) {
-        return organizationBoardRepository.findAllWithOrganizationByTypeLessThanOrderByIdDescLimit(subDomain, type, lastOrganizationBoardId, size);
+    public List<BoardWithOrganizationDtoWithImage> getBoardsInOrganization(String subDomain, OrganizationBoardCategory type, long lastOrganizationBoardId, int size) {
+        return organizationBoardRepository.findAllWithOrganizationByTypeLessThanOrderByIdDescLimit(subDomain, type, lastOrganizationBoardId, size).stream()
+            .map(boardWithOrganizationDto ->  BoardWithOrganizationDtoWithImage.of(boardWithOrganizationDto, OrganizationBoardServiceUtils.findOrganizationBoardImage(boardImageRepository, boardWithOrganizationDto.getBoardId())))
+            .collect(Collectors.toList());
     }
 
 }

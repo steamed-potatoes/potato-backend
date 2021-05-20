@@ -2,6 +2,7 @@ package com.potato.service.schedule.dto.response;
 
 import com.potato.domain.board.admin.AdminBoard;
 import com.potato.domain.board.organization.OrganizationBoard;
+import com.potato.service.board.organization.OrganizationBoardServiceUtils;
 import com.potato.service.board.organization.dto.response.AdminBoardInfoResponse;
 import com.potato.service.board.organization.dto.response.OrganizationBoardInfoResponse;
 import lombok.*;
@@ -20,7 +21,7 @@ public class ScheduleResponse {
 
     public static ScheduleResponse of(List<OrganizationBoard> organizationBoardList, List<AdminBoard> adminBoardList) {
         List<OrganizationBoardInfoResponse> organizationBoards = organizationBoardList.stream()
-            .map(OrganizationBoardInfoResponse::of)
+            .map(organizationBoard -> OrganizationBoardInfoResponse.of(organizationBoard))
             .collect(Collectors.toList());
         List<AdminBoardInfoResponse> adminBoardInfoResponses = adminBoardList.stream()
             .map(AdminBoardInfoResponse::of)

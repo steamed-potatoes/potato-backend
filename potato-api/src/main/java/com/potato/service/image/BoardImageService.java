@@ -1,10 +1,7 @@
 package com.potato.service.image;
 
-import com.potato.domain.board.BoardImage;
-import com.potato.domain.board.BoardImageRepository;
-import com.potato.domain.board.BoardType;
-import com.potato.domain.hashtag.BoardHashTag;
-import com.potato.service.hashtag.BoardHashTagServiceUtils;
+import com.potato.domain.image.BoardImage;
+import com.potato.domain.image.BoardImageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

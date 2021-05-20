@@ -1,7 +1,7 @@
 package com.potato.service.board;
 
-import com.potato.domain.board.BoardImage;
-import com.potato.domain.board.BoardImageRepository;
+import com.potato.domain.image.BoardImage;
+import com.potato.domain.image.BoardImageRepository;
 import com.potato.domain.board.BoardType;
 import com.potato.domain.board.organization.*;
 import com.potato.domain.hashtag.BoardHashTag;

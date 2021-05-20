@@ -1,6 +1,6 @@
-package com.potato.domain.board.repository;
+package com.potato.domain.image.repository;
 
-import com.potato.domain.board.BoardImage;
+import com.potato.domain.image.BoardImage;
 
 import java.util.List;
 

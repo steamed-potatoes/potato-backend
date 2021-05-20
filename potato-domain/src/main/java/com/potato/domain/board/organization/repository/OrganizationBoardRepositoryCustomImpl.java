@@ -3,6 +3,7 @@ package com.potato.domain.board.organization.repository;
 import com.potato.domain.board.organization.OrganizationBoard;
 import com.potato.domain.board.organization.OrganizationBoardCategory;
 import com.potato.domain.board.organization.repository.dto.BoardWithOrganizationDto;
+import com.potato.domain.image.QBoardImage;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import static com.potato.domain.board.organization.QOrganizationBoard.organizationBoard;
+import static com.potato.domain.image.QBoardImage.boardImage;
 import static com.potato.domain.organization.QOrganization.organization;
 
 @RequiredArgsConstructor

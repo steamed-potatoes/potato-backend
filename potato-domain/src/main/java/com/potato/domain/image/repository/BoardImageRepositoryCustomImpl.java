@@ -1,13 +1,13 @@
-package com.potato.domain.board.repository;
+package com.potato.domain.image.repository;
 
-import com.potato.domain.board.BoardImage;
-import com.potato.domain.board.QBoardImage;
+import com.potato.domain.image.BoardImage;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-import static com.potato.domain.board.QBoardImage.boardImage;
+import static com.potato.domain.image.QBoardImage.boardImage;
+
 
 @RequiredArgsConstructor
 public class BoardImageRepositoryCustomImpl implements BoardImageRepositoryCustom{

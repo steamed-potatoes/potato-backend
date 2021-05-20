@@ -2,8 +2,8 @@ package com.potato.controller.board;
 
 import com.potato.controller.ApiResponse;
 import com.potato.controller.ControllerTestUtils;
-import com.potato.domain.board.BoardImage;
-import com.potato.domain.board.BoardImageRepository;
+import com.potato.domain.image.BoardImage;
+import com.potato.domain.image.BoardImageRepository;
 import com.potato.domain.board.BoardType;
 import com.potato.domain.board.organization.OrganizationBoard;
 import com.potato.domain.board.organization.OrganizationBoardCategory;
