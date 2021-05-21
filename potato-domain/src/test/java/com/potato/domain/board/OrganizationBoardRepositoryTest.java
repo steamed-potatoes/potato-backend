@@ -1,9 +1,9 @@
 package com.potato.domain.board;
 
-import com.potato.domain.board.organization.OrganizationBoard;
-import com.potato.domain.board.organization.OrganizationBoardCategory;
-import com.potato.domain.board.organization.OrganizationBoardCreator;
-import com.potato.domain.board.organization.OrganizationBoardRepository;
+import com.potato.domain.domain.board.organization.OrganizationBoard;
+import com.potato.domain.domain.board.organization.OrganizationBoardCategory;
+import com.potato.domain.domain.board.organization.OrganizationBoardCreator;
+import com.potato.domain.domain.board.organization.OrganizationBoardRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

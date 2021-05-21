@@ -1,6 +1,7 @@
 package com.potato.domain.organization;
 
-import com.potato.exception.model.ValidationException;
+import com.potato.domain.domain.organization.Organization;
+import com.potato.common.exception.model.ValidationException;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
