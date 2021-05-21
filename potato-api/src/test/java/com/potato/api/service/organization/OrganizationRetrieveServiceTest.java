@@ -19,8 +19,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.potato.api.service.member.MemberServiceTestUtils.assertMemberInfoResponse;
-import static com.potato.api.service.organization.OrganizationServiceTestUtils.assertOrganizationInfoResponse;
+import static com.potato.api.helper.member.MemberTestHelper.assertMemberInfoResponse;
+import static com.potato.api.helper.organization.OrganizationServiceTestUtils.assertOrganizationInfoResponse;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 

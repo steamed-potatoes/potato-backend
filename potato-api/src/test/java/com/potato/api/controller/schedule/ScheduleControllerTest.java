@@ -107,7 +107,7 @@ class ScheduleControllerTest extends ControllerTestUtils {
         // then
         assertThat(response.getData().getAdminBoards()).isEmpty();
         assertThat(response.getData().getOrganizationBoards()).hasSize(1);
-        assertOrganizationInfoResponse(response.getData().getOrganizationBoards().get(0), organizationBoard);
+        assertOrganizationBoardInfoResponse(response.getData().getOrganizationBoards().get(0), organizationBoard);
     }
 
     @Test
@@ -133,7 +133,7 @@ class ScheduleControllerTest extends ControllerTestUtils {
         assertThat(adminBoard.getEndDateTime()).isEqualTo(endDateTime);
     }
 
-    private void assertOrganizationInfoResponse(OrganizationBoardInfoResponse response, OrganizationBoard organizationBoard) {
+    private void assertOrganizationBoardInfoResponse(OrganizationBoardInfoResponse response, OrganizationBoard organizationBoard) {
         assertThat(response.getId()).isEqualTo(organizationBoard.getId());
         assertThat(response.getSubDomain()).isEqualTo(organizationBoard.getSubDomain());
         assertThat(response.getTitle()).isEqualTo(organizationBoard.getTitle());

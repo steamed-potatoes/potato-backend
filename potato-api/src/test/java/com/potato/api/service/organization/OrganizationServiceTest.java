@@ -24,7 +24,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
-import static com.potato.api.service.organization.OrganizationServiceTestUtils.*;
+import static com.potato.api.helper.organization.OrganizationServiceTestUtils.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
