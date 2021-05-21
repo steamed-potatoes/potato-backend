@@ -42,16 +42,3 @@ jobs:
         with:
           token: ${{ secrets.CODE_COV_TOKEN }}
           file: potato-api/build/reports/jacoco/test/jacocoTestReport.xml
-coverage:
-  status:
-    project:
-      default:
-        target: auto
-        threshold: 0%
-        flags:
-          - unit
-        paths:
-          - "src"
-        if_ci_failed: success
-        informational: true
-        only_pulls: true
