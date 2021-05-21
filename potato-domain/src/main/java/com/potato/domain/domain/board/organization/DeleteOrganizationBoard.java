@@ -48,7 +48,7 @@ public class DeleteOrganizationBoard extends BaseTimeEntity {
 
     @Builder
     public DeleteOrganizationBoard(Long backUpId, String subDomain, Long memberId, OrganizationBoardCategory category, String title,
-                                   String content, String imageUrl, LocalDateTime startDateTime, LocalDateTime endDateTime, int likesCount,
+                                   String content, LocalDateTime startDateTime, LocalDateTime endDateTime, int likesCount,
                                    LocalDateTime backUpCreatedDateTime, Long deletedMemberId, Long deletedAdminMemberId) {
         this.memberId = memberId;
         this.dateTimeInterval = DateTimeInterval.of(startDateTime, endDateTime);

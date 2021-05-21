@@ -1,6 +1,6 @@
 package com.potato.api.service.board.organization;
 
-import com.potato.domain.domain.image.BoardImageRepository;
+import com.potato.api.service.board.organization.dto.request.DeleteOrganizationBoardRequest;
 import com.potato.domain.domain.board.BoardType;
 import com.potato.domain.domain.board.organization.DeleteOrganizationBoardRepository;
 import com.potato.domain.domain.board.organization.OrganizationBoard;
@@ -23,7 +23,6 @@ public class OrganizationBoardService {
     private final ApplicationEventPublisher eventPublisher;
     private final OrganizationBoardRepository organizationBoardRepository;
     private final DeleteOrganizationBoardRepository deleteOrganizationBoardRepository;
-    private final BoardImageRepository boardImageRepository;
 
     @Transactional
     public OrganizationBoardInfoResponseWithImage createBoard(String subDomain, CreateOrganizationBoardRequest request, Long memberId) {
@@ -53,8 +52,8 @@ public class OrganizationBoardService {
     }
 
     @Transactional
-    public void deleteOrganizationBoard(String subDomain, Long organizationBoardId, Long memberId) {
-        OrganizationBoard organizationBoard = OrganizationBoardServiceUtils.findOrganizationBoardByIdAndSubDomain(organizationBoardRepository, subDomain, organizationBoardId);
+    public void deleteOrganizationBoard(String subDomain, DeleteOrganizationBoardRequest request, Long memberId) {
+        OrganizationBoard organizationBoard = OrganizationBoardServiceUtils.findOrganizationBoardByIdAndSubDomain(organizationBoardRepository, subDomain, request.getOrganizationBoardId());
         deleteOrganizationBoardRepository.save(organizationBoard.delete(memberId));
         organizationBoardRepository.delete(organizationBoard);
     }

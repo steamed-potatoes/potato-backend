@@ -17,18 +17,18 @@ public class BoardImageService {
     private final BoardImageRepository boardImageRepository;
 
     @Transactional
-    public void addImage(Long boardId, List<String> imageUrlList, BoardType type) {
+    public void addImage(Long boardId, BoardType type, List<String> imageUrlList) {
         List<BoardImage> boardImageList = imageUrlList.stream()
-            .map(imageUrl -> BoardImage.newInstance(boardId, imageUrl, type))
+            .map(imageUrl -> BoardImage.newInstance(boardId, type, imageUrl))
             .collect(Collectors.toList());
         boardImageRepository.saveAll(boardImageList);
     }
 
     @Transactional
-    public void updateImage(Long boardId, List<String> imageUrlList, BoardType type) {
+    public void updateImage(Long boardId, BoardType type, List<String> imageUrlList) {
         List<BoardImage> boardImages = BoardImageServiceUtils.findBoardImages(boardImageRepository, boardId);
         boardImageRepository.deleteAll(boardImages);
-        addImage(boardId, imageUrlList, type);
+        addImage(boardId, type, imageUrlList);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.potato.api.service.board;
 
+import com.potato.api.service.board.organization.dto.request.DeleteOrganizationBoardRequest;
 import com.potato.domain.domain.board.organization.DeleteOrganizationBoard;
 import com.potato.domain.domain.board.organization.DeleteOrganizationBoardRepository;
 import com.potato.domain.domain.board.organization.OrganizationBoard;
@@ -9,6 +10,7 @@ import com.potato.domain.domain.board.organization.OrganizationBoardLike;
 import com.potato.domain.domain.board.organization.OrganizationBoardLikeRepository;
 import com.potato.domain.domain.board.organization.OrganizationBoardRepository;
 import com.potato.domain.domain.image.BoardImage;
+import com.potato.domain.domain.image.BoardImageCreator;
 import com.potato.domain.domain.image.BoardImageRepository;
 import com.potato.domain.domain.board.BoardType;
 import com.potato.domain.domain.hashtag.BoardHashTag;
@@ -121,7 +123,8 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
     @Test
     void 게시글_추가시_이미지_여러개를_지정하면_이미지_정보가_DB_에_저장된다() {
         // given
-        List<String> imageUrlList = Arrays.asList("image.png", "potato.png");
+        String imageUrl1 = "https://image.png";
+        String imageUrl2 = "https://potato.png";
 
         CreateOrganizationBoardRequest request = CreateOrganizationBoardRequest.testBuilder()
             .title("감자 신입 회원 모집")
@@ -130,17 +133,21 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
             .endDateTime(LocalDateTime.of(2021, 3, 5, 0, 0))
             .type(OrganizationBoardCategory.RECRUIT)
             .hashTags(Collections.emptyList())
-            .imageUrlList(imageUrlList)
+            .imageUrlList(Arrays.asList(imageUrl1, imageUrl2))
             .build();
 
         // when
         organizationBoardService.createBoard(subDomain, request, memberId);
 
         // then
+        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findAll();
+        assertThat(organizationBoardList).hasSize(1);
+        Long boardId = organizationBoardList.get(0).getId();
+
         List<BoardImage> boardImageList = boardImageRepository.findAll();
         assertThat(boardImageList).hasSize(2);
-        assertThat(boardImageList.get(0).getImageUrl()).isEqualTo("image.png");
-        assertThat(boardImageList.get(1).getImageUrl()).isEqualTo("potato.png");
+        assertBoardImage(boardImageList.get(0), boardId, imageUrl1);
+        assertBoardImage(boardImageList.get(1), boardId, imageUrl2);
     }
 
     @Test
@@ -231,6 +238,38 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
     }
 
     @Test
+    void 올린_게시글을_수정하면_DB에_저장된_이미지_사진도_수정된다() {
+        // given
+        String imageUrl1 = "https://image.png";
+        String imageUrl2 = "https://potato.png";
+
+        OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, 999L, "이전의 게시글", OrganizationBoardCategory.RECRUIT);
+        organizationBoardRepository.save(organizationBoard);
+
+        boardImageRepository.save(BoardImageCreator.create(organizationBoard.getId(), BoardType.ORGANIZATION_BOARD, "https://test.png"));
+
+        UpdateOrganizationBoardRequest request = UpdateOrganizationBoardRequest.testBuilder()
+            .organizationBoardId(organizationBoard.getId())
+            .title("이후의 게시글")
+            .content("변경 이후의 내용")
+            .startDateTime(LocalDateTime.of(2021, 4, 1, 0, 0))
+            .endDateTime(LocalDateTime.of(2021, 4, 7, 0, 0))
+            .type(OrganizationBoardCategory.EVENT)
+            .hashTags(Collections.emptyList())
+            .imageUrlList(Arrays.asList(imageUrl1, imageUrl2))
+            .build();
+
+        // when
+        organizationBoardService.updateBoard(subDomain, request, memberId);
+
+        // then
+        List<BoardImage> boardImageList = boardImageRepository.findAll();
+        assertThat(boardImageList).hasSize(2);
+        assertBoardImage(boardImageList.get(0), organizationBoard.getId(), imageUrl1);
+        assertBoardImage(boardImageList.get(1), organizationBoard.getId(), imageUrl2);
+    }
+
+    @Test
     void 그룹_게시물을_좋아요하면_게시물_좋아요_테이블에_새로운_컬럼이_추가된다() {
         // given
         OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, 999L, "이전의 게시글", OrganizationBoardCategory.RECRUIT);
@@ -309,8 +348,10 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
         OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, memberId, "게시글", OrganizationBoardCategory.RECRUIT);
         organizationBoardRepository.save(organizationBoard);
 
+        DeleteOrganizationBoardRequest request = DeleteOrganizationBoardRequest.testInstance(organizationBoard.getId());
+
         //when
-        organizationBoardService.deleteOrganizationBoard(subDomain, organizationBoard.getId(), memberId);
+        organizationBoardService.deleteOrganizationBoard(subDomain, request, memberId);
 
         //then
         List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findAll();
@@ -328,17 +369,22 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
         OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, memberId, "title", OrganizationBoardCategory.RECRUIT);
         organizationBoardRepository.save(organizationBoard);
 
+        DeleteOrganizationBoardRequest request = DeleteOrganizationBoardRequest.testInstance(organizationBoard.getId());
+
         //when & then
         assertThatThrownBy(
-            () -> organizationBoardService.deleteOrganizationBoard("another-subDomain", organizationBoard.getId(), memberId)
+            () -> organizationBoardService.deleteOrganizationBoard("another-subDomain", request, memberId)
         ).isInstanceOf(NotFoundException.class);
     }
 
     @Test
     void 게시물이_없으면_삭제되지_않는다() {
+        // given
+        DeleteOrganizationBoardRequest request = DeleteOrganizationBoardRequest.testInstance(999L);
+
         //when & then
         assertThatThrownBy(
-            () -> organizationBoardService.deleteOrganizationBoard(subDomain, 999L, memberId)
+            () -> organizationBoardService.deleteOrganizationBoard(subDomain, request, memberId)
         ).isInstanceOf(NotFoundException.class);
     }
 
@@ -371,6 +417,12 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
     private void assertHashTag(BoardHashTag boardHashTag, Long memberId, String hashtag) {
         assertThat(boardHashTag.getMemberId()).isEqualTo(memberId);
         assertThat(boardHashTag.getHashTag()).isEqualTo(hashtag);
+    }
+
+    private void assertBoardImage(BoardImage boardImage, Long boardId, String imageUrl) {
+        assertThat(boardImage.getBoardId()).isEqualTo(boardId);
+        assertThat(boardImage.getType()).isEqualTo(BoardType.ORGANIZATION_BOARD);
+        assertThat(boardImage.getImageUrl()).isEqualTo(imageUrl);
     }
 
 }

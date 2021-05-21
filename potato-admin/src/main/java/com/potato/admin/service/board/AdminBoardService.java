@@ -30,7 +30,7 @@ public class AdminBoardService {
     @Transactional
     public AdminBoardInfoResponse updateAdminBoard(UpdateAdminBoardRequest request) {
         AdminBoard adminBoard = AdminBoardServiceUtils.findAdminBoardById(adminBoardRepository, request.getAdminBoardId());
-        adminBoard.updateInfo(request.getTitle(), request.getContent(), request.getImageUrl(), request.getStartDateTime(), request.getEndDateTime());
+        adminBoard.updateInfo(request.getTitle(), request.getContent(), request.getStartDateTime(), request.getEndDateTime());
         return AdminBoardInfoResponse.of(adminBoard);
     }
 

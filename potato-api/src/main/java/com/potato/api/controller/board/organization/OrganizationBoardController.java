@@ -40,9 +40,8 @@ public class OrganizationBoardController {
     @Operation(summary = "그룹의 관리자가 그룹의 게시물을 삭제하는 API", security = {@SecurityRequirement(name = "BearerKey")})
     @Auth(role = ORGANIZATION_ADMIN)
     @DeleteMapping("/api/v2/organization/board/{subDomain}")
-    public ApiResponse<String> deleteOrganizationBoard(@PathVariable String subDomain, @Valid DeleteOrganizationBoardRequest request,
-                                                       @MemberId Long memberId) {
-        organizationBoardService.deleteOrganizationBoard(subDomain, request.getOrganizationBoardId(), memberId);
+    public ApiResponse<String> deleteOrganizationBoard(@PathVariable String subDomain, @Valid DeleteOrganizationBoardRequest request, @MemberId Long memberId) {
+        organizationBoardService.deleteOrganizationBoard(subDomain, request, memberId);
         return ApiResponse.OK;
     }
 

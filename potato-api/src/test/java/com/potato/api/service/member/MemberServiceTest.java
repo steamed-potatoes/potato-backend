@@ -16,7 +16,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 
 import static com.potato.api.service.member.MemberServiceTestUtils.assertMemberInfo;
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 class MemberServiceTest {

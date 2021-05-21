@@ -1,5 +1,6 @@
 package com.potato.api.service.comment;
 
+import com.potato.api.service.comment.dto.request.LikeBoardCommentRequest;
 import com.potato.domain.domain.board.BoardType;
 import com.potato.domain.domain.board.admin.AdminBoard;
 import com.potato.domain.domain.board.admin.AdminBoardCreator;
@@ -339,8 +340,10 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
         BoardComment comment = BoardCommentCreator.createRootComment(type, organizationBoard.getId(), memberId, "댓글");
         boardCommentRepository.save(comment);
 
+        LikeBoardCommentRequest request = LikeBoardCommentRequest.testInstance(comment.getId());
+
         //when
-        boardCommentService.likeBoardComment(comment.getId(), memberId);
+        boardCommentService.likeBoardComment(request, memberId);
 
         //then
         List<BoardCommentLike> boardCommentLikeList = boardCommentLikeRepository.findAll();
@@ -359,8 +362,10 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
         comment.addChildComment(memberId, "대댓글_좋아요");
         boardCommentRepository.save(comment);
 
+        LikeBoardCommentRequest request = LikeBoardCommentRequest.testInstance(comment.getChildComments().get(0).getId());
+
         //when
-        boardCommentService.likeBoardComment(comment.getChildComments().get(0).getId(), memberId);
+        boardCommentService.likeBoardComment(request, memberId);
 
         //then
         List<BoardCommentLike> boardCommentLikeList = boardCommentLikeRepository.findAll();
@@ -379,8 +384,11 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
         comment.addLike(memberId);
         boardCommentRepository.save(comment);
 
+        LikeBoardCommentRequest request = LikeBoardCommentRequest.testInstance(comment.getId());
+
+        // when & then
         assertThatThrownBy(
-            () -> boardCommentService.likeBoardComment(comment.getId(), memberId)
+            () -> boardCommentService.likeBoardComment(request, memberId)
         ).isInstanceOf(ConflictException.class);
     }
 
@@ -393,8 +401,11 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
         comment.delete();
         boardCommentRepository.save(comment);
 
+        LikeBoardCommentRequest request = LikeBoardCommentRequest.testInstance(comment.getId());
+
+        // when & then
         assertThatThrownBy(
-            () -> boardCommentService.likeBoardComment(comment.getId(), memberId)
+            () -> boardCommentService.likeBoardComment(request, memberId)
         ).isInstanceOf(NotFoundException.class);
     }
 
@@ -407,8 +418,10 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
         comment.addLike(memberId);
         boardCommentRepository.save(comment);
 
+        LikeBoardCommentRequest request = LikeBoardCommentRequest.testInstance(comment.getId());
+
         //when
-        boardCommentService.unLikeBoardComment(comment.getId(), memberId);
+        boardCommentService.unLikeBoardComment(request, memberId);
 
         //then
         List<BoardCommentLike> boardCommentLikeList = boardCommentLikeRepository.findAll();
@@ -425,9 +438,11 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
         BoardComment comment = BoardCommentCreator.createRootComment(type, organizationBoard.getId(), memberId, "댓글");
         boardCommentRepository.save(comment);
 
+        LikeBoardCommentRequest request = LikeBoardCommentRequest.testInstance(comment.getId());
+
         // when & then
         assertThatThrownBy(
-            () -> boardCommentService.unLikeBoardComment(comment.getId(), memberId)
+            () -> boardCommentService.unLikeBoardComment(request, memberId)
         ).isInstanceOf(NotFoundException.class);
     }
 
@@ -440,8 +455,10 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
         comment.delete();
         boardCommentRepository.save(comment);
 
+        LikeBoardCommentRequest request = LikeBoardCommentRequest.testInstance(comment.getId());
+
         // when & then
-        assertThatThrownBy(() -> boardCommentService.unLikeBoardComment(comment.getId(), memberId)).isInstanceOf(NotFoundException.class);
+        assertThatThrownBy(() -> boardCommentService.unLikeBoardComment(request, memberId)).isInstanceOf(NotFoundException.class);
     }
 
     private void assertBoardCommentLike(BoardCommentLike boardCommentLike, Long boardCommentId, Long memberId) {

@@ -3,7 +3,6 @@ package com.potato.api.service.comment.dto.response;
 import com.potato.api.service.common.dto.response.BaseTimeResponse;
 import com.potato.domain.domain.board.BoardType;
 import com.potato.domain.domain.comment.BoardComment;
-import com.potato.api.service.common.dto.response.BaseTimeResponse;
 import lombok.*;
 
 import java.util.ArrayList;

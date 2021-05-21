@@ -35,7 +35,7 @@ public class AdminBoard extends BaseTimeEntity {
     private DateTimeInterval dateTimeInterval;
 
     @Builder
-    public AdminBoard(Long administratorId, String title, String content, String imageUrl, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+    public AdminBoard(Long administratorId, String title, String content, LocalDateTime startDateTime, LocalDateTime endDateTime) {
         this.administratorId = administratorId;
         this.boardInfo = BoardInfo.of(title, content);
         this.dateTimeInterval = DateTimeInterval.of(startDateTime, endDateTime);
@@ -49,7 +49,7 @@ public class AdminBoard extends BaseTimeEntity {
         return this.dateTimeInterval.getEndDateTime();
     }
 
-    public void updateInfo(String title, String content, String imageUrl, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+    public void updateInfo(String title, String content, LocalDateTime startDateTime, LocalDateTime endDateTime) {
         this.boardInfo = BoardInfo.of(title, content);
         this.dateTimeInterval = DateTimeInterval.of(startDateTime, endDateTime);
     }

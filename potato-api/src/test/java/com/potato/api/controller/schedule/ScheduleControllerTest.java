@@ -85,7 +85,6 @@ class ScheduleControllerTest extends ControllerTestUtils {
         String content = "그룹 게시물 상세 내용";
         LocalDateTime startDateTime = LocalDateTime.of(2021, 4, 1, 1, 30);
         LocalDateTime endDateTime = LocalDateTime.of(2021, 4, 3, 1, 30);
-        String imageUrl = "https://groupimage.com";
         OrganizationBoardCategory category = OrganizationBoardCategory.RECRUIT;
 
         OrganizationBoard organizationBoard = OrganizationBoard.builder()
