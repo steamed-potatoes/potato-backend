@@ -2,10 +2,12 @@ package com.potato.service.board;
 
 import com.potato.domain.board.organization.*;
 import com.potato.domain.board.organization.repository.dto.BoardWithOrganizationDto;
+import com.potato.domain.board.organization.repository.dto.BoardWithOrganizationDtoWithImage;
 import com.potato.service.OrganizationMemberSetUpTest;
 import com.potato.service.board.organization.OrganizationBoardRetrieveService;
 import com.potato.service.board.organization.dto.request.RetrieveImminentBoardsRequest;
 import com.potato.service.board.organization.dto.response.OrganizationBoardInfoResponse;
+import com.potato.service.board.organization.dto.response.OrganizationBoardInfoResponseWithImage;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -48,7 +50,7 @@ class OrganizationBoardRetrieveServiceTest extends OrganizationMemberSetUpTest {
         organizationBoardRepository.saveAll(Arrays.asList(organizationBoard1, organizationBoard2, organizationBoard3));
 
         //when
-        List<BoardWithOrganizationDto> responses = organizationBoardService.retrieveBoardsWithPagination(null, 0, 3);
+        List<BoardWithOrganizationDtoWithImage> responses = organizationBoardService.retrieveBoardsWithPagination(null, 0, 3);
 
         //then
         assertThat(responses).hasSize(3);
@@ -67,7 +69,7 @@ class OrganizationBoardRetrieveServiceTest extends OrganizationMemberSetUpTest {
         organizationBoardRepository.saveAll(Arrays.asList(organizationBoard1, organizationBoard2));
 
         //when
-        List<BoardWithOrganizationDto> responses = organizationBoardService.retrieveBoardsWithPagination(null, 0, 1);
+        List<BoardWithOrganizationDtoWithImage> responses = organizationBoardService.retrieveBoardsWithPagination(null, 0, 1);
 
         //then
         assertThat(responses).hasSize(1);
@@ -77,7 +79,7 @@ class OrganizationBoardRetrieveServiceTest extends OrganizationMemberSetUpTest {
     @Test
     void 게시물_조회시_없을_경우_NULL이_아닌_빈리스트를_반환() {
         //given
-        List<BoardWithOrganizationDto> responses = organizationBoardService.retrieveBoardsWithPagination(null, 0, 3);
+        List<BoardWithOrganizationDtoWithImage> responses = organizationBoardService.retrieveBoardsWithPagination(null, 0, 3);
 
         //then
         assertThat(responses).isEmpty();
@@ -94,7 +96,7 @@ class OrganizationBoardRetrieveServiceTest extends OrganizationMemberSetUpTest {
         organizationBoardRepository.saveAll(Arrays.asList(organizationBoard1, organizationBoard2, organizationBoard3));
 
         //when
-        List<BoardWithOrganizationDto> responses = organizationBoardService.retrieveBoardsWithPagination(null, organizationBoard3.getId(), 1);
+        List<BoardWithOrganizationDtoWithImage> responses = organizationBoardService.retrieveBoardsWithPagination(null, organizationBoard3.getId(), 1);
 
         //then
         assertThat(responses).hasSize(1);
@@ -111,7 +113,7 @@ class OrganizationBoardRetrieveServiceTest extends OrganizationMemberSetUpTest {
         organizationBoardRepository.saveAll(Arrays.asList(organizationBoard1, organizationBoard2, organizationBoard3));
 
         //when
-        List<BoardWithOrganizationDto> responses = organizationBoardService.retrieveBoardsWithPagination(OrganizationBoardCategory.RECRUIT, organizationBoard3.getId(), 1);
+        List<BoardWithOrganizationDtoWithImage> responses = organizationBoardService.retrieveBoardsWithPagination(OrganizationBoardCategory.RECRUIT, organizationBoard3.getId(), 1);
 
         //then
         assertThat(responses).hasSize(1);
@@ -125,7 +127,7 @@ class OrganizationBoardRetrieveServiceTest extends OrganizationMemberSetUpTest {
         organizationBoardRepository.save(organizationBoard1);
 
         //when
-        List<BoardWithOrganizationDto> responses = organizationBoardService.retrieveBoardsWithPagination(null, organizationBoard1.getId(), 3);
+        List<BoardWithOrganizationDtoWithImage> responses = organizationBoardService.retrieveBoardsWithPagination(null, organizationBoard1.getId(), 3);
 
         //then
         assertThat(responses).isEmpty();
@@ -141,7 +143,7 @@ class OrganizationBoardRetrieveServiceTest extends OrganizationMemberSetUpTest {
         RetrieveImminentBoardsRequest request = RetrieveImminentBoardsRequest.testInstance(LocalDateTime.of(2021, 4, 23, 0, 0), 3);
 
         // when
-        List<OrganizationBoardInfoResponse> organizationBoardInfoResponses = organizationBoardService.retrieveImminentBoards(request);
+        List<OrganizationBoardInfoResponseWithImage> organizationBoardInfoResponses = organizationBoardService.retrieveImminentBoards(request);
 
         // then
         assertThat(organizationBoardInfoResponses).hasSize(1);
@@ -165,7 +167,7 @@ class OrganizationBoardRetrieveServiceTest extends OrganizationMemberSetUpTest {
         RetrieveImminentBoardsRequest request = RetrieveImminentBoardsRequest.testInstance(LocalDateTime.of(2021, 4, 23, 0, 0), 3);
 
         // when
-        List<OrganizationBoardInfoResponse> organizationBoardInfoResponses = organizationBoardService.retrieveImminentBoards(request);
+        List<OrganizationBoardInfoResponseWithImage> organizationBoardInfoResponses = organizationBoardService.retrieveImminentBoards(request);
 
         // then
         assertThat(organizationBoardInfoResponses).isEmpty();
@@ -188,7 +190,7 @@ class OrganizationBoardRetrieveServiceTest extends OrganizationMemberSetUpTest {
         RetrieveImminentBoardsRequest request = RetrieveImminentBoardsRequest.testInstance(LocalDateTime.of(2021, 4, 23, 0, 0), 3);
 
         // when
-        List<OrganizationBoardInfoResponse> organizationBoardInfoResponses = organizationBoardService.retrieveImminentBoards(request);
+        List<OrganizationBoardInfoResponseWithImage> organizationBoardInfoResponses = organizationBoardService.retrieveImminentBoards(request);
 
         // then
         assertThat(organizationBoardInfoResponses).hasSize(1);
@@ -212,7 +214,7 @@ class OrganizationBoardRetrieveServiceTest extends OrganizationMemberSetUpTest {
         RetrieveImminentBoardsRequest request = RetrieveImminentBoardsRequest.testInstance(LocalDateTime.of(2021, 4, 23, 0, 0), 3);
 
         // when
-        List<OrganizationBoardInfoResponse> organizationBoardInfoResponses = organizationBoardService.retrieveImminentBoards(request);
+        List<OrganizationBoardInfoResponseWithImage> organizationBoardInfoResponses = organizationBoardService.retrieveImminentBoards(request);
 
         assertThat(organizationBoardInfoResponses).isEmpty();
     }
@@ -277,13 +279,13 @@ class OrganizationBoardRetrieveServiceTest extends OrganizationMemberSetUpTest {
         assertOrganizationBoardInfo(responses.get(1), organizationBoard2);
     }
 
-    private void assertOrganizationBoardWithCreatorInfo(BoardWithOrganizationDto boardWithOrganizationDto, OrganizationBoard organizationBoard) {
-        assertThat(boardWithOrganizationDto.getBoardId()).isEqualTo(organizationBoard.getId());
-        assertThat(boardWithOrganizationDto.getOrgSubDomain()).isEqualTo(organizationBoard.getSubDomain());
-        assertThat(boardWithOrganizationDto.getBoardTitle()).isEqualTo(organizationBoard.getTitle());
-        assertThat(boardWithOrganizationDto.getBoardStartDateTime()).isEqualTo(organizationBoard.getStartDateTime());
-        assertThat(boardWithOrganizationDto.getBoardEndDateTime()).isEqualTo(organizationBoard.getEndDateTime());
-        assertThat(boardWithOrganizationDto.getBoardCategory()).isEqualTo(organizationBoard.getCategory());
+    private void assertOrganizationBoardWithCreatorInfo(BoardWithOrganizationDtoWithImage boardWithOrganizationDto, OrganizationBoard organizationBoard) {
+        assertThat(boardWithOrganizationDto.getBoardWithOrganizationDto().getBoardId()).isEqualTo(organizationBoard.getId());
+        assertThat(boardWithOrganizationDto.getBoardWithOrganizationDto().getOrgSubDomain()).isEqualTo(organizationBoard.getSubDomain());
+        assertThat(boardWithOrganizationDto.getBoardWithOrganizationDto().getBoardTitle()).isEqualTo(organizationBoard.getTitle());
+        assertThat(boardWithOrganizationDto.getBoardWithOrganizationDto().getBoardStartDateTime()).isEqualTo(organizationBoard.getStartDateTime());
+        assertThat(boardWithOrganizationDto.getBoardWithOrganizationDto().getBoardEndDateTime()).isEqualTo(organizationBoard.getEndDateTime());
+        assertThat(boardWithOrganizationDto.getBoardWithOrganizationDto().getBoardCategory()).isEqualTo(organizationBoard.getCategory());
     }
 
     private void assertOrganizationBoardInfo(OrganizationBoardInfoResponse organizationBoardInfoResponse, OrganizationBoard organizationBoard) {
@@ -294,5 +296,15 @@ class OrganizationBoardRetrieveServiceTest extends OrganizationMemberSetUpTest {
         assertThat(organizationBoardInfoResponse.getEndDateTime()).isEqualTo(organizationBoard.getEndDateTime());
         assertThat(organizationBoardInfoResponse.getType()).isEqualTo(organizationBoard.getCategory());
     }
+
+    private void assertOrganizationBoardInfo(OrganizationBoardInfoResponseWithImage organizationBoardInfoResponse, OrganizationBoard organizationBoard) {
+        assertThat(organizationBoardInfoResponse.getId()).isEqualTo(organizationBoard.getId());
+        assertThat(organizationBoardInfoResponse.getSubDomain()).isEqualTo(organizationBoard.getSubDomain());
+        assertThat(organizationBoardInfoResponse.getTitle()).isEqualTo(organizationBoard.getTitle());
+        assertThat(organizationBoardInfoResponse.getStartDateTime()).isEqualTo(organizationBoard.getStartDateTime());
+        assertThat(organizationBoardInfoResponse.getEndDateTime()).isEqualTo(organizationBoard.getEndDateTime());
+        assertThat(organizationBoardInfoResponse.getType()).isEqualTo(organizationBoard.getCategory());
+    }
+
 
 }

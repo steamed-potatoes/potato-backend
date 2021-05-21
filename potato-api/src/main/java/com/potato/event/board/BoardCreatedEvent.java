@@ -19,8 +19,10 @@ public class BoardCreatedEvent {
 
     private final List<String> hashTags;
 
-    public static BoardCreatedEvent of(BoardType type, Long boardId, Long creatorId, List<String> hashTags) {
-        return new BoardCreatedEvent(type, boardId, creatorId, hashTags);
+    private final List<String> imageUrlList;
+
+    public static BoardCreatedEvent of(BoardType type, Long boardId, Long creatorId, List<String> hashTags, List<String> imageUrlList) {
+        return new BoardCreatedEvent(type, boardId, creatorId, hashTags, imageUrlList);
     }
 
 }

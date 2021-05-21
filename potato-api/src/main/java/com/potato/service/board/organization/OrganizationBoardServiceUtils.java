@@ -1,10 +1,15 @@
 package com.potato.service.board.organization;
 
+import com.potato.domain.image.BoardImage;
+import com.potato.domain.image.BoardImageRepository;
 import com.potato.domain.board.organization.OrganizationBoard;
 import com.potato.domain.board.organization.OrganizationBoardRepository;
 import com.potato.exception.model.NotFoundException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class OrganizationBoardServiceUtils {
@@ -30,6 +35,20 @@ public final class OrganizationBoardServiceUtils {
         if (organizationBoard == null) {
             throw new NotFoundException(String.format("해당하는 그룹의 게시물 (%s)이 존재하지 않습니다", organizationBoardId));
         }
+    }
+
+    public static List<String> findOrganizationBoardImage(BoardImageRepository boardImageRepository, Long organizationBoardId) {
+        List<BoardImage> boardImageList = boardImageRepository.findBoardImageByOrganizationBoardId(organizationBoardId);
+        return getImageUrlList(boardImageList);
+    }
+
+    private static List<String> getImageUrlList(List<BoardImage> boardImageList) {
+        return boardImageList.stream().map(BoardImage::getImageUrl)
+            .collect(Collectors.toList());
+    }
+
+    public static BoardImage findOrganizationBoardMainImage(BoardImageRepository boardImageRepository, Long organizationBoardId) {
+        return boardImageRepository.findMainImageByOrganizationBoardId(organizationBoardId);
     }
 
 }

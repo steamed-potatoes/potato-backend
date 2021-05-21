@@ -12,7 +12,7 @@ import java.util.List;
 @ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class OrganizationBoardInfoResponse extends BaseTimeResponse {
+public class OrganizationBoardInfoResponseWithImage extends BaseTimeResponse {
 
     private Long id;
 
@@ -30,8 +30,10 @@ public class OrganizationBoardInfoResponse extends BaseTimeResponse {
 
     private OrganizationBoardCategory type;
 
+    private List<String> imageUrlList = new ArrayList<>();
+
     @Builder
-    private OrganizationBoardInfoResponse(Long id, String subDomain, String title, LocalDateTime startDateTime, LocalDateTime endDateTime, String content, int likesCount, OrganizationBoardCategory type) {
+    private OrganizationBoardInfoResponseWithImage(Long id, String subDomain, String title, LocalDateTime startDateTime, LocalDateTime endDateTime, String content, int likesCount, OrganizationBoardCategory type, List<String> imageUrlList) {
         this.id = id;
         this.subDomain = subDomain;
         this.title = title;
@@ -40,10 +42,11 @@ public class OrganizationBoardInfoResponse extends BaseTimeResponse {
         this.content = content;
         this.likesCount = likesCount;
         this.type = type;
+        this.imageUrlList = imageUrlList;
     }
 
-    public static OrganizationBoardInfoResponse of(OrganizationBoard organizationBoard) {
-        OrganizationBoardInfoResponse organizationBoardInfoResponse = OrganizationBoardInfoResponse.builder()
+    public static OrganizationBoardInfoResponseWithImage of(OrganizationBoard organizationBoard, List<String> imageUrlList) {
+        OrganizationBoardInfoResponseWithImage organizationBoardInfoResponseWithImage = OrganizationBoardInfoResponseWithImage.builder()
             .id(organizationBoard.getId())
             .subDomain(organizationBoard.getSubDomain())
             .title(organizationBoard.getTitle())
@@ -52,9 +55,10 @@ public class OrganizationBoardInfoResponse extends BaseTimeResponse {
             .endDateTime(organizationBoard.getEndDateTime())
             .likesCount(organizationBoard.getLikesCount())
             .type(organizationBoard.getCategory())
+            .imageUrlList(imageUrlList)
             .build();
-        organizationBoardInfoResponse.setBaseTime(organizationBoard);
-        return organizationBoardInfoResponse;
+        organizationBoardInfoResponseWithImage.setBaseTime(organizationBoard);
+        return organizationBoardInfoResponseWithImage;
     }
 
 }

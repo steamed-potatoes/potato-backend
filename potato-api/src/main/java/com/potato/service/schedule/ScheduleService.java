@@ -2,6 +2,8 @@ package com.potato.service.schedule;
 
 import com.potato.domain.board.admin.AdminBoardRepository;
 import com.potato.domain.board.organization.OrganizationBoardRepository;
+import com.potato.domain.image.BoardImageRepository;
+import com.potato.service.board.organization.OrganizationBoardServiceUtils;
 import com.potato.service.schedule.dto.request.ScheduleRequest;
 import com.potato.service.schedule.dto.response.ScheduleResponse;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,7 @@ public class ScheduleService {
 
     private final OrganizationBoardRepository organizationBoardRepository;
     private final AdminBoardRepository adminBoardRepository;
+    private final BoardImageRepository boardImageRepository;
 
     @Transactional(readOnly = true)
     public ScheduleResponse getDefaultSchedule(ScheduleRequest request) {

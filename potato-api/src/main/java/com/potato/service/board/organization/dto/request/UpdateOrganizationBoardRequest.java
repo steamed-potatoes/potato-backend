@@ -22,7 +22,7 @@ public class UpdateOrganizationBoardRequest {
 
     private String content;
 
-    private String imageUrl;
+    private List<String> imageUrlList;
 
     @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
@@ -39,12 +39,12 @@ public class UpdateOrganizationBoardRequest {
     private List<String> hashTags;
 
     @Builder(builderMethodName = "testBuilder")
-    public UpdateOrganizationBoardRequest(Long organizationBoardId, String title, String content, String imageUrl,
+    public UpdateOrganizationBoardRequest(Long organizationBoardId, String title, String content, List<String> imageUrlList,
                                           LocalDateTime startDateTime, LocalDateTime endDateTime, OrganizationBoardCategory type, List<String> hashTags) {
         this.organizationBoardId = organizationBoardId;
         this.title = title;
         this.content = content;
-        this.imageUrl = imageUrl;
+        this.imageUrlList = imageUrlList;
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
         this.type = type;

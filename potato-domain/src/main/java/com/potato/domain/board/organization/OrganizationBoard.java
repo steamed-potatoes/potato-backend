@@ -54,17 +54,17 @@ public class OrganizationBoard extends BaseTimeEntity {
     private final List<OrganizationBoardLike> organizationBoardLikeList = new ArrayList<>();
 
     @Builder
-    public OrganizationBoard(String subDomain, Long memberId, String title, LocalDateTime startDateTime, LocalDateTime endDateTime, String content, String imageUrl, OrganizationBoardCategory category) {
+    public OrganizationBoard(String subDomain, Long memberId, String title, LocalDateTime startDateTime, LocalDateTime endDateTime, String content, OrganizationBoardCategory category) {
         this.subDomain = subDomain;
         this.memberId = memberId;
         this.category = category;
-        this.boardInfo = BoardInfo.of(title, content, imageUrl);
+        this.boardInfo = BoardInfo.of(title, content);
         this.dateTimeInterval = DateTimeInterval.of(startDateTime, endDateTime);
         this.likesCount = 0;
     }
 
-    public void updateInfo(String title, String content, String imageUrl, LocalDateTime startDateTime, LocalDateTime endDateTime, OrganizationBoardCategory category, Long memberId) {
-        this.boardInfo = BoardInfo.of(title, content, imageUrl);
+    public void updateInfo(String title, String content, LocalDateTime startDateTime, LocalDateTime endDateTime, OrganizationBoardCategory category, Long memberId) {
+        this.boardInfo = BoardInfo.of(title, content);
         this.category = category;
         this.memberId = memberId;
         this.dateTimeInterval = DateTimeInterval.of(startDateTime, endDateTime);
@@ -119,10 +119,6 @@ public class OrganizationBoard extends BaseTimeEntity {
 
     public String getContent() {
         return boardInfo.getContent();
-    }
-
-    public String getImageUrl() {
-        return boardInfo.getImageUrl();
     }
 
 }

@@ -1,5 +1,7 @@
 package com.potato.service.board.organization;
 
+import com.potato.domain.board.organization.repository.dto.BoardWithOrganizationDtoWithImage;
+import com.potato.domain.image.BoardImageRepository;
 import com.potato.domain.board.BoardType;
 import com.potato.domain.board.organization.OrganizationBoard;
 import com.potato.domain.board.organization.OrganizationBoardRepository;
@@ -13,6 +15,7 @@ import com.potato.domain.organization.Organization;
 import com.potato.domain.organization.OrganizationRepository;
 import com.potato.service.board.organization.dto.request.RetrieveImminentBoardsRequest;
 import com.potato.service.board.organization.dto.response.OrganizationBoardInfoResponse;
+import com.potato.service.board.organization.dto.response.OrganizationBoardInfoResponseWithImage;
 import com.potato.service.board.organization.dto.response.OrganizationBoardWithCreatorInfoResponse;
 import com.potato.service.hashtag.BoardHashTagServiceUtils;
 import com.potato.service.member.MemberServiceUtils;
@@ -32,13 +35,15 @@ public class OrganizationBoardRetrieveService {
     private final OrganizationRepository organizationRepository;
     private final MemberRepository memberRepository;
     private final BoardHashTagRepository boardHashTagRepository;
+    private final BoardImageRepository boardImageRepository;
 
     @Transactional(readOnly = true)
     public OrganizationBoardWithCreatorInfoResponse retrieveBoardWithOrganizationAndCreator(Long organizationBoardId) {
         OrganizationBoard organizationBoard = OrganizationBoardServiceUtils.findOrganizationBoardById(organizationBoardRepository, organizationBoardId);
         Organization organization = OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, organizationBoard.getSubDomain());
         Member creator = MemberServiceUtils.findMemberById(memberRepository, organizationBoard.getMemberId());
-        return OrganizationBoardWithCreatorInfoResponse.of(organizationBoard, organization, creator, getBoardHashTags(organizationBoard.getId()));
+        List<String> imageUrlList = OrganizationBoardServiceUtils.findOrganizationBoardImage(boardImageRepository, organizationBoard.getId());
+        return OrganizationBoardWithCreatorInfoResponse.of(organizationBoard, organization, creator, getBoardHashTags(organizationBoard.getId()), imageUrlList);
     }
 
     private List<String> getBoardHashTags(Long boardId) {
@@ -49,15 +54,19 @@ public class OrganizationBoardRetrieveService {
     }
 
     @Transactional(readOnly = true)
-    public List<BoardWithOrganizationDto> retrieveBoardsWithPagination(OrganizationBoardCategory type, long lastOrganizationBoardId, int size) {
-        return organizationBoardRepository.findAllWithOrganizationByTypeLessThanOrderByIdDescLimit(null, type, lastOrganizationBoardId, size);
+    public List<BoardWithOrganizationDtoWithImage> retrieveBoardsWithPagination(OrganizationBoardCategory type, long lastOrganizationBoardId, int size) {
+        return organizationBoardRepository.findAllWithOrganizationByTypeLessThanOrderByIdDescLimit(null, type, lastOrganizationBoardId, size)
+            .stream().map(boardWithOrganizationDto -> BoardWithOrganizationDtoWithImage.of(boardWithOrganizationDto, OrganizationBoardServiceUtils.findOrganizationBoardImage(boardImageRepository, boardWithOrganizationDto.getBoardId())))
+            .collect(Collectors.toList());
+
     }
 
     @Transactional(readOnly = true)
-    public List<OrganizationBoardInfoResponse> retrieveImminentBoards(RetrieveImminentBoardsRequest request) {
+    public List<OrganizationBoardInfoResponseWithImage> retrieveImminentBoards(RetrieveImminentBoardsRequest request) {
         return organizationBoardRepository.findAllByBetweenDateTimeWithLimit(request.getDateTime(), request.getDateTime().plusWeeks(1), request.getSize()).stream()
-            .map(OrganizationBoardInfoResponse::of)
+            .map(organizationBoard -> OrganizationBoardInfoResponseWithImage.of(organizationBoard, OrganizationBoardServiceUtils.findOrganizationBoardImage(boardImageRepository, organizationBoard.getId())))
             .collect(Collectors.toList());
+
     }
 
     @Transactional(readOnly = true)
@@ -68,8 +77,10 @@ public class OrganizationBoardRetrieveService {
     }
 
     @Transactional(readOnly = true)
-    public List<BoardWithOrganizationDto> getBoardsInOrganization(String subDomain, OrganizationBoardCategory type, long lastOrganizationBoardId, int size) {
-        return organizationBoardRepository.findAllWithOrganizationByTypeLessThanOrderByIdDescLimit(subDomain, type, lastOrganizationBoardId, size);
+    public List<BoardWithOrganizationDtoWithImage> getBoardsInOrganization(String subDomain, OrganizationBoardCategory type, long lastOrganizationBoardId, int size) {
+        return organizationBoardRepository.findAllWithOrganizationByTypeLessThanOrderByIdDescLimit(subDomain, type, lastOrganizationBoardId, size).stream()
+            .map(boardWithOrganizationDto ->  BoardWithOrganizationDtoWithImage.of(boardWithOrganizationDto, OrganizationBoardServiceUtils.findOrganizationBoardImage(boardImageRepository, boardWithOrganizationDto.getBoardId())))
+            .collect(Collectors.toList());
     }
 
 }

@@ -18,16 +18,13 @@ public class BoardInfo {
 
     private String content;
 
-    private String imageUrl;
-
-    private BoardInfo(String title, String content, String imageUrl) {
+    private BoardInfo(String title, String content) {
         this.title = title;
         this.content = content;
-        this.imageUrl = imageUrl;
     }
 
-    public static BoardInfo of(String title, String content, String imageUrl) {
-        return new BoardInfo(title, content, imageUrl);
+    public static BoardInfo of(String title, String content) {
+        return new BoardInfo(title, content);
     }
 
     @Override
@@ -35,12 +32,12 @@ public class BoardInfo {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BoardInfo boardInfo = (BoardInfo) o;
-        return Objects.equals(title, boardInfo.title) && Objects.equals(content, boardInfo.content) && Objects.equals(imageUrl, boardInfo.imageUrl);
+        return Objects.equals(title, boardInfo.title) && Objects.equals(content, boardInfo.content);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(title, content, imageUrl);
+        return Objects.hash(title, content);
     }
-    
+
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.potato.controller.ApiResponse;
 import com.potato.domain.board.organization.repository.dto.BoardWithOrganizationDto;
+import com.potato.domain.board.organization.repository.dto.BoardWithOrganizationDtoWithImage;
 import com.potato.service.board.organization.dto.request.CreateOrganizationBoardRequest;
 import com.potato.service.board.organization.dto.request.RetrieveLatestBoardsRequest;
 import com.potato.service.board.organization.dto.request.UpdateOrganizationBoardRequest;
@@ -64,7 +65,7 @@ class OrganizationBoardMockMvc {
         );
     }
 
-    public ApiResponse<List<BoardWithOrganizationDto>> retrieveLatestOrganizationBoardList(long lastOrganizationBoardId, long size, int expectedStatus) throws Exception {
+    public ApiResponse<List<BoardWithOrganizationDtoWithImage>> retrieveLatestOrganizationBoardList(long lastOrganizationBoardId, long size, int expectedStatus) throws Exception {
         MultiValueMap<String, String> retrieveLatestBoardsRequest = new LinkedMultiValueMap<>();
         retrieveLatestBoardsRequest.add("lastOrganizationBoardId", String.valueOf(lastOrganizationBoardId));
         retrieveLatestBoardsRequest.add("size", String.valueOf(size));
@@ -113,7 +114,7 @@ class OrganizationBoardMockMvc {
         );
     }
 
-    public ApiResponse<List<BoardWithOrganizationDto>> getBoardsInOrganization(String subDomain, RetrieveLatestBoardsRequest request, int expectedStatus) throws Exception {
+    public ApiResponse<List<BoardWithOrganizationDtoWithImage>> getBoardsInOrganization(String subDomain, RetrieveLatestBoardsRequest request, int expectedStatus) throws Exception {
         MockHttpServletRequestBuilder builder = get("/api/v2/organization/board/list/in/".concat(subDomain))
             .param("lastOrganizationBoardId", String.valueOf(request.getLastOrganizationBoardId()))
             .param("size", String.valueOf(request.getSize()));
