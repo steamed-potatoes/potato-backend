@@ -1,7 +1,7 @@
 package com.potato.domain.board;
 
-import com.potato.domain.board.admin.AdminBoard;
-import com.potato.domain.board.admin.AdminBoardRepository;
+import com.potato.domain.domain.board.admin.AdminBoard;
+import com.potato.domain.domain.board.admin.AdminBoardRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

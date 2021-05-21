@@ -1,5 +1,6 @@
 package com.potato.domain.organization;
 
+import com.potato.domain.domain.organization.OrganizationCategory;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
