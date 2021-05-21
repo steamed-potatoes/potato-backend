@@ -51,13 +51,11 @@ public class AdminBoardServiceTest extends AdminSetupTest {
         // given
         String content = "content";
         String title = "title";
-        String imageUrl = "http://image.com";
         LocalDateTime startDateTime = LocalDateTime.of(2021, 9, 3, 12, 12);
         LocalDateTime endDateTime = LocalDateTime.of(2021, 9, 5, 12, 12);
         CreateAdminBoardRequest request = CreateAdminBoardRequest.testBuilder()
             .title(title)
             .content(content)
-            .imageUrl(imageUrl)
             .startDateTime(startDateTime)
             .endDateTime(endDateTime)
             .build();
@@ -68,7 +66,7 @@ public class AdminBoardServiceTest extends AdminSetupTest {
         // then
         List<AdminBoard> adminBoardList = adminBoardRepository.findAll();
         assertThat(adminBoardList).hasSize(1);
-        assertAdminBoard(adminBoardList.get(0), title, content, imageUrl, startDateTime, endDateTime, adminMemberId);
+        assertAdminBoard(adminBoardList.get(0), title, content, startDateTime, endDateTime, adminMemberId);
     }
 
     @Test
@@ -85,7 +83,6 @@ public class AdminBoardServiceTest extends AdminSetupTest {
 
         String title = "학사행정";
         String content = "내용";
-        String imageUrl = "imageUrl";
         LocalDateTime startDateTime = LocalDateTime.of(2021, 4, 1, 0, 0);
         LocalDateTime endDateTime = LocalDateTime.of(2021, 4, 3, 0, 0);
 
@@ -93,7 +90,6 @@ public class AdminBoardServiceTest extends AdminSetupTest {
             .adminBoardId(adminBoard.getId())
             .title(title)
             .content(content)
-            .imageUrl(imageUrl)
             .startDateTime(startDateTime)
             .endDateTime(endDateTime)
             .build();
@@ -104,7 +100,7 @@ public class AdminBoardServiceTest extends AdminSetupTest {
         // then
         List<AdminBoard> adminBoardList = adminBoardRepository.findAll();
         assertThat(adminBoardList).hasSize(1);
-        assertAdminBoard(adminBoardList.get(0), title, content, imageUrl, startDateTime, endDateTime, adminMemberId);
+        assertAdminBoard(adminBoardList.get(0), title, content, startDateTime, endDateTime, adminMemberId);
     }
 
     @Test
@@ -145,7 +141,7 @@ public class AdminBoardServiceTest extends AdminSetupTest {
         ).isInstanceOf(NotFoundException.class);
     }
 
-    private void assertAdminBoard(AdminBoard adminBoard, String title, String content, String imageUrl, LocalDateTime startDateTime, LocalDateTime endDateTime, Long adminMemberId) {
+    private void assertAdminBoard(AdminBoard adminBoard, String title, String content, LocalDateTime startDateTime, LocalDateTime endDateTime, Long adminMemberId) {
         assertThat(adminBoard.getAdministratorId()).isEqualTo(adminMemberId);
         assertThat(adminBoard.getTitle()).isEqualTo(title);
         assertThat(adminBoard.getContent()).isEqualTo(content);

@@ -58,7 +58,7 @@ public class BoardCommentController {
     @Auth
     @PostMapping("/api/v2/board/comment/like")
     public ApiResponse<String> likeBoardComment(@Valid @RequestBody LikeBoardCommentRequest request, @MemberId Long memberId) {
-        boardCommentService.likeBoardComment(request.getBoardCommentId(), memberId);
+        boardCommentService.likeBoardComment(request, memberId);
         return ApiResponse.OK;
     }
 
@@ -66,7 +66,7 @@ public class BoardCommentController {
     @Auth
     @DeleteMapping("/api/v2/board/comment/like")
     public ApiResponse<String> unlikeBoardComment(@Valid LikeBoardCommentRequest request, @MemberId Long memberId) {
-        boardCommentService.unLikeBoardComment(request.getBoardCommentId(), memberId);
+        boardCommentService.unLikeBoardComment(request, memberId);
         return ApiResponse.OK;
     }
 

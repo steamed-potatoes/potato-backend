@@ -15,12 +15,12 @@ public class BoardImageEventListener {
 
     @EventListener
     public void addBoardImages(BoardCreatedEvent event) {
-        boardImageService.addImage(event.getBoardId(), event.getImageUrlList(), event.getType());
+        boardImageService.addImage(event.getBoardId(), event.getType(), event.getImageUrls());
     }
 
     @EventListener
     public void updateBoardImages(BoardUpdatedEvent event) {
-        boardImageService.updateImage(event.getBoardId(), event.getImageUrlList(), event.getType());
+        boardImageService.updateImage(event.getBoardId(), event.getType(), event.getImageUrlList());
     }
 
 }

@@ -13,4 +13,8 @@ public class DeleteOrganizationBoardRequest {
     @NotNull
     private Long organizationBoardId;
 
+    public static DeleteOrganizationBoardRequest testInstance(Long organizationBoardId) {
+        return new DeleteOrganizationBoardRequest(organizationBoardId);
+    }
+
 }

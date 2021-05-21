@@ -14,8 +14,8 @@ Authorization: Bearer {{AUTHORIZATION}}
         "고구마"
     ],
     "imageUrlList": [
-        "potato.png",
-        "hello.png"
+        "https://avatars.githubusercontent.com/u/48153675?v=4",
+        "https://avatars.githubusercontent.com/u/71378543?s=200&v=4"
     ]
 }
 
@@ -24,7 +24,7 @@ GET {{host_api}}/api/v2/organization/board?organizationBoardId=1
 
 
 ### 얼마 남지 않은 게시물
-GET {{host_api}}/api/v2/organization/board/list/imminentBoards?dateTime=2021-04-25T00:00:00&size=5
+GET {{host_api}}/api/v2/organization/board/list/imminentBoards?dateTime=2021-05-03T00:00:00&size=5
 
 ### 그룹 게시물 정보를 변경하는 API
 PUT {{host_api}}/api/v2/organization/board/potato
@@ -37,7 +37,7 @@ Authorization: Bearer {{AUTHORIZATION}}
     "content": "감지 동아리에서 신규 회원을 모집합니다 - 변경",
     "startDateTime": "2021-03-05T00:00:00",
     "endDateTime": "2021-03-13T11:59:59",
-    "imageUrl": "http://image.url",
+    "imageUrl": "https://avatars.githubusercontent.com/u/48153675?v=4",
     "type": "RECRUIT",
     "hashTags": [
         "백엔드"

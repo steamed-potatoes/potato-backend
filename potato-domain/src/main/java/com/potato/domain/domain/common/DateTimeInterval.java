@@ -3,14 +3,15 @@ package com.potato.domain.domain.common;
 import com.potato.common.exception.ErrorCode;
 import com.potato.common.exception.model.ValidationException;
 import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
+@EqualsAndHashCode
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Embeddable
@@ -36,19 +37,6 @@ public class DateTimeInterval {
         if (startDateTime.isAfter(endDateTime)) {
             throw new ValidationException(String.format("시작 날짜(%s)가 종료 날짜(%s) 보다 이후일 수 없습니다", startDateTime, endDateTime), ErrorCode.VALIDATION_DATETIME_INTERVAL_EXCEPTION);
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        DateTimeInterval that = (DateTimeInterval) o;
-        return Objects.equals(startDateTime, that.startDateTime) && Objects.equals(endDateTime, that.endDateTime);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(startDateTime, endDateTime);
     }
 
 }

@@ -23,14 +23,4 @@ public class BoardImageRepositoryCustomImpl implements BoardImageRepositoryCusto
             .fetch();
     }
 
-    @Override
-    public BoardImage findMainImageByOrganizationBoardId(Long organizationBoardId) {
-        return queryFactory.selectFrom(boardImage)
-            .where(
-                boardImage.boardId.eq(organizationBoardId)
-            )
-            .limit(1)
-            .fetchOne();
-    }
-
 }

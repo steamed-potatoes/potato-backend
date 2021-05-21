@@ -80,7 +80,7 @@ public class OrganizationControllerTest extends ControllerTestUtils {
         // given
         String token = administratorMockMvc.getMockAdminToken();
 
-        Organization organization = OrganizationCreator.create("potato", "감자", "설명", "http://profile.com", OrganizationCategory.NON_APPROVED_CIRCLE);
+        Organization organization = OrganizationCreator.create("potato", "감자", "설명", "https://profile.com", OrganizationCategory.NON_APPROVED_CIRCLE);
         organization.addAdmin(1L);
         organizationRepository.save(organization);
 
@@ -99,7 +99,7 @@ public class OrganizationControllerTest extends ControllerTestUtils {
         // given
         String token = administratorMockMvc.getMockAdminToken();
 
-        Organization organization = OrganizationCreator.create("potato", "감자", "설명", "http://profile.com", OrganizationCategory.APPROVED_CIRCLE);
+        Organization organization = OrganizationCreator.create("potato", "감자", "설명", "https://profile.com", OrganizationCategory.APPROVED_CIRCLE);
         organization.addAdmin(1L);
         organizationRepository.save(organization);
 

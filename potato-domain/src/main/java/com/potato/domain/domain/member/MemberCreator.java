@@ -13,7 +13,7 @@ public class MemberCreator {
         return Member.builder()
             .email(email)
             .name("테스트 유저")
-            .profileUrl("http://profile.com")
+            .profileUrl("https://profile.com")
             .provider(MemberProvider.GOOGLE)
             .major(MemberMajor.IT_ICT)
             .classNumber(201610323)

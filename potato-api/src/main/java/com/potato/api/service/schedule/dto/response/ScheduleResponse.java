@@ -20,7 +20,7 @@ public class ScheduleResponse {
 
     public static ScheduleResponse of(List<OrganizationBoard> organizationBoardList, List<AdminBoard> adminBoardList) {
         List<OrganizationBoardInfoResponse> organizationBoards = organizationBoardList.stream()
-            .map(organizationBoard -> OrganizationBoardInfoResponse.of(organizationBoard))
+            .map(OrganizationBoardInfoResponse::of)
             .collect(Collectors.toList());
         List<AdminBoardInfoResponse> adminBoardInfoResponses = adminBoardList.stream()
             .map(AdminBoardInfoResponse::of)

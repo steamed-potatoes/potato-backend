@@ -3,7 +3,7 @@ POST {{host_api}}/api/v1/member
 Content-Type: application/json
 
 {
-    "email": "will.seungho@gmail.com",
+    "email": "wil123133l.seungho@gmail.com",
     "name": "강승호",
     "profileUrl": "https://avatars.githubusercontent.com/u/48153675?v=4",
     "major": "IT_ICT",

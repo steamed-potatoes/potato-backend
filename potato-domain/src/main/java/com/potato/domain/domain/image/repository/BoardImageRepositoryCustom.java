@@ -8,6 +8,4 @@ public interface BoardImageRepositoryCustom {
 
     List<BoardImage> findBoardImageByOrganizationBoardId(Long boardId);
 
-    BoardImage findMainImageByOrganizationBoardId(Long organizationBoardId);
-
 }

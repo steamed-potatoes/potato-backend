@@ -1,5 +1,6 @@
 package com.potato.api.service.comment;
 
+import com.potato.api.service.comment.dto.request.LikeBoardCommentRequest;
 import com.potato.domain.domain.board.admin.AdminBoardRepository;
 import com.potato.domain.domain.board.organization.OrganizationBoardRepository;
 import com.potato.domain.domain.comment.BoardComment;
@@ -56,14 +57,14 @@ public class BoardCommentService {
     }
 
     @Transactional
-    public void likeBoardComment(Long boardCommentId, Long memberId) {
-        BoardComment boardComment = BoardCommentServiceUtils.findBoardCommentById(boardCommentRepository, boardCommentId);
+    public void likeBoardComment(LikeBoardCommentRequest request, Long memberId) {
+        BoardComment boardComment = BoardCommentServiceUtils.findBoardCommentById(boardCommentRepository, request.getBoardCommentId());
         boardComment.addLike(memberId);
     }
 
     @Transactional
-    public void unLikeBoardComment(Long boardCommentId, Long memberId) {
-        BoardComment boardComment = BoardCommentServiceUtils.findBoardCommentById(boardCommentRepository, boardCommentId);
+    public void unLikeBoardComment(LikeBoardCommentRequest request, Long memberId) {
+        BoardComment boardComment = BoardCommentServiceUtils.findBoardCommentById(boardCommentRepository, request.getBoardCommentId());
         boardComment.deleteLike(memberId);
     }
 
