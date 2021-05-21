@@ -16,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
+import static com.potato.api.helper.member.MemberTestHelper.assertMemberInfoResponse;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @AutoConfigureMockMvc
@@ -108,7 +109,7 @@ class MemberControllerTest extends ControllerTestUtils {
         ApiResponse<MemberInfoResponse> response = memberMockMvc.getMyMemberInfo(token, 200);
 
         // then
-        assertMemberInfoResponse(response.getData(), testMember.getEmail(), testMember.getName(), testMember.getMajorName(), testMember.getClassNumber(), testMember.getProfileUrl());
+        assertMemberInfoResponse(response.getData(), testMember.getEmail(), testMember.getName(), testMember.getProfileUrl(), testMember.getMajor(), testMember.getClassNumber());
     }
 
     @Test
@@ -139,7 +140,7 @@ class MemberControllerTest extends ControllerTestUtils {
         ApiResponse<MemberInfoResponse> response = memberMockMvc.updateMemberInfo(request, token, 200);
 
         // then
-        assertMemberInfoResponse(response.getData(), testMember.getEmail(), name, major.getName(), classNumber, profileUrl);
+        assertMemberInfoResponse(response.getData(), testMember.getEmail(), name, profileUrl, major, classNumber);
     }
 
     @Test
@@ -148,7 +149,7 @@ class MemberControllerTest extends ControllerTestUtils {
         ApiResponse<MemberInfoResponse> response = memberMockMvc.getMemberInfo(testMember.getId(), 200);
 
         // then
-        assertMemberInfoResponse(response.getData(), testMember.getEmail(), testMember.getName(), testMember.getMajorName(), testMember.getClassNumber(), testMember.getProfileUrl());
+        assertMemberInfoResponse(response.getData(), testMember.getEmail(), testMember.getName(), testMember.getProfileUrl(), testMember.getMajor(), testMember.getClassNumber());
     }
 
     @Test
@@ -167,14 +168,6 @@ class MemberControllerTest extends ControllerTestUtils {
 
         // then
         assertThat(response.getData()).hasSize(MemberMajor.values().length);
-    }
-
-    private void assertMemberInfoResponse(MemberInfoResponse response, String email, String name, String major, int classNumber, String profileUrl) {
-        assertThat(response.getEmail()).isEqualTo(email);
-        assertThat(response.getName()).isEqualTo(name);
-        assertThat(response.getMajor()).isEqualTo(major);
-        assertThat(response.getClassNumber()).isEqualTo(classNumber);
-        assertThat(response.getProfileUrl()).isEqualTo(profileUrl);
     }
 
 }

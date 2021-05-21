@@ -23,6 +23,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.potato.api.helper.organization.OrganizationServiceTestUtils.assertMemberInOrganizationResponse;
+import static com.potato.api.helper.organization.OrganizationServiceTestUtils.assertOrganizationInfoResponse;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @AutoConfigureMockMvc
@@ -76,7 +78,7 @@ class OrganizationControllerTest extends ControllerTestUtils {
         ApiResponse<OrganizationInfoResponse> response = organizationMockMvc.createOrganization(request, token, 200);
 
         // then
-        assertOrganizationInfoResponse(response.getData(), subDomain, name, description, profileUrl, 1, OrganizationCategory.NON_APPROVED_CIRCLE);
+        assertOrganizationInfoResponse(response.getData(), subDomain, name, description, profileUrl, OrganizationCategory.NON_APPROVED_CIRCLE, 1);
     }
 
     @Test
@@ -111,7 +113,7 @@ class OrganizationControllerTest extends ControllerTestUtils {
         ApiResponse<OrganizationWithMembersInfoResponse> response = organizationMockMvc.getDetailOrganizationInfo(subDomain, 200);
 
         // then
-        assertOrganizationInfoResponse(response.getData().getOrganization(), subDomain, name, description, profileUrl, 1, organization.getCategory());
+        assertOrganizationInfoResponse(response.getData().getOrganization(), subDomain, name, description, profileUrl, organization.getCategory(), 1);
 
         assertThat(response.getData().getMembers()).hasSize(1);
         assertMemberInOrganizationResponse(response.getData().getMembers().get(0), testMember.getId(), testMember.getEmail(),
@@ -129,7 +131,7 @@ class OrganizationControllerTest extends ControllerTestUtils {
 
         // then
         assertThat(response.getData()).hasSize(1);
-        assertOrganizationInfoResponse(response.getData().get(0), subDomain, name, description, profileUrl, 1, OrganizationCategory.NON_APPROVED_CIRCLE);
+        assertOrganizationInfoResponse(response.getData().get(0), subDomain, name, description, profileUrl, OrganizationCategory.NON_APPROVED_CIRCLE, 1);
     }
 
     @Test
@@ -149,8 +151,8 @@ class OrganizationControllerTest extends ControllerTestUtils {
 
         // then
         assertThat(response.getData()).hasSize(2);
-        assertOrganizationInfoResponse(response.getData().get(0), subDomain, name, description, profileUrl, 1, OrganizationCategory.NON_APPROVED_CIRCLE);
-        assertOrganizationInfoResponse(response.getData().get(1), organization2.getSubDomain(), organization2.getName(), organization2.getDescription(), organization2.getProfileUrl(), 1, OrganizationCategory.NON_APPROVED_CIRCLE);
+        assertOrganizationInfoResponse(response.getData().get(0), subDomain, name, description, profileUrl, OrganizationCategory.NON_APPROVED_CIRCLE, 1);
+        assertOrganizationInfoResponse(response.getData().get(1), organization2.getSubDomain(), organization2.getName(), organization2.getDescription(), organization2.getProfileUrl(), OrganizationCategory.NON_APPROVED_CIRCLE, 1);
     }
 
     @Test
@@ -164,7 +166,7 @@ class OrganizationControllerTest extends ControllerTestUtils {
 
         // then
         assertThat(response.getData()).hasSize(1);
-        assertOrganizationInfoResponse(response.getData().get(0), subDomain, name, description, profileUrl, 1, OrganizationCategory.NON_APPROVED_CIRCLE);
+        assertOrganizationInfoResponse(response.getData().get(0), subDomain, name, description, profileUrl, OrganizationCategory.NON_APPROVED_CIRCLE, 1);
     }
 
     @Test
@@ -219,23 +221,6 @@ class OrganizationControllerTest extends ControllerTestUtils {
 
         //then
         assertThat(response.getCode()).isEqualTo(ErrorCode.FORBIDDEN_EXCEPTION.getCode());
-    }
-
-    private void assertOrganizationInfoResponse(OrganizationInfoResponse response, String subDomain, String name, String description, String profileUrl, int membersCount, OrganizationCategory category) {
-        assertThat(response.getSubDomain()).isEqualTo(subDomain);
-        assertThat(response.getName()).isEqualTo(name);
-        assertThat(response.getDescription()).isEqualTo(description);
-        assertThat(response.getProfileUrl()).isEqualTo(profileUrl);
-        assertThat(response.getMembersCount()).isEqualTo(membersCount);
-        assertThat(response.getCategory()).isEqualTo(category);
-    }
-
-    private void assertMemberInOrganizationResponse(MemberInOrganizationResponse response, Long memberId, String email, String name, String profileUrl, OrganizationRole role) {
-        assertThat(response.getMemberId()).isEqualTo(memberId);
-        assertThat(response.getEmail()).isEqualTo(email);
-        assertThat(response.getName()).isEqualTo(name);
-        assertThat(response.getProfileUrl()).isEqualTo(profileUrl);
-        assertThat(response.getRole()).isEqualTo(role);
     }
 
 }

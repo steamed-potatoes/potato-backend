@@ -16,11 +16,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import static com.potato.api.helper.organization.OrganizationServiceTestUtils.assertOrganizationInfoResponse;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @AutoConfigureMockMvc
 @SpringBootTest
-public class OrganizationAdminControllerTest extends ControllerTestUtils {
+class OrganizationAdminControllerTest extends ControllerTestUtils {
 
     private OrganizationMockMvc organizationMockMvc;
 
@@ -68,7 +69,7 @@ public class OrganizationAdminControllerTest extends ControllerTestUtils {
         ApiResponse<OrganizationInfoResponse> response = organizationMockMvc.updateOrganizationInfo(subDomain, request, token, 200);
 
         //then
-        assertOrganizationInfoResponse(response.getData(), organization.getSubDomain(), updateName, updateDescription, updateProfileUrl, 1, organization.getCategory());
+        assertOrganizationInfoResponse(response.getData(), organization.getSubDomain(), updateName, updateDescription, updateProfileUrl, organization.getCategory(), 1);
     }
 
     @Test
@@ -86,15 +87,6 @@ public class OrganizationAdminControllerTest extends ControllerTestUtils {
 
         // then
         assertThat(response.getCode()).isEqualTo(ErrorCode.FORBIDDEN_EXCEPTION.getCode());
-    }
-
-    private void assertOrganizationInfoResponse(OrganizationInfoResponse response, String subDomain, String name, String description, String profileUrl, int membersCount, OrganizationCategory category) {
-        assertThat(response.getSubDomain()).isEqualTo(subDomain);
-        assertThat(response.getName()).isEqualTo(name);
-        assertThat(response.getDescription()).isEqualTo(description);
-        assertThat(response.getProfileUrl()).isEqualTo(profileUrl);
-        assertThat(response.getMembersCount()).isEqualTo(membersCount);
-        assertThat(response.getCategory()).isEqualTo(category);
     }
 
 }
