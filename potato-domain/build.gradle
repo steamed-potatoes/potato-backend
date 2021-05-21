@@ -7,6 +7,7 @@ tasks.bootJar {
 }
 
 dependencies {
+    api project(':potato-common')
     api group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '2.3.8.RELEASE'
 
     runtimeOnly 'com.h2database:h2'

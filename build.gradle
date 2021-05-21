@@ -50,6 +50,7 @@ subprojects {
 }
 
 def testProjects = [
+    project(':potato-admin'),
     project(':potato-api'),
     project(':potato-domain')
 ]

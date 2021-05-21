@@ -1,5 +1,8 @@
 package com.potato.domain.member;
 
+import com.potato.domain.domain.member.Member;
+import com.potato.domain.domain.member.MemberCreator;
+import com.potato.domain.domain.member.MemberRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

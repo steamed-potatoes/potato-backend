@@ -3,4 +3,5 @@ include 'potato-domain'
 include 'potato-api'
 include 'potato-admin'
 include 'potato-external'
+include 'potato-common'
 

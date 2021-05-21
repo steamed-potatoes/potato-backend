@@ -8,11 +8,14 @@ Authorization: Bearer {{AUTHORIZATION}}
     "content": "감자 모각코",
     "startDateTime": "2021-05-01T00:00:00",
     "endDateTime": "2021-05-08T11:59:59",
-    "imageUrl": "https://avatars.githubusercontent.com/u/48153675?v=4",
     "type": "RECRUIT",
     "hashTags": [
         "감자",
         "고구마"
+    ],
+    "imageUrlList": [
+        "potato.png",
+        "hello.png"
     ]
 }
 
@@ -38,6 +41,10 @@ Authorization: Bearer {{AUTHORIZATION}}
     "type": "RECRUIT",
     "hashTags": [
         "백엔드"
+    ],
+    "imageUrlList": [
+        "potato.png",
+        "hello.png"
     ]
 }
 
@@ -61,7 +68,7 @@ GET {{host_api}}/api/v2/organization/board/list?lastOrganizationBoardId=0&size=5
 
 
 ### 그룹의 게시물을 스크롤 페이지네이션 기반으로 조회하는 API
-GET {{host_api}}/api/v2/organization/board/list/potato?lastOrganizationBoardId=0&size=5&type=RECRUIT
+GET {{host_api}}/api/v2/organization/board/list/in/potato?lastOrganizationBoardId=0&size=5&type=RECRUIT
 
 ### 그룹 게시물 삭제
 DELETE  {{host_api}}/api/v2/organization/board/potato?organizationBoardId=1

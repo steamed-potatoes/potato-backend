@@ -1,9 +1,9 @@
 package com.potato.domain.board;
 
-import com.potato.domain.board.organization.OrganizationBoard;
-import com.potato.domain.board.organization.OrganizationBoardCategory;
-import com.potato.domain.board.organization.OrganizationBoardCreator;
-import com.potato.domain.board.organization.OrganizationBoardRepository;
+import com.potato.domain.domain.board.organization.OrganizationBoard;
+import com.potato.domain.domain.board.organization.OrganizationBoardCategory;
+import com.potato.domain.domain.board.organization.OrganizationBoardCreator;
+import com.potato.domain.domain.board.organization.OrganizationBoardRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +39,6 @@ class OrganizationBoardRepositoryTest {
             .endDateTime(LocalDateTime.of(2021, 3, 1, 0, 1))
             .title("감자 신입회원 모집")
             .content("감자팀 신입회원을 모집합니다. 많은 참여바랍니다")
-            .imageUrl("http://image.com")
             .category(OrganizationBoardCategory.RECRUIT)
             .build();
         organizationBoardRepository.save(organizationBoard);
@@ -64,7 +63,6 @@ class OrganizationBoardRepositoryTest {
             .endDateTime(LocalDateTime.of(2021, 4, 1, 0, 0))
             .title("감자 신입회원 모집")
             .content("감자팀 신입회원을 모집합니다. 많은 참여바랍니다")
-            .imageUrl("http://image.com")
             .category(OrganizationBoardCategory.RECRUIT)
             .build();
         organizationBoardRepository.save(organizationBoard);
@@ -89,7 +87,6 @@ class OrganizationBoardRepositoryTest {
             .endDateTime(LocalDateTime.of(2021, 3, 1, 0, 0))
             .title("감자 신입회원 모집")
             .content("감자팀 신입회원을 모집합니다. 많은 참여바랍니다")
-            .imageUrl("http://image.com")
             .category(OrganizationBoardCategory.RECRUIT)
             .build();
         organizationBoardRepository.save(organizationBoard);
@@ -114,7 +111,6 @@ class OrganizationBoardRepositoryTest {
             .endDateTime(LocalDateTime.of(2021, 4, 2, 0, 0))
             .title("감자 신입회원 모집")
             .content("감자팀 신입회원을 모집합니다. 많은 참여바랍니다")
-            .imageUrl("http://image.com")
             .category(OrganizationBoardCategory.RECRUIT)
             .build();
         organizationBoardRepository.save(organizationBoard);
@@ -139,7 +135,6 @@ class OrganizationBoardRepositoryTest {
             .endDateTime(LocalDateTime.of(2021, 3, 16, 0, 0))
             .title("감자 신입회원 모집")
             .content("감자팀 신입회원을 모집합니다. 많은 참여바랍니다")
-            .imageUrl("http://image.com")
             .category(OrganizationBoardCategory.RECRUIT)
             .build();
         organizationBoardRepository.save(organizationBoard);
