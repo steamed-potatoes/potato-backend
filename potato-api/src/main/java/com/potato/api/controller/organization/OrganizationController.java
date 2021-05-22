@@ -19,6 +19,7 @@ import javax.validation.Valid;
 
 import java.util.List;
 
+import static com.potato.api.config.interceptor.auth.Auth.Role.OPTIONAL_LOGIN;
 import static com.potato.api.config.interceptor.auth.Auth.Role.ORGANIZATION_MEMBER;
 
 @RequiredArgsConstructor
@@ -35,10 +36,11 @@ public class OrganizationController {
         return ApiResponse.success(organizationService.createOrganization(request, memberId));
     }
 
-    @Operation(summary = "특정 그룹의 정보를 조회하는 API")
+    @Auth(role = OPTIONAL_LOGIN)
+    @Operation(summary = "특정 그룹의 정보를 조회하는 API", security = {@SecurityRequirement(name = "BearerKey")})
     @GetMapping("/api/v1/organization/{subDomain}")
-    public ApiResponse<OrganizationWithMembersInfoResponse> getDetailOrganizationInfo(@PathVariable String subDomain) {
-        return ApiResponse.success(organizationRetrieveService.getDetailOrganizationInfo(subDomain));
+    public ApiResponse<OrganizationWithMembersInfoResponse> getDetailOrganizationInfo(@PathVariable String subDomain, @MemberId Long memberId) {
+        return ApiResponse.success(organizationRetrieveService.getDetailOrganizationInfo(subDomain, memberId));
     }
 
     @Operation(summary = "등록된 그룹 리스트를 불러오는 API")

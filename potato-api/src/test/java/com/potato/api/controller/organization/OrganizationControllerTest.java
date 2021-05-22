@@ -10,7 +10,6 @@ import com.potato.domain.domain.organization.OrganizationRole;
 import com.potato.common.exception.ErrorCode;
 import com.potato.api.service.organization.dto.request.CreateOrganizationRequest;
 import com.potato.api.service.organization.dto.request.RetrievePopularOrganizationsRequest;
-import com.potato.api.service.organization.dto.response.MemberInOrganizationResponse;
 import com.potato.api.service.organization.dto.response.OrganizationInfoResponse;
 import com.potato.api.service.organization.dto.response.OrganizationWithMembersInfoResponse;
 import org.junit.jupiter.api.AfterEach;
@@ -110,7 +109,7 @@ class OrganizationControllerTest extends ControllerTestUtils {
         organizationRepository.save(organization);
 
         // when
-        ApiResponse<OrganizationWithMembersInfoResponse> response = organizationMockMvc.getDetailOrganizationInfo(subDomain, 200);
+        ApiResponse<OrganizationWithMembersInfoResponse> response = organizationMockMvc.getDetailOrganizationInfo(subDomain, token, 200);
 
         // then
         assertOrganizationInfoResponse(response.getData().getOrganization(), subDomain, name, description, profileUrl, organization.getCategory(), 1);
@@ -118,6 +117,46 @@ class OrganizationControllerTest extends ControllerTestUtils {
         assertThat(response.getData().getMembers()).hasSize(1);
         assertMemberInOrganizationResponse(response.getData().getMembers().get(0), testMember.getId(), testMember.getEmail(),
             testMember.getName(), testMember.getProfileUrl(), OrganizationRole.ADMIN);
+    }
+
+    @Test
+    void 그룹을_팔로우한_로그인한_유저가_그룹_상세_조회시_팔로우했다고_표시된다() throws Exception {
+        // given
+        organization.addAdmin(testMember.getId());
+        organization.addFollow(testMember.getId());
+        organizationRepository.save(organization);
+
+        // when
+        ApiResponse<OrganizationWithMembersInfoResponse> response = organizationMockMvc.getDetailOrganizationInfo(subDomain, token, 200);
+
+        // then
+        assertThat(response.getData().getIsFollower()).isTrue();
+    }
+
+    @Test
+    void 그룹을_팔로우하지_않은_로그인한_유저가_그룹_상세_조회를_하면_팔로우하지_않았다고_표시된다() throws Exception {
+        // given
+        organization.addAdmin(testMember.getId());
+        organizationRepository.save(organization);
+
+        // when
+        ApiResponse<OrganizationWithMembersInfoResponse> response = organizationMockMvc.getDetailOrganizationInfo(subDomain, token, 200);
+
+        // then
+        assertThat(response.getData().getIsFollower()).isFalse();
+    }
+
+    @Test
+    void 로그인_하지_않은_유저가_그룹_상세_조회를_하면__401_에러_없이_팔로우하지_않았다고_표시된다() throws Exception {
+        // given
+        organization.addAdmin(testMember.getId());
+        organizationRepository.save(organization);
+
+        // when
+        ApiResponse<OrganizationWithMembersInfoResponse> response = organizationMockMvc.getDetailOrganizationInfo(subDomain, "Wrong Token", 200);
+
+        // then
+        assertThat(response.getData().getIsFollower()).isFalse();
     }
 
     @Test

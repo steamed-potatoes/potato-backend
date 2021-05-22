@@ -47,8 +47,9 @@ class OrganizationMockMvc {
         );
     }
 
-    public ApiResponse<OrganizationWithMembersInfoResponse> getDetailOrganizationInfo(String subDomain, int expectedStatus) throws Exception {
-        MockHttpServletRequestBuilder builder = get("/api/v1/organization/" + subDomain);
+    public ApiResponse<OrganizationWithMembersInfoResponse> getDetailOrganizationInfo(String subDomain, String token, int expectedStatus) throws Exception {
+        MockHttpServletRequestBuilder builder = get("/api/v1/organization/" + subDomain)
+            .header(HttpHeaders.AUTHORIZATION, "Bearer ".concat(token));
         return objectMapper.readValue(
             mockMvc.perform(builder)
                 .andExpect(status().is(expectedStatus))
