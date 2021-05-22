@@ -93,7 +93,7 @@ public class BoardComment extends BaseTimeEntity {
     }
 
     public void addLike(Long memberId) {
-        if (alreadyLike(memberId)) {
+        if (isLike(memberId)) {
             throw new ConflictException(String.format("멤버 (%s)는 (%s) 댓글에 좋아요를 누른 상태입니다.", memberId, this.id));
         }
         validateNotDeletedBoardComment();
@@ -102,7 +102,7 @@ public class BoardComment extends BaseTimeEntity {
         this.commentLikeCounts++;
     }
 
-    private boolean alreadyLike(Long memberId) {
+    public boolean isLike(Long memberId) {
         return this.boardCommentLikeList.stream()
             .anyMatch(boardCommentLike -> boardCommentLike.isSameMember(memberId));
     }

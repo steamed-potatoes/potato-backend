@@ -26,33 +26,36 @@ public class BoardCommentResponse extends BaseTimeResponse {
 
     private int boardCommentLikeCounts;
 
+    private Boolean isLike;
+
     private final List<BoardCommentResponse> children = new ArrayList<>();
 
     @Builder
-    private BoardCommentResponse(Long id, BoardType type, Long boardId, Long memberId, String content, int boardCommentLikeCounts) {
+    private BoardCommentResponse(Long id, BoardType type, Long boardId, Long memberId, String content, int boardCommentLikeCounts, boolean isLike) {
         this.id = id;
         this.type = type;
         this.boardId = boardId;
         this.memberId = memberId;
         this.content = content;
         this.boardCommentLikeCounts = boardCommentLikeCounts;
+        this.isLike = isLike;
     }
 
-    public static BoardCommentResponse of(BoardComment comment) {
-        BoardCommentResponse response = activeOrInActiveComment(comment);
+    public static BoardCommentResponse of(BoardComment comment, Long memberId) {
+        BoardCommentResponse response = activeOrInActiveComment(comment, memberId);
         List<BoardCommentResponse> childResponses = comment.getChildComments().stream()
-            .map(BoardCommentResponse::of)
+            .map(boardComment -> BoardCommentResponse.of(boardComment, memberId))
             .collect(Collectors.toList());
         response.children.addAll(childResponses);
         response.setBaseTime(comment);
         return response;
     }
 
-    private static BoardCommentResponse activeOrInActiveComment(BoardComment comment) {
+    private static BoardCommentResponse activeOrInActiveComment(BoardComment comment, Long memberId) {
         if (comment.isDeleted()) {
             return inActiveComment(comment);
         }
-        return activeComment(comment);
+        return activeComment(comment, memberId);
     }
 
     private static BoardCommentResponse inActiveComment(BoardComment comment) {
@@ -63,10 +66,11 @@ public class BoardCommentResponse extends BaseTimeResponse {
             .memberId(null)
             .content("삭제된 메시지입니다")
             .boardCommentLikeCounts(0)
+            .isLike(false)
             .build();
     }
 
-    private static BoardCommentResponse activeComment(BoardComment comment) {
+    private static BoardCommentResponse activeComment(BoardComment comment, Long memberId) {
         return BoardCommentResponse.builder()
             .id(comment.getId())
             .type(comment.getType())
@@ -74,6 +78,7 @@ public class BoardCommentResponse extends BaseTimeResponse {
             .memberId(comment.getMemberId())
             .content(comment.getContent())
             .boardCommentLikeCounts(comment.getCommentLikeCounts())
+            .isLike(comment.isLike(memberId))
             .build();
     }
 

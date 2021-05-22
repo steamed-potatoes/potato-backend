@@ -1,6 +1,8 @@
 package com.potato.api.service.comment;
 
+import com.potato.api.service.comment.dto.request.DeleteBoardCommentRequest;
 import com.potato.api.service.comment.dto.request.LikeBoardCommentRequest;
+import com.potato.api.service.comment.dto.request.RetrieveBoardCommentsRequest;
 import com.potato.domain.domain.board.BoardType;
 import com.potato.domain.domain.board.admin.AdminBoard;
 import com.potato.domain.domain.board.admin.AdminBoardCreator;
@@ -198,8 +200,10 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
         rootComment2.addChildComment(memberId, "자식 댓글2-1");
         boardCommentRepository.saveAll(Arrays.asList(rootComment1, rootComment2));
 
+        RetrieveBoardCommentsRequest request = RetrieveBoardCommentsRequest.testInstance(type, organizationBoard.getId());
+
         // when
-        List<BoardCommentResponse> responses = boardCommentService.retrieveBoardCommentList(type, organizationBoard.getId());
+        List<BoardCommentResponse> responses = boardCommentService.retrieveBoardCommentList(request, memberId);
 
         // then
         assertThat(responses).hasSize(2);
@@ -228,8 +232,10 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
         rootComment2.addChildComment(memberId, "자식 댓글2-1");
         boardCommentRepository.saveAll(Arrays.asList(rootComment1, rootComment2));
 
+        RetrieveBoardCommentsRequest request = RetrieveBoardCommentsRequest.testInstance(type, adminBoard.getId());
+
         // when
-        List<BoardCommentResponse> responses = boardCommentService.retrieveBoardCommentList(type, adminBoard.getId());
+        List<BoardCommentResponse> responses = boardCommentService.retrieveBoardCommentList(request, memberId);
 
         // then
         assertThat(responses).hasSize(2);
@@ -254,14 +260,19 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
         BoardComment rootComment1 = BoardCommentCreator.createRootComment(BoardType.ORGANIZATION_BOARD, organizationBoard.getId(), memberId, "부모 댓글1");
         boardCommentRepository.save(rootComment1);
 
+        RetrieveBoardCommentsRequest request = RetrieveBoardCommentsRequest.testInstance(BoardType.ADMIN_BOARD, 999L);
+
         // when & then
-        assertThatThrownBy(() -> boardCommentService.retrieveBoardCommentList(BoardType.ADMIN_BOARD, 999L)).isInstanceOf(NotFoundException.class);
+        assertThatThrownBy(() -> boardCommentService.retrieveBoardCommentList(request, memberId)).isInstanceOf(NotFoundException.class);
     }
 
     @Test
     void 존재하지_않는_게시물의_댓글을_불러올_수_없다() {
+        // given
+        RetrieveBoardCommentsRequest request = RetrieveBoardCommentsRequest.testInstance(BoardType.ADMIN_BOARD, 999L);
+
         // when & then
-        assertThatThrownBy(() -> boardCommentService.retrieveBoardCommentList(BoardType.ADMIN_BOARD, 999L)).isInstanceOf(NotFoundException.class);
+        assertThatThrownBy(() -> boardCommentService.retrieveBoardCommentList(request, memberId)).isInstanceOf(NotFoundException.class);
     }
 
     @Test
@@ -293,8 +304,10 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
         BoardComment comment = BoardCommentCreator.createRootComment(type, organizationBoard.getId(), memberId, "댓글");
         boardCommentRepository.save(comment);
 
+        DeleteBoardCommentRequest request = DeleteBoardCommentRequest.testInstance(comment.getId());
+
         // when
-        boardCommentService.deleteBoardComment(comment.getId(), memberId);
+        boardCommentService.deleteBoardComment(request, memberId);
 
         // then
         List<BoardComment> boardCommentList = boardCommentRepository.findAll();
@@ -310,8 +323,10 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
         BoardComment comment = BoardCommentCreator.createRootComment(BoardType.ORGANIZATION_BOARD, organizationBoard.getId(), memberId, "댓글");
         boardCommentRepository.save(comment);
 
+        DeleteBoardCommentRequest request = DeleteBoardCommentRequest.testInstance(comment.getId());
+
         // when & then
-        assertThatThrownBy(() -> boardCommentService.deleteBoardComment(comment.getId(), 999L)).isInstanceOf(NotFoundException.class);
+        assertThatThrownBy(() -> boardCommentService.deleteBoardComment(request, 999L)).isInstanceOf(NotFoundException.class);
     }
 
     @Test
@@ -323,8 +338,10 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
         comment.delete();
         boardCommentRepository.save(comment);
 
+        RetrieveBoardCommentsRequest request = RetrieveBoardCommentsRequest.testInstance(type, organizationBoard.getId());
+
         // when
-        List<BoardCommentResponse> responses = boardCommentService.retrieveBoardCommentList(type, organizationBoard.getId());
+        List<BoardCommentResponse> responses = boardCommentService.retrieveBoardCommentList(request, memberId);
 
         // then
         assertThat(responses).hasSize(1);

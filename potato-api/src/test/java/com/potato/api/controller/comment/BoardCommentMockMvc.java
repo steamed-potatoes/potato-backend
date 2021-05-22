@@ -3,7 +3,7 @@ package com.potato.api.controller.comment;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.potato.api.controller.ApiResponse;
-import com.potato.domain.domain.board.BoardType;
+import com.potato.api.service.comment.dto.request.RetrieveBoardCommentsRequest;
 import com.potato.api.service.comment.dto.request.AddBoardCommentRequest;
 import com.potato.api.service.comment.dto.response.BoardCommentResponse;
 import org.springframework.http.HttpHeaders;
@@ -28,10 +28,11 @@ public class BoardCommentMockMvc {
         this.objectMapper = objectMapper;
     }
 
-    public ApiResponse<List<BoardCommentResponse>> retrieveBoardComments(BoardType type, Long boardId, int expectedStatus) throws Exception {
+    public ApiResponse<List<BoardCommentResponse>> retrieveBoardComments(RetrieveBoardCommentsRequest request, String token, int expectedStatus) throws Exception {
         MockHttpServletRequestBuilder builder = get("/api/v2/board/comment/list")
-            .param("type", String.valueOf(type))
-            .param("boardId", String.valueOf(boardId));
+            .param("type", String.valueOf(request.getType()))
+            .param("boardId", String.valueOf(request.getBoardId()))
+            .header(HttpHeaders.AUTHORIZATION, "Bearer ".concat(token));
 
         return objectMapper.readValue(
             mockMvc.perform(builder)
