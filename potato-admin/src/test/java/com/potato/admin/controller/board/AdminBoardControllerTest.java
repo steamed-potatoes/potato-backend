@@ -8,6 +8,10 @@ import com.potato.domain.domain.board.admin.AdminBoardRepository;
 import com.potato.admin.service.board.dto.request.CreateAdminBoardRequest;
 import com.potato.admin.service.board.dto.request.UpdateAdminBoardRequest;
 import com.potato.admin.service.board.dto.response.AdminBoardInfoResponse;
+import com.potato.domain.domain.board.organization.OrganizationBoard;
+import com.potato.domain.domain.board.organization.OrganizationBoardCategory;
+import com.potato.domain.domain.board.organization.OrganizationBoardCreator;
+import com.potato.domain.domain.board.organization.OrganizationBoardRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,6 +32,9 @@ public class AdminBoardControllerTest extends ControllerTestUtils {
     @Autowired
     private AdminBoardRepository adminBoardRepository;
 
+    @Autowired
+    private OrganizationBoardRepository organizationBoardRepository;
+
     @BeforeEach
     void setUp() {
         super.setup();
@@ -37,6 +44,8 @@ public class AdminBoardControllerTest extends ControllerTestUtils {
     @AfterEach
     void cleanUp() {
         super.cleanup();
+        adminBoardRepository.deleteAll();
+        organizationBoardRepository.deleteAll();
     }
 
     @Test
@@ -64,7 +73,7 @@ public class AdminBoardControllerTest extends ControllerTestUtils {
     }
 
     @Test
-    void 관리자만이_게시물을_생성할_수있다() throws Exception {
+    void 관리자만이_게시물을_생성_할_수있다() throws Exception {
         // given
         CreateAdminBoardRequest request = CreateAdminBoardRequest.testBuilder()
             .title("title")
@@ -113,7 +122,7 @@ public class AdminBoardControllerTest extends ControllerTestUtils {
     }
 
     @Test
-    void 관리자만이_게시물을_수정할_수있다() throws Exception {
+    void 관리자만이_게시물을_수정_할_수_있다() throws Exception {
         // given
         UpdateAdminBoardRequest request = UpdateAdminBoardRequest.testBuilder()
             .title("title")
@@ -134,6 +143,34 @@ public class AdminBoardControllerTest extends ControllerTestUtils {
         assertThat(response.getContent()).isEqualTo(content);
         assertThat(response.getStartDateTime()).isEqualTo(startDateTime);
         assertThat(response.getEndDateTime()).isEqualTo(endDateTime);
+    }
+
+    @Test
+    void 관리자가_게시글을_삭제하는_경우() throws Exception {
+        // given
+        String token = administratorMockMvc.getMockAdminToken();
+
+        String subDomain = "potato";
+        OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, 1L, "title1", OrganizationBoardCategory.RECRUIT);
+        organizationBoardRepository.save(organizationBoard);
+
+        // when
+        ApiResponse<String> response = adminBoardMockMvc.deleteOrganizationBoard(organizationBoard.getId(), subDomain, token, 200);
+
+        // then
+        assertThat(response.getData()).isEqualTo("OK");
+    }
+
+    @Test
+    void 관리자가_게시글을_삭제하려는데_해당_게시글이_없을_경우() throws Exception {
+        // given
+        String token = administratorMockMvc.getMockAdminToken();
+
+        // when
+        ApiResponse<String> response = adminBoardMockMvc.deleteOrganizationBoard(1L, "empty", token, 404);
+
+        // then
+        assertThat(response.getCode()).isEqualTo(ErrorCode.NOT_FOUND_EXCEPTION.getCode());
     }
 
 }

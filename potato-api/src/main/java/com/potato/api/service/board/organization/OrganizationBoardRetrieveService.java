@@ -1,6 +1,6 @@
 package com.potato.api.service.board.organization;
 
-import com.potato.domain.domain.board.organization.repository.dto.BoardWithOrganizationDtoWithImage;
+import com.potato.domain.domain.board.organization.repository.dto.BoardWithOrganizationDto;
 import com.potato.domain.domain.image.BoardImageRepository;
 import com.potato.domain.domain.board.BoardType;
 import com.potato.domain.domain.board.organization.OrganizationBoard;
@@ -37,12 +37,12 @@ public class OrganizationBoardRetrieveService {
     private final BoardImageRepository boardImageRepository;
 
     @Transactional(readOnly = true)
-    public OrganizationBoardWithCreatorInfoResponse retrieveBoardWithOrganizationAndCreator(Long organizationBoardId) {
+    public OrganizationBoardWithCreatorInfoResponse retrieveBoardWithOrganizationAndCreator(Long organizationBoardId, Long memberId) {
         OrganizationBoard organizationBoard = OrganizationBoardServiceUtils.findOrganizationBoardById(organizationBoardRepository, organizationBoardId);
         Organization organization = OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, organizationBoard.getSubDomain());
         Member creator = MemberServiceUtils.findMemberById(memberRepository, organizationBoard.getMemberId());
         List<String> imageUrlList = OrganizationBoardServiceUtils.findOrganizationBoardImage(boardImageRepository, organizationBoard.getId());
-        return OrganizationBoardWithCreatorInfoResponse.of(organizationBoard, organization, creator, getBoardHashTags(organizationBoard.getId()), imageUrlList);
+        return OrganizationBoardWithCreatorInfoResponse.of(organizationBoard, organization, creator, getBoardHashTags(organizationBoard.getId()), imageUrlList, organizationBoard.hasLike(memberId));
     }
 
     private List<String> getBoardHashTags(Long boardId) {
@@ -53,11 +53,10 @@ public class OrganizationBoardRetrieveService {
     }
 
     @Transactional(readOnly = true)
-    public List<BoardWithOrganizationDtoWithImage> retrieveBoardsWithPagination(OrganizationBoardCategory type, long lastOrganizationBoardId, int size) {
-        return organizationBoardRepository.findAllWithOrganizationByTypeLessThanOrderByIdDescLimit(null, type, lastOrganizationBoardId, size)
-            .stream().map(boardWithOrganizationDto -> BoardWithOrganizationDtoWithImage.of(boardWithOrganizationDto, OrganizationBoardServiceUtils.findOrganizationBoardImage(boardImageRepository, boardWithOrganizationDto.getBoardId())))
+    public List<BoardWithOrganizationDto> retrieveBoardsWithPagination(OrganizationBoardCategory type, long lastOrganizationBoardId, int size) {
+        return organizationBoardRepository.findAllWithOrganizationByTypeLessThanOrderByIdDescLimit(null, type, lastOrganizationBoardId, size).stream()
+            .map(boardWithOrganizationDto -> boardWithOrganizationDto.setImageUrls(OrganizationBoardServiceUtils.findOrganizationBoardImage(boardImageRepository, boardWithOrganizationDto.getBoardId())))
             .collect(Collectors.toList());
-
     }
 
     @Transactional(readOnly = true)
@@ -76,9 +75,9 @@ public class OrganizationBoardRetrieveService {
     }
 
     @Transactional(readOnly = true)
-    public List<BoardWithOrganizationDtoWithImage> getBoardsInOrganization(String subDomain, OrganizationBoardCategory type, long lastOrganizationBoardId, int size) {
+    public List<BoardWithOrganizationDto> getBoardsInOrganization(String subDomain, OrganizationBoardCategory type, long lastOrganizationBoardId, int size) {
         return organizationBoardRepository.findAllWithOrganizationByTypeLessThanOrderByIdDescLimit(subDomain, type, lastOrganizationBoardId, size).stream()
-            .map(boardWithOrganizationDto ->  BoardWithOrganizationDtoWithImage.of(boardWithOrganizationDto, OrganizationBoardServiceUtils.findOrganizationBoardImage(boardImageRepository, boardWithOrganizationDto.getBoardId())))
+            .map(boardWithOrganizationDto -> boardWithOrganizationDto.setImageUrls(OrganizationBoardServiceUtils.findOrganizationBoardImage(boardImageRepository, boardWithOrganizationDto.getBoardId())))
             .collect(Collectors.toList());
     }
 

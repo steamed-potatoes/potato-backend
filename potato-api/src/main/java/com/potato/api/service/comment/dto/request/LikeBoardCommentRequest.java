@@ -13,4 +13,8 @@ public class LikeBoardCommentRequest {
     @NotNull
     private Long boardCommentId;
 
+    public static LikeBoardCommentRequest testInstance(Long boardCommentId) {
+        return new LikeBoardCommentRequest(boardCommentId);
+    }
+
 }

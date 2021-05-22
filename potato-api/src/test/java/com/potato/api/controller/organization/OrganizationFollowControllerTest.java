@@ -2,6 +2,7 @@ package com.potato.api.controller.organization;
 
 import com.potato.api.controller.ApiResponse;
 import com.potato.api.controller.ControllerTestUtils;
+import com.potato.api.controller.organization.api.OrganizationFollowerMockMvc;
 import com.potato.domain.domain.organization.Organization;
 import com.potato.domain.domain.organization.OrganizationCategory;
 import com.potato.domain.domain.organization.OrganizationCreator;
@@ -18,13 +19,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
+import static com.potato.api.helper.member.MemberTestHelper.assertMemberInfoResponse;
+import static com.potato.api.helper.organization.OrganizationServiceTestUtils.assertOrganizationInfoResponse;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @AutoConfigureMockMvc
 @SpringBootTest
-public class OrganizationFollowControllerTest extends ControllerTestUtils {
+class OrganizationFollowControllerTest extends ControllerTestUtils {
 
-    private OrganizationMockMvc organizationMockMvc;
+    private OrganizationFollowerMockMvc organizationMockMvc;
 
     @Autowired
     private OrganizationRepository organizationRepository;
@@ -38,7 +41,7 @@ public class OrganizationFollowControllerTest extends ControllerTestUtils {
     @BeforeEach
     void setUp() throws Exception {
         super.setup();
-        organizationMockMvc = new OrganizationMockMvc(mockMvc, objectMapper);
+        organizationMockMvc = new OrganizationFollowerMockMvc(mockMvc, objectMapper);
         subDomain = "potato";
         name = "감자";
         description = "개발의 감을 잡자";
@@ -104,7 +107,7 @@ public class OrganizationFollowControllerTest extends ControllerTestUtils {
 
         //then
         assertThat(response.getData()).hasSize(1);
-        assertMemberInfoResponse(response.getData().get(0), testMember.getEmail(), testMember.getName(), testMember.getMajorName(), testMember.getClassNumber(), testMember.getProfileUrl());
+        assertMemberInfoResponse(response.getData().get(0), testMember.getEmail(), testMember.getName(), testMember.getProfileUrl(), testMember.getMajor(), testMember.getClassNumber());
     }
 
     @Test
@@ -119,25 +122,8 @@ public class OrganizationFollowControllerTest extends ControllerTestUtils {
 
         // then
         assertThat(response.getData()).hasSize(1);
-        assertOrganizationInfoResponse(response.getData().get(0), subDomain, name, description, profileUrl, 1, organization.getCategory());
+        assertOrganizationInfoResponse(response.getData().get(0), subDomain, name, description, profileUrl, organization.getCategory(), 1);
         assertThat(response.getData().get(0).getSubDomain()).isEqualTo(subDomain);
-    }
-
-    private void assertOrganizationInfoResponse(OrganizationInfoResponse response, String subDomain, String name, String description, String profileUrl, int membersCount, OrganizationCategory category) {
-        assertThat(response.getSubDomain()).isEqualTo(subDomain);
-        assertThat(response.getName()).isEqualTo(name);
-        assertThat(response.getDescription()).isEqualTo(description);
-        assertThat(response.getProfileUrl()).isEqualTo(profileUrl);
-        assertThat(response.getMembersCount()).isEqualTo(membersCount);
-        assertThat(response.getCategory()).isEqualTo(category);
-    }
-
-    private void assertMemberInfoResponse(MemberInfoResponse response, String email, String name, String major, int classNumber, String profileUrl) {
-        assertThat(response.getEmail()).isEqualTo(email);
-        assertThat(response.getName()).isEqualTo(name);
-        assertThat(response.getMajor()).isEqualTo(major);
-        assertThat(response.getClassNumber()).isEqualTo(classNumber);
-        assertThat(response.getProfileUrl()).isEqualTo(profileUrl);
     }
 
 }

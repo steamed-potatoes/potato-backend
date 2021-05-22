@@ -3,7 +3,8 @@ package com.potato.api.controller.comment;
 import com.potato.api.config.argumentResolver.MemberId;
 import com.potato.api.config.interceptor.auth.Auth;
 import com.potato.api.controller.ApiResponse;
-import com.potato.domain.domain.board.BoardType;
+import com.potato.api.service.comment.dto.request.DeleteBoardCommentRequest;
+import com.potato.api.service.comment.dto.request.RetrieveBoardCommentsRequest;
 import com.potato.api.service.comment.BoardCommentService;
 import com.potato.api.service.comment.dto.request.AddBoardCommentRequest;
 import com.potato.api.service.comment.dto.request.LikeBoardCommentRequest;
@@ -18,11 +19,20 @@ import javax.validation.Valid;
 
 import java.util.List;
 
+import static com.potato.api.config.interceptor.auth.Auth.Role.OPTIONAL_LOGIN;
+
 @RequiredArgsConstructor
 @RestController
 public class BoardCommentController {
 
     private final BoardCommentService boardCommentService;
+
+    @Operation(summary = "게시물의 댓글 리스트를 조회합니다.", security = {@SecurityRequirement(name = "BearerKey")})
+    @Auth(role = OPTIONAL_LOGIN)
+    @GetMapping("/api/v2/board/comment/list")
+    public ApiResponse<List<BoardCommentResponse>> retrieveBoardComments(@Valid RetrieveBoardCommentsRequest request, @MemberId Long memberId) {
+        return ApiResponse.success(boardCommentService.retrieveBoardCommentList(request, memberId));
+    }
 
     @Operation(summary = "게시물에 댓글을 추가합니다.", security = {@SecurityRequirement(name = "BearerKey")})
     @Auth
@@ -30,12 +40,6 @@ public class BoardCommentController {
     public ApiResponse<String> addBoardComment(@Valid @RequestBody AddBoardCommentRequest request, @MemberId Long memberId) {
         boardCommentService.addBoardComment(request, memberId);
         return ApiResponse.OK;
-    }
-
-    @Operation(summary = "게시물의 댓글 리스트를 조회합니다.")
-    @GetMapping("/api/v2/board/comment/list")
-    public ApiResponse<List<BoardCommentResponse>> retrieveBoardComments(@RequestParam BoardType type, @RequestParam Long boardId) {
-        return ApiResponse.success(boardCommentService.retrieveBoardCommentList(type, boardId));
     }
 
     @Operation(summary = "게시물의 댓글을 수정합니다.", security = {@SecurityRequirement(name = "BearerKey")})
@@ -49,8 +53,8 @@ public class BoardCommentController {
     @Operation(summary = "작성한 댓글을 삭제합니다.", security = {@SecurityRequirement(name = "BearerKey")})
     @Auth
     @DeleteMapping("/api/v2/board/comment")
-    public ApiResponse<String> deleteBoardComment(@RequestParam Long boardCommentId, @MemberId Long memberId) {
-        boardCommentService.deleteBoardComment(boardCommentId, memberId);
+    public ApiResponse<String> deleteBoardComment(@Valid DeleteBoardCommentRequest request, @MemberId Long memberId) {
+        boardCommentService.deleteBoardComment(request, memberId);
         return ApiResponse.OK;
     }
 
@@ -58,7 +62,7 @@ public class BoardCommentController {
     @Auth
     @PostMapping("/api/v2/board/comment/like")
     public ApiResponse<String> likeBoardComment(@Valid @RequestBody LikeBoardCommentRequest request, @MemberId Long memberId) {
-        boardCommentService.likeBoardComment(request.getBoardCommentId(), memberId);
+        boardCommentService.likeBoardComment(request, memberId);
         return ApiResponse.OK;
     }
 
@@ -66,7 +70,7 @@ public class BoardCommentController {
     @Auth
     @DeleteMapping("/api/v2/board/comment/like")
     public ApiResponse<String> unlikeBoardComment(@Valid LikeBoardCommentRequest request, @MemberId Long memberId) {
-        boardCommentService.unLikeBoardComment(request.getBoardCommentId(), memberId);
+        boardCommentService.unLikeBoardComment(request, memberId);
         return ApiResponse.OK;
     }
 

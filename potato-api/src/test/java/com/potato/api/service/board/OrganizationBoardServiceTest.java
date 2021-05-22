@@ -1,5 +1,6 @@
 package com.potato.api.service.board;
 
+import com.potato.api.service.board.organization.dto.request.DeleteOrganizationBoardRequest;
 import com.potato.domain.domain.board.organization.DeleteOrganizationBoard;
 import com.potato.domain.domain.board.organization.DeleteOrganizationBoardRepository;
 import com.potato.domain.domain.board.organization.OrganizationBoard;
@@ -9,6 +10,7 @@ import com.potato.domain.domain.board.organization.OrganizationBoardLike;
 import com.potato.domain.domain.board.organization.OrganizationBoardLikeRepository;
 import com.potato.domain.domain.board.organization.OrganizationBoardRepository;
 import com.potato.domain.domain.image.BoardImage;
+import com.potato.domain.domain.image.BoardImageCreator;
 import com.potato.domain.domain.image.BoardImageRepository;
 import com.potato.domain.domain.board.BoardType;
 import com.potato.domain.domain.hashtag.BoardHashTag;
@@ -89,15 +91,41 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
         // then
         List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findAll();
         assertThat(organizationBoardList).hasSize(1);
-        assertThat(organizationBoardList.get(0).getLikesCount()).isEqualTo(0);
         assertOrganizationBoard(organizationBoardList.get(0), title, content, type, startDateTime, endDateTime, subDomain, memberId);
+    }
+
+    @Test
+    void 새로운_그룹_게시물을_작성하면_기본적으로_좋아요수가_0_가된다() {
+        // given
+        String title = "감자 신입 회원 모집";
+        String content = "감자 동아리에서 신입 회원을 모집합니다";
+        LocalDateTime startDateTime = LocalDateTime.of(2021, 3, 1, 0, 0);
+        LocalDateTime endDateTime = LocalDateTime.of(2021, 3, 5, 0, 0);
+        OrganizationBoardCategory type = OrganizationBoardCategory.RECRUIT;
+
+        CreateOrganizationBoardRequest request = CreateOrganizationBoardRequest.testBuilder()
+            .title(title)
+            .content(content)
+            .startDateTime(startDateTime)
+            .endDateTime(endDateTime)
+            .type(type)
+            .hashTags(Collections.emptyList())
+            .imageUrlList(Collections.emptyList())
+            .build();
+
+        // when
+        organizationBoardService.createBoard(subDomain, request, memberId);
+
+        // then
+        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findAll();
+        assertThat(organizationBoardList).hasSize(1);
+        assertThat(organizationBoardList.get(0).getLikesCount()).isEqualTo(0);
     }
 
     @Test
     void 게시글_추가시_해시태그를_지정하면_해시태그_정보가_DB_에_저장된다() {
         // given
         List<String> hashTags = Arrays.asList("감자", "백엔드");
-
         CreateOrganizationBoardRequest request = CreateOrganizationBoardRequest.testBuilder()
             .title("감자 신입 회원 모집")
             .content("감자 동아리에서 신입 회원을 모집합니다")
@@ -121,7 +149,8 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
     @Test
     void 게시글_추가시_이미지_여러개를_지정하면_이미지_정보가_DB_에_저장된다() {
         // given
-        List<String> imageUrlList = Arrays.asList("image.png", "potato.png");
+        String imageUrl1 = "https://image.png";
+        String imageUrl2 = "https://potato.png";
 
         CreateOrganizationBoardRequest request = CreateOrganizationBoardRequest.testBuilder()
             .title("감자 신입 회원 모집")
@@ -130,17 +159,21 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
             .endDateTime(LocalDateTime.of(2021, 3, 5, 0, 0))
             .type(OrganizationBoardCategory.RECRUIT)
             .hashTags(Collections.emptyList())
-            .imageUrlList(imageUrlList)
+            .imageUrlList(Arrays.asList(imageUrl1, imageUrl2))
             .build();
 
         // when
         organizationBoardService.createBoard(subDomain, request, memberId);
 
         // then
+        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findAll();
+        assertThat(organizationBoardList).hasSize(1);
+        Long boardId = organizationBoardList.get(0).getId();
+
         List<BoardImage> boardImageList = boardImageRepository.findAll();
         assertThat(boardImageList).hasSize(2);
-        assertThat(boardImageList.get(0).getImageUrl()).isEqualTo("image.png");
-        assertThat(boardImageList.get(1).getImageUrl()).isEqualTo("potato.png");
+        assertBoardImage(boardImageList.get(0), boardId, imageUrl1);
+        assertBoardImage(boardImageList.get(1), boardId, imageUrl2);
     }
 
     @Test
@@ -176,32 +209,6 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
     }
 
     @Test
-    void 게시글을_수정하면_수정을_요청한_사람으로_게시글_작성자가_변경된다() {
-        // given
-        OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, 999L, "이전의 게시글", OrganizationBoardCategory.RECRUIT);
-        organizationBoardRepository.save(organizationBoard);
-
-        UpdateOrganizationBoardRequest request = UpdateOrganizationBoardRequest.testBuilder()
-            .organizationBoardId(organizationBoard.getId())
-            .title("이후의 게시글")
-            .content("변경 이후의 내용")
-            .startDateTime(LocalDateTime.of(2021, 4, 1, 0, 0))
-            .endDateTime(LocalDateTime.of(2021, 4, 7, 0, 0))
-            .type(OrganizationBoardCategory.EVENT)
-            .hashTags(Collections.emptyList())
-            .imageUrlList(Collections.emptyList())
-            .build();
-
-        // when
-        organizationBoardService.updateBoard(subDomain, request, memberId);
-
-        // then
-        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findAll();
-        assertThat(organizationBoardList).hasSize(1);
-        assertThat(organizationBoardList.get(0).getMemberId()).isEqualTo(memberId);
-    }
-
-    @Test
     void 올린_게시글을_수정하면_해시태그도_수정된다() {
         // given
         OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, 999L, "이전의 게시글", OrganizationBoardCategory.RECRUIT);
@@ -231,7 +238,111 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
     }
 
     @Test
-    void 그룹_게시물을_좋아요하면_게시물_좋아요_테이블에_새로운_컬럼이_추가된다() {
+    void 올린_게시글을_수정하면_DB에_저장된_이미지_사진도_수정된다() {
+        // given
+        String imageUrl1 = "https://image.png";
+        String imageUrl2 = "https://potato.png";
+
+        OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, 999L, "이전의 게시글", OrganizationBoardCategory.RECRUIT);
+        organizationBoardRepository.save(organizationBoard);
+
+        boardImageRepository.save(BoardImageCreator.create(organizationBoard.getId(), BoardType.ORGANIZATION_BOARD, "https://test.png"));
+
+        UpdateOrganizationBoardRequest request = UpdateOrganizationBoardRequest.testBuilder()
+            .organizationBoardId(organizationBoard.getId())
+            .title("이후의 게시글")
+            .content("변경 이후의 내용")
+            .startDateTime(LocalDateTime.of(2021, 4, 1, 0, 0))
+            .endDateTime(LocalDateTime.of(2021, 4, 7, 0, 0))
+            .type(OrganizationBoardCategory.EVENT)
+            .hashTags(Collections.emptyList())
+            .imageUrlList(Arrays.asList(imageUrl1, imageUrl2))
+            .build();
+
+        // when
+        organizationBoardService.updateBoard(subDomain, request, memberId);
+
+        // then
+        List<BoardImage> boardImageList = boardImageRepository.findAll();
+        assertThat(boardImageList).hasSize(2);
+        assertBoardImage(boardImageList.get(0), organizationBoard.getId(), imageUrl1);
+        assertBoardImage(boardImageList.get(1), organizationBoard.getId(), imageUrl2);
+    }
+
+    @Test
+    void 게시글을_수정하면_수정을_요청한_사람으로_게시글_작성자가_변경된다() {
+        // given
+        OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, 999L, "이전의 게시글", OrganizationBoardCategory.RECRUIT);
+        organizationBoardRepository.save(organizationBoard);
+
+        UpdateOrganizationBoardRequest request = UpdateOrganizationBoardRequest.testBuilder()
+            .organizationBoardId(organizationBoard.getId())
+            .title("이후의 게시글")
+            .content("변경 이후의 내용")
+            .startDateTime(LocalDateTime.of(2021, 4, 1, 0, 0))
+            .endDateTime(LocalDateTime.of(2021, 4, 7, 0, 0))
+            .type(OrganizationBoardCategory.EVENT)
+            .hashTags(Collections.emptyList())
+            .imageUrlList(Collections.emptyList())
+            .build();
+
+        // when
+        organizationBoardService.updateBoard(subDomain, request, memberId);
+
+        // then
+        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findAll();
+        assertThat(organizationBoardList).hasSize(1);
+        assertThat(organizationBoardList.get(0).getMemberId()).isEqualTo(memberId);
+    }
+
+    @Test
+    void 게시물을_삭제하면_백업이_되고_삭제된다() {
+        //given
+        OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, memberId, "게시글", OrganizationBoardCategory.RECRUIT);
+        organizationBoardRepository.save(organizationBoard);
+
+        DeleteOrganizationBoardRequest request = DeleteOrganizationBoardRequest.testInstance(organizationBoard.getId());
+
+        //when
+        organizationBoardService.deleteOrganizationBoard(subDomain, request, memberId);
+
+        //then
+        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findAll();
+        assertThat(organizationBoardList).isEmpty();
+
+        List<DeleteOrganizationBoard> deleteOrganizationBoardList = deleteOrganizationBoardRepository.findAll();
+        assertThat(deleteOrganizationBoardList).hasSize(1);
+        assertDeletedBoardOrganization(deleteOrganizationBoardList.get(0), organizationBoard.getId(), organizationBoard.getSubDomain(), organizationBoard.getCategory(), organizationBoard.getMemberId(),
+            organizationBoard.getTitle(), organizationBoard.getStartDateTime(), organizationBoard.getEndDateTime());
+    }
+
+    @Test
+    void 게시물을_삭제할때_해당_그룹의_게시물이_아닌경우_에러가_발생한다() {
+        //given
+        OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, memberId, "title", OrganizationBoardCategory.RECRUIT);
+        organizationBoardRepository.save(organizationBoard);
+
+        DeleteOrganizationBoardRequest request = DeleteOrganizationBoardRequest.testInstance(organizationBoard.getId());
+
+        //when & then
+        assertThatThrownBy(
+            () -> organizationBoardService.deleteOrganizationBoard("another-subDomain", request, memberId)
+        ).isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
+    void 게시물이_없으면_삭제되지_않는다() {
+        // given
+        DeleteOrganizationBoardRequest request = DeleteOrganizationBoardRequest.testInstance(999L);
+
+        //when & then
+        assertThatThrownBy(
+            () -> organizationBoardService.deleteOrganizationBoard(subDomain, request, memberId)
+        ).isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
+    void 그룹_게시물을_좋아요_누르면_게시물_좋아요_테이블에_새로운_컬럼이_추가된다() {
         // given
         OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, 999L, "이전의 게시글", OrganizationBoardCategory.RECRUIT);
         organizationBoardRepository.save(organizationBoard);
@@ -271,7 +382,7 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
     }
 
     @Test
-    void 그룹_게시물_좋아요를_취소요청하면_기존의_좋아요_컬럼이_사라진다() {
+    void 그룹_게시물_좋아요를_취소하면_기존의_좋아요_컬럼이_삭제된다() {
         // given
         OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, 999L, "이전의 게시글", OrganizationBoardCategory.RECRUIT);
         organizationBoard.addLike(memberId);
@@ -303,45 +414,6 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
         assertThatThrownBy(() -> organizationBoardService.cancelLikeOrganizationBoard(request, memberId)).isInstanceOf(NotFoundException.class);
     }
 
-    @Test
-    void 게시물을_삭제하면_백업이_되고_삭제된다() {
-        //given
-        OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, memberId, "게시글", OrganizationBoardCategory.RECRUIT);
-        organizationBoardRepository.save(organizationBoard);
-
-        //when
-        organizationBoardService.deleteOrganizationBoard(subDomain, organizationBoard.getId(), memberId);
-
-        //then
-        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findAll();
-        assertThat(organizationBoardList).isEmpty();
-
-        List<DeleteOrganizationBoard> deleteOrganizationBoardList = deleteOrganizationBoardRepository.findAll();
-        assertThat(deleteOrganizationBoardList).hasSize(1);
-        assertDeletedBoardOrganization(deleteOrganizationBoardList.get(0), organizationBoard.getId(), organizationBoard.getSubDomain(), organizationBoard.getCategory(), organizationBoard.getMemberId(),
-            organizationBoard.getTitle(), organizationBoard.getStartDateTime(), organizationBoard.getEndDateTime());
-    }
-
-    @Test
-    void 게시물을_삭제할때_해당_그룹의_게시물이_아닌경우_에러가_발생한다() {
-        //given
-        OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, memberId, "title", OrganizationBoardCategory.RECRUIT);
-        organizationBoardRepository.save(organizationBoard);
-
-        //when & then
-        assertThatThrownBy(
-            () -> organizationBoardService.deleteOrganizationBoard("another-subDomain", organizationBoard.getId(), memberId)
-        ).isInstanceOf(NotFoundException.class);
-    }
-
-    @Test
-    void 게시물이_없으면_삭제되지_않는다() {
-        //when & then
-        assertThatThrownBy(
-            () -> organizationBoardService.deleteOrganizationBoard(subDomain, 999L, memberId)
-        ).isInstanceOf(NotFoundException.class);
-    }
-
     private void assertOrganizationBoardLike(OrganizationBoardLike organizationBoardLike, Long id, Long memberId) {
         assertThat(organizationBoardLike.getOrganizationBoard().getId()).isEqualTo(id);
         assertThat(organizationBoardLike.getMemberId()).isEqualTo(memberId);
@@ -371,6 +443,12 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
     private void assertHashTag(BoardHashTag boardHashTag, Long memberId, String hashtag) {
         assertThat(boardHashTag.getMemberId()).isEqualTo(memberId);
         assertThat(boardHashTag.getHashTag()).isEqualTo(hashtag);
+    }
+
+    private void assertBoardImage(BoardImage boardImage, Long boardId, String imageUrl) {
+        assertThat(boardImage.getBoardId()).isEqualTo(boardId);
+        assertThat(boardImage.getType()).isEqualTo(BoardType.ORGANIZATION_BOARD);
+        assertThat(boardImage.getImageUrl()).isEqualTo(imageUrl);
     }
 
 }

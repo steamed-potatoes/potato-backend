@@ -2,6 +2,7 @@ package com.potato.api.controller.schedule;
 
 import com.potato.api.controller.ApiResponse;
 import com.potato.api.controller.ControllerTestUtils;
+import com.potato.api.controller.schedule.api.ScheduleMockMvc;
 import com.potato.domain.domain.board.admin.AdminBoard;
 import com.potato.domain.domain.board.admin.AdminBoardRepository;
 import com.potato.domain.domain.board.organization.OrganizationBoard;
@@ -85,7 +86,6 @@ class ScheduleControllerTest extends ControllerTestUtils {
         String content = "그룹 게시물 상세 내용";
         LocalDateTime startDateTime = LocalDateTime.of(2021, 4, 1, 1, 30);
         LocalDateTime endDateTime = LocalDateTime.of(2021, 4, 3, 1, 30);
-        String imageUrl = "https://groupimage.com";
         OrganizationBoardCategory category = OrganizationBoardCategory.RECRUIT;
 
         OrganizationBoard organizationBoard = OrganizationBoard.builder()
@@ -108,7 +108,7 @@ class ScheduleControllerTest extends ControllerTestUtils {
         // then
         assertThat(response.getData().getAdminBoards()).isEmpty();
         assertThat(response.getData().getOrganizationBoards()).hasSize(1);
-        assertOrganizationInfoResponse(response.getData().getOrganizationBoards().get(0), organizationBoard);
+        assertOrganizationBoardInfoResponse(response.getData().getOrganizationBoards().get(0), organizationBoard);
     }
 
     @Test
@@ -134,7 +134,7 @@ class ScheduleControllerTest extends ControllerTestUtils {
         assertThat(adminBoard.getEndDateTime()).isEqualTo(endDateTime);
     }
 
-    private void assertOrganizationInfoResponse(OrganizationBoardInfoResponse response, OrganizationBoard organizationBoard) {
+    private void assertOrganizationBoardInfoResponse(OrganizationBoardInfoResponse response, OrganizationBoard organizationBoard) {
         assertThat(response.getId()).isEqualTo(organizationBoard.getId());
         assertThat(response.getSubDomain()).isEqualTo(organizationBoard.getSubDomain());
         assertThat(response.getTitle()).isEqualTo(organizationBoard.getTitle());

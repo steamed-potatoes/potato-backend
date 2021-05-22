@@ -76,11 +76,23 @@ public class OrganizationControllerTest extends ControllerTestUtils {
     }
 
     @Test
+    void 가입되어_있는_그룹이_없는_경우() throws Exception {
+        // given
+        String token = administratorMockMvc.getMockAdminToken();
+
+        // when
+        ApiResponse<List<OrganizationInfoResponse>> response = organizationMockMvc.retrieveOrganization(token, 200);
+
+        // then
+        assertThat(response.getData()).isEmpty();
+    }
+
+    @Test
     void 비인준_그룹을_인준그룹으로_바꾼다() throws Exception {
         // given
         String token = administratorMockMvc.getMockAdminToken();
 
-        Organization organization = OrganizationCreator.create("potato", "감자", "설명", "http://profile.com", OrganizationCategory.NON_APPROVED_CIRCLE);
+        Organization organization = OrganizationCreator.create("potato", "감자", "설명", "https://profile.com", OrganizationCategory.NON_APPROVED_CIRCLE);
         organization.addAdmin(1L);
         organizationRepository.save(organization);
 
@@ -99,7 +111,26 @@ public class OrganizationControllerTest extends ControllerTestUtils {
         // given
         String token = administratorMockMvc.getMockAdminToken();
 
-        Organization organization = OrganizationCreator.create("potato", "감자", "설명", "http://profile.com", OrganizationCategory.APPROVED_CIRCLE);
+        Organization organization = OrganizationCreator.create("potato", "감자", "설명", "https://profile.com", OrganizationCategory.APPROVED_CIRCLE);
+        organization.addAdmin(1L);
+        organizationRepository.save(organization);
+
+        UpdateCategoryRequest request = UpdateCategoryRequest.testInstance(OrganizationCategory.NON_APPROVED_CIRCLE);
+
+        // when
+        ApiResponse<OrganizationInfoResponse> response = organizationMockMvc.updateCategory(organization.getSubDomain(), request, token, 200);
+
+        // then
+        assertThat(response.getData().getSubDomain()).isEqualTo(organization.getSubDomain());
+        assertThat(response.getData().getCategory()).isEqualTo(OrganizationCategory.NON_APPROVED_CIRCLE);
+    }
+
+    @Test
+    void 비인준_그룹을_비인준_그룹을_바꿀경우_그대로_비인준_그룹유지() throws Exception {
+        // given
+        String token = administratorMockMvc.getMockAdminToken();
+
+        Organization organization = OrganizationCreator.create("potato", "감자", "설명", "https://profile.com", OrganizationCategory.NON_APPROVED_CIRCLE);
         organization.addAdmin(1L);
         organizationRepository.save(organization);
 

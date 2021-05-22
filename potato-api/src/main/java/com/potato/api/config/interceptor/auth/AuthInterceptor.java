@@ -8,6 +8,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import static com.potato.api.config.interceptor.auth.Auth.Role.OPTIONAL_LOGIN;
 import static com.potato.api.config.interceptor.auth.Auth.Role.ORGANIZATION_ADMIN;
 import static com.potato.api.config.interceptor.auth.Auth.Role.ORGANIZATION_MEMBER;
 
@@ -31,6 +32,13 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
         if (auth == null) {
             return true;
         }
+
+        if (auth.role().compareTo(OPTIONAL_LOGIN) == 0) {
+            Long memberId = loginUserComponent.getMemberIdIfExists(request);
+            request.setAttribute(MEMBER_ID, memberId);
+            return true;
+        }
+
         Long memberId = loginUserComponent.getMemberId(request);
         request.setAttribute(MEMBER_ID, memberId);
 

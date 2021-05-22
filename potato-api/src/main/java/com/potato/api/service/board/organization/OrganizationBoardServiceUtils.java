@@ -43,12 +43,9 @@ public final class OrganizationBoardServiceUtils {
     }
 
     private static List<String> getImageUrlList(List<BoardImage> boardImageList) {
-        return boardImageList.stream().map(BoardImage::getImageUrl)
+        return boardImageList.stream()
+            .map(BoardImage::getImageUrl)
             .collect(Collectors.toList());
-    }
-
-    public static BoardImage findOrganizationBoardMainImage(BoardImageRepository boardImageRepository, Long organizationBoardId) {
-        return boardImageRepository.findMainImageByOrganizationBoardId(organizationBoardId);
     }
 
 }

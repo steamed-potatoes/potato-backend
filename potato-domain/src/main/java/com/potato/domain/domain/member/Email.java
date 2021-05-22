@@ -3,14 +3,15 @@ package com.potato.domain.domain.member;
 import com.potato.common.exception.ErrorCode;
 import com.potato.common.exception.model.ValidationException;
 import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import java.util.Objects;
 import java.util.regex.Pattern;
 
+@EqualsAndHashCode
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Embeddable
@@ -34,19 +35,6 @@ public class Email {
 
     public static Email of(String email) {
         return new Email(email);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Email email1 = (Email) o;
-        return Objects.equals(getEmail(), email1.getEmail());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getEmail());
     }
 
 }

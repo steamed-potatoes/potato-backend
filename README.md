@@ -1,12 +1,8 @@
 # Potato Backend 
 
-![Generic badge](https://img.shields.io/badge/version-0.3.5-orange.svg)
+![Generic badge](https://img.shields.io/badge/version-0.4.1-orange.svg)
 [![codecov](https://codecov.io/gh/steamed-potatoes/potato-backend/branch/develop/graph/badge.svg?token=ACoWRzqGBl)](https://codecov.io/gh/steamed-potatoes/potato-backend)
 
-## Test Server
-- 기능 테스트는 이곳에서 하실 수 있습니다. (실제 UI와 관련 X)
-  
-https://potato-front.netlify.app/
 
 ## Introduction
 ### 동아리의 다양한 일정들을 한 곳에서 관리하는 웹 서비스

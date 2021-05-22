@@ -22,9 +22,9 @@ public class OrganizationRetrieveService {
     private final MemberRepository memberRepository;
 
     @Transactional(readOnly = true)
-    public OrganizationWithMembersInfoResponse getDetailOrganizationInfo(String subDomain) {
+    public OrganizationWithMembersInfoResponse getDetailOrganizationInfo(String subDomain, Long memberId) {
         Organization organization = OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, subDomain);
-        return OrganizationWithMembersInfoResponse.of(organization, memberRepository.findAllById(organization.getMemberIds()));
+        return OrganizationWithMembersInfoResponse.of(organization, memberRepository.findAllById(organization.getMemberIds()), organization.isFollower(memberId));
     }
 
     @Transactional(readOnly = true)

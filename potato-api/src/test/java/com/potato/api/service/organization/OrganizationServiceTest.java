@@ -24,7 +24,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
-import static com.potato.api.service.organization.OrganizationServiceTestUtils.*;
+import static com.potato.api.helper.organization.OrganizationServiceTestUtils.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -65,7 +65,7 @@ class OrganizationServiceTest extends MemberSetupTest {
         // given
         String name = "찐 감자";
         String description = "개발 동아리 입니다";
-        String profileUrl = "http://image.com";
+        String profileUrl = "https://image.com";
 
         CreateOrganizationRequest request = CreateOrganizationRequest.testBuilder()
             .subDomain(subDomain)

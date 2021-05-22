@@ -17,12 +17,12 @@ public class MemberInfoResponse {
 
     private String profileUrl;
 
-    private String major;
+    private MajorInfoResponse major;
 
     private Integer classNumber;
 
     public static MemberInfoResponse of(Member member) {
-        return new MemberInfoResponse(member.getId(), member.getEmail(), member.getName(), member.getProfileUrl(), member.getMajorName(), member.getClassNumber());
+        return new MemberInfoResponse(member.getId(), member.getEmail(), member.getName(), member.getProfileUrl(), MajorInfoResponse.of(member.getMajor()), member.getClassNumber());
     }
 
 }

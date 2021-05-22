@@ -1,10 +1,12 @@
 package com.potato.api.service.comment;
 
+import com.potato.api.service.comment.dto.request.DeleteBoardCommentRequest;
+import com.potato.api.service.comment.dto.request.LikeBoardCommentRequest;
+import com.potato.api.service.comment.dto.request.RetrieveBoardCommentsRequest;
 import com.potato.domain.domain.board.admin.AdminBoardRepository;
 import com.potato.domain.domain.board.organization.OrganizationBoardRepository;
 import com.potato.domain.domain.comment.BoardComment;
 import com.potato.domain.domain.comment.BoardCommentRepository;
-import com.potato.domain.domain.board.BoardType;
 import com.potato.api.service.comment.dto.request.AddBoardCommentRequest;
 import com.potato.api.service.comment.dto.request.UpdateBoardCommentRequest;
 import com.potato.api.service.comment.dto.response.BoardCommentResponse;
@@ -35,11 +37,11 @@ public class BoardCommentService {
     }
 
     @Transactional(readOnly = true)
-    public List<BoardCommentResponse> retrieveBoardCommentList(BoardType type, Long boardId) {
-        BoardCommentServiceUtils.validateExistBoard(organizationBoardRepository, adminBoardRepository, type, boardId);
-        List<BoardComment> rootComments = boardCommentRepository.findRootCommentByTypeAndBoardId(type, boardId);
+    public List<BoardCommentResponse> retrieveBoardCommentList(RetrieveBoardCommentsRequest request, Long memberId) {
+        BoardCommentServiceUtils.validateExistBoard(organizationBoardRepository, adminBoardRepository, request.getType(), request.getBoardId());
+        List<BoardComment> rootComments = boardCommentRepository.findRootCommentByTypeAndBoardId(request.getType(), request.getBoardId());
         return rootComments.stream()
-            .map(BoardCommentResponse::of)
+            .map(boardComment -> BoardCommentResponse.of(boardComment, memberId))
             .collect(Collectors.toList());
     }
 
@@ -50,20 +52,20 @@ public class BoardCommentService {
     }
 
     @Transactional
-    public void deleteBoardComment(Long boardCommentId, Long memberId) {
-        BoardComment comment = BoardCommentServiceUtils.findBoardCommentByIdAndMemberId(boardCommentRepository, boardCommentId, memberId);
+    public void deleteBoardComment(DeleteBoardCommentRequest request, Long memberId) {
+        BoardComment comment = BoardCommentServiceUtils.findBoardCommentByIdAndMemberId(boardCommentRepository, request.getBoardCommentId(), memberId);
         comment.delete();
     }
 
     @Transactional
-    public void likeBoardComment(Long boardCommentId, Long memberId) {
-        BoardComment boardComment = BoardCommentServiceUtils.findBoardCommentById(boardCommentRepository, boardCommentId);
+    public void likeBoardComment(LikeBoardCommentRequest request, Long memberId) {
+        BoardComment boardComment = BoardCommentServiceUtils.findBoardCommentById(boardCommentRepository, request.getBoardCommentId());
         boardComment.addLike(memberId);
     }
 
     @Transactional
-    public void unLikeBoardComment(Long boardCommentId, Long memberId) {
-        BoardComment boardComment = BoardCommentServiceUtils.findBoardCommentById(boardCommentRepository, boardCommentId);
+    public void unLikeBoardComment(LikeBoardCommentRequest request, Long memberId) {
+        BoardComment boardComment = BoardCommentServiceUtils.findBoardCommentById(boardCommentRepository, request.getBoardCommentId());
         boardComment.deleteLike(memberId);
     }
 

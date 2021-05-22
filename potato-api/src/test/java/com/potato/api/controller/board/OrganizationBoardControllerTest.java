@@ -2,27 +2,25 @@ package com.potato.api.controller.board;
 
 import com.potato.api.controller.ApiResponse;
 import com.potato.api.controller.ControllerTestUtils;
-import com.potato.domain.domain.board.organization.repository.dto.BoardWithOrganizationDtoWithImage;
-import com.potato.domain.domain.image.BoardImage;
-import com.potato.domain.domain.image.BoardImageRepository;
-import com.potato.domain.domain.board.BoardType;
+import com.potato.api.controller.board.api.OrganizationBoardMockMvc;
+import com.potato.api.service.board.organization.dto.request.CreateOrganizationBoardRequest;
+import com.potato.api.service.board.organization.dto.request.DeleteOrganizationBoardRequest;
+import com.potato.api.service.board.organization.dto.request.LikeOrganizationBoardRequest;
+import com.potato.api.service.board.organization.dto.request.UpdateOrganizationBoardRequest;
+import com.potato.api.service.board.organization.dto.response.OrganizationBoardInfoResponse;
 import com.potato.domain.domain.board.organization.OrganizationBoard;
 import com.potato.domain.domain.board.organization.OrganizationBoardCategory;
 import com.potato.domain.domain.board.organization.OrganizationBoardCreator;
 import com.potato.domain.domain.board.organization.OrganizationBoardRepository;
-import com.potato.domain.domain.hashtag.BoardHashTag;
 import com.potato.domain.domain.hashtag.BoardHashTagRepository;
+import com.potato.domain.domain.image.BoardImageRepository;
 import com.potato.domain.domain.member.Member;
 import com.potato.domain.domain.organization.Organization;
 import com.potato.domain.domain.organization.OrganizationCreator;
 import com.potato.domain.domain.organization.OrganizationRepository;
-import com.potato.api.service.board.organization.dto.request.CreateOrganizationBoardRequest;
-import com.potato.api.service.board.organization.dto.request.RetrieveLatestBoardsRequest;
-import com.potato.api.service.board.organization.dto.request.UpdateOrganizationBoardRequest;
-import com.potato.api.service.board.organization.dto.response.OrganizationBoardInfoResponse;
-import com.potato.api.service.board.organization.dto.response.OrganizationBoardWithCreatorInfoResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -31,7 +29,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -68,6 +65,7 @@ class OrganizationBoardControllerTest extends ControllerTestUtils {
         boardImageRepository.deleteAll();
     }
 
+    @DisplayName("POST /api/v2/organization/board 200 OK")
     @Test
     void 그룹의_관리자가_새로운_그룹의_게시물을_등록하는_경우() throws Exception {
         //given
@@ -91,7 +89,7 @@ class OrganizationBoardControllerTest extends ControllerTestUtils {
             .endDateTime(endTime)
             .type(OrganizationBoardCategory.RECRUIT)
             .hashTags(Arrays.asList("감자", "고구마"))
-            .imageUrlList(Collections.emptyList())
+            .imageUrlList(Collections.singletonList("https://profile.com"))
             .build();
 
         //when
@@ -105,104 +103,13 @@ class OrganizationBoardControllerTest extends ControllerTestUtils {
         assertThat(response.getData().getType()).isEqualTo(OrganizationBoardCategory.RECRUIT);
     }
 
-    @Test
-    void 특정그룹의_게시물을_조회하는_경우() throws Exception {
-        //given
-        String subDomain = "potato";
-        Organization organization = OrganizationCreator.create(subDomain);
-        organization.addAdmin(testMember.getId());
-        organizationRepository.save(organization);
-
-        String title = "title";
-        OrganizationBoard board = OrganizationBoardCreator.create(subDomain, testMember.getId(), title, OrganizationBoardCategory.RECRUIT);
-        organizationBoardRepository.save(board);
-
-        String imageUrl = "potato.png";
-        BoardImage boardImage = BoardImage.newInstance(board.getId(), imageUrl, BoardType.ORGANIZATION_BOARD);
-        boardImageRepository.save(boardImage);
-
-        boardHashTagRepository.saveAll(Collections.singletonList(BoardHashTag.newInstance(BoardType.ORGANIZATION_BOARD, board.getId(), testMember.getId(), "감자")));
-
-        //when
-        ApiResponse<OrganizationBoardWithCreatorInfoResponse> response = organizationBoardMockMvc.retrieveOrganizationBoard(board.getId(), 200);
-
-        //then
-        assertThat(response.getData().getBoard().getTitle()).isEqualTo(title);
-        assertThat(response.getData().getCreator().getEmail()).isEqualTo(testMember.getEmail());
-        assertThat(response.getData().getOrganization().getSubDomain()).isEqualTo(subDomain);
-        assertThat(response.getData().getHashTags()).isEqualTo(Collections.singletonList("감자"));
-    }
-
-    @Test
-    void 그룹의_게시물을_스크롤_페이지네이션_기반_최신_3개_조회하는_경우() throws Exception {
-        //given
-        String subDomain = "potato";
-        Organization organization = OrganizationCreator.create(subDomain);
-        organization.addAdmin(testMember.getId());
-        organizationRepository.save(organization);
-
-        String title1 = "title1";
-        String title2 = "title2";
-        String title3 = "title3";
-        OrganizationBoard board1 = OrganizationBoardCreator.create(subDomain, testMember.getId(), title1, OrganizationBoardCategory.RECRUIT);
-        OrganizationBoard board2 = OrganizationBoardCreator.create(subDomain, testMember.getId(), title2, OrganizationBoardCategory.RECRUIT);
-        OrganizationBoard board3 = OrganizationBoardCreator.create(subDomain, testMember.getId(), title3, OrganizationBoardCategory.RECRUIT);
-        organizationBoardRepository.saveAll(Arrays.asList(board1, board2, board3));
-
-        //when
-        ApiResponse<List<BoardWithOrganizationDtoWithImage>> response = organizationBoardMockMvc.retrieveLatestOrganizationBoardList(0, 3, 200);
-
-        //then
-        assertThat(response.getData().get(0).getBoardWithOrganizationDto().getBoardTitle()).isEqualTo(title3);
-        assertThat(response.getData().get(1).getBoardWithOrganizationDto().getBoardTitle()).isEqualTo(title2);
-        assertThat(response.getData().get(2).getBoardWithOrganizationDto().getBoardTitle()).isEqualTo(title1);
-    }
-
-    @Test
-    void 그룹의_게시물을_스크롤_페이지네이션_기반_최근게시글1개_있고_2개_조회하는_경우() throws Exception {
-        //given
-        String subDomain = "potato";
-        Organization organization = OrganizationCreator.create(subDomain);
-        organization.addAdmin(testMember.getId());
-        organizationRepository.save(organization);
-
-        String title1 = "title1";
-        String title2 = "title2";
-        String title3 = "title3";
-        OrganizationBoard board1 = OrganizationBoardCreator.create(subDomain, testMember.getId(), title1, OrganizationBoardCategory.RECRUIT);
-        OrganizationBoard board2 = OrganizationBoardCreator.create(subDomain, testMember.getId(), title2, OrganizationBoardCategory.RECRUIT);
-        OrganizationBoard board3 = OrganizationBoardCreator.create(subDomain, testMember.getId(), title3, OrganizationBoardCategory.RECRUIT);
-        organizationBoardRepository.saveAll(Arrays.asList(board1, board2, board3));
-
-        //when
-        ApiResponse<List<BoardWithOrganizationDtoWithImage>> response = organizationBoardMockMvc.retrieveLatestOrganizationBoardList(board3.getId(), 2, 200);
-
-        //then
-        assertThat(response.getData().get(0).getBoardWithOrganizationDto().getBoardTitle()).isEqualTo(title2);
-        assertThat(response.getData().get(1).getBoardWithOrganizationDto().getBoardTitle()).isEqualTo(title1);
-    }
-
-    @Test
-    void 게시글이_없을_경우_빈배열_반환() throws Exception {
-        //given
-
-        //when
-        ApiResponse<List<BoardWithOrganizationDtoWithImage>> response = organizationBoardMockMvc.retrieveLatestOrganizationBoardList(0, 3, 200);
-
-        //then
-        assertThat(response.getData()).isEmpty();
-    }
-
+    @DisplayName("PUT /api/v2/organization/board")
     @Test
     void 그룹_관리자가_그룹의_게시물을_수정하는_경우() throws Exception {
         //given
-        String email = "tnswh2023@gmail.com";
-        String token = memberMockMvc.getMockMemberToken(email);
-        Member member = memberRepository.findMemberByEmail(email);
-
         String subDomain = "potato";
         Organization organization = OrganizationCreator.create(subDomain);
-        organization.addAdmin(member.getId());
+        organization.addAdmin(testMember.getId());
         organizationRepository.save(organization);
 
         String title = "title";
@@ -228,52 +135,54 @@ class OrganizationBoardControllerTest extends ControllerTestUtils {
     }
 
     @Test
-    void 인기있는_게시글_5개를_가져오는_경우() throws Exception {
-        //given
+    void 그룹_관리자가_게시한_게시물을_삭제한다() throws Exception {
+        // given
         String subDomain = "potato";
-        OrganizationBoard organizationBoard1 = OrganizationBoardCreator.create(subDomain, 1L, "title1", OrganizationBoardCategory.RECRUIT);
-        organizationBoard1.addLike(2L);
-        organizationBoard1.addLike(3L);
-        OrganizationBoard organizationBoard2 = OrganizationBoardCreator.create(subDomain, 1L, "title2", OrganizationBoardCategory.RECRUIT);
-        organizationBoard2.addLike(2L);
-        OrganizationBoard organizationBoard3 = OrganizationBoardCreator.create(subDomain, 1L, "title3", OrganizationBoardCategory.RECRUIT);
-        OrganizationBoard organizationBoard4 = OrganizationBoardCreator.create(subDomain, 1L, "title4", OrganizationBoardCategory.RECRUIT);
-        OrganizationBoard organizationBoard5 = OrganizationBoardCreator.create(subDomain, 1L, "title5", OrganizationBoardCategory.RECRUIT);
+        Organization organization = OrganizationCreator.create(subDomain);
+        organization.addAdmin(testMember.getId());
+        organizationRepository.save(organization);
 
-        organizationBoardRepository.saveAll(Arrays.asList(organizationBoard1, organizationBoard2, organizationBoard3, organizationBoard4, organizationBoard5));
+        OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, testMember.getId(), "게시글", OrganizationBoardCategory.RECRUIT);
+        organizationBoardRepository.save(organizationBoard);
 
-        //when
-        ApiResponse<List<OrganizationBoardInfoResponse>> response = organizationBoardMockMvc.retrievePopularBoard(200);
+        DeleteOrganizationBoardRequest request = DeleteOrganizationBoardRequest.testInstance(organizationBoard.getId());
 
-        //then
-        assertThat(response.getData().get(0).getTitle()).isEqualTo(organizationBoard1.getTitle());
-        assertThat(response.getData().get(1).getTitle()).isEqualTo(organizationBoard2.getTitle());
-        assertThat(response.getData().get(2).getTitle()).isEqualTo(organizationBoard5.getTitle());
-        assertThat(response.getData().get(3).getTitle()).isEqualTo(organizationBoard4.getTitle());
-        assertThat(response.getData().get(4).getTitle()).isEqualTo(organizationBoard3.getTitle());
+        // when
+        ApiResponse<String> response = organizationBoardMockMvc.deleteOrganizationBoard(subDomain, request, token, 200);
+
+        // then
+        assertThat(response.getData()).isEqualTo("OK");
     }
 
     @Test
-    void 특정_동아리에_속한_게시물만을_조회한다() throws Exception {
+    void 그룹_게시물을_좋아요_누른다() throws Exception {
         // given
-        String subDomain = "potato";
-        organizationRepository.save(OrganizationCreator.create(subDomain));
-        OrganizationBoard organizationBoard1 = OrganizationBoardCreator.create(subDomain, 1L, "title1", OrganizationBoardCategory.RECRUIT);
-        OrganizationBoard organizationBoard2 = OrganizationBoardCreator.create(subDomain, 1L, "title2", OrganizationBoardCategory.RECRUIT);
-        organizationBoardRepository.saveAll(Arrays.asList(organizationBoard1, organizationBoard2));
+        OrganizationBoard organizationBoard = OrganizationBoardCreator.create(organization.getSubDomain(), 999L, "이전의 게시글", OrganizationBoardCategory.RECRUIT);
+        organizationBoardRepository.save(organizationBoard);
 
-        RetrieveLatestBoardsRequest request = RetrieveLatestBoardsRequest.testBuilder()
-            .size(5)
-            .lastOrganizationBoardId(0)
-            .build();
+        LikeOrganizationBoardRequest request = LikeOrganizationBoardRequest.testInstance(organizationBoard.getId());
 
         // when
-        ApiResponse<List<BoardWithOrganizationDtoWithImage>> response = organizationBoardMockMvc.getBoardsInOrganization(subDomain, request, 200);
+        ApiResponse<String> response = organizationBoardMockMvc.addOrganizationBoardLiked(request, token, 200);
 
         // then
-        assertThat(response.getData()).hasSize(2);
-        assertThat(response.getData().get(0).getBoardWithOrganizationDto().getBoardId()).isEqualTo(organizationBoard2.getId());
-        assertThat(response.getData().get(1).getBoardWithOrganizationDto().getBoardId()).isEqualTo(organizationBoard1.getId());
+        assertThat(response.getData()).isEqualTo("OK");
+    }
+
+    @Test
+    void 그룹_게시물을_좋아요를_취소한다() throws Exception {
+        // given
+        OrganizationBoard organizationBoard = OrganizationBoardCreator.create(organization.getSubDomain(), 999L, "이전의 게시글", OrganizationBoardCategory.RECRUIT);
+        organizationBoard.addLike(testMember.getId());
+        organizationBoardRepository.save(organizationBoard);
+
+        LikeOrganizationBoardRequest request = LikeOrganizationBoardRequest.testInstance(organizationBoard.getId());
+
+        // when
+        ApiResponse<String> response = organizationBoardMockMvc.cancelOrganizationBoardLike(request, token, 200);
+
+        // then
+        assertThat(response.getData()).isEqualTo("OK");
     }
 
 }

@@ -58,7 +58,7 @@ public class OrganizationServiceTest extends AdminSetupTest {
     @Test
     void 비인준_그룹을_인준그룹으로_변경해준다() {
         // given
-        Organization organization = OrganizationCreator.create("potato", "감자", "설명", "http://profile.com", OrganizationCategory.NON_APPROVED_CIRCLE);
+        Organization organization = OrganizationCreator.create("potato", "감자", "설명", "https://profile.com", OrganizationCategory.NON_APPROVED_CIRCLE);
         organization.addAdmin(1L);
         organizationRepository.save(organization);
 
@@ -77,7 +77,7 @@ public class OrganizationServiceTest extends AdminSetupTest {
     @Test
     void 비인준_그룹을_비인준그룹으로_변경요청하면_에러없이_유지된다() {
         // given
-        Organization organization = OrganizationCreator.create("potato", "감자", "설명", "http://profile.com", OrganizationCategory.NON_APPROVED_CIRCLE);
+        Organization organization = OrganizationCreator.create("potato", "감자", "설명", "https://profile.com", OrganizationCategory.NON_APPROVED_CIRCLE);
         organization.addAdmin(1L);
         organizationRepository.save(organization);
 
@@ -96,7 +96,7 @@ public class OrganizationServiceTest extends AdminSetupTest {
     @Test
     void 인준_그룹을_비인준그룹으로_변경한다() {
         // given
-        Organization organization = OrganizationCreator.create("potato", "감자", "설명", "http://profile.com", OrganizationCategory.APPROVED_CIRCLE);
+        Organization organization = OrganizationCreator.create("potato", "감자", "설명", "https://profile.com", OrganizationCategory.APPROVED_CIRCLE);
         organization.addAdmin(1L);
         organizationRepository.save(organization);
 

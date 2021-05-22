@@ -2,16 +2,17 @@ package com.potato.domain.domain.member;
 
 import com.potato.common.exception.model.ValidationException;
 import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 import static com.potato.common.exception.ErrorCode.VALIDATION_CLASS_NUMBER_EXCEPTION;
 
+@EqualsAndHashCode
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Embeddable
@@ -56,19 +57,6 @@ public class ClassNumber {
 
     public static ClassNumber of(Integer classNumber) {
         return new ClassNumber(classNumber);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ClassNumber that = (ClassNumber) o;
-        return Objects.equals(classNumber, that.classNumber);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(classNumber);
     }
 
 }

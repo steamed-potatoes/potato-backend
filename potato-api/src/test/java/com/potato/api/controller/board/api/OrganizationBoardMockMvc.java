@@ -1,28 +1,26 @@
-package com.potato.api.controller.board;
+package com.potato.api.controller.board.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.potato.api.controller.ApiResponse;
-import com.potato.domain.domain.board.organization.repository.dto.BoardWithOrganizationDtoWithImage;
 import com.potato.api.service.board.organization.dto.request.CreateOrganizationBoardRequest;
-import com.potato.api.service.board.organization.dto.request.RetrieveLatestBoardsRequest;
+import com.potato.api.service.board.organization.dto.request.DeleteOrganizationBoardRequest;
+import com.potato.api.service.board.organization.dto.request.LikeOrganizationBoardRequest;
 import com.potato.api.service.board.organization.dto.request.UpdateOrganizationBoardRequest;
 import com.potato.api.service.board.organization.dto.response.OrganizationBoardInfoResponse;
-import com.potato.api.service.board.organization.dto.response.OrganizationBoardWithCreatorInfoResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class OrganizationBoardMockMvc {
+public class OrganizationBoardMockMvc {
 
     private final MockMvc mockMvc;
 
@@ -38,39 +36,6 @@ class OrganizationBoardMockMvc {
             .contentType(MediaType.APPLICATION_JSON)
             .header(HttpHeaders.AUTHORIZATION, "Bearer ".concat(token))
             .content(objectMapper.writeValueAsString(request));
-
-        return objectMapper.readValue(
-            mockMvc.perform(builder)
-                .andExpect(status().is(expectedStatus))
-                .andReturn()
-                .getResponse()
-                .getContentAsString(StandardCharsets.UTF_8), new TypeReference<>() {
-            }
-        );
-    }
-
-    public ApiResponse<OrganizationBoardWithCreatorInfoResponse> retrieveOrganizationBoard(Long organizationBoardId, int expectedStatus) throws Exception {
-        MockHttpServletRequestBuilder builder = get("/api/v2/organization/board")
-            .param("organizationBoardId", String.valueOf(organizationBoardId))
-            .contentType(MediaType.APPLICATION_JSON);
-
-        return objectMapper.readValue(
-            mockMvc.perform(builder)
-                .andExpect(status().is(expectedStatus))
-                .andReturn()
-                .getResponse()
-                .getContentAsString(StandardCharsets.UTF_8), new TypeReference<>() {
-            }
-        );
-    }
-
-    public ApiResponse<List<BoardWithOrganizationDtoWithImage>> retrieveLatestOrganizationBoardList(long lastOrganizationBoardId, long size, int expectedStatus) throws Exception {
-        MultiValueMap<String, String> retrieveLatestBoardsRequest = new LinkedMultiValueMap<>();
-        retrieveLatestBoardsRequest.add("lastOrganizationBoardId", String.valueOf(lastOrganizationBoardId));
-        retrieveLatestBoardsRequest.add("size", String.valueOf(size));
-        MockHttpServletRequestBuilder builder = get("/api/v2/organization/board/list")
-            .params(retrieveLatestBoardsRequest)
-            .contentType(MediaType.APPLICATION_JSON);
 
         return objectMapper.readValue(
             mockMvc.perform(builder)
@@ -98,10 +63,10 @@ class OrganizationBoardMockMvc {
         );
     }
 
-    public ApiResponse<List<OrganizationBoardInfoResponse>> retrievePopularBoard(int expectedStatus) throws Exception {
-        MockHttpServletRequestBuilder builder = get("/api/v2/organization/board/popular/list")
-            .param("size", String.valueOf(5))
-            .contentType(MediaType.APPLICATION_JSON);
+    public ApiResponse<String> deleteOrganizationBoard(String subDomain, DeleteOrganizationBoardRequest request, String token, int expectedStatus) throws Exception {
+        MockHttpServletRequestBuilder builder = delete("/api/v2/organization/board/" + subDomain)
+            .header(HttpHeaders.AUTHORIZATION, "Bearer ".concat(token))
+            .param("organizationBoardId", String.valueOf(request.getOrganizationBoardId()));
 
         return objectMapper.readValue(
             mockMvc.perform(builder)
@@ -113,10 +78,26 @@ class OrganizationBoardMockMvc {
         );
     }
 
-    public ApiResponse<List<BoardWithOrganizationDtoWithImage>> getBoardsInOrganization(String subDomain, RetrieveLatestBoardsRequest request, int expectedStatus) throws Exception {
-        MockHttpServletRequestBuilder builder = get("/api/v2/organization/board/list/in/".concat(subDomain))
-            .param("lastOrganizationBoardId", String.valueOf(request.getLastOrganizationBoardId()))
-            .param("size", String.valueOf(request.getSize()));
+    public ApiResponse<String> addOrganizationBoardLiked(LikeOrganizationBoardRequest request, String token, int expectedStatus) throws Exception {
+        MockHttpServletRequestBuilder builder = post("/api/v2/organization/board/like")
+            .contentType(MediaType.APPLICATION_JSON)
+            .header(HttpHeaders.AUTHORIZATION, "Bearer ".concat(token))
+            .content(objectMapper.writeValueAsString(request));
+
+        return objectMapper.readValue(
+            mockMvc.perform(builder)
+                .andExpect(status().is(expectedStatus))
+                .andReturn()
+                .getResponse()
+                .getContentAsString(StandardCharsets.UTF_8), new TypeReference<>() {
+            }
+        );
+    }
+
+    public ApiResponse<String> cancelOrganizationBoardLike(LikeOrganizationBoardRequest request, String token, int expectedStatus) throws Exception {
+        MockHttpServletRequestBuilder builder = delete("/api/v2/organization/board/like")
+            .header(HttpHeaders.AUTHORIZATION, "Bearer ".concat(token))
+            .param("organizationBoardId", String.valueOf(request.getOrganizationBoardId()));
 
         return objectMapper.readValue(
             mockMvc.perform(builder)

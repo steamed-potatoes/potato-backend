@@ -1,4 +1,4 @@
-package com.potato.api.controller.member;
+package com.potato.api.controller.member.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

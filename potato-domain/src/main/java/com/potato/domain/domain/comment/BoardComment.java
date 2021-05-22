@@ -1,11 +1,11 @@
 package com.potato.domain.domain.comment;
 
+import com.potato.common.exception.model.ForbiddenException;
 import com.potato.domain.domain.BaseTimeEntity;
 import com.potato.domain.domain.board.BoardType;
 import com.potato.common.exception.ErrorCode;
 import com.potato.common.exception.model.ConflictException;
 import com.potato.common.exception.model.NotFoundException;
-import com.potato.common.exception.model.ValidationException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -75,7 +75,7 @@ public class BoardComment extends BaseTimeEntity {
 
     public void addChildComment(Long memberId, String content) {
         if (!this.isRootComment()) {
-            throw new ValidationException(String.format("댓글은 2 depth 까지 가능합니다. memberId: (%s) content: (%s)", memberId, content), ErrorCode.VALIDATION_COMMENT_DEPTH_EXCEPTION);
+            throw new ForbiddenException(String.format("댓글은 2 depth 까지 가능합니다. memberId: (%s) content: (%s)", memberId, content), ErrorCode.FORBIDDEN_COMMENT_DEPTH_EXCEPTION);
         }
         this.childComments.add(new BoardComment(this, this.type, this.boardId, memberId, content, this.depth + 1));
     }
@@ -93,7 +93,7 @@ public class BoardComment extends BaseTimeEntity {
     }
 
     public void addLike(Long memberId) {
-        if (alreadyLike(memberId)) {
+        if (isLike(memberId)) {
             throw new ConflictException(String.format("멤버 (%s)는 (%s) 댓글에 좋아요를 누른 상태입니다.", memberId, this.id));
         }
         validateNotDeletedBoardComment();
@@ -102,7 +102,7 @@ public class BoardComment extends BaseTimeEntity {
         this.commentLikeCounts++;
     }
 
-    private boolean alreadyLike(Long memberId) {
+    public boolean isLike(Long memberId) {
         return this.boardCommentLikeList.stream()
             .anyMatch(boardCommentLike -> boardCommentLike.isSameMember(memberId));
     }

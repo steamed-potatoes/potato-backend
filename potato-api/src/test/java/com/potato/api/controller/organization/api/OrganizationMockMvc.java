@@ -1,12 +1,10 @@
-package com.potato.api.controller.organization;
+package com.potato.api.controller.organization.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.potato.api.controller.ApiResponse;
-import com.potato.api.service.member.dto.response.MemberInfoResponse;
 import com.potato.api.service.organization.dto.request.CreateOrganizationRequest;
 import com.potato.api.service.organization.dto.request.RetrievePopularOrganizationsRequest;
-import com.potato.api.service.organization.dto.request.UpdateOrganizationInfoRequest;
 import com.potato.api.service.organization.dto.response.OrganizationInfoResponse;
 import com.potato.api.service.organization.dto.response.OrganizationWithMembersInfoResponse;
 import org.springframework.http.HttpHeaders;
@@ -20,7 +18,7 @@ import java.util.List;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class OrganizationMockMvc {
+public class OrganizationMockMvc {
 
     private final MockMvc mockMvc;
 
@@ -47,8 +45,9 @@ class OrganizationMockMvc {
         );
     }
 
-    public ApiResponse<OrganizationWithMembersInfoResponse> getDetailOrganizationInfo(String subDomain, int expectedStatus) throws Exception {
-        MockHttpServletRequestBuilder builder = get("/api/v1/organization/" + subDomain);
+    public ApiResponse<OrganizationWithMembersInfoResponse> getDetailOrganizationInfo(String subDomain, String token, int expectedStatus) throws Exception {
+        MockHttpServletRequestBuilder builder = get("/api/v1/organization/" + subDomain)
+            .header(HttpHeaders.AUTHORIZATION, "Bearer ".concat(token));
         return objectMapper.readValue(
             mockMvc.perform(builder)
                 .andExpect(status().is(expectedStatus))
@@ -100,7 +99,6 @@ class OrganizationMockMvc {
         );
     }
 
-
     public ApiResponse<String> applyJoiningOrganization(String subDomain, String token, int expectedStatus) throws Exception {
         MockHttpServletRequestBuilder builder = post("/api/v1/organization/join/apply/" + subDomain)
             .contentType(MediaType.APPLICATION_JSON)
@@ -135,81 +133,6 @@ class OrganizationMockMvc {
         MockHttpServletRequestBuilder builder = delete("/api/v1/organization/leave/" + subDomain)
             .contentType(MediaType.APPLICATION_JSON)
             .header(HttpHeaders.AUTHORIZATION, "Bearer ".concat(token));
-
-        return objectMapper.readValue(
-            mockMvc.perform(builder)
-                .andExpect(status().is(expectedStatus))
-                .andReturn()
-                .getResponse()
-                .getContentAsString(StandardCharsets.UTF_8), new TypeReference<>() {
-            }
-        );
-    }
-
-    public ApiResponse<String> followOrganization(String subDomain, String token, int expectedStatus) throws Exception {
-        MockHttpServletRequestBuilder builder = post("/api/v1/organization/follow/" + subDomain)
-            .contentType(MediaType.APPLICATION_JSON)
-            .header(HttpHeaders.AUTHORIZATION, "Bearer ".concat(token));
-
-        return objectMapper.readValue(
-            mockMvc.perform(builder)
-                .andExpect(status().is(expectedStatus))
-                .andReturn()
-                .getResponse()
-                .getContentAsString(StandardCharsets.UTF_8), new TypeReference<>() {
-            }
-        );
-    }
-
-    public ApiResponse<String> unFollowOrganization(String subDomain, String token, int expectedStatus) throws Exception {
-        MockHttpServletRequestBuilder builder = delete("/api/v1/organization/follow/" + subDomain)
-            .contentType(MediaType.APPLICATION_JSON)
-            .header(HttpHeaders.AUTHORIZATION, "Bearer ".concat(token));
-
-        return objectMapper.readValue(
-            mockMvc.perform(builder)
-                .andExpect(status().is(expectedStatus))
-                .andReturn()
-                .getResponse()
-                .getContentAsString(StandardCharsets.UTF_8), new TypeReference<>() {
-            }
-        );
-    }
-
-    public ApiResponse<List<MemberInfoResponse>> getOrganizationFollowMember(String subDomain, int expectedStatus) throws Exception {
-        MockHttpServletRequestBuilder builder = get("/api/v1/organization/follow/" + subDomain)
-            .contentType(MediaType.APPLICATION_JSON);
-
-        return objectMapper.readValue(
-            mockMvc.perform(builder)
-                .andExpect(status().is(expectedStatus))
-                .andReturn()
-                .getResponse()
-                .getContentAsString(StandardCharsets.UTF_8), new TypeReference<>() {
-            }
-        );
-    }
-
-    public ApiResponse<List<OrganizationInfoResponse>> retrieveFollowingOrganization(String token, int expectedStatus) throws Exception {
-        MockHttpServletRequestBuilder builder = get("/api/v1/member/organization/follow")
-            .contentType(MediaType.APPLICATION_JSON)
-            .header(HttpHeaders.AUTHORIZATION, "Bearer ".concat(token));
-
-        return objectMapper.readValue(
-            mockMvc.perform(builder)
-                .andExpect(status().is(expectedStatus))
-                .andReturn()
-                .getResponse()
-                .getContentAsString(StandardCharsets.UTF_8), new TypeReference<>() {
-            }
-        );
-    }
-
-    public ApiResponse<OrganizationInfoResponse> updateOrganizationInfo(String subDomain, UpdateOrganizationInfoRequest request, String token, int expectedStatus) throws Exception {
-        MockHttpServletRequestBuilder builder = put("/api/v1/organization/" + subDomain)
-            .contentType(MediaType.APPLICATION_JSON)
-            .header(HttpHeaders.AUTHORIZATION, "Bearer ".concat(token))
-            .content(objectMapper.writeValueAsString(request));
 
         return objectMapper.readValue(
             mockMvc.perform(builder)

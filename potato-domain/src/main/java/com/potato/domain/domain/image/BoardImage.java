@@ -33,8 +33,13 @@ public class BoardImage extends BaseTimeEntity {
         this.type = type;
     }
 
-    public static BoardImage newInstance(Long boardId, String imageUrl, BoardType type) {
+    public static BoardImage newInstance(Long boardId, BoardType type, String imageUrl) {
         return new BoardImage(boardId, type, imageUrl);
     }
+
+    public static BoardImage testInstance(Long boardId, BoardType type, String imageUrl) {
+        return new BoardImage(boardId, type, imageUrl);
+    }
+
 
 }
