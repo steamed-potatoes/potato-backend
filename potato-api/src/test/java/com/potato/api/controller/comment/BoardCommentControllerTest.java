@@ -2,6 +2,7 @@ package com.potato.api.controller.comment;
 
 import com.potato.api.controller.ApiResponse;
 import com.potato.api.controller.ControllerTestUtils;
+import com.potato.api.service.comment.dto.request.RetrieveBoardCommentsRequest;
 import com.potato.domain.domain.board.BoardType;
 import com.potato.domain.domain.board.organization.OrganizationBoardCategory;
 import com.potato.common.exception.ErrorCode;
@@ -61,8 +62,10 @@ class BoardCommentControllerTest extends ControllerTestUtils {
         rootComment.addChildComment(testMember.getId(), "대댓글2");
         boardCommentRepository.save(rootComment);
 
+        RetrieveBoardCommentsRequest request = RetrieveBoardCommentsRequest.testInstance(type, organizationBoard.getId());
+
         // when
-        ApiResponse<List<BoardCommentResponse>> response = boardCommentMockMvc.retrieveBoardComments(type, organizationBoard.getId(), 200);
+        ApiResponse<List<BoardCommentResponse>> response = boardCommentMockMvc.retrieveBoardComments(request, token, 200);
 
         // then
         assertThat(response.getData()).hasSize(1);
@@ -74,9 +77,51 @@ class BoardCommentControllerTest extends ControllerTestUtils {
     }
 
     @Test
-    void 존재하지_않는_게시물의_댓글을_조회하면_404에러가_발생() throws Exception {
+    void 좋아요를_누른_유저가_게시물의_댓글을_조회하면_좋아요눌렀다고_표시된다() throws Exception {
+        // given
+        OrganizationBoard organizationBoard = OrganizationBoardCreator.create("subDomain", testMember.getId(), "123", OrganizationBoardCategory.RECRUIT);
+        organizationBoardRepository.save(organizationBoard);
+
+        BoardType type = BoardType.ORGANIZATION_BOARD;
+        BoardComment rootComment = BoardCommentCreator.createRootComment(type, organizationBoard.getId(), testMember.getId(), "루트 댓글1");
+        rootComment.addLike(testMember.getId());
+        boardCommentRepository.save(rootComment);
+
+        RetrieveBoardCommentsRequest request = RetrieveBoardCommentsRequest.testInstance(type, organizationBoard.getId());
+
         // when
-        ApiResponse<List<BoardCommentResponse>> response = boardCommentMockMvc.retrieveBoardComments(BoardType.ADMIN_BOARD, 999L, 404);
+        ApiResponse<List<BoardCommentResponse>> response = boardCommentMockMvc.retrieveBoardComments(request, token, 200);
+
+        // then
+        assertThat(response.getData().get(0).getIsLike()).isTrue();
+    }
+
+    @Test
+    void 좋아요를_누르지_않은_유저가_게시물의_댓글을_조회하면_좋아요를_누르지_않았다고_표시된다() throws Exception {
+        // given
+        OrganizationBoard organizationBoard = OrganizationBoardCreator.create("subDomain", testMember.getId(), "123", OrganizationBoardCategory.RECRUIT);
+        organizationBoardRepository.save(organizationBoard);
+
+        BoardType type = BoardType.ORGANIZATION_BOARD;
+        BoardComment rootComment = BoardCommentCreator.createRootComment(type, organizationBoard.getId(), testMember.getId(), "루트 댓글1");
+        boardCommentRepository.save(rootComment);
+
+        RetrieveBoardCommentsRequest request = RetrieveBoardCommentsRequest.testInstance(type, organizationBoard.getId());
+
+        // when
+        ApiResponse<List<BoardCommentResponse>> response = boardCommentMockMvc.retrieveBoardComments(request, token, 200);
+
+        // then
+        assertThat(response.getData().get(0).getIsLike()).isFalse();
+    }
+
+    @Test
+    void 존재하지_않는_게시물의_댓글을_조회하면_404에러가_발생() throws Exception {
+        // given
+        RetrieveBoardCommentsRequest request = RetrieveBoardCommentsRequest.testInstance(BoardType.ADMIN_BOARD, 999L);
+
+        // when
+        ApiResponse<List<BoardCommentResponse>> response = boardCommentMockMvc.retrieveBoardComments(request, token, 404);
 
         // then
         assertThat(response.getCode()).isEqualTo(ErrorCode.NOT_FOUND_EXCEPTION.getCode());
@@ -93,8 +138,10 @@ class BoardCommentControllerTest extends ControllerTestUtils {
         rootComment.delete();
         boardCommentRepository.save(rootComment);
 
+        RetrieveBoardCommentsRequest request = RetrieveBoardCommentsRequest.testInstance(type, organizationBoard.getId());
+
         // when
-        ApiResponse<List<BoardCommentResponse>> response = boardCommentMockMvc.retrieveBoardComments(type, organizationBoard.getId(), 200);
+        ApiResponse<List<BoardCommentResponse>> response = boardCommentMockMvc.retrieveBoardComments(request, token, 200);
 
         // then
         assertThat(response.getData()).hasSize(1);

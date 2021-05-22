@@ -52,7 +52,7 @@ class OrganizationRetrieveServiceTest extends MemberSetupTest {
         organizationRepository.save(organization);
 
         // when
-        OrganizationWithMembersInfoResponse response = organizationRetrieveService.getDetailOrganizationInfo(subDomain);
+        OrganizationWithMembersInfoResponse response = organizationRetrieveService.getDetailOrganizationInfo(subDomain, memberId);
 
         // then
         assertThat(response.getMembers()).hasSize(1);
@@ -63,7 +63,7 @@ class OrganizationRetrieveServiceTest extends MemberSetupTest {
     void 특정_그룹을_조회시_해당하는_그룹이_없는경우() {
         // when & then
         assertThatThrownBy(
-            () -> organizationRetrieveService.getDetailOrganizationInfo(subDomain)
+            () -> organizationRetrieveService.getDetailOrganizationInfo(subDomain, memberId)
         ).isInstanceOf(NotFoundException.class);
     }
 

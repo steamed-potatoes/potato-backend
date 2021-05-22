@@ -49,10 +49,10 @@ class OrganizationBoardMockMvc {
         );
     }
 
-    public ApiResponse<OrganizationBoardWithCreatorInfoResponse> retrieveOrganizationBoard(Long organizationBoardId, int expectedStatus) throws Exception {
+    public ApiResponse<OrganizationBoardWithCreatorInfoResponse> retrieveOrganizationBoard(Long organizationBoardId, String token, int expectedStatus) throws Exception {
         MockHttpServletRequestBuilder builder = get("/api/v2/organization/board")
             .param("organizationBoardId", String.valueOf(organizationBoardId))
-            .contentType(MediaType.APPLICATION_JSON);
+            .header(HttpHeaders.AUTHORIZATION, "Bearer ".concat(token));
 
         return objectMapper.readValue(
             mockMvc.perform(builder)

@@ -18,11 +18,13 @@ public class OrganizationWithMembersInfoResponse {
 
     private final List<MemberInOrganizationResponse> members = new ArrayList<>();
 
-    public static OrganizationWithMembersInfoResponse of(Organization organization, List<Member> memberList) {
+    private Boolean isFollower;
+
+    public static OrganizationWithMembersInfoResponse of(Organization organization, List<Member> memberList, boolean isFollower) {
         List<MemberInOrganizationResponse> memberInOrganizationResponses = memberList.stream()
             .map(member -> MemberInOrganizationResponse.of(member, organization.getRoleOfMember(member.getId())))
             .collect(Collectors.toList());
-        OrganizationWithMembersInfoResponse response = new OrganizationWithMembersInfoResponse(OrganizationInfoResponse.of(organization));
+        OrganizationWithMembersInfoResponse response = new OrganizationWithMembersInfoResponse(OrganizationInfoResponse.of(organization), isFollower);
         response.members.addAll(memberInOrganizationResponses);
         return response;
     }

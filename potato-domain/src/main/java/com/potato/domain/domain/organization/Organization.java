@@ -124,14 +124,14 @@ public class Organization extends BaseTimeEntity {
     }
 
     public void addFollow(Long memberId) {
-        if (hasAlreadyFollow(memberId)) {
+        if (isFollower(memberId)) {
             throw new ConflictException(String.format("이미 멤버 (%s)는 그룹 (%s)에 팔로우를 했습니다", memberId, this.subDomain));
         }
         this.organizationFollowerList.add(OrganizationFollower.newFollow(this, memberId));
         this.followersCount++;
     }
 
-    private boolean hasAlreadyFollow(Long memberId) {
+    public boolean isFollower(Long memberId) {
         return this.organizationFollowerList.stream()
             .anyMatch(follow -> follow.isSameMember(memberId));
     }

@@ -37,12 +37,12 @@ public class OrganizationBoardRetrieveService {
     private final BoardImageRepository boardImageRepository;
 
     @Transactional(readOnly = true)
-    public OrganizationBoardWithCreatorInfoResponse retrieveBoardWithOrganizationAndCreator(Long organizationBoardId) {
+    public OrganizationBoardWithCreatorInfoResponse retrieveBoardWithOrganizationAndCreator(Long organizationBoardId, Long memberId) {
         OrganizationBoard organizationBoard = OrganizationBoardServiceUtils.findOrganizationBoardById(organizationBoardRepository, organizationBoardId);
         Organization organization = OrganizationServiceUtils.findOrganizationBySubDomain(organizationRepository, organizationBoard.getSubDomain());
         Member creator = MemberServiceUtils.findMemberById(memberRepository, organizationBoard.getMemberId());
         List<String> imageUrlList = OrganizationBoardServiceUtils.findOrganizationBoardImage(boardImageRepository, organizationBoard.getId());
-        return OrganizationBoardWithCreatorInfoResponse.of(organizationBoard, organization, creator, getBoardHashTags(organizationBoard.getId()), imageUrlList);
+        return OrganizationBoardWithCreatorInfoResponse.of(organizationBoard, organization, creator, getBoardHashTags(organizationBoard.getId()), imageUrlList, organizationBoard.hasLike(memberId));
     }
 
     private List<String> getBoardHashTags(Long boardId) {

@@ -124,13 +124,62 @@ class OrganizationBoardControllerTest extends ControllerTestUtils {
         boardHashTagRepository.saveAll(Collections.singletonList(BoardHashTag.newInstance(BoardType.ORGANIZATION_BOARD, board.getId(), testMember.getId(), "감자")));
 
         //when
-        ApiResponse<OrganizationBoardWithCreatorInfoResponse> response = organizationBoardMockMvc.retrieveOrganizationBoard(board.getId(), 200);
+        ApiResponse<OrganizationBoardWithCreatorInfoResponse> response = organizationBoardMockMvc.retrieveOrganizationBoard(board.getId(), token, 200);
 
         //then
         assertThat(response.getData().getBoard().getTitle()).isEqualTo(title);
         assertThat(response.getData().getCreator().getEmail()).isEqualTo(testMember.getEmail());
         assertThat(response.getData().getOrganization().getSubDomain()).isEqualTo(subDomain);
         assertThat(response.getData().getHashTags()).isEqualTo(Collections.singletonList("감자"));
+    }
+
+    @Test
+    void 좋아요를_누른_게시물을_조회하는_경우_좋아요눌렀다고_표시된다() throws Exception {
+        // given
+        organization.addAdmin(testMember.getId());
+        organizationRepository.save(organization);
+
+        OrganizationBoard board = OrganizationBoardCreator.create(organization.getSubDomain(), testMember.getId(), "그룹 게시물", OrganizationBoardCategory.RECRUIT);
+        board.addLike(testMember.getId());
+        organizationBoardRepository.save(board);
+
+        // when
+        ApiResponse<OrganizationBoardWithCreatorInfoResponse> response = organizationBoardMockMvc.retrieveOrganizationBoard(board.getId(), token, 200);
+
+        // then
+        assertThat(response.getData().getIsLike()).isTrue();
+    }
+
+    @Test
+    void 좋아요를_누르지_않은_게시물을_조회하는_경우_좋아요를_누르지_않았댜고_표시된다() throws Exception {
+        // given
+        organization.addAdmin(testMember.getId());
+        organizationRepository.save(organization);
+
+        OrganizationBoard board = OrganizationBoardCreator.create(organization.getSubDomain(), testMember.getId(), "그룹 게시물", OrganizationBoardCategory.RECRUIT);
+        organizationBoardRepository.save(board);
+
+        // when
+        ApiResponse<OrganizationBoardWithCreatorInfoResponse> response = organizationBoardMockMvc.retrieveOrganizationBoard(board.getId(), token, 200);
+
+        // then
+        assertThat(response.getData().getIsLike()).isFalse();
+    }
+
+    @Test
+    void 로그인하지_않은_유저가_게시물을_조회하는_경우_좋아요를_누르지_않았다고_표시된다() throws Exception {
+        // given
+        organization.addAdmin(testMember.getId());
+        organizationRepository.save(organization);
+
+        OrganizationBoard board = OrganizationBoardCreator.create(organization.getSubDomain(), testMember.getId(), "그룹 게시물", OrganizationBoardCategory.RECRUIT);
+        organizationBoardRepository.save(board);
+
+        // when
+        ApiResponse<OrganizationBoardWithCreatorInfoResponse> response = organizationBoardMockMvc.retrieveOrganizationBoard(board.getId(), "Wrong Token", 200);
+
+        // then
+        assertThat(response.getData().getIsLike()).isFalse();
     }
 
     @Test
