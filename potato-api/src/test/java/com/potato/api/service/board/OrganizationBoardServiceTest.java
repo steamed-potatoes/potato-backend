@@ -296,6 +296,52 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
     }
 
     @Test
+    void 게시물을_삭제하면_백업이_되고_삭제된다() {
+        //given
+        OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, memberId, "게시글", OrganizationBoardCategory.RECRUIT);
+        organizationBoardRepository.save(organizationBoard);
+
+        DeleteOrganizationBoardRequest request = DeleteOrganizationBoardRequest.testInstance(organizationBoard.getId());
+
+        //when
+        organizationBoardService.deleteOrganizationBoard(subDomain, request, memberId);
+
+        //then
+        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findAll();
+        assertThat(organizationBoardList).isEmpty();
+
+        List<DeleteOrganizationBoard> deleteOrganizationBoardList = deleteOrganizationBoardRepository.findAll();
+        assertThat(deleteOrganizationBoardList).hasSize(1);
+        assertDeletedBoardOrganization(deleteOrganizationBoardList.get(0), organizationBoard.getId(), organizationBoard.getSubDomain(), organizationBoard.getCategory(), organizationBoard.getMemberId(),
+            organizationBoard.getTitle(), organizationBoard.getStartDateTime(), organizationBoard.getEndDateTime());
+    }
+
+    @Test
+    void 게시물을_삭제할때_해당_그룹의_게시물이_아닌경우_에러가_발생한다() {
+        //given
+        OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, memberId, "title", OrganizationBoardCategory.RECRUIT);
+        organizationBoardRepository.save(organizationBoard);
+
+        DeleteOrganizationBoardRequest request = DeleteOrganizationBoardRequest.testInstance(organizationBoard.getId());
+
+        //when & then
+        assertThatThrownBy(
+            () -> organizationBoardService.deleteOrganizationBoard("another-subDomain", request, memberId)
+        ).isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
+    void 게시물이_없으면_삭제되지_않는다() {
+        // given
+        DeleteOrganizationBoardRequest request = DeleteOrganizationBoardRequest.testInstance(999L);
+
+        //when & then
+        assertThatThrownBy(
+            () -> organizationBoardService.deleteOrganizationBoard(subDomain, request, memberId)
+        ).isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
     void 그룹_게시물을_좋아요_누르면_게시물_좋아요_테이블에_새로운_컬럼이_추가된다() {
         // given
         OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, 999L, "이전의 게시글", OrganizationBoardCategory.RECRUIT);
@@ -366,52 +412,6 @@ class OrganizationBoardServiceTest extends OrganizationMemberSetUpTest {
 
         // when & then
         assertThatThrownBy(() -> organizationBoardService.cancelLikeOrganizationBoard(request, memberId)).isInstanceOf(NotFoundException.class);
-    }
-
-    @Test
-    void 게시물을_삭제하면_백업이_되고_삭제된다() {
-        //given
-        OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, memberId, "게시글", OrganizationBoardCategory.RECRUIT);
-        organizationBoardRepository.save(organizationBoard);
-
-        DeleteOrganizationBoardRequest request = DeleteOrganizationBoardRequest.testInstance(organizationBoard.getId());
-
-        //when
-        organizationBoardService.deleteOrganizationBoard(subDomain, request, memberId);
-
-        //then
-        List<OrganizationBoard> organizationBoardList = organizationBoardRepository.findAll();
-        assertThat(organizationBoardList).isEmpty();
-
-        List<DeleteOrganizationBoard> deleteOrganizationBoardList = deleteOrganizationBoardRepository.findAll();
-        assertThat(deleteOrganizationBoardList).hasSize(1);
-        assertDeletedBoardOrganization(deleteOrganizationBoardList.get(0), organizationBoard.getId(), organizationBoard.getSubDomain(), organizationBoard.getCategory(), organizationBoard.getMemberId(),
-            organizationBoard.getTitle(), organizationBoard.getStartDateTime(), organizationBoard.getEndDateTime());
-    }
-
-    @Test
-    void 게시물을_삭제할때_해당_그룹의_게시물이_아닌경우_에러가_발생한다() {
-        //given
-        OrganizationBoard organizationBoard = OrganizationBoardCreator.create(subDomain, memberId, "title", OrganizationBoardCategory.RECRUIT);
-        organizationBoardRepository.save(organizationBoard);
-
-        DeleteOrganizationBoardRequest request = DeleteOrganizationBoardRequest.testInstance(organizationBoard.getId());
-
-        //when & then
-        assertThatThrownBy(
-            () -> organizationBoardService.deleteOrganizationBoard("another-subDomain", request, memberId)
-        ).isInstanceOf(NotFoundException.class);
-    }
-
-    @Test
-    void 게시물이_없으면_삭제되지_않는다() {
-        // given
-        DeleteOrganizationBoardRequest request = DeleteOrganizationBoardRequest.testInstance(999L);
-
-        //when & then
-        assertThatThrownBy(
-            () -> organizationBoardService.deleteOrganizationBoard(subDomain, request, memberId)
-        ).isInstanceOf(NotFoundException.class);
     }
 
     private void assertOrganizationBoardLike(OrganizationBoardLike organizationBoardLike, Long id, Long memberId) {
