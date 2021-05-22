@@ -2,6 +2,8 @@ package com.potato.api.controller.board;
 
 import com.potato.api.controller.ApiResponse;
 import com.potato.api.controller.ControllerTestUtils;
+import com.potato.api.service.board.organization.dto.request.RetrieveImminentBoardsRequest;
+import com.potato.api.service.board.organization.dto.response.OrganizationBoardInfoResponseWithImage;
 import com.potato.domain.domain.board.organization.repository.dto.BoardWithOrganizationDto;
 import com.potato.domain.domain.image.BoardImage;
 import com.potato.domain.domain.image.BoardImageRepository;
@@ -23,7 +25,11 @@ import com.potato.api.service.board.organization.dto.response.OrganizationBoardI
 import com.potato.api.service.board.organization.dto.response.OrganizationBoardWithCreatorInfoResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,6 +38,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -68,6 +75,7 @@ class OrganizationBoardControllerTest extends ControllerTestUtils {
         boardImageRepository.deleteAll();
     }
 
+    @DisplayName("POST /api/v2/organization/board 200 OK")
     @Test
     void 그룹의_관리자가_새로운_그룹의_게시물을_등록하는_경우() throws Exception {
         //given
@@ -105,6 +113,7 @@ class OrganizationBoardControllerTest extends ControllerTestUtils {
         assertThat(response.getData().getType()).isEqualTo(OrganizationBoardCategory.RECRUIT);
     }
 
+    @DisplayName("GET /api/v2/organization/board 200 OK")
     @Test
     void 특정그룹의_게시물을_조회하는_경우() throws Exception {
         //given
@@ -133,6 +142,7 @@ class OrganizationBoardControllerTest extends ControllerTestUtils {
         assertThat(response.getData().getHashTags()).isEqualTo(Collections.singletonList("감자"));
     }
 
+    @DisplayName("GET /api/v2/organization/board 200 OK")
     @Test
     void 좋아요를_누른_게시물을_조회하는_경우_좋아요눌렀다고_표시된다() throws Exception {
         // given
@@ -150,6 +160,7 @@ class OrganizationBoardControllerTest extends ControllerTestUtils {
         assertThat(response.getData().getIsLike()).isTrue();
     }
 
+    @DisplayName("GET /api/v2/organization/board 200 OK")
     @Test
     void 좋아요를_누르지_않은_게시물을_조회하는_경우_좋아요를_누르지_않았댜고_표시된다() throws Exception {
         // given
@@ -166,6 +177,7 @@ class OrganizationBoardControllerTest extends ControllerTestUtils {
         assertThat(response.getData().getIsLike()).isFalse();
     }
 
+    @DisplayName("GET /api/v2/organization/board 200 OK")
     @Test
     void 로그인하지_않은_유저가_게시물을_조회하는_경우_좋아요를_누르지_않았다고_표시된다() throws Exception {
         // given
@@ -182,6 +194,7 @@ class OrganizationBoardControllerTest extends ControllerTestUtils {
         assertThat(response.getData().getIsLike()).isFalse();
     }
 
+    @DisplayName("GET /api/v2/organization/board/list 200 OK")
     @Test
     void 그룹의_게시물을_스크롤_페이지네이션_기반_최신_3개_조회하는_경우() throws Exception {
         //given
@@ -207,6 +220,7 @@ class OrganizationBoardControllerTest extends ControllerTestUtils {
         assertThat(response.getData().get(2).getBoardTitle()).isEqualTo(title1);
     }
 
+    @DisplayName("GET /api/v2/organization/board/list 200 OK")
     @Test
     void 그룹의_게시물을_스크롤_페이지네이션_기반_최근게시글1개_있고_2개_조회하는_경우() throws Exception {
         //given
@@ -231,6 +245,7 @@ class OrganizationBoardControllerTest extends ControllerTestUtils {
         assertThat(response.getData().get(1).getBoardTitle()).isEqualTo(title1);
     }
 
+    @DisplayName("GET /api/v2/organization/board/list 200 OK")
     @Test
     void 게시글이_없을_경우_빈배열_반환() throws Exception {
         //given
@@ -242,6 +257,7 @@ class OrganizationBoardControllerTest extends ControllerTestUtils {
         assertThat(response.getData()).isEmpty();
     }
 
+    @DisplayName("PUT /api/v2/organization/board")
     @Test
     void 그룹_관리자가_그룹의_게시물을_수정하는_경우() throws Exception {
         //given
@@ -276,6 +292,7 @@ class OrganizationBoardControllerTest extends ControllerTestUtils {
         assertThat(response.getData().getTitle()).isEqualTo(updateTitle);
     }
 
+    @DisplayName("GET /api/v2/organization/board/popular/list")
     @Test
     void 인기있는_게시글_5개를_가져오는_경우() throws Exception {
         //given
@@ -302,6 +319,7 @@ class OrganizationBoardControllerTest extends ControllerTestUtils {
         assertThat(response.getData().get(4).getTitle()).isEqualTo(organizationBoard3.getTitle());
     }
 
+    @DisplayName("GET /api/v2/organization/board/list/in")
     @Test
     void 특정_동아리에_속한_게시물만을_조회한다() throws Exception {
         // given
@@ -323,6 +341,112 @@ class OrganizationBoardControllerTest extends ControllerTestUtils {
         assertThat(response.getData()).hasSize(2);
         assertThat(response.getData().get(0).getBoardId()).isEqualTo(organizationBoard2.getId());
         assertThat(response.getData().get(1).getBoardId()).isEqualTo(organizationBoard1.getId());
+    }
+
+    @DisplayName("GET /api/v2/organization/board/list/imminentBoards")
+    @MethodSource("아직_시작하지_않고_일주일_이내에_종료되는_게시물들")
+    @ParameterizedTest
+    void 얼마남지_않은_게시물_조회시_아직_시작하지_않고_일주일_이전에_종료되는_그룹_게시물들이_포함된다(LocalDateTime startDateTime, LocalDateTime endDateTime, String title) throws Exception {
+        // given
+        OrganizationBoard organizationBoard = OrganizationBoardCreator.create(organization.getSubDomain(), testMember.getId(), title, startDateTime, endDateTime, OrganizationBoardCategory.RECRUIT);
+        organizationBoardRepository.save(organizationBoard);
+
+        RetrieveImminentBoardsRequest request = RetrieveImminentBoardsRequest.testInstance(LocalDateTime.of(2021, 4, 23, 0, 0), 3);
+
+        // when
+        ApiResponse<List<OrganizationBoardInfoResponseWithImage>> response = organizationBoardMockMvc.retrieveImminentBoards(request, 200);
+
+        // then
+        assertThat(response.getData()).hasSize(1);
+        assertOrganizationBoardInfo(response.getData().get(0), organizationBoard);
+    }
+
+    private static Stream<Arguments> 아직_시작하지_않고_일주일_이내에_종료되는_게시물들() {
+        return Stream.of(
+            Arguments.of(LocalDateTime.of(2021, 4, 24, 0, 0), LocalDateTime.of(2021, 4, 29, 11, 59), "게시물1"),
+            Arguments.of(LocalDateTime.of(2021, 4, 23, 0, 1), LocalDateTime.of(2021, 4, 23, 0, 1), "게시물1")
+        );
+    }
+
+    @DisplayName("GET /api/v2/organization/board/list/imminentBoards")
+    @MethodSource("아직_시작하지_않고_일주일_이후에_종료되는_게시물들")
+    @ParameterizedTest
+    void 얼마남지_않은_게시물_조회시_아직_시작하지_않고_일주일_이후로_종료되는_그룹_게시물들이_포함되지_않는다(LocalDateTime startDateTime, LocalDateTime endDateTime) throws Exception {
+        // given
+        OrganizationBoard organizationBoard = OrganizationBoardCreator.create(organization.getSubDomain(), testMember.getId(), "게시물", startDateTime, endDateTime, OrganizationBoardCategory.RECRUIT);
+        organizationBoardRepository.save(organizationBoard);
+
+        RetrieveImminentBoardsRequest request = RetrieveImminentBoardsRequest.testInstance(LocalDateTime.of(2021, 4, 23, 0, 0), 3);
+
+        // when
+        ApiResponse<List<OrganizationBoardInfoResponseWithImage>> response = organizationBoardMockMvc.retrieveImminentBoards(request, 200);
+
+        // then
+        assertThat(response.getData()).isEmpty();
+    }
+
+    private static Stream<Arguments> 아직_시작하지_않고_일주일_이후에_종료되는_게시물들() {
+        return Stream.of(
+            Arguments.of(LocalDateTime.of(2021, 4, 23, 0, 1), LocalDateTime.of(2021, 5, 3, 0, 1)),
+            Arguments.of(LocalDateTime.of(2021, 4, 23, 0, 1), LocalDateTime.of(2021, 5, 1, 0, 0))
+        );
+    }
+
+    @DisplayName("GET /api/v2/organization/board/list/imminentBoards")
+    @MethodSource("이미_시작하였고_일주일_이내에_종료되는_게시물들")
+    @ParameterizedTest
+    void 얼마남지_않은_게시물_조회시_이미_시작하였고_일주일_이전에_종료되는_그룹_게시물들이_포함된다(LocalDateTime startDateTime, LocalDateTime endDateTime, String title) throws Exception {
+        // given
+        OrganizationBoard organizationBoard = OrganizationBoardCreator.create(organization.getSubDomain(), testMember.getId(), title, startDateTime, endDateTime, OrganizationBoardCategory.RECRUIT);
+        organizationBoardRepository.save(organizationBoard);
+
+        RetrieveImminentBoardsRequest request = RetrieveImminentBoardsRequest.testInstance(LocalDateTime.of(2021, 4, 23, 0, 0), 3);
+
+        // when
+        ApiResponse<List<OrganizationBoardInfoResponseWithImage>> response = organizationBoardMockMvc.retrieveImminentBoards(request, 200);
+
+        // then
+        assertThat(response.getData()).hasSize(1);
+        assertOrganizationBoardInfo(response.getData().get(0), organizationBoard);
+    }
+
+    private static Stream<Arguments> 이미_시작하였고_일주일_이내에_종료되는_게시물들() {
+        return Stream.of(
+            Arguments.of(LocalDateTime.of(2021, 4, 21, 0, 0), LocalDateTime.of(2021, 4, 29, 11, 59), "게시물1"),
+            Arguments.of(LocalDateTime.of(2021, 4, 22, 11, 59), LocalDateTime.of(2021, 4, 23, 0, 1), "게시물1")
+        );
+    }
+
+    @DisplayName("GET /api/v2/organization/board/list/imminentBoards")
+    @MethodSource("이미_끝난_게시물들")
+    @ParameterizedTest
+    void 얼마남지_않은_게시물_조회시_이미_끝난경우_조회되지_않는다(LocalDateTime startDateTime, LocalDateTime endDateTime) throws Exception {
+        // given
+        OrganizationBoard organizationBoard = OrganizationBoardCreator.create(organization.getSubDomain(), testMember.getId(), "제목", startDateTime, endDateTime, OrganizationBoardCategory.RECRUIT);
+        organizationBoardRepository.save(organizationBoard);
+
+        RetrieveImminentBoardsRequest request = RetrieveImminentBoardsRequest.testInstance(LocalDateTime.of(2021, 4, 23, 0, 0), 3);
+
+        // when
+        ApiResponse<List<OrganizationBoardInfoResponseWithImage>> response = organizationBoardMockMvc.retrieveImminentBoards(request, 200);
+
+        assertThat(response.getData()).isEmpty();
+    }
+
+    private static Stream<Arguments> 이미_끝난_게시물들() {
+        return Stream.of(
+            Arguments.of(LocalDateTime.of(2021, 4, 20, 0, 0), LocalDateTime.of(2021, 4, 22, 23, 50)),
+            Arguments.of(LocalDateTime.of(2021, 4, 21, 0, 0), LocalDateTime.of(2021, 4, 22, 23, 59))
+        );
+    }
+
+    private void assertOrganizationBoardInfo(OrganizationBoardInfoResponseWithImage organizationBoardInfoResponse, OrganizationBoard organizationBoard) {
+        assertThat(organizationBoardInfoResponse.getId()).isEqualTo(organizationBoard.getId());
+        assertThat(organizationBoardInfoResponse.getSubDomain()).isEqualTo(organizationBoard.getSubDomain());
+        assertThat(organizationBoardInfoResponse.getTitle()).isEqualTo(organizationBoard.getTitle());
+        assertThat(organizationBoardInfoResponse.getStartDateTime()).isEqualTo(organizationBoard.getStartDateTime());
+        assertThat(organizationBoardInfoResponse.getEndDateTime()).isEqualTo(organizationBoard.getEndDateTime());
+        assertThat(organizationBoardInfoResponse.getType()).isEqualTo(organizationBoard.getCategory());
     }
 
 }
