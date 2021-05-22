@@ -2,6 +2,7 @@ package com.potato.api.controller.schedule;
 
 import com.potato.api.controller.ApiResponse;
 import com.potato.api.controller.ControllerTestUtils;
+import com.potato.api.controller.schedule.api.ScheduleMockMvc;
 import com.potato.domain.domain.board.admin.AdminBoard;
 import com.potato.domain.domain.board.admin.AdminBoardRepository;
 import com.potato.domain.domain.board.organization.OrganizationBoard;

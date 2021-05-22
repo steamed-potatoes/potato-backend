@@ -2,8 +2,12 @@ package com.potato.api.controller.comment;
 
 import com.potato.api.controller.ApiResponse;
 import com.potato.api.controller.ControllerTestUtils;
+import com.potato.api.controller.comment.api.BoardCommentMockMvc;
 import com.potato.api.service.comment.dto.request.RetrieveBoardCommentsRequest;
 import com.potato.domain.domain.board.BoardType;
+import com.potato.domain.domain.board.admin.AdminBoard;
+import com.potato.domain.domain.board.admin.AdminBoardCreator;
+import com.potato.domain.domain.board.admin.AdminBoardRepository;
 import com.potato.domain.domain.board.organization.OrganizationBoardCategory;
 import com.potato.common.exception.ErrorCode;
 import com.potato.domain.domain.board.organization.OrganizationBoard;
@@ -37,6 +41,9 @@ class BoardCommentControllerTest extends ControllerTestUtils {
     @Autowired
     private BoardCommentRepository boardCommentRepository;
 
+    @Autowired
+    private AdminBoardRepository adminBoardRepository;
+
     @BeforeEach
     void setUp() throws Exception {
         super.setup();
@@ -46,8 +53,62 @@ class BoardCommentControllerTest extends ControllerTestUtils {
     @AfterEach
     void cleanUp() {
         super.cleanup();
+        adminBoardRepository.deleteAll();
         organizationBoardRepository.deleteAll();
         boardCommentRepository.deleteAll();
+    }
+
+    @Test
+    void 특정_그룹_게시물의_댓글들을_조회한다() throws Exception {
+        // given
+        OrganizationBoard organizationBoard = OrganizationBoardCreator.create("subDomain", testMember.getId(), "123", OrganizationBoardCategory.RECRUIT);
+        organizationBoardRepository.save(organizationBoard);
+
+        BoardType type = BoardType.ORGANIZATION_BOARD;
+        String content = "루트 댓글";
+        BoardComment rootComment1 = BoardCommentCreator.createRootComment(type, organizationBoard.getId(), testMember.getId(), content);
+
+        String childContent1 = "자식 댓글1";
+        rootComment1.addChildComment(testMember.getId(), childContent1);
+
+        String childContent2 = "자식 댓글2";
+        rootComment1.addChildComment(testMember.getId(), childContent2);
+        boardCommentRepository.save(rootComment1);
+
+        RetrieveBoardCommentsRequest request = RetrieveBoardCommentsRequest.testInstance(type, organizationBoard.getId());
+
+        // when
+        ApiResponse<List<BoardCommentResponse>> response = boardCommentMockMvc.retrieveBoardComments(request, token, 200);
+
+        // then
+        assertThat(response.getData()).hasSize(1);
+        assertBoardCommentResponse(response.getData().get(0), type, organizationBoard.getId(), content, testMember.getId());
+        assertBoardCommentResponse(response.getData().get(0).getChildren().get(0), type, organizationBoard.getId(), childContent1, testMember.getId());
+        assertBoardCommentResponse(response.getData().get(0).getChildren().get(1), type, organizationBoard.getId(), childContent2, testMember.getId());
+    }
+
+    @Test
+    void 특정_관리자_게시물의_댓글들을_불러온다() throws Exception {
+        AdminBoard adminBoard = AdminBoardCreator.create("관리자 공지 게시물", testMember.getId());
+        adminBoardRepository.save(adminBoard);
+
+        BoardType type = BoardType.ADMIN_BOARD;
+        String rootContent = "루트 댓글 내용";
+        BoardComment rootComment = BoardCommentCreator.createRootComment(type, adminBoard.getId(), testMember.getId(), rootContent);
+
+        String childContent = "자식 댓글";
+        rootComment.addChildComment(testMember.getId(), childContent);
+        boardCommentRepository.save(rootComment);
+
+        RetrieveBoardCommentsRequest request = RetrieveBoardCommentsRequest.testInstance(type, adminBoard.getId());
+
+        // when
+        ApiResponse<List<BoardCommentResponse>> response = boardCommentMockMvc.retrieveBoardComments(request, token, 200);
+
+        // then
+        assertThat(response.getData()).hasSize(1);
+        assertBoardCommentResponse(response.getData().get(0), type, adminBoard.getId(), rootContent, testMember.getId());
+        assertBoardCommentResponse(response.getData().get(0).getChildren().get(0), type, adminBoard.getId(), childContent, testMember.getId());
     }
 
     @Test

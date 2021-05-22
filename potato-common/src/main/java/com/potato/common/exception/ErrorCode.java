@@ -22,12 +22,14 @@ public enum ErrorCode {
     VALIDATION_SUBDOMAIN_EXCEPTION(ErrorStatusCode.VALIDATION_EXCEPTION, "허용되지 않은 도메인 입니다"),
     VALIDATION_FILE_FORMAT_EXCEPTION(ErrorStatusCode.VALIDATION_EXCEPTION, "허용되지 않은 파일입니다"),
     VALIDATION_GOOGLE_CODE_EXCEPTION(ErrorStatusCode.VALIDATION_EXCEPTION, "잘못된 구글 코드 입니다"),
-    VALIDATION_COMMENT_DEPTH_EXCEPTION(ErrorStatusCode.VALIDATION_EXCEPTION, "대댓글까지만 입력할 수 있습니다"),
     VALIDATION_DATETIME_INTERVAL_EXCEPTION(ErrorStatusCode.VALIDATION_EXCEPTION, "시작날짜가 종료날짜보다 빠를 수 없습니다"),
     VALIDATION_EMAIL_FORMAT_EXCEPTION(ErrorStatusCode.VALIDATION_EXCEPTION, "이메일 형식에 어긋납니다"),
 
+    // FORBIDDEN_EXCEPTION
     FORBIDDEN_NOT_ORGANIZATION_ADMIN_EXCEPTION(ErrorStatusCode.FORBIDDEN_EXCEPTION, "동아리의 관리자만이 할 수 있습니다"),
-    FORBIDDEN_NOT_ORGANIZATION_MEMBER_EXCEPTION(ErrorStatusCode.FORBIDDEN_EXCEPTION, "동아리의 소속만이 할 수 있습니다");
+    FORBIDDEN_NOT_ORGANIZATION_MEMBER_EXCEPTION(ErrorStatusCode.FORBIDDEN_EXCEPTION, "동아리의 소속만이 할 수 있습니다"),
+    FORBIDDEN_COMMENT_DEPTH_EXCEPTION(ErrorStatusCode.VALIDATION_EXCEPTION, "댓글에 대댓글까지만 입력할 수 있습니다");
+
 
     private final ErrorStatusCode statusCode;
     private final String message;

@@ -9,7 +9,6 @@ import com.potato.domain.domain.organization.OrganizationRepository;
 import com.potato.common.exception.model.NotFoundException;
 import com.potato.api.service.MemberSetupTest;
 import com.potato.api.service.member.dto.response.MemberInfoResponse;
-import com.potato.api.service.organization.dto.response.OrganizationWithMembersInfoResponse;
 import com.potato.api.service.organization.dto.response.OrganizationInfoResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -42,49 +41,11 @@ class OrganizationRetrieveServiceTest extends MemberSetupTest {
     private final String subDomain = "potato";
 
     @Test
-    void 특정_그룹_조회시_가입_승인_대기중인_경우_동아리_멤버에서_조회되지_않는다() {
-        // given
-        Member pendingMember = memberRepository.save(MemberCreator.create("test@gmail.com"));
-
-        Organization organization = OrganizationCreator.create(subDomain);
-        organization.addAdmin(memberId);
-        organization.addPending(pendingMember.getId());
-        organizationRepository.save(organization);
-
-        // when
-        OrganizationWithMembersInfoResponse response = organizationRetrieveService.getDetailOrganizationInfo(subDomain, memberId);
-
-        // then
-        assertThat(response.getMembers()).hasSize(1);
-        assertThat(response.getMembers().get(0).getMemberId()).isEqualTo(memberId);
-    }
-
-    @Test
     void 특정_그룹을_조회시_해당하는_그룹이_없는경우() {
         // when & then
         assertThatThrownBy(
             () -> organizationRetrieveService.getDetailOrganizationInfo(subDomain, memberId)
         ).isInstanceOf(NotFoundException.class);
-    }
-
-    @Test
-    void 모든_카테고리의_동아리_리스트를_조회한다() {
-        // given
-        Organization organization1 = OrganizationCreator.create(subDomain);
-        organization1.addAdmin(memberId);
-
-        Organization organization2 = OrganizationCreator.create("subDomain2");
-        organization2.addAdmin(memberId);
-
-        organizationRepository.saveAll(Arrays.asList(organization1, organization2));
-
-        // when
-        List<OrganizationInfoResponse> responses = organizationRetrieveService.retrieveOrganizationsWithPagination(null, 0, 3);
-
-        // then
-        assertThat(responses).hasSize(2);
-        assertOrganizationInfoResponse(responses.get(0), organization2.getSubDomain());
-        assertOrganizationInfoResponse(responses.get(1), organization1.getSubDomain());
     }
 
     @Test
@@ -126,37 +87,6 @@ class OrganizationRetrieveServiceTest extends MemberSetupTest {
     }
 
     @Test
-    void 조직_리스트를_불러온다_아무_조직도_없으면_NULL_이아닌_빈배열을_반환한다() {
-        // when
-        List<OrganizationInfoResponse> responses = organizationRetrieveService.retrieveOrganizationsWithPagination(null, 0, 3);
-
-        // then
-        assertThat(responses).isEmpty();
-        assertThat(responses).isNotNull();
-    }
-
-    @Test
-    void 내가_속한_조직의_리스트를_모두_불러온다() {
-        // given
-        Organization organization1 = OrganizationCreator.create(subDomain);
-        organization1.addAdmin(memberId);
-
-        String subDomain2 = "subDomain2";
-        Organization organization2 = OrganizationCreator.create(subDomain2);
-        organization2.addUser(memberId);
-
-        organizationRepository.saveAll(Arrays.asList(organization1, organization2));
-
-        // when
-        List<OrganizationInfoResponse> organizationInfoResponses = organizationRetrieveService.getMyOrganizationsInfo(memberId);
-
-        // then
-        assertThat(organizationInfoResponses).hasSize(2);
-        assertOrganizationInfoResponse(organizationInfoResponses.get(0), subDomain);
-        assertOrganizationInfoResponse(organizationInfoResponses.get(1), subDomain2);
-    }
-
-    @Test
     void 내가_속한_동아리를_모두_불러올때_가입신청중인_동아리는_포함되지_않는다() {
         // given
         Organization organization = OrganizationCreator.create(subDomain);
@@ -191,20 +121,6 @@ class OrganizationRetrieveServiceTest extends MemberSetupTest {
         //then
         assertMemberInfoResponse(responses.get(0), followingMember1.getId(), followingEmail1);
         assertMemberInfoResponse(responses.get(1), followingMember2.getId(), followingEmail2);
-    }
-
-    @Test
-    void 그룹을_팔로우한_유저가_없을경우_빈배열을_반환한다() {
-        //given
-        Organization organization = OrganizationCreator.create(subDomain);
-        organization.addAdmin(memberId);
-        organizationRepository.save(organization);
-
-        //when
-        List<MemberInfoResponse> responses = organizationRetrieveService.getOrganizationFollowMember(subDomain);
-
-        //then
-        assertThat(responses).isEmpty();
     }
 
     @Test

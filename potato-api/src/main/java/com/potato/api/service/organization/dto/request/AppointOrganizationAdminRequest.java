@@ -13,4 +13,8 @@ public class AppointOrganizationAdminRequest {
     @NotNull
     private Long targetMemberId;
 
+    public static AppointOrganizationAdminRequest testInstance(Long targetMemberId) {
+        return new AppointOrganizationAdminRequest(targetMemberId);
+    }
+
 }

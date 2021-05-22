@@ -1,7 +1,7 @@
 package com.potato.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.potato.api.controller.member.MemberMockMvc;
+import com.potato.api.controller.member.api.MemberMockMvc;
 import com.potato.domain.domain.member.Member;
 import com.potato.domain.domain.member.MemberRepository;
 import com.potato.domain.domain.organization.Organization;
