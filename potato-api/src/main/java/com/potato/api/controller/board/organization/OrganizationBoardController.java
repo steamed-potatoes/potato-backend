@@ -48,7 +48,7 @@ public class OrganizationBoardController {
     @Operation(summary = "게시물의 좋아요를 추가하는 API", security = {@SecurityRequirement(name = "BearerKey")})
     @Auth
     @PostMapping("/api/v2/organization/board/like")
-    public ApiResponse<String> likeOrganizationBoard(@Valid @RequestBody LikeOrganizationBoardRequest request, @MemberId Long memberId) {
+    public ApiResponse<String> addOrganizationBoardLike(@Valid @RequestBody LikeOrganizationBoardRequest request, @MemberId Long memberId) {
         organizationBoardService.likeOrganizationBoard(request, memberId);
         return ApiResponse.OK;
     }
@@ -56,7 +56,7 @@ public class OrganizationBoardController {
     @Operation(summary = "게시물의 좋아요를 취소하는 API", security = {@SecurityRequirement(name = "BearerKey")})
     @Auth
     @DeleteMapping("/api/v2/organization/board/like")
-    public ApiResponse<String> cancelOrganizationBoard(@Valid LikeOrganizationBoardRequest request, @MemberId Long memberId) {
+    public ApiResponse<String> cancelOrganizationBoardLike(@Valid LikeOrganizationBoardRequest request, @MemberId Long memberId) {
         organizationBoardService.cancelLikeOrganizationBoard(request, memberId);
         return ApiResponse.OK;
     }
