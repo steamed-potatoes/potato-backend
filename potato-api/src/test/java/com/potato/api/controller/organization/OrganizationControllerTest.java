@@ -35,21 +35,10 @@ class OrganizationControllerTest extends ControllerTestUtils {
     @Autowired
     private OrganizationRepository organizationRepository;
 
-    private Organization organization;
-    private String subDomain;
-    private String name;
-    private String description;
-    private String profileUrl;
-
     @BeforeEach
     void setUp() throws Exception {
         super.setup();
         organizationMockMvc = new OrganizationMockMvc(mockMvc, objectMapper);
-        subDomain = "potato";
-        name = "감자";
-        description = "개발의 감을 잡자";
-        profileUrl = "https://profile.com";
-        organization = OrganizationCreator.create(subDomain, name, description, profileUrl, OrganizationCategory.NON_APPROVED_CIRCLE);
     }
 
     @AfterEach
@@ -109,10 +98,10 @@ class OrganizationControllerTest extends ControllerTestUtils {
         organizationRepository.save(organization);
 
         // when
-        ApiResponse<OrganizationWithMembersInfoResponse> response = organizationMockMvc.getDetailOrganizationInfo(subDomain, token, 200);
+        ApiResponse<OrganizationWithMembersInfoResponse> response = organizationMockMvc.getDetailOrganizationInfo(organization.getSubDomain(), token, 200);
 
         // then
-        assertOrganizationInfoResponse(response.getData().getOrganization(), subDomain, name, description, profileUrl, organization.getCategory(), 1);
+        assertOrganizationInfoResponse(response.getData().getOrganization(), organization.getSubDomain(), organization.getName(), organization.getDescription(), organization.getProfileUrl(), organization.getCategory(), 1);
 
         assertThat(response.getData().getMembers()).hasSize(1);
         assertMemberInOrganizationResponse(response.getData().getMembers().get(0), testMember.getId(), testMember.getEmail(),
@@ -127,9 +116,10 @@ class OrganizationControllerTest extends ControllerTestUtils {
         organizationRepository.save(organization);
 
         // when
-        ApiResponse<OrganizationWithMembersInfoResponse> response = organizationMockMvc.getDetailOrganizationInfo(subDomain, token, 200);
+        ApiResponse<OrganizationWithMembersInfoResponse> response = organizationMockMvc.getDetailOrganizationInfo(organization.getSubDomain(), token, 200);
 
         // then
+        System.out.println(response);
         assertThat(response.getData().getIsFollower()).isTrue();
     }
 
@@ -140,20 +130,20 @@ class OrganizationControllerTest extends ControllerTestUtils {
         organizationRepository.save(organization);
 
         // when
-        ApiResponse<OrganizationWithMembersInfoResponse> response = organizationMockMvc.getDetailOrganizationInfo(subDomain, token, 200);
+        ApiResponse<OrganizationWithMembersInfoResponse> response = organizationMockMvc.getDetailOrganizationInfo(organization.getSubDomain(), token, 200);
 
         // then
         assertThat(response.getData().getIsFollower()).isFalse();
     }
 
     @Test
-    void 로그인_하지_않은_유저가_그룹_상세_조회를_하면__401_에러_없이_팔로우하지_않았다고_표시된다() throws Exception {
+    void 로그인_하지_않은_유저가_그룹_상세_조회를_하면_401_에러_없이_팔로우하지_않았다고_표시된다() throws Exception {
         // given
         organization.addAdmin(testMember.getId());
         organizationRepository.save(organization);
 
         // when
-        ApiResponse<OrganizationWithMembersInfoResponse> response = organizationMockMvc.getDetailOrganizationInfo(subDomain, "Wrong Token", 200);
+        ApiResponse<OrganizationWithMembersInfoResponse> response = organizationMockMvc.getDetailOrganizationInfo(organization.getSubDomain(), "Wrong Token", 200);
 
         // then
         assertThat(response.getData().getIsFollower()).isFalse();
@@ -170,7 +160,8 @@ class OrganizationControllerTest extends ControllerTestUtils {
 
         // then
         assertThat(response.getData()).hasSize(1);
-        assertOrganizationInfoResponse(response.getData().get(0), subDomain, name, description, profileUrl, OrganizationCategory.NON_APPROVED_CIRCLE, 1);
+        assertOrganizationInfoResponse(response.getData().get(0), organization.getSubDomain(), organization.getName(),
+            organization.getDescription(), organization.getProfileUrl(), OrganizationCategory.NON_APPROVED_CIRCLE, 1);
     }
 
     @Test
@@ -190,8 +181,10 @@ class OrganizationControllerTest extends ControllerTestUtils {
 
         // then
         assertThat(response.getData()).hasSize(2);
-        assertOrganizationInfoResponse(response.getData().get(0), subDomain, name, description, profileUrl, OrganizationCategory.NON_APPROVED_CIRCLE, 1);
-        assertOrganizationInfoResponse(response.getData().get(1), organization2.getSubDomain(), organization2.getName(), organization2.getDescription(), organization2.getProfileUrl(), OrganizationCategory.NON_APPROVED_CIRCLE, 1);
+        assertOrganizationInfoResponse(response.getData().get(0), organization.getSubDomain(), organization.getName(),
+            organization.getDescription(), organization.getProfileUrl(), OrganizationCategory.NON_APPROVED_CIRCLE, 1);
+        assertOrganizationInfoResponse(response.getData().get(1), organization2.getSubDomain(), organization2.getName(),
+            organization2.getDescription(), organization2.getProfileUrl(), OrganizationCategory.NON_APPROVED_CIRCLE, 1);
     }
 
     @Test
@@ -205,7 +198,8 @@ class OrganizationControllerTest extends ControllerTestUtils {
 
         // then
         assertThat(response.getData()).hasSize(1);
-        assertOrganizationInfoResponse(response.getData().get(0), subDomain, name, description, profileUrl, OrganizationCategory.NON_APPROVED_CIRCLE, 1);
+        assertOrganizationInfoResponse(response.getData().get(0), organization.getSubDomain(), organization.getName(),
+            organization.getDescription(), organization.getProfileUrl(), OrganizationCategory.NON_APPROVED_CIRCLE, 1);
     }
 
     @Test
@@ -215,7 +209,7 @@ class OrganizationControllerTest extends ControllerTestUtils {
         organizationRepository.save(organization);
 
         //when
-        ApiResponse<String> response = organizationMockMvc.applyJoiningOrganization(subDomain, token, 200);
+        ApiResponse<String> response = organizationMockMvc.applyJoiningOrganization(organization.getSubDomain(), token, 200);
 
         //then
         assertThat(response.getData()).isEqualTo("OK");
@@ -229,7 +223,7 @@ class OrganizationControllerTest extends ControllerTestUtils {
         organizationRepository.save(organization);
 
         // when
-        ApiResponse<String> response = organizationMockMvc.cancelJoiningOrganization(subDomain, token, 200);
+        ApiResponse<String> response = organizationMockMvc.cancelJoiningOrganization(organization.getSubDomain(), token, 200);
 
         // then
         assertThat(response.getData()).isEqualTo("OK");
@@ -243,7 +237,7 @@ class OrganizationControllerTest extends ControllerTestUtils {
         organizationRepository.save(organization);
 
         // when
-        ApiResponse<String> response = organizationMockMvc.leaveFromOrganization(subDomain, token, 200);
+        ApiResponse<String> response = organizationMockMvc.leaveFromOrganization(organization.getSubDomain(), token, 200);
 
         // then
         assertThat(response.getData()).isEqualTo("OK");
@@ -256,7 +250,7 @@ class OrganizationControllerTest extends ControllerTestUtils {
         organizationRepository.save(organization);
 
         //when
-        ApiResponse<String> response = organizationMockMvc.leaveFromOrganization(subDomain, token, 403);
+        ApiResponse<String> response = organizationMockMvc.leaveFromOrganization(organization.getSubDomain(), token, 403);
 
         //then
         assertThat(response.getCode()).isEqualTo(ErrorCode.FORBIDDEN_EXCEPTION.getCode());

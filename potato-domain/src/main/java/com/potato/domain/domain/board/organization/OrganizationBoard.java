@@ -71,7 +71,7 @@ public class OrganizationBoard extends BaseTimeEntity {
     }
 
     public void addLike(Long memberId) {
-        if (hasAlreadyLike(memberId)) {
+        if (hasLike(memberId)) {
             throw new ConflictException(String.format("이미 멤버 (%s)는 게시물 (%s)에 좋아요를 눌렀습니다", memberId, this.id));
         }
         OrganizationBoardLike like = OrganizationBoardLike.of(this, memberId);
@@ -79,7 +79,7 @@ public class OrganizationBoard extends BaseTimeEntity {
         this.likesCount++;
     }
 
-    private boolean hasAlreadyLike(Long memberId) {
+    public boolean hasLike(Long memberId) {
         return this.organizationBoardLikeList.stream()
             .anyMatch(boardLike -> boardLike.isSameEntity(memberId));
     }

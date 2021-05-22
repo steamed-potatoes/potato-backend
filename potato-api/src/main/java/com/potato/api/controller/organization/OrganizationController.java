@@ -36,8 +36,8 @@ public class OrganizationController {
         return ApiResponse.success(organizationService.createOrganization(request, memberId));
     }
 
-    @Auth(role = OPTIONAL_LOGIN)
     @Operation(summary = "특정 그룹의 정보를 조회하는 API", security = {@SecurityRequirement(name = "BearerKey")})
+    @Auth(role = OPTIONAL_LOGIN)
     @GetMapping("/api/v1/organization/{subDomain}")
     public ApiResponse<OrganizationWithMembersInfoResponse> getDetailOrganizationInfo(@PathVariable String subDomain, @MemberId Long memberId) {
         return ApiResponse.success(organizationRetrieveService.getDetailOrganizationInfo(subDomain, memberId));
