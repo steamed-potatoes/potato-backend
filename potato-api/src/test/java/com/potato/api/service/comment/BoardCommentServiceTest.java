@@ -264,6 +264,19 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
     }
 
     @Test
+    void 내가_작성하지_않은_댓글을_수정할_수_없다() {
+        // given
+        organizationBoardRepository.save(organizationBoard);
+        BoardComment comment = BoardCommentCreator.createRootComment(BoardType.ORGANIZATION_BOARD, organizationBoard.getId(), 100L, "댓글");
+        boardCommentRepository.save(comment);
+
+        UpdateBoardCommentRequest request = UpdateBoardCommentRequest.testInstance(comment.getId(), "댓글 내용");
+
+        // when
+        assertThatThrownBy(() -> boardCommentService.updateBoardComment(request, memberId)).isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
     void 작성한_댓글을_삭제한다() {
         // given
         organizationBoardRepository.save(organizationBoard);

@@ -27,19 +27,19 @@ public class BoardCommentController {
 
     private final BoardCommentService boardCommentService;
 
+    @Operation(summary = "게시물의 댓글 리스트를 조회합니다.", security = {@SecurityRequirement(name = "BearerKey")})
+    @Auth(role = OPTIONAL_LOGIN)
+    @GetMapping("/api/v2/board/comment/list")
+    public ApiResponse<List<BoardCommentResponse>> retrieveBoardComments(@Valid RetrieveBoardCommentsRequest request, @MemberId Long memberId) {
+        return ApiResponse.success(boardCommentService.retrieveBoardCommentList(request, memberId));
+    }
+
     @Operation(summary = "게시물에 댓글을 추가합니다.", security = {@SecurityRequirement(name = "BearerKey")})
     @Auth
     @PostMapping("/api/v2/board/comment")
     public ApiResponse<String> addBoardComment(@Valid @RequestBody AddBoardCommentRequest request, @MemberId Long memberId) {
         boardCommentService.addBoardComment(request, memberId);
         return ApiResponse.OK;
-    }
-
-    @Operation(summary = "게시물의 댓글 리스트를 조회합니다.", security = {@SecurityRequirement(name = "BearerKey")})
-    @Auth(role = OPTIONAL_LOGIN)
-    @GetMapping("/api/v2/board/comment/list")
-    public ApiResponse<List<BoardCommentResponse>> retrieveBoardComments(@Valid RetrieveBoardCommentsRequest request, @MemberId Long memberId) {
-        return ApiResponse.success(boardCommentService.retrieveBoardCommentList(request, memberId));
     }
 
     @Operation(summary = "게시물의 댓글을 수정합니다.", security = {@SecurityRequirement(name = "BearerKey")})

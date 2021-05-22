@@ -3,8 +3,11 @@ package com.potato.api.controller.comment.api;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.potato.api.controller.ApiResponse;
+import com.potato.api.service.comment.dto.request.DeleteBoardCommentRequest;
+import com.potato.api.service.comment.dto.request.LikeBoardCommentRequest;
 import com.potato.api.service.comment.dto.request.RetrieveBoardCommentsRequest;
 import com.potato.api.service.comment.dto.request.AddBoardCommentRequest;
+import com.potato.api.service.comment.dto.request.UpdateBoardCommentRequest;
 import com.potato.api.service.comment.dto.response.BoardCommentResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -48,6 +51,68 @@ public class BoardCommentMockMvc {
         MockHttpServletRequestBuilder builder = post("/api/v2/board/comment")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request))
+            .header(HttpHeaders.AUTHORIZATION, "Bearer ".concat(token));
+
+        return objectMapper.readValue(
+            mockMvc.perform(builder)
+                .andExpect(status().is(expectedStatus))
+                .andReturn()
+                .getResponse()
+                .getContentAsString(StandardCharsets.UTF_8), new TypeReference<>() {
+            }
+        );
+    }
+
+    public ApiResponse<String> updateBoardComment(UpdateBoardCommentRequest request, String token, int expectedStatus) throws Exception {
+        MockHttpServletRequestBuilder builder = put("/api/v2/board/comment")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(request))
+            .header(HttpHeaders.AUTHORIZATION, "Bearer ".concat(token));
+
+        return objectMapper.readValue(
+            mockMvc.perform(builder)
+                .andExpect(status().is(expectedStatus))
+                .andReturn()
+                .getResponse()
+                .getContentAsString(StandardCharsets.UTF_8), new TypeReference<>() {
+            }
+        );
+    }
+
+    public ApiResponse<String> deleteBoardComment(DeleteBoardCommentRequest request, String token, int expectedStatus) throws Exception {
+        MockHttpServletRequestBuilder builder = delete("/api/v2/board/comment")
+            .param("boardCommentId", String.valueOf(request.getBoardCommentId()))
+            .header(HttpHeaders.AUTHORIZATION, "Bearer ".concat(token));
+
+        return objectMapper.readValue(
+            mockMvc.perform(builder)
+                .andExpect(status().is(expectedStatus))
+                .andReturn()
+                .getResponse()
+                .getContentAsString(StandardCharsets.UTF_8), new TypeReference<>() {
+            }
+        );
+    }
+
+    public ApiResponse<String> likeBoardComment(LikeBoardCommentRequest request, String token, int expectedStatus) throws Exception {
+        MockHttpServletRequestBuilder builder = post("/api/v2/board/comment/like")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(request))
+            .header(HttpHeaders.AUTHORIZATION, "Bearer ".concat(token));
+
+        return objectMapper.readValue(
+            mockMvc.perform(builder)
+                .andExpect(status().is(expectedStatus))
+                .andReturn()
+                .getResponse()
+                .getContentAsString(StandardCharsets.UTF_8), new TypeReference<>() {
+            }
+        );
+    }
+
+    public ApiResponse<String> unlikeBoardComment(LikeBoardCommentRequest request, String token, int expectedStatus) throws Exception {
+        MockHttpServletRequestBuilder builder = delete("/api/v2/board/comment/like")
+            .param("boardCommentId", String.valueOf(request.getBoardCommentId()))
             .header(HttpHeaders.AUTHORIZATION, "Bearer ".concat(token));
 
         return objectMapper.readValue(
