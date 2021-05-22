@@ -1,4 +1,4 @@
-package com.potato.api.controller.schedule;
+package com.potato.api.controller.schedule.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,7 +15,7 @@ import java.nio.charset.StandardCharsets;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
-class ScheduleMockMvc {
+public class ScheduleMockMvc {
 
     private final MockMvc mockMvc;
 

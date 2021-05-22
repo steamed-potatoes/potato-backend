@@ -2,6 +2,7 @@ package com.potato.api.controller.board;
 
 import com.potato.api.controller.ApiResponse;
 import com.potato.api.controller.ControllerTestUtils;
+import com.potato.api.controller.board.api.OrganizationBoardMockMvc;
 import com.potato.api.service.board.organization.dto.request.RetrieveImminentBoardsRequest;
 import com.potato.api.service.board.organization.dto.response.OrganizationBoardInfoResponseWithImage;
 import com.potato.domain.domain.board.organization.repository.dto.BoardWithOrganizationDto;

@@ -2,6 +2,7 @@ package com.potato.api.controller.organization;
 
 import com.potato.api.controller.ApiResponse;
 import com.potato.api.controller.ControllerTestUtils;
+import com.potato.api.controller.organization.api.OrganizationFollowerMockMvc;
 import com.potato.domain.domain.organization.Organization;
 import com.potato.domain.domain.organization.OrganizationCategory;
 import com.potato.domain.domain.organization.OrganizationCreator;
@@ -26,7 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 class OrganizationFollowControllerTest extends ControllerTestUtils {
 
-    private OrganizationMockMvc organizationMockMvc;
+    private OrganizationFollowerMockMvc organizationMockMvc;
 
     @Autowired
     private OrganizationRepository organizationRepository;
@@ -40,7 +41,7 @@ class OrganizationFollowControllerTest extends ControllerTestUtils {
     @BeforeEach
     void setUp() throws Exception {
         super.setup();
-        organizationMockMvc = new OrganizationMockMvc(mockMvc, objectMapper);
+        organizationMockMvc = new OrganizationFollowerMockMvc(mockMvc, objectMapper);
         subDomain = "potato";
         name = "감자";
         description = "개발의 감을 잡자";

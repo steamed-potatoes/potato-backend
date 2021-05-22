@@ -1,4 +1,4 @@
-package com.potato.api.controller.comment;
+package com.potato.api.controller.comment.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

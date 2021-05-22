@@ -2,6 +2,7 @@ package com.potato.api.controller.comment;
 
 import com.potato.api.controller.ApiResponse;
 import com.potato.api.controller.ControllerTestUtils;
+import com.potato.api.controller.comment.api.BoardCommentMockMvc;
 import com.potato.api.service.comment.dto.request.RetrieveBoardCommentsRequest;
 import com.potato.domain.domain.board.BoardType;
 import com.potato.domain.domain.board.admin.AdminBoard;
