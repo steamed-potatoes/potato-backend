@@ -2,6 +2,7 @@ package com.potato.api.controller.member.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.potato.api.controller.AbstractMockMvc;
 import com.potato.api.controller.ApiResponse;
 import com.potato.domain.domain.member.MemberMajor;
 import com.potato.api.service.member.dto.request.SignUpMemberRequest;
@@ -19,15 +20,10 @@ import java.util.List;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class MemberMockMvc {
-
-    private final MockMvc mockMvc;
-
-    private final ObjectMapper objectMapper;
+public class MemberMockMvc extends AbstractMockMvc {
 
     public MemberMockMvc(MockMvc mockMvc, ObjectMapper objectMapper) {
-        this.mockMvc = mockMvc;
-        this.objectMapper = objectMapper;
+        super(mockMvc, objectMapper);
     }
 
     public ApiResponse<String> signUpMember(SignUpMemberRequest request, int expectedStatus) throws Exception {

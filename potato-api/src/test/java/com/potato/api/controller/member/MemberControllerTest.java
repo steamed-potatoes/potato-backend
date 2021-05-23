@@ -1,7 +1,7 @@
 package com.potato.api.controller.member;
 
 import com.potato.api.controller.ApiResponse;
-import com.potato.api.controller.ControllerTestUtils;
+import com.potato.api.controller.AbstractControllerTest;
 import com.potato.common.exception.ErrorCode;
 import com.potato.domain.domain.member.MemberMajor;
 import com.potato.api.service.member.dto.request.SignUpMemberRequest;
@@ -11,17 +11,13 @@ import com.potato.api.service.member.dto.response.MemberInfoResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
 import static com.potato.api.helper.member.MemberTestHelper.assertMemberInfoResponse;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@AutoConfigureMockMvc
-@SpringBootTest
-class MemberControllerTest extends ControllerTestUtils {
+class MemberControllerTest extends AbstractControllerTest {
 
     @BeforeEach
     void setUp() throws Exception {

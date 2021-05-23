@@ -1,7 +1,7 @@
 package com.potato.api.controller.organization;
 
 import com.potato.api.controller.ApiResponse;
-import com.potato.api.controller.ControllerTestUtils;
+import com.potato.api.controller.AbstractControllerTest;
 import com.potato.api.controller.organization.api.OrganizationFollowerMockMvc;
 import com.potato.domain.domain.organization.Organization;
 import com.potato.domain.domain.organization.OrganizationCategory;
@@ -14,8 +14,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
@@ -23,9 +21,7 @@ import static com.potato.api.helper.member.MemberTestHelper.assertMemberInfoResp
 import static com.potato.api.helper.organization.OrganizationServiceTestUtils.assertOrganizationInfoResponse;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@AutoConfigureMockMvc
-@SpringBootTest
-class OrganizationFollowControllerTest extends ControllerTestUtils {
+class OrganizationFollowControllerTest extends AbstractControllerTest {
 
     private OrganizationFollowerMockMvc organizationMockMvc;
 

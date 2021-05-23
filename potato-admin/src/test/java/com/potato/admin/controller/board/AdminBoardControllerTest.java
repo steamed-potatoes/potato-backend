@@ -1,8 +1,9 @@
 package com.potato.admin.controller.board;
 
 import com.potato.admin.controller.ApiResponse;
-import com.potato.admin.controller.ControllerTestUtils;
+import com.potato.admin.controller.AbstractControllerTest;
 import com.potato.admin.controller.advice.ErrorCode;
+import com.potato.admin.controller.board.api.AdminBoardMockMvc;
 import com.potato.domain.domain.board.admin.AdminBoard;
 import com.potato.domain.domain.board.admin.AdminBoardRepository;
 import com.potato.admin.service.board.dto.request.CreateAdminBoardRequest;
@@ -16,16 +17,12 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.*;
 
-@AutoConfigureMockMvc
-@SpringBootTest
-public class AdminBoardControllerTest extends ControllerTestUtils {
+public class AdminBoardControllerTest extends AbstractControllerTest {
 
     private AdminBoardMockMvc adminBoardMockMvc;
 

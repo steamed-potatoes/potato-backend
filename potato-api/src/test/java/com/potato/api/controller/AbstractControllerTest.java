@@ -8,9 +8,13 @@ import com.potato.domain.domain.organization.Organization;
 import com.potato.domain.domain.organization.OrganizationCategory;
 import com.potato.domain.domain.organization.OrganizationCreator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
-public abstract class ControllerTestUtils {
+@AutoConfigureMockMvc
+@SpringBootTest
+public abstract class AbstractControllerTest {
 
     @Autowired
     protected MockMvc mockMvc;

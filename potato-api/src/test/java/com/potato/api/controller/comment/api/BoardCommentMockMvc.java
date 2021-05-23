@@ -2,6 +2,7 @@ package com.potato.api.controller.comment.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.potato.api.controller.AbstractMockMvc;
 import com.potato.api.controller.ApiResponse;
 import com.potato.api.service.comment.dto.request.DeleteBoardCommentRequest;
 import com.potato.api.service.comment.dto.request.LikeBoardCommentRequest;
@@ -20,15 +21,10 @@ import java.util.List;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class BoardCommentMockMvc {
-
-    private final MockMvc mockMvc;
-
-    private final ObjectMapper objectMapper;
+public class BoardCommentMockMvc extends AbstractMockMvc {
 
     public BoardCommentMockMvc(MockMvc mockMvc, ObjectMapper objectMapper) {
-        this.mockMvc = mockMvc;
-        this.objectMapper = objectMapper;
+        super(mockMvc, objectMapper);
     }
 
     public ApiResponse<List<BoardCommentResponse>> retrieveBoardComments(RetrieveBoardCommentsRequest request, String token, int expectedStatus) throws Exception {

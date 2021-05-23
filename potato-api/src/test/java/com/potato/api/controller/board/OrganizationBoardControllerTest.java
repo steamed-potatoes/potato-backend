@@ -1,7 +1,7 @@
 package com.potato.api.controller.board;
 
 import com.potato.api.controller.ApiResponse;
-import com.potato.api.controller.ControllerTestUtils;
+import com.potato.api.controller.AbstractControllerTest;
 import com.potato.api.controller.board.api.OrganizationBoardMockMvc;
 import com.potato.api.service.board.organization.dto.request.CreateOrganizationBoardRequest;
 import com.potato.api.service.board.organization.dto.request.DeleteOrganizationBoardRequest;
@@ -23,8 +23,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -32,9 +30,7 @@ import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@AutoConfigureMockMvc
-@SpringBootTest
-class OrganizationBoardControllerTest extends ControllerTestUtils {
+class OrganizationBoardControllerTest extends AbstractControllerTest {
 
     private OrganizationBoardMockMvc organizationBoardMockMvc;
 

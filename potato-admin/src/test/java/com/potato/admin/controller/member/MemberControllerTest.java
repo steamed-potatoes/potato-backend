@@ -1,7 +1,8 @@
 package com.potato.admin.controller.member;
 
 import com.potato.admin.controller.ApiResponse;
-import com.potato.admin.controller.ControllerTestUtils;
+import com.potato.admin.controller.AbstractControllerTest;
+import com.potato.admin.controller.member.api.MemberMockMvc;
 import com.potato.admin.service.member.dto.response.MemberInfoResponse;
 import com.potato.domain.domain.member.Member;
 import com.potato.domain.domain.member.MemberCreator;
@@ -9,18 +10,14 @@ import com.potato.domain.domain.member.MemberRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.beans.factory.annotation.Autowired;;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@AutoConfigureMockMvc
-@SpringBootTest
-public class MemberControllerTest extends ControllerTestUtils {
+public class MemberControllerTest extends AbstractControllerTest {
 
     private MemberMockMvc memberMockMvc;
 

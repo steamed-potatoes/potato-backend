@@ -2,6 +2,7 @@ package com.potato.api.controller.schedule.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.potato.api.controller.AbstractMockMvc;
 import com.potato.api.controller.ApiResponse;
 import com.potato.api.service.schedule.dto.request.ScheduleRequest;
 import com.potato.api.service.schedule.dto.response.ScheduleResponse;
@@ -15,15 +16,10 @@ import java.nio.charset.StandardCharsets;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
-public class ScheduleMockMvc {
-
-    private final MockMvc mockMvc;
-
-    private final ObjectMapper objectMapper;
+public class ScheduleMockMvc extends AbstractMockMvc {
 
     public ScheduleMockMvc(MockMvc mockMvc, ObjectMapper objectMapper) {
-        this.mockMvc = mockMvc;
-        this.objectMapper = objectMapper;
+        super(mockMvc, objectMapper);
     }
 
     public ApiResponse<ScheduleResponse> retrieveScheduleBetween(ScheduleRequest request) throws Exception {

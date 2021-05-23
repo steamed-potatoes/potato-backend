@@ -1,7 +1,7 @@
 package com.potato.api.controller.schedule;
 
 import com.potato.api.controller.ApiResponse;
-import com.potato.api.controller.ControllerTestUtils;
+import com.potato.api.controller.AbstractControllerTest;
 import com.potato.api.controller.schedule.api.ScheduleMockMvc;
 import com.potato.domain.domain.board.admin.AdminBoard;
 import com.potato.domain.domain.board.admin.AdminBoardRepository;
@@ -16,17 +16,13 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@AutoConfigureMockMvc
-@SpringBootTest
-class ScheduleControllerTest extends ControllerTestUtils {
+class ScheduleControllerTest extends AbstractControllerTest {
 
     private ScheduleMockMvc scheduleMockMvc;
 
