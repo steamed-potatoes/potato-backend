@@ -27,14 +27,14 @@ public class BoardCommentController {
 
     private final BoardCommentService boardCommentService;
 
-    @Operation(summary = "게시물의 댓글 리스트를 조회합니다.", security = {@SecurityRequirement(name = "BearerKey")})
+    @Operation(summary = "게시물에 작성된 댓글들을 조회합니다.", security = {@SecurityRequirement(name = "BearerKey")})
     @Auth(role = OPTIONAL_LOGIN)
     @GetMapping("/api/v2/board/comment/list")
     public ApiResponse<List<BoardCommentResponse>> retrieveBoardComments(@Valid RetrieveBoardCommentsRequest request, @MemberId Long memberId) {
         return ApiResponse.success(boardCommentService.retrieveBoardCommentList(request, memberId));
     }
 
-    @Operation(summary = "게시물에 댓글을 추가합니다.", security = {@SecurityRequirement(name = "BearerKey")})
+    @Operation(summary = "특정 게시물에 새로운 댓글을 추가합니다.", security = {@SecurityRequirement(name = "BearerKey")})
     @Auth
     @PostMapping("/api/v2/board/comment")
     public ApiResponse<String> addBoardComment(@Valid @RequestBody AddBoardCommentRequest request, @MemberId Long memberId) {
@@ -42,7 +42,7 @@ public class BoardCommentController {
         return ApiResponse.OK;
     }
 
-    @Operation(summary = "게시물의 댓글을 수정합니다.", security = {@SecurityRequirement(name = "BearerKey")})
+    @Operation(summary = "특정 게시물에 작성한 댓글을 수정합니다.", security = {@SecurityRequirement(name = "BearerKey")})
     @Auth
     @PutMapping("/api/v2/board/comment")
     public ApiResponse<String> updateBoardComment(@RequestBody UpdateBoardCommentRequest request, @MemberId Long memberId) {
@@ -50,7 +50,7 @@ public class BoardCommentController {
         return ApiResponse.OK;
     }
 
-    @Operation(summary = "작성한 댓글을 삭제합니다.", security = {@SecurityRequirement(name = "BearerKey")})
+    @Operation(summary = "특정 게시물에 작성한 댓글을 삭제합니다.", security = {@SecurityRequirement(name = "BearerKey")})
     @Auth
     @DeleteMapping("/api/v2/board/comment")
     public ApiResponse<String> deleteBoardComment(@Valid DeleteBoardCommentRequest request, @MemberId Long memberId) {
@@ -58,7 +58,7 @@ public class BoardCommentController {
         return ApiResponse.OK;
     }
 
-    @Operation(summary = "댓글에 좋아요를 합니다.", security = {@SecurityRequirement(name = "BearerKey")})
+    @Operation(summary = "특정 댓글에 좋아요를 추가합니다.", security = {@SecurityRequirement(name = "BearerKey")})
     @Auth
     @PostMapping("/api/v2/board/comment/like")
     public ApiResponse<String> likeBoardComment(@Valid @RequestBody LikeBoardCommentRequest request, @MemberId Long memberId) {
@@ -66,7 +66,7 @@ public class BoardCommentController {
         return ApiResponse.OK;
     }
 
-    @Operation(summary = "댓글에 좋아요를 취소합니다.", security = {@SecurityRequirement(name = "BearerKey")})
+    @Operation(summary = "특정 댓글에 추가한 좋아요를 취소합니다.", security = {@SecurityRequirement(name = "BearerKey")})
     @Auth
     @DeleteMapping("/api/v2/board/comment/like")
     public ApiResponse<String> unlikeBoardComment(@Valid LikeBoardCommentRequest request, @MemberId Long memberId) {
