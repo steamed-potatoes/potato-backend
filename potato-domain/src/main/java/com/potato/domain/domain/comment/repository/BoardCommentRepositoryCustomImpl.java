@@ -17,7 +17,7 @@ public class BoardCommentRepositoryCustomImpl implements BoardCommentRepositoryC
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public BoardComment findBoardCommentByIdAndMemberId(Long boardCommentId, Long memberId) {
+    public BoardComment findActiveBoardCommentByIdAndMemberId(Long boardCommentId, Long memberId) {
         return queryFactory.selectFrom(boardComment)
             .where(
                 boardComment.id.eq(boardCommentId),
