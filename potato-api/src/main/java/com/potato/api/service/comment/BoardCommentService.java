@@ -25,17 +25,6 @@ public class BoardCommentService {
     private final OrganizationBoardRepository organizationBoardRepository;
     private final BoardCommentRepository boardCommentRepository;
 
-    @Transactional
-    public void addBoardComment(AddBoardCommentRequest request, Long memberId) {
-        BoardCommentServiceUtils.validateExistBoard(organizationBoardRepository, adminBoardRepository, request.getType(), request.getBoardId());
-        if (!request.hasParentComment()) {
-            BoardComment boardComment = BoardCommentServiceUtils.findBoardCommentById(boardCommentRepository, request.getParentCommentId());
-            boardComment.addChildComment(memberId, request.getContent());
-            return;
-        }
-        boardCommentRepository.save(BoardComment.newRootComment(request.getType(), request.getBoardId(), memberId, request.getContent()));
-    }
-
     @Transactional(readOnly = true)
     public List<BoardCommentResponse> retrieveBoardCommentList(RetrieveBoardCommentsRequest request, Long memberId) {
         BoardCommentServiceUtils.validateExistBoard(organizationBoardRepository, adminBoardRepository, request.getType(), request.getBoardId());
@@ -43,6 +32,17 @@ public class BoardCommentService {
         return rootComments.stream()
             .map(boardComment -> BoardCommentResponse.of(boardComment, memberId))
             .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void addBoardComment(AddBoardCommentRequest request, Long memberId) {
+        BoardCommentServiceUtils.validateExistBoard(organizationBoardRepository, adminBoardRepository, request.getType(), request.getBoardId());
+        if (request.hasParentComment()) {
+            BoardComment boardComment = BoardCommentServiceUtils.findBoardCommentById(boardCommentRepository, request.getParentCommentId());
+            boardComment.addChildComment(memberId, request.getContent());
+            return;
+        }
+        boardCommentRepository.save(BoardComment.newRootComment(request.getType(), request.getBoardId(), memberId, request.getContent()));
     }
 
     @Transactional

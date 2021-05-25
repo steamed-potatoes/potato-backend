@@ -65,7 +65,7 @@ class BoardCommentControllerTest extends AbstractControllerTest {
 
     @DisplayName("GET /api/v2/board/comment/list 200 OK")
     @Test
-    void 특정_그룹_게시물의_댓글들을_조회한다() throws Exception {
+    void 특정_그룹_에서_업로드한_게시물에_작성된_댓글들을_조회한다() throws Exception {
         // given
         organizationBoardRepository.save(organizationBoard);
 
@@ -94,7 +94,7 @@ class BoardCommentControllerTest extends AbstractControllerTest {
 
     @DisplayName("GET /api/v2/board/comment/list 200 OK")
     @Test
-    void 특정_관리자_게시물의_댓글들을_불러온다() throws Exception {
+    void 특정_관리자가_업로드한_게시물에_작성된_댓글들을_조회한다() throws Exception {
         adminBoardRepository.save(adminBoard);
 
         BoardType type = BoardType.ADMIN_BOARD;
@@ -118,7 +118,7 @@ class BoardCommentControllerTest extends AbstractControllerTest {
 
     @DisplayName("GET /api/v2/board/comment/list 200 OK")
     @Test
-    void 좋아요를_누른_유저가_게시물의_댓글을_조회하면_좋아요눌렀다고_표시된다() throws Exception {
+    void 좋아요를_누른_유저가_게시물의_댓글을_조회하면_좋아요_눌렀다고_표시된다() throws Exception {
         // given
         organizationBoardRepository.save(organizationBoard);
 
@@ -157,7 +157,7 @@ class BoardCommentControllerTest extends AbstractControllerTest {
 
     @DisplayName("GET /api/v2/board/comment/list 404 NOT FOUND")
     @Test
-    void 존재하지_않는_게시물의_댓글을_조회하면_404에러가_발생() throws Exception {
+    void 존재하지_않는_게시물의_댓글을_조회하면_404_에러가_발생한다() throws Exception {
         // given
         RetrieveBoardCommentsRequest request = RetrieveBoardCommentsRequest.testInstance(BoardType.ADMIN_BOARD, 999L);
 
@@ -170,7 +170,7 @@ class BoardCommentControllerTest extends AbstractControllerTest {
 
     @DisplayName("GET /api/v2/board/comment/list 200 OK")
     @Test
-    void 삭제된_댓글을_조회시_삭제되었다고_표시된다() throws Exception {
+    void 삭제된_댓글을_조회하면_삭제되었다고_표시된다() throws Exception {
         // given
         organizationBoardRepository.save(organizationBoard);
 

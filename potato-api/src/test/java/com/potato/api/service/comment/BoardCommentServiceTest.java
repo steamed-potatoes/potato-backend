@@ -70,7 +70,7 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
     }
 
     @Test
-    void 그룹게시에_새로운_댓글을_작성한다() {
+    void 그룹_에서_업로드한_게시물에_새로운_댓글을_작성한다() {
         // given
         organizationBoardRepository.save(organizationBoard);
 
@@ -88,7 +88,7 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
     }
 
     @Test
-    void 최상위_댓글을_작성하면_부모_댓글은_NULL_로_저장된다() {
+    void 최상위_댓글을_작성하면_부모_댓글_필드는_NULL_로_저장된다() {
         // given
         organizationBoardRepository.save(organizationBoard);
 
