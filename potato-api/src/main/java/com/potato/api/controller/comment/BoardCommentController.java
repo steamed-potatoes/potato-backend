@@ -70,7 +70,7 @@ public class BoardCommentController {
     @Auth
     @DeleteMapping("/api/v2/board/comment/like")
     public ApiResponse<String> unlikeBoardComment(@Valid LikeBoardCommentRequest request, @MemberId Long memberId) {
-        boardCommentService.unLikeBoardComment(request, memberId);
+        boardCommentService.cancelBoardCommentLike(request, memberId);
         return ApiResponse.OK;
     }
 

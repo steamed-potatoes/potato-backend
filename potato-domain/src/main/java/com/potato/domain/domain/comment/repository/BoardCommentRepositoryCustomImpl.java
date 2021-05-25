@@ -21,7 +21,8 @@ public class BoardCommentRepositoryCustomImpl implements BoardCommentRepositoryC
         return queryFactory.selectFrom(boardComment)
             .where(
                 boardComment.id.eq(boardCommentId),
-                eqMemberId(memberId)
+                eqMemberId(memberId),
+                boardComment.isDeleted.isFalse()
             ).fetchOne();
     }
 

@@ -64,9 +64,9 @@ public class BoardCommentService {
     }
 
     @Transactional
-    public void unLikeBoardComment(LikeBoardCommentRequest request, Long memberId) {
+    public void cancelBoardCommentLike(LikeBoardCommentRequest request, Long memberId) {
         BoardComment boardComment = BoardCommentServiceUtils.findBoardCommentById(boardCommentRepository, request.getBoardCommentId());
-        boardComment.deleteLike(memberId);
+        boardComment.cancelLike(memberId);
     }
 
 }

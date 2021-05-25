@@ -390,7 +390,7 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
         LikeBoardCommentRequest request = LikeBoardCommentRequest.testInstance(comment.getId());
 
         //when
-        boardCommentService.unLikeBoardComment(request, memberId);
+        boardCommentService.cancelBoardCommentLike(request, memberId);
 
         //then
         List<BoardCommentLike> boardCommentLikeList = boardCommentLikeRepository.findAll();
@@ -408,7 +408,7 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
         LikeBoardCommentRequest request = LikeBoardCommentRequest.testInstance(comment.getId());
 
         // when & then
-        assertThatThrownBy(() -> boardCommentService.unLikeBoardComment(request, memberId)).isInstanceOf(NotFoundException.class);
+        assertThatThrownBy(() -> boardCommentService.cancelBoardCommentLike(request, memberId)).isInstanceOf(NotFoundException.class);
     }
 
     @DisplayName("이미 삭제된 댓글에 누른 좋아요를 취소하려하면 NOT FOUND EXCEPTION이 발생하면서 취소할 수 없다")
@@ -423,7 +423,7 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
         LikeBoardCommentRequest request = LikeBoardCommentRequest.testInstance(comment.getId());
 
         // when & then
-        assertThatThrownBy(() -> boardCommentService.unLikeBoardComment(request, memberId)).isInstanceOf(NotFoundException.class);
+        assertThatThrownBy(() -> boardCommentService.cancelBoardCommentLike(request, memberId)).isInstanceOf(NotFoundException.class);
     }
 
     private void assertBoardCommentLike(BoardCommentLike boardCommentLike, Long boardCommentId, Long memberId) {
