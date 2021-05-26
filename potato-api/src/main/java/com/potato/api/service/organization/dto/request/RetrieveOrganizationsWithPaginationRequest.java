@@ -21,4 +21,8 @@ public class RetrieveOrganizationsWithPaginationRequest {
     @NotNull
     private int size;
 
+    public static RetrieveOrganizationsWithPaginationRequest testInstance(OrganizationCategory category, long lastOrganizationId, int size) {
+        return new RetrieveOrganizationsWithPaginationRequest(category, lastOrganizationId, size);
+    }
+
 }

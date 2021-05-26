@@ -35,4 +35,22 @@ public class OrganizationCreator {
             .build();
     }
 
+    public static Organization createNonApproved(String subDomain, String name) {
+        return Organization.builder()
+            .subDomain(subDomain)
+            .name(name)
+            .description("비인준 동아리입니다")
+            .category(OrganizationCategory.NON_APPROVED_CIRCLE)
+            .build();
+    }
+
+    public static Organization createApproved(String subDomain, String name) {
+        return Organization.builder()
+            .subDomain(subDomain)
+            .name(name)
+            .description("인준 동아리입니다")
+            .category(OrganizationCategory.APPROVED_CIRCLE)
+            .build();
+    }
+
 }

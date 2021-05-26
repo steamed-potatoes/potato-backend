@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.potato.api.controller.AbstractMockMvc;
 import com.potato.api.controller.ApiResponse;
 import com.potato.api.service.organization.dto.request.CreateOrganizationRequest;
+import com.potato.api.service.organization.dto.request.RetrieveOrganizationsWithPaginationRequest;
 import com.potato.api.service.organization.dto.request.RetrievePopularOrganizationsRequest;
 import com.potato.api.service.organization.dto.response.OrganizationInfoResponse;
 import com.potato.api.service.organization.dto.response.OrganizationWithMembersInfoResponse;
@@ -83,8 +84,12 @@ public class OrganizationMockMvc extends AbstractMockMvc {
         );
     }
 
-    public ApiResponse<List<OrganizationInfoResponse>> getOrganizations(int size, int expectedStatus) throws Exception {
-        MockHttpServletRequestBuilder builder = get("/api/v1/organization/list?size=" + size);
+    public ApiResponse<List<OrganizationInfoResponse>> retrieveOrganizationsWithPagination(RetrieveOrganizationsWithPaginationRequest request, int expectedStatus) throws Exception {
+        MockHttpServletRequestBuilder builder = get("/api/v1/organization/list")
+            .param("size", String.valueOf(request.getSize()))
+            .param("category", request.getCategory() == null ? null : request.getCategory().toString())
+            .param("lastOrganizationId", String.valueOf(request.getLastOrganizationId()));
+
         return objectMapper.readValue(
             mockMvc.perform(builder)
                 .andExpect(status().is(expectedStatus))
