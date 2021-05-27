@@ -66,10 +66,6 @@ Authorization: Bearer {{AUTHORIZATION}}
 GET {{host_api}}/api/v2/organization/board/list?lastOrganizationBoardId=0&size=5&type=RECRUIT
 
 
-
-### 그룹의 게시물을 스크롤 페이지네이션 기반으로 조회하는 API
-GET {{host_api}}/api/v2/organization/board/list/in/potato?lastOrganizationBoardId=0&size=5&type=RECRUIT
-
 ### 그룹 게시물 삭제
 DELETE  {{host_api}}/api/v2/organization/board/potato?organizationBoardId=1
 Authorization: Bearer {{AUTHORIZATION}}
