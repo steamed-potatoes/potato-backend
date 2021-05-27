@@ -1,8 +1,9 @@
-package com.potato.external.service.upload;
+package com.potato.api.service.upload;
 
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.potato.common.exception.model.BadGatewayException;
 import com.potato.common.exception.model.ValidationException;
+import com.potato.common.exception.type.ImageType;
 import com.potato.external.external.s3.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,9 +25,9 @@ public class FileUploadService {
 
     private final S3Service s3Service;
 
-    public String uploadImageToStorage(MultipartFile file) {
+    public String uploadImageToStorage(ImageType type, MultipartFile file) {
         validateFileType(file.getContentType());
-        String fileName = createFileName(file.getOriginalFilename());
+        String fileName = createFileName(type, file.getOriginalFilename());
 
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentType(file.getContentType());
@@ -46,8 +47,8 @@ public class FileUploadService {
         }
     }
 
-    private String createFileName(String originalFileName) {
-        return UUID.randomUUID().toString().concat(getFileExtension(originalFileName));
+    private String createFileName(ImageType type, String originalFileName) {
+        return type.getFileNameWithDirectory(UUID.randomUUID().toString().concat(getFileExtension(originalFileName)));
     }
 
     private String getFileExtension(String fileName) {
