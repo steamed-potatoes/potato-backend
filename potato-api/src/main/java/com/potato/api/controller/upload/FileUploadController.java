@@ -2,7 +2,7 @@ package com.potato.api.controller.upload;
 
 import com.potato.api.controller.ApiResponse;
 import com.potato.api.service.upload.FileUploadService;
-import com.potato.api.controller.upload.request.UploadImageRequest;
+import com.potato.api.service.upload.request.FileUploadRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,8 +20,8 @@ public class FileUploadController {
 
     @Operation(summary = "이미지 파일을 업로드하는 API")
     @PostMapping("/api/v1/upload")
-    public ApiResponse<String> uploadFile(@Valid UploadImageRequest request, @RequestPart MultipartFile file) {
-        return ApiResponse.success(fileUploadService.uploadImageToStorage(request.getType(), file));
+    public ApiResponse<String> uploadFile(@Valid FileUploadRequest request, @RequestPart MultipartFile file) {
+        return ApiResponse.success(fileUploadService.uploadImageToStorage(request, file));
     }
 
 }

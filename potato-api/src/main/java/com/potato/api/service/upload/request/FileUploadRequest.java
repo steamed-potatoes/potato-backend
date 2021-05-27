@@ -1,6 +1,6 @@
-package com.potato.api.controller.upload.request;
+package com.potato.api.service.upload.request;
 
-import com.potato.common.exception.type.ImageType;
+import com.potato.common.type.ImageType;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,9 +11,13 @@ import javax.validation.constraints.NotNull;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class UploadImageRequest {
+public class FileUploadRequest {
 
     @NotNull
     private ImageType type;
+
+    public static FileUploadRequest testInstance(ImageType type) {
+        return new FileUploadRequest(type);
+    }
 
 }

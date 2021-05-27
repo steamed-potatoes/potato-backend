@@ -1,4 +1,4 @@
-package com.potato.common.exception.type;
+package com.potato.common.type;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

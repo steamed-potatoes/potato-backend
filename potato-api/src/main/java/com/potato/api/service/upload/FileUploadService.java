@@ -1,9 +1,10 @@
 package com.potato.api.service.upload;
 
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.potato.api.service.upload.request.FileUploadRequest;
 import com.potato.common.exception.model.BadGatewayException;
 import com.potato.common.exception.model.ValidationException;
-import com.potato.common.exception.type.ImageType;
+import com.potato.common.type.ImageType;
 import com.potato.external.external.s3.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,9 +26,9 @@ public class FileUploadService {
 
     private final S3Service s3Service;
 
-    public String uploadImageToStorage(ImageType type, MultipartFile file) {
+    public String uploadImageToStorage(FileUploadRequest request, MultipartFile file) {
         validateFileType(file.getContentType());
-        String fileName = createFileName(type, file.getOriginalFilename());
+        String fileName = createFileName(request.getType(), file.getOriginalFilename());
 
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentType(file.getContentType());
