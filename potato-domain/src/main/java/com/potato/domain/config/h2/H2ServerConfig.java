@@ -1,4 +1,4 @@
-package com.potato.domain.config;
+package com.potato.domain.config.h2;
 
 import org.h2.tools.Server;
 import org.springframework.context.annotation.Bean;

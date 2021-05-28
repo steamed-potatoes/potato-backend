@@ -2,12 +2,17 @@ dependencies {
     implementation project(':potato-domain')
     implementation project(':potato-external')
 
+    // Spring MVC
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-configuration-processor'
-    implementation 'org.springdoc:springdoc-openapi-ui:1.5.4'
 
+    // Spring Security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
     testImplementation 'org.springframework.security:spring-security-test'
+
+    // Spring Session (Redis)
+    implementation 'org.springframework.session:spring-session-data-redis'
+
+    // Swagger
+    implementation 'org.springdoc:springdoc-openapi-ui:1.5.4'
 }
 

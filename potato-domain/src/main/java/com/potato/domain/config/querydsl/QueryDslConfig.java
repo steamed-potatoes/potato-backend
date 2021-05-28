@@ -1,4 +1,4 @@
-package com.potato.domain.config;
+package com.potato.domain.config.querydsl;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.context.annotation.Bean;

@@ -1,4 +1,4 @@
-package com.potato.domain.config;
+package com.potato.domain.config.jpa;
 
 import com.potato.domain.PotatoDomainRoot;
 import org.springframework.boot.autoconfigure.domain.EntityScan;

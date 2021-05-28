@@ -8,6 +8,9 @@ jar {
 dependencies {
     implementation project(':potato-common')
 
+    // Spring WebFlux
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+    // Spring Cloud (AWS)
     api group: 'org.springframework.cloud', name: 'spring-cloud-starter-aws', version: '2.2.6.RELEASE'
 }
