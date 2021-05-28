@@ -21,6 +21,7 @@ import com.potato.domain.domain.comment.BoardCommentCreator;
 import com.potato.domain.domain.comment.BoardCommentRepository;
 import com.potato.api.service.comment.dto.request.AddBoardCommentRequest;
 import com.potato.api.service.comment.dto.response.BoardCommentResponse;
+import com.potato.domain.domain.member.Member;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -29,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
+import static com.potato.api.helper.member.MemberTestHelper.assertMemberInfoResponse;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class BoardCommentControllerTest extends AbstractControllerTest {
@@ -87,9 +89,9 @@ class BoardCommentControllerTest extends AbstractControllerTest {
 
         // then
         assertThat(response.getData()).hasSize(1);
-        assertBoardCommentResponse(response.getData().get(0), type, organizationBoard.getId(), content, testMember.getId());
-        assertBoardCommentResponse(response.getData().get(0).getChildren().get(0), type, organizationBoard.getId(), childContent1, testMember.getId());
-        assertBoardCommentResponse(response.getData().get(0).getChildren().get(1), type, organizationBoard.getId(), childContent2, testMember.getId());
+        assertBoardCommentResponse(response.getData().get(0), type, organizationBoard.getId(), content, testMember);
+        assertBoardCommentResponse(response.getData().get(0).getChildren().get(0), type, organizationBoard.getId(), childContent1, testMember);
+        assertBoardCommentResponse(response.getData().get(0).getChildren().get(1), type, organizationBoard.getId(), childContent2, testMember);
     }
 
     @DisplayName("GET /api/v2/board/comment/list 200 OK")
@@ -112,8 +114,8 @@ class BoardCommentControllerTest extends AbstractControllerTest {
 
         // then
         assertThat(response.getData()).hasSize(1);
-        assertBoardCommentResponse(response.getData().get(0), type, adminBoard.getId(), rootContent, testMember.getId());
-        assertBoardCommentResponse(response.getData().get(0).getChildren().get(0), type, adminBoard.getId(), childContent, testMember.getId());
+        assertBoardCommentResponse(response.getData().get(0), type, adminBoard.getId(), rootContent, testMember);
+        assertBoardCommentResponse(response.getData().get(0).getChildren().get(0), type, adminBoard.getId(), childContent, testMember);
     }
 
     @DisplayName("GET /api/v2/board/comment/list 200 OK")
@@ -186,7 +188,7 @@ class BoardCommentControllerTest extends AbstractControllerTest {
 
         // then
         assertThat(response.getData()).hasSize(1);
-        assertBoardCommentResponse(response.getData().get(0), type, organizationBoard.getId(), "삭제된 메시지입니다", null);
+        assertBoardCommentResponse(response.getData().get(0), type, organizationBoard.getId(), "삭제된 메시지입니다");
     }
 
     @DisplayName("POST /api/v2/board/comment 200 OK")
@@ -253,7 +255,6 @@ class BoardCommentControllerTest extends AbstractControllerTest {
         assertThat(response.getData()).isEqualTo("OK");
     }
 
-
     @Test
     void 작성한_댓글을_삭제한다() throws Exception {
         // given
@@ -307,11 +308,17 @@ class BoardCommentControllerTest extends AbstractControllerTest {
         assertThat(response.getData()).isEqualTo("OK");
     }
 
-    private void assertBoardCommentResponse(BoardCommentResponse boardCommentResponse, BoardType type, Long organizationBoardId, String content, Long memberId) {
+    private void assertBoardCommentResponse(BoardCommentResponse boardCommentResponse, BoardType type, Long organizationBoardId, String content) {
         assertThat(boardCommentResponse.getBoardId()).isEqualTo(organizationBoardId);
         assertThat(boardCommentResponse.getType()).isEqualTo(type);
         assertThat(boardCommentResponse.getContent()).isEqualTo(content);
-        assertThat(boardCommentResponse.getMemberId()).isEqualTo(memberId);
+    }
+
+    private void assertBoardCommentResponse(BoardCommentResponse boardCommentResponse, BoardType type, Long organizationBoardId, String content, Member author) {
+        assertThat(boardCommentResponse.getBoardId()).isEqualTo(organizationBoardId);
+        assertThat(boardCommentResponse.getType()).isEqualTo(type);
+        assertThat(boardCommentResponse.getContent()).isEqualTo(content);
+        assertMemberInfoResponse(boardCommentResponse.getAuthor(), author.getEmail(), author.getName(), author.getProfileUrl(), author.getMajor(), author.getClassNumber());
     }
 
 }

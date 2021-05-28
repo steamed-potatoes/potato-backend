@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -117,6 +118,16 @@ public class BoardComment extends BaseTimeEntity {
             .filter(boardCommentLike -> boardCommentLike.isSameMember(memberId))
             .findFirst()
             .orElseThrow(() -> new NotFoundException(String.format("(%s)가 좋아요 한 댓글 (%s)을 찾을 수 없습니다.", memberId, this.id)));
+    }
+
+    List<Long> getAuthorIdsInChildren() {
+        List<Long> authors = new ArrayList<>();
+        authors.add(memberId);
+        authors.addAll(childComments.stream()
+            .map(BoardComment::getAuthorIdsInChildren)
+            .flatMap(List::stream)
+            .collect(Collectors.toList()));
+        return authors;
     }
 
 }
