@@ -1,26 +1,24 @@
 package com.potato.admin.controller.member;
 
 import com.potato.admin.controller.ApiResponse;
-import com.potato.admin.controller.ControllerTestUtils;
+import com.potato.admin.controller.AbstractControllerTest;
+import com.potato.admin.controller.member.api.MemberMockMvc;
 import com.potato.admin.service.member.dto.response.MemberInfoResponse;
+import com.potato.common.exception.ErrorCode;
 import com.potato.domain.domain.member.Member;
 import com.potato.domain.domain.member.MemberCreator;
 import com.potato.domain.domain.member.MemberRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.beans.factory.annotation.Autowired;;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@AutoConfigureMockMvc
-@SpringBootTest
-public class MemberControllerTest extends ControllerTestUtils {
+public class MemberControllerTest extends AbstractControllerTest {
 
     private MemberMockMvc memberMockMvc;
 
@@ -66,6 +64,16 @@ public class MemberControllerTest extends ControllerTestUtils {
 
         // then
         assertThat(response.getData()).isEmpty();
+    }
+
+    @Test
+    void 관리자_세션ID_가_아닌경우_401에러가_발생한다() throws Exception {
+        // when
+        ApiResponse<List<MemberInfoResponse>> response = memberMockMvc.retrieveMember("Wrong Session ID", 401);
+
+        // then
+        assertThat(response.getCode()).isEqualTo(ErrorCode.UNAUTHORIZED_EXCEPTION.getCode());
+        assertThat(response.getMessage()).isEqualTo(ErrorCode.UNAUTHORIZED_EXCEPTION.getMessage());
     }
 
 }

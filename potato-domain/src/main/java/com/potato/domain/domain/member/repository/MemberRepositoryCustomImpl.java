@@ -4,6 +4,8 @@ import com.potato.domain.domain.member.Member;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 import static com.potato.domain.domain.member.QMember.member;
 
 @RequiredArgsConstructor
@@ -26,6 +28,14 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
             .where(
                 member.id.eq(memberId)
             ).fetchOne();
+    }
+
+    @Override
+    public List<Member> findAllByInIds(List<Long> memberIds) {
+        return queryFactory.selectFrom(member)
+            .where(
+                member.id.in(memberIds)
+            ).fetch();
     }
 
 }

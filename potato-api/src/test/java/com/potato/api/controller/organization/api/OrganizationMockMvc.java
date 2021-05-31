@@ -2,8 +2,10 @@ package com.potato.api.controller.organization.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.potato.api.controller.AbstractMockMvc;
 import com.potato.api.controller.ApiResponse;
 import com.potato.api.service.organization.dto.request.CreateOrganizationRequest;
+import com.potato.api.service.organization.dto.request.RetrieveOrganizationsWithPaginationRequest;
 import com.potato.api.service.organization.dto.request.RetrievePopularOrganizationsRequest;
 import com.potato.api.service.organization.dto.response.OrganizationInfoResponse;
 import com.potato.api.service.organization.dto.response.OrganizationWithMembersInfoResponse;
@@ -18,15 +20,10 @@ import java.util.List;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class OrganizationMockMvc {
-
-    private final MockMvc mockMvc;
-
-    private final ObjectMapper objectMapper;
+public class OrganizationMockMvc extends AbstractMockMvc {
 
     public OrganizationMockMvc(MockMvc mockMvc, ObjectMapper objectMapper) {
-        this.mockMvc = mockMvc;
-        this.objectMapper = objectMapper;
+        super(mockMvc, objectMapper);
     }
 
     public ApiResponse<OrganizationInfoResponse> createOrganization(CreateOrganizationRequest request, String token, int expectedStatus) throws Exception {
@@ -87,8 +84,12 @@ public class OrganizationMockMvc {
         );
     }
 
-    public ApiResponse<List<OrganizationInfoResponse>> getOrganizations(int size, int expectedStatus) throws Exception {
-        MockHttpServletRequestBuilder builder = get("/api/v1/organization/list?size=" + size);
+    public ApiResponse<List<OrganizationInfoResponse>> retrieveOrganizationsWithPagination(RetrieveOrganizationsWithPaginationRequest request, int expectedStatus) throws Exception {
+        MockHttpServletRequestBuilder builder = get("/api/v1/organization/list")
+            .param("size", String.valueOf(request.getSize()))
+            .param("category", request.getCategory() == null ? null : request.getCategory().toString())
+            .param("lastOrganizationId", String.valueOf(request.getLastOrganizationId()));
+
         return objectMapper.readValue(
             mockMvc.perform(builder)
                 .andExpect(status().is(expectedStatus))

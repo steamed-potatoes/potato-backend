@@ -16,6 +16,7 @@ spring:
       - swagger
       - cloud
       - redis
+      - credential
 logging:
   file:
     path: logs/api/

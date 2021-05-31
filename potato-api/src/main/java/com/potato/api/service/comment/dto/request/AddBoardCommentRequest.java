@@ -24,7 +24,7 @@ public class AddBoardCommentRequest {
     private String content;
 
     public boolean hasParentComment() {
-        return this.parentCommentId == null;
+        return this.parentCommentId != null;
     }
 
     public static AddBoardCommentRequest testInstance(BoardType type, Long boardId, Long parentCommentId, String content) {

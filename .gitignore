@@ -40,4 +40,5 @@ generated/
 
 application-thirdparty.yml
 application-rds.yml
+application-credential.yml
 logs/

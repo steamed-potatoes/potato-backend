@@ -1,7 +1,7 @@
 package com.potato.api.controller.comment;
 
 import com.potato.api.controller.ApiResponse;
-import com.potato.api.controller.ControllerTestUtils;
+import com.potato.api.controller.AbstractControllerTest;
 import com.potato.api.controller.comment.api.BoardCommentMockMvc;
 import com.potato.api.service.comment.dto.request.DeleteBoardCommentRequest;
 import com.potato.api.service.comment.dto.request.LikeBoardCommentRequest;
@@ -21,21 +21,19 @@ import com.potato.domain.domain.comment.BoardCommentCreator;
 import com.potato.domain.domain.comment.BoardCommentRepository;
 import com.potato.api.service.comment.dto.request.AddBoardCommentRequest;
 import com.potato.api.service.comment.dto.response.BoardCommentResponse;
+import com.potato.domain.domain.member.Member;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
+import static com.potato.api.helper.member.MemberTestHelper.assertMemberInfoResponse;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@AutoConfigureMockMvc
-@SpringBootTest
-class BoardCommentControllerTest extends ControllerTestUtils {
+class BoardCommentControllerTest extends AbstractControllerTest {
 
     private BoardCommentMockMvc boardCommentMockMvc;
 
@@ -69,7 +67,7 @@ class BoardCommentControllerTest extends ControllerTestUtils {
 
     @DisplayName("GET /api/v2/board/comment/list 200 OK")
     @Test
-    void 특정_그룹_게시물의_댓글들을_조회한다() throws Exception {
+    void 특정_그룹_에서_업로드한_게시물에_작성된_댓글들을_조회한다() throws Exception {
         // given
         organizationBoardRepository.save(organizationBoard);
 
@@ -91,14 +89,14 @@ class BoardCommentControllerTest extends ControllerTestUtils {
 
         // then
         assertThat(response.getData()).hasSize(1);
-        assertBoardCommentResponse(response.getData().get(0), type, organizationBoard.getId(), content, testMember.getId());
-        assertBoardCommentResponse(response.getData().get(0).getChildren().get(0), type, organizationBoard.getId(), childContent1, testMember.getId());
-        assertBoardCommentResponse(response.getData().get(0).getChildren().get(1), type, organizationBoard.getId(), childContent2, testMember.getId());
+        assertBoardCommentResponse(response.getData().get(0), type, organizationBoard.getId(), content, testMember);
+        assertBoardCommentResponse(response.getData().get(0).getChildren().get(0), type, organizationBoard.getId(), childContent1, testMember);
+        assertBoardCommentResponse(response.getData().get(0).getChildren().get(1), type, organizationBoard.getId(), childContent2, testMember);
     }
 
     @DisplayName("GET /api/v2/board/comment/list 200 OK")
     @Test
-    void 특정_관리자_게시물의_댓글들을_불러온다() throws Exception {
+    void 특정_관리자가_업로드한_게시물에_작성된_댓글들을_조회한다() throws Exception {
         adminBoardRepository.save(adminBoard);
 
         BoardType type = BoardType.ADMIN_BOARD;
@@ -116,13 +114,13 @@ class BoardCommentControllerTest extends ControllerTestUtils {
 
         // then
         assertThat(response.getData()).hasSize(1);
-        assertBoardCommentResponse(response.getData().get(0), type, adminBoard.getId(), rootContent, testMember.getId());
-        assertBoardCommentResponse(response.getData().get(0).getChildren().get(0), type, adminBoard.getId(), childContent, testMember.getId());
+        assertBoardCommentResponse(response.getData().get(0), type, adminBoard.getId(), rootContent, testMember);
+        assertBoardCommentResponse(response.getData().get(0).getChildren().get(0), type, adminBoard.getId(), childContent, testMember);
     }
 
     @DisplayName("GET /api/v2/board/comment/list 200 OK")
     @Test
-    void 좋아요를_누른_유저가_게시물의_댓글을_조회하면_좋아요눌렀다고_표시된다() throws Exception {
+    void 좋아요를_누른_유저가_게시물의_댓글을_조회하면_좋아요_눌렀다고_표시된다() throws Exception {
         // given
         organizationBoardRepository.save(organizationBoard);
 
@@ -161,7 +159,7 @@ class BoardCommentControllerTest extends ControllerTestUtils {
 
     @DisplayName("GET /api/v2/board/comment/list 404 NOT FOUND")
     @Test
-    void 존재하지_않는_게시물의_댓글을_조회하면_404에러가_발생() throws Exception {
+    void 존재하지_않는_게시물의_댓글을_조회하면_404_에러가_발생한다() throws Exception {
         // given
         RetrieveBoardCommentsRequest request = RetrieveBoardCommentsRequest.testInstance(BoardType.ADMIN_BOARD, 999L);
 
@@ -174,7 +172,7 @@ class BoardCommentControllerTest extends ControllerTestUtils {
 
     @DisplayName("GET /api/v2/board/comment/list 200 OK")
     @Test
-    void 삭제된_댓글을_조회시_삭제되었다고_표시된다() throws Exception {
+    void 삭제된_댓글을_조회하면_삭제되었다고_표시된다() throws Exception {
         // given
         organizationBoardRepository.save(organizationBoard);
 
@@ -190,7 +188,7 @@ class BoardCommentControllerTest extends ControllerTestUtils {
 
         // then
         assertThat(response.getData()).hasSize(1);
-        assertBoardCommentResponse(response.getData().get(0), type, organizationBoard.getId(), "삭제된 메시지입니다", null);
+        assertBoardCommentResponse(response.getData().get(0), type, organizationBoard.getId(), "삭제된 메시지입니다");
     }
 
     @DisplayName("POST /api/v2/board/comment 200 OK")
@@ -257,7 +255,6 @@ class BoardCommentControllerTest extends ControllerTestUtils {
         assertThat(response.getData()).isEqualTo("OK");
     }
 
-
     @Test
     void 작성한_댓글을_삭제한다() throws Exception {
         // given
@@ -311,11 +308,17 @@ class BoardCommentControllerTest extends ControllerTestUtils {
         assertThat(response.getData()).isEqualTo("OK");
     }
 
-    private void assertBoardCommentResponse(BoardCommentResponse boardCommentResponse, BoardType type, Long organizationBoardId, String content, Long memberId) {
+    private void assertBoardCommentResponse(BoardCommentResponse boardCommentResponse, BoardType type, Long organizationBoardId, String content) {
         assertThat(boardCommentResponse.getBoardId()).isEqualTo(organizationBoardId);
         assertThat(boardCommentResponse.getType()).isEqualTo(type);
         assertThat(boardCommentResponse.getContent()).isEqualTo(content);
-        assertThat(boardCommentResponse.getMemberId()).isEqualTo(memberId);
+    }
+
+    private void assertBoardCommentResponse(BoardCommentResponse boardCommentResponse, BoardType type, Long organizationBoardId, String content, Member author) {
+        assertThat(boardCommentResponse.getBoardId()).isEqualTo(organizationBoardId);
+        assertThat(boardCommentResponse.getType()).isEqualTo(type);
+        assertThat(boardCommentResponse.getContent()).isEqualTo(content);
+        assertMemberInfoResponse(boardCommentResponse.getAuthor(), author.getEmail(), author.getName(), author.getProfileUrl(), author.getMajor(), author.getClassNumber());
     }
 
 }

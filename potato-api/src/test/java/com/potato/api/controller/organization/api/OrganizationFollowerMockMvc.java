@@ -2,6 +2,7 @@ package com.potato.api.controller.organization.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.potato.api.controller.AbstractMockMvc;
 import com.potato.api.controller.ApiResponse;
 import com.potato.api.service.member.dto.response.MemberInfoResponse;
 import com.potato.api.service.organization.dto.response.OrganizationInfoResponse;
@@ -18,15 +19,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class OrganizationFollowerMockMvc {
-
-    private final MockMvc mockMvc;
-
-    private final ObjectMapper objectMapper;
+public class OrganizationFollowerMockMvc extends AbstractMockMvc {
 
     public OrganizationFollowerMockMvc(MockMvc mockMvc, ObjectMapper objectMapper) {
-        this.mockMvc = mockMvc;
-        this.objectMapper = objectMapper;
+        super(mockMvc, objectMapper);
     }
 
     public ApiResponse<String> followOrganization(String subDomain, String token, int expectedStatus) throws Exception {

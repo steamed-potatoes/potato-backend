@@ -1,10 +1,10 @@
-package com.potato.admin.controller.board;
+package com.potato.admin.controller.board.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.potato.admin.controller.AbstractMockMvc;
 import com.potato.admin.controller.ApiResponse;
 import com.potato.admin.service.board.dto.request.CreateAdminBoardRequest;
-import com.potato.admin.service.board.dto.request.DeleteOrganizationBoardRequest;
 import com.potato.admin.service.board.dto.request.UpdateAdminBoardRequest;
 import com.potato.admin.service.board.dto.response.AdminBoardInfoResponse;
 import org.springframework.http.HttpHeaders;
@@ -19,14 +19,10 @@ import java.nio.charset.StandardCharsets;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class AdminBoardMockMvc {
-
-    private final MockMvc mockMvc;
-    private final ObjectMapper objectMapper;
+public class AdminBoardMockMvc extends AbstractMockMvc {
 
     public AdminBoardMockMvc(MockMvc mockMvc, ObjectMapper objectMapper) {
-        this.mockMvc = mockMvc;
-        this.objectMapper = objectMapper;
+        super(mockMvc, objectMapper);
     }
 
     public ApiResponse<AdminBoardInfoResponse> createAdminBoard(CreateAdminBoardRequest request, String token, int expectedStatus) throws Exception {

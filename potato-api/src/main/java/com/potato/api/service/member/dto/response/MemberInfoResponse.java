@@ -25,4 +25,8 @@ public class MemberInfoResponse {
         return new MemberInfoResponse(member.getId(), member.getEmail(), member.getName(), member.getProfileUrl(), MajorInfoResponse.of(member.getMajor()), member.getClassNumber());
     }
 
+    public static MemberInfoResponse deletedMember() {
+        return new MemberInfoResponse(null, null, "삭제된 계정입니다", null, null, null);
+    }
+
 }

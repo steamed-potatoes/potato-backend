@@ -70,7 +70,7 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
     }
 
     @Test
-    void 그룹게시에_새로운_댓글을_작성한다() {
+    void 그룹_에서_업로드한_게시물에_새로운_댓글을_작성한다() {
         // given
         organizationBoardRepository.save(organizationBoard);
 
@@ -88,7 +88,7 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
     }
 
     @Test
-    void 최상위_댓글을_작성하면_부모_댓글은_NULL_로_저장된다() {
+    void 최상위_댓글을_작성하면_부모_댓글_필드는_NULL_로_저장된다() {
         // given
         organizationBoardRepository.save(organizationBoard);
 
@@ -191,9 +191,18 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
     }
 
     @Test
-    void 존재하지_않는_게시물에_댓글을_추가할_수_없다() {
+    void 존재하지_않는_그룹_게시물에_댓글을_추가할_수_없다() {
         // given
         AddBoardCommentRequest request = AddBoardCommentRequest.testInstance(BoardType.ORGANIZATION_BOARD, 999L, null, "없는 게시물에 댓글");
+
+        // when & then
+        assertThatThrownBy(() -> boardCommentService.addBoardComment(request, memberId)).isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
+    void 존재하지_않는_관리자_게시물에_댓글을_추가할_수없다() {
+        // given
+        AddBoardCommentRequest request = AddBoardCommentRequest.testInstance(BoardType.ORGANIZATION_BOARD, 999L, null, "댓글 내용");
 
         // when & then
         assertThatThrownBy(() -> boardCommentService.addBoardComment(request, memberId)).isInstanceOf(NotFoundException.class);
@@ -390,7 +399,7 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
         LikeBoardCommentRequest request = LikeBoardCommentRequest.testInstance(comment.getId());
 
         //when
-        boardCommentService.unLikeBoardComment(request, memberId);
+        boardCommentService.cancelBoardCommentLike(request, memberId);
 
         //then
         List<BoardCommentLike> boardCommentLikeList = boardCommentLikeRepository.findAll();
@@ -408,7 +417,7 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
         LikeBoardCommentRequest request = LikeBoardCommentRequest.testInstance(comment.getId());
 
         // when & then
-        assertThatThrownBy(() -> boardCommentService.unLikeBoardComment(request, memberId)).isInstanceOf(NotFoundException.class);
+        assertThatThrownBy(() -> boardCommentService.cancelBoardCommentLike(request, memberId)).isInstanceOf(NotFoundException.class);
     }
 
     @DisplayName("이미 삭제된 댓글에 누른 좋아요를 취소하려하면 NOT FOUND EXCEPTION이 발생하면서 취소할 수 없다")
@@ -423,7 +432,7 @@ class BoardCommentServiceTest extends OrganizationMemberSetUpTest {
         LikeBoardCommentRequest request = LikeBoardCommentRequest.testInstance(comment.getId());
 
         // when & then
-        assertThatThrownBy(() -> boardCommentService.unLikeBoardComment(request, memberId)).isInstanceOf(NotFoundException.class);
+        assertThatThrownBy(() -> boardCommentService.cancelBoardCommentLike(request, memberId)).isInstanceOf(NotFoundException.class);
     }
 
     private void assertBoardCommentLike(BoardCommentLike boardCommentLike, Long boardCommentId, Long memberId) {

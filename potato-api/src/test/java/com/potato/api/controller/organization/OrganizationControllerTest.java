@@ -1,8 +1,9 @@
 package com.potato.api.controller.organization;
 
 import com.potato.api.controller.ApiResponse;
-import com.potato.api.controller.ControllerTestUtils;
+import com.potato.api.controller.AbstractControllerTest;
 import com.potato.api.controller.organization.api.OrganizationMockMvc;
+import com.potato.api.service.organization.dto.request.RetrieveOrganizationsWithPaginationRequest;
 import com.potato.domain.domain.member.Member;
 import com.potato.domain.domain.member.MemberCreator;
 import com.potato.domain.domain.organization.Organization;
@@ -20,8 +21,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,9 +29,7 @@ import static com.potato.api.helper.organization.OrganizationServiceTestUtils.as
 import static com.potato.api.helper.organization.OrganizationServiceTestUtils.assertOrganizationInfoResponse;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@AutoConfigureMockMvc
-@SpringBootTest
-class OrganizationControllerTest extends ControllerTestUtils {
+class OrganizationControllerTest extends AbstractControllerTest {
 
     private OrganizationMockMvc organizationMockMvc;
 
@@ -204,8 +201,10 @@ class OrganizationControllerTest extends ControllerTestUtils {
         organization.addAdmin(testMember.getId());
         organizationRepository.save(organization);
 
+        RetrieveOrganizationsWithPaginationRequest request = RetrieveOrganizationsWithPaginationRequest.testInstance(null, 0, 5);
+
         // when
-        ApiResponse<List<OrganizationInfoResponse>> response = organizationMockMvc.getOrganizations(5, 200);
+        ApiResponse<List<OrganizationInfoResponse>> response = organizationMockMvc.retrieveOrganizationsWithPagination(request, 200);
 
         // then
         assertThat(response.getData()).hasSize(1);
@@ -217,19 +216,78 @@ class OrganizationControllerTest extends ControllerTestUtils {
     @Test
     void 모든_카테고리의_동아리_리스트를_조회한다() throws Exception {
         // given
-        Organization organization1 = OrganizationCreator.create(organization.getSubDomain());
-        organization1.addAdmin(testMember.getId());
+        organization.addAdmin(testMember.getId());
         Organization organization2 = OrganizationCreator.create("subDomain2");
         organization2.addAdmin(testMember.getId());
-        organizationRepository.saveAll(Arrays.asList(organization1, organization2));
+        organizationRepository.saveAll(Arrays.asList(organization, organization2));
+
+        RetrieveOrganizationsWithPaginationRequest request = RetrieveOrganizationsWithPaginationRequest.testInstance(null, 0, 5);
 
         // when
-        ApiResponse<List<OrganizationInfoResponse>> response = organizationMockMvc.getOrganizations(5, 200);
+        ApiResponse<List<OrganizationInfoResponse>> response = organizationMockMvc.retrieveOrganizationsWithPagination(request, 200);
 
         // then
         assertThat(response.getData()).hasSize(2);
         assertOrganizationInfoResponse(response.getData().get(0), organization2.getSubDomain());
-        assertOrganizationInfoResponse(response.getData().get(1), organization1.getSubDomain());
+        assertOrganizationInfoResponse(response.getData().get(1), organization.getSubDomain());
+    }
+
+    @DisplayName("GET /api/v1/organization/list SIZE만큼 최신순으로 조회한다 200 OK")
+    @Test
+    void lastOrganizationId를_0으로_요청하면_가장_최신에_개설된_동아리를_SIZE_수_만큼_조회한다() throws Exception {
+        // given
+        organization.addAdmin(testMember.getId());
+        Organization organization2 = OrganizationCreator.create("subDomain2");
+        organization2.addAdmin(testMember.getId());
+        organizationRepository.saveAll(Arrays.asList(organization, organization2));
+
+        RetrieveOrganizationsWithPaginationRequest request = RetrieveOrganizationsWithPaginationRequest.testInstance(null, 0, 1);
+
+        // when
+        ApiResponse<List<OrganizationInfoResponse>> response = organizationMockMvc.retrieveOrganizationsWithPagination(request, 200);
+
+        // then
+        assertThat(response.getData()).hasSize(1);
+        assertOrganizationInfoResponse(response.getData().get(0), organization2.getSubDomain());
+    }
+
+    @DisplayName("GET /api/v1/organization/list 스크롤 기반 페이지네이션 200 OK")
+    @Test
+    void lastOrganizationId이_0이_아니면_id_보다_이전에_개설된_동아리를_SIZE_수_만큼_조회한다() throws Exception {
+        // given
+        organization.addAdmin(testMember.getId());
+        Organization organization2 = OrganizationCreator.create("subDomain2");
+        organization2.addAdmin(testMember.getId());
+        organizationRepository.saveAll(Arrays.asList(organization, organization2));
+
+        RetrieveOrganizationsWithPaginationRequest request = RetrieveOrganizationsWithPaginationRequest.testInstance(null, organization2.getId(), 1);
+
+        // when
+        ApiResponse<List<OrganizationInfoResponse>> response = organizationMockMvc.retrieveOrganizationsWithPagination(request, 200);
+
+        // then
+        assertThat(response.getData()).hasSize(1);
+        assertOrganizationInfoResponse(response.getData().get(0), organization.getSubDomain());
+    }
+
+    @DisplayName("GET /api/v1/organization/list 특정 카테고리만 조회 200 OK")
+    @Test
+    void 인준_동아리만_조회하면_비인준_동아리는_포함되지_않는다() throws Exception {
+        // given
+        Organization nonApproved = OrganizationCreator.createNonApproved("nonapproved", "비인준 동아리");
+        nonApproved.addAdmin(testMember.getId());
+        Organization approved = OrganizationCreator.createApproved("approved", "인준 동아리");
+        approved.addAdmin(testMember.getId());
+        organizationRepository.saveAll(Arrays.asList(nonApproved, approved));
+
+        RetrieveOrganizationsWithPaginationRequest request = RetrieveOrganizationsWithPaginationRequest.testInstance(OrganizationCategory.APPROVED_CIRCLE, 0, 5);
+
+        // when
+        ApiResponse<List<OrganizationInfoResponse>> response = organizationMockMvc.retrieveOrganizationsWithPagination(request, 200);
+
+        // then
+        assertThat(response.getData()).hasSize(1);
+        assertOrganizationInfoResponse(response.getData().get(0), approved.getSubDomain());
     }
 
     @DisplayName("GET /api/v1/organization/list/popular 200 OK")

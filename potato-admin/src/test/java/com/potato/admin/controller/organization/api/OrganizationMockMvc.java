@@ -1,7 +1,8 @@
-package com.potato.admin.controller.organization;
+package com.potato.admin.controller.organization.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.potato.admin.controller.AbstractMockMvc;
 import com.potato.admin.controller.ApiResponse;
 import com.potato.admin.service.organization.dto.request.UpdateCategoryRequest;
 import com.potato.admin.service.organization.dto.response.OrganizationInfoResponse;
@@ -16,14 +17,10 @@ import java.util.List;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class OrganizationMockMvc {
-
-    private final MockMvc mockMvc;
-    private final ObjectMapper objectMapper;
+public class OrganizationMockMvc extends AbstractMockMvc {
 
     public OrganizationMockMvc(MockMvc mockMvc, ObjectMapper objectMapper) {
-        this.mockMvc = mockMvc;
-        this.objectMapper = objectMapper;
+        super(mockMvc, objectMapper);
     }
 
     public ApiResponse<List<OrganizationInfoResponse>> retrieveOrganization(String token, int expectedStatus) throws Exception {
