@@ -16,7 +16,7 @@ import java.util.Arrays;
 @Aspect
 public class RequestLoggingAspect {
 
-    @Around("within(com.potato.controller..*)")
+    @Around("within(com.potato.api.controller..*)")
     public Object calculatePerformance(ProceedingJoinPoint joinPoint) throws Throwable {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         long start = System.currentTimeMillis();
