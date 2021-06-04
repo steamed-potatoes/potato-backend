@@ -34,7 +34,7 @@ public class GoogleAuthService {
             return AuthResponse.signUp(userInfoResponse.getEmail(), userInfoResponse.getName(), userInfoResponse.getPicture());
         }
         httpSession.setAttribute(AUTH_SESSION, MemberSession.of(findMember.getId()));
-        return AuthResponse.login(httpSession.getId());
+        return AuthResponse.login(httpSession.getId(), findMember.getEmail(), findMember.getName(), findMember.getProfileUrl());
     }
 
 }

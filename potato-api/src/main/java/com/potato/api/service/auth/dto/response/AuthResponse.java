@@ -26,8 +26,8 @@ public class AuthResponse {
         return new AuthResponse(AuthType.SIGN_UP, email, name, profileUrl, null);
     }
 
-    public static AuthResponse login(String token) {
-        return new AuthResponse(AuthType.LOGIN, null, null, null, token);
+    public static AuthResponse login(String token, String email, String name, String profileUrl) {
+        return new AuthResponse(AuthType.LOGIN, email, name, profileUrl, token);
     }
 
     public enum AuthType {
