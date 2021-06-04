@@ -1,5 +1,6 @@
 package com.potato.api.service.auth;
 
+import com.potato.domain.domain.member.Member;
 import com.potato.domain.domain.member.MemberCreator;
 import com.potato.domain.domain.member.MemberRepository;
 import com.potato.external.external.google.GoogleApiCaller;
@@ -57,7 +58,8 @@ class GoogleAuthServiceTest {
     @Test
     void 구글_인증시_이미_존재하는_이메일의경우_로그인이_진행된다() {
         // given
-        memberRepository.save(MemberCreator.create("will.seungho@gmail.com"));
+        Member member = MemberCreator.create("will.seungho@gmail.com");
+        memberRepository.save(member);
 
         AuthRequest request = AuthRequest.testInstance("code", "redirectUri");
 
@@ -67,8 +69,8 @@ class GoogleAuthServiceTest {
         // then
         assertThat(response.getType()).isEqualTo(AuthResponse.AuthType.LOGIN);
         assertThat(response.getToken()).isNotNull();
-        assertThat(response.getEmail()).isNull();
-        assertThat(response.getName()).isNull();
+        assertThat(response.getEmail()).isEqualTo(member.getEmail());
+        assertThat(response.getName()).isEqualTo(member.getName());
     }
 
     private static class StubGoogleApiCaller implements GoogleApiCaller {
