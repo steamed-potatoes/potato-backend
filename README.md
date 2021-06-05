@@ -47,6 +47,7 @@
 - TODO
 
 ### Infra (Development Server)
+<img src="/_images/potato-dev-1.png" title="서버 아키텍처" alt="서버 아키텍처"></img>
 - AWS EC2
 - AWS RDS (MariaDB 10.4), flyway 6.4
 - Redis (Session)
