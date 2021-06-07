@@ -1,21 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
     <springProfile name="local">
-        <include resource="org/springframework/boot/logging/logback/base.xml"/>
+        <logger name="com.potato" level="DEBUG"/>
         <logger name="org.springframework.web" level="DEBUG"/>
         <logger name="org.springframework.web.servlet.handler" level="INFO"/>
-        <logger name="org.hibernate.SQL" level="DEBUG"/>
     </springProfile>
 
     <springProfile name="dev,prod">
-        <include resource="org/springframework/boot/logging/logback/base.xml"/>
+        <logger name="com.potato" level="DEBUG"/>
         <logger name="org.springframework.web" level="DEBUG"/>
         <logger name="org.springframework.web.servlet.handler" level="INFO"/>
-        <logger name="org.hibernate.SQL" level="DEBUG"/>
         <root level="INFO">
             <appender-ref ref="CONSOLE"/>
         </root>
     </springProfile>
-
 </configuration>
