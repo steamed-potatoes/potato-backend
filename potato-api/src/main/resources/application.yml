@@ -17,6 +17,8 @@ spring:
       - cloud
       - redis
       - credential
+  mvc:
+    log-request-details: true
 logging:
   file:
     path: logs/api/
