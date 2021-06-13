@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BoardSaveRequestDto {
 
-    private Long id;
-
     private String name;
 
     private String password;
@@ -26,8 +24,7 @@ public class BoardSaveRequestDto {
     private String portFolio;
 
     @Builder
-    public BoardSaveRequestDto(Long id, String name, String password, Integer studentId, String major, String phoneNumber, String experience, String portFolio) {
-        this.id = id;
+    public BoardSaveRequestDto (String name, String password, Integer studentId, String major, String phoneNumber, String experience, String portFolio) {
         this.name = name;
         this.password = password;
         this.studentId = studentId;
@@ -37,8 +34,15 @@ public class BoardSaveRequestDto {
         this.portFolio = portFolio;
     }
 
-    public Board entity() {
-        return Board.builder().id(id).name(name).password(password).studentId(studentId).major(major).phoneNumber(phoneNumber).experience(experience).portFolio(portFolio).build();
+    public Board toEntity() {
+        return Board.builder()
+            .name(name)
+            .password(password)
+            .studentId(studentId)
+            .major(major)
+            .phoneNumber(phoneNumber)
+            .experience(experience)
+            .portFolio(portFolio)
+            .build();
     }
-
 }

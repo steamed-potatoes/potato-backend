@@ -36,8 +36,8 @@ public class Board {
     @Column(nullable = true, columnDefinition = "TEXT")
     private String portFolio;
 
-    @Column(nullable = true, columnDefinition = "boolean default false")
-    private Boolean isDeleted;
+    @Column(columnDefinition = "boolean default false")
+    private boolean isDeleted;
 
 
     @Builder
@@ -50,5 +50,6 @@ public class Board {
         this.phoneNumber = phoneNumber;
         this.experience = experience;
         this.portFolio = portFolio;
+        this.isDeleted = false;
     }
 }
