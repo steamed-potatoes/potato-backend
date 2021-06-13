@@ -1,5 +1,6 @@
 package com.potato.recruit.domain.board;
 
+import com.potato.recruit.domain.BaseTimeEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +10,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Board {
+public class Board extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,7 +42,7 @@ public class Board {
 
 
     @Builder
-    public Board(Long id, String name, String password, Integer studentId, String major, String phoneNumber, String experience, String portFolio) {
+    public Board (Long id, String name, String password, Integer studentId, String major, String phoneNumber, String experience, String portFolio) {
         this.id = id;
         this.name = name;
         this.password = password;
