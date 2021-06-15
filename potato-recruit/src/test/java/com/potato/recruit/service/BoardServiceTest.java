@@ -1,8 +1,8 @@
 package com.potato.recruit.service;
 
-
 import com.potato.recruit.domain.board.Board;
 import com.potato.recruit.domain.board.BoardRepository;
+import com.potato.recruit.domain.board.PhoneNumber;
 import com.potato.recruit.dto.BoardSaveRequestDto;
 import com.potato.recruit.service.board.BoardService;
 import org.junit.jupiter.api.AfterEach;
@@ -34,7 +34,7 @@ public class BoardServiceTest {
         String major = "컴퓨터공학과";
         String experience = "감자의 일원으로 활동하고 있습니다.";
         String portFolio = "github/yerimkoko";
-        String phoneNumber = "01031911586";
+        PhoneNumber phoneNumber = new PhoneNumber("01031911586");
         String password = "werwerwer";
 
         BoardSaveRequestDto saveDto = BoardSaveRequestDto.builder()
@@ -44,12 +44,12 @@ public class BoardServiceTest {
             .major(major)
             .experience(experience)
             .portFolio(portFolio)
-            .phoneNumber(phoneNumber)
+            .phoneNumber(phoneNumber.getPhoneNumber())
             .build();
 
 
         //when
-        boardService.save(saveDto);
+        boardService.createBoard(saveDto);
 
         //then
         Board board = boardRepository.findAll().get(0);

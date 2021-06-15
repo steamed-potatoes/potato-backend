@@ -28,9 +28,6 @@ public class Board extends BaseTimeEntity {
     @Column(nullable = false, length = 30)
     private String major;
 
-    @Column(nullable = false, length = 20)
-    private String phoneNumber;
-
     @Column(nullable = false, columnDefinition = "TEXT")
     private String experience;
 
@@ -40,9 +37,11 @@ public class Board extends BaseTimeEntity {
     @Column(columnDefinition = "boolean default false")
     private boolean isDeleted;
 
+    @Embedded
+    PhoneNumber phoneNumber;
 
     @Builder
-    public Board (Long id, String name, String password, Integer studentId, String major, String phoneNumber, String experience, String portFolio) {
+    public Board (Long id, String name, String password, PhoneNumber phoneNumber, Integer studentId, String major, String experience, String portFolio) {
         this.id = id;
         this.name = name;
         this.password = password;

@@ -1,6 +1,7 @@
 package com.potato.recruit.dto;
 
 import com.potato.recruit.domain.board.Board;
+import com.potato.recruit.domain.board.PhoneNumber;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,19 +18,19 @@ public class BoardSaveRequestDto {
 
     private String major;
 
-    private String phoneNumber;
+    private PhoneNumber phoneNumber;
 
     private String experience;
 
     private String portFolio;
 
     @Builder
-    public BoardSaveRequestDto (String name, String password, Integer studentId, String major, String phoneNumber, String experience, String portFolio) {
+    public BoardSaveRequestDto (String name, String password, String phoneNumber, Integer studentId, String major, String experience, String portFolio) {
         this.name = name;
         this.password = password;
         this.studentId = studentId;
         this.major = major;
-        this.phoneNumber = phoneNumber;
+        this.phoneNumber = getPhoneNumber();
         this.experience = experience;
         this.portFolio = portFolio;
     }
@@ -40,7 +41,7 @@ public class BoardSaveRequestDto {
             .password(password)
             .studentId(studentId)
             .major(major)
-            .phoneNumber(phoneNumber)
+            .phoneNumber(getPhoneNumber())
             .experience(experience)
             .portFolio(portFolio)
             .build();
