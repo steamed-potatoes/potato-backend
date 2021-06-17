@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -52,7 +54,11 @@ public class BoardServiceTest {
         boardService.createBoard(saveDto);
 
         //then
-        Board board = boardRepository.findAll().get(0);
+
+        List<Board> boardList = boardRepository.findAll();
+        assertThat(boardList).hasSize(1);
+
+        Board board = boardList.get(0);
 
         assertThat(board.getExperience()).isEqualTo(saveDto.getExperience());
         assertThat(board.getName()).isEqualTo(saveDto.getName());
@@ -61,7 +67,6 @@ public class BoardServiceTest {
         assertThat(board.getPhoneNumber()).isEqualTo(saveDto.getPhoneNumber());
         assertThat(board.getPortFolio()).isEqualTo(saveDto.getPortFolio());
         assertThat(board.getPassword()).isEqualTo(saveDto.getPassword());
-
 
     }
 

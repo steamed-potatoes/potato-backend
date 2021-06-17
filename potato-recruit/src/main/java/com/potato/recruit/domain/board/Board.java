@@ -38,7 +38,7 @@ public class Board extends BaseTimeEntity {
     private boolean isDeleted;
 
     @Embedded
-    PhoneNumber phoneNumber;
+    private PhoneNumber phoneNumber;
 
     @Builder
     public Board (Long id, String name, String password, PhoneNumber phoneNumber, Integer studentId, String major, String experience, String portFolio) {
