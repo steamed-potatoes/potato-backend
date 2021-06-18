@@ -1,10 +1,9 @@
-package com.potato.recruit.service;
+package com.potato.recruit.service.board;
 
 import com.potato.recruit.domain.board.Board;
 import com.potato.recruit.domain.board.BoardRepository;
 import com.potato.recruit.domain.board.PhoneNumber;
-import com.potato.recruit.dto.BoardSaveRequestDto;
-import com.potato.recruit.service.board.BoardService;
+import com.potato.recruit.service.board.dto.BoardSaveRequestDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +35,8 @@ public class BoardServiceTest {
         String major = "컴퓨터공학과";
         String experience = "감자의 일원으로 활동하고 있습니다.";
         String portFolio = "github/yerimkoko";
-        PhoneNumber phoneNumber = new PhoneNumber("01031911586");
         String password = "werwerwer";
+        String phoneNumber = "01012345678";
 
         BoardSaveRequestDto saveDto = BoardSaveRequestDto.builder()
             .name(name)
@@ -46,28 +45,24 @@ public class BoardServiceTest {
             .major(major)
             .experience(experience)
             .portFolio(portFolio)
-            .phoneNumber(phoneNumber.getPhoneNumber())
+            .phoneNumber(phoneNumber)
             .build();
-
 
         //when
         boardService.createBoard(saveDto);
 
         //then
-
         List<Board> boardList = boardRepository.findAll();
         assertThat(boardList).hasSize(1);
-
         Board board = boardList.get(0);
 
         assertThat(board.getExperience()).isEqualTo(saveDto.getExperience());
         assertThat(board.getName()).isEqualTo(saveDto.getName());
         assertThat(board.getMajor()).isEqualTo(saveDto.getMajor());
         assertThat(board.getStudentId()).isEqualTo(saveDto.getStudentId());
-        assertThat(board.getPhoneNumber()).isEqualTo(saveDto.getPhoneNumber());
+        assertThat(board.getPhoneNumber()).isEqualTo(new PhoneNumber(saveDto.getPhoneNumber()));
         assertThat(board.getPortFolio()).isEqualTo(saveDto.getPortFolio());
         assertThat(board.getPassword()).isEqualTo(saveDto.getPassword());
-
     }
 
 }

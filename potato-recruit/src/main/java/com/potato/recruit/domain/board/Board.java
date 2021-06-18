@@ -34,22 +34,23 @@ public class Board extends BaseTimeEntity {
     @Column(nullable = true, columnDefinition = "TEXT")
     private String portFolio;
 
-    @Column(columnDefinition = "boolean default false")
+    @Column
     private boolean isDeleted;
 
     @Embedded
     private PhoneNumber phoneNumber;
 
     @Builder
-    public Board (Long id, String name, String password, PhoneNumber phoneNumber, Integer studentId, String major, String experience, String portFolio) {
+    public Board (Long id, String name, String password, String phoneNumber, Integer studentId, String major, String experience, String portFolio) {
         this.id = id;
         this.name = name;
         this.password = password;
         this.studentId = studentId;
         this.major = major;
-        this.phoneNumber = phoneNumber;
+        this.phoneNumber = new PhoneNumber(phoneNumber);
         this.experience = experience;
         this.portFolio = portFolio;
         this.isDeleted = false;
     }
+
 }
