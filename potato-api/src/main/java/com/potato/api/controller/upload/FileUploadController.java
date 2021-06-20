@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -21,7 +22,13 @@ public class FileUploadController {
     @Operation(summary = "이미지 파일을 업로드하는 API")
     @PostMapping("/api/v1/upload")
     public ApiResponse<String> uploadFile(@Valid FileUploadRequest request, @RequestPart MultipartFile file) {
-        return ApiResponse.success(fileUploadService.uploadImageToStorage(request, file));
+        return ApiResponse.success(fileUploadService.uploadImage(request, file));
+    }
+
+    @Operation(summary = "여러 이미지 파일을 업로드하는 API")
+    @PostMapping("/api/v1/upload/list")
+    public ApiResponse<List<String>> uploadFiles(@Valid FileUploadRequest request, @RequestPart List<MultipartFile> files) {
+        return ApiResponse.success(fileUploadService.uploadImages(request, files));
     }
 
 }
