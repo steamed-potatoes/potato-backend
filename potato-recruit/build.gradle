@@ -1,0 +1,10 @@
+dependencies {
+    // Spring MVC
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // Spring Data JPA
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    // H2
+    runtimeOnly 'com.h2database:h2'
+}

@@ -11,6 +11,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -18,7 +20,7 @@ public class FileUploadService {
 
     private final S3Service s3Service;
 
-    public String uploadImageToStorage(FileUploadRequest request, MultipartFile file) {
+    public String uploadImage(FileUploadRequest request, MultipartFile file) {
         FileUtils.validateImageFile(file.getContentType());
         final String fileName = FileUtils.createFileUuidNameWithExtension(request.getType(), file.getOriginalFilename());
 
@@ -32,6 +34,12 @@ public class FileUploadService {
             throw new BadGatewayException(String.format("파일 (%s) 입력 스트림을 가져오는 중 에러가 발생하였습니다", file.getOriginalFilename()));
         }
         return s3Service.getFileUrl(fileName);
+    }
+
+    public List<String> uploadImages(FileUploadRequest request, List<MultipartFile> files) {
+        return files.stream()
+            .map(file -> uploadImage(request, file))
+            .collect(Collectors.toList());
     }
 
 }

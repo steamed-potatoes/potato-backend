@@ -17,7 +17,8 @@ public class FileUtils {
     private static final List<String> imageContentTypes = Arrays.asList("image/jpeg", "image/png");
 
     public static String createFileUuidNameWithExtension(ImageType type, String originalFileName) {
-        return type.getFileNameWithDirectory(UUID.randomUUID().toString().concat(getFileExtension(originalFileName)));
+        String extension = getFileExtension(originalFileName);
+        return type.getFileNameWithDirectory(UUID.randomUUID().toString().concat(extension));
     }
 
     private static String getFileExtension(String fileName) {
