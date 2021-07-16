@@ -85,3 +85,8 @@ docker-compose up --build
 
 ## Contacts
 - will.seungho@gmail.com
+
+---
+
+License
+Potato Backend is MIT licensed.
