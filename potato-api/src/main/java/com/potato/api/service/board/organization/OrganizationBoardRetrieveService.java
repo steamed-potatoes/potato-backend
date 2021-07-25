@@ -1,6 +1,6 @@
 package com.potato.api.service.board.organization;
 
-import com.potato.domain.domain.board.organization.repository.dto.BoardWithOrganizationDto;
+import com.potato.api.service.board.organization.dto.response.OrganizationBoardWithOrganizationResponse;
 import com.potato.domain.domain.image.BoardImageRepository;
 import com.potato.domain.domain.board.BoardType;
 import com.potato.domain.domain.board.organization.OrganizationBoard;
@@ -53,9 +53,9 @@ public class OrganizationBoardRetrieveService {
     }
 
     @Transactional(readOnly = true)
-    public List<BoardWithOrganizationDto> retrieveBoardsWithPagination(OrganizationBoardCategory type, long lastOrganizationBoardId, int size) {
+    public List<OrganizationBoardWithOrganizationResponse> retrieveBoardsWithPagination(OrganizationBoardCategory type, long lastOrganizationBoardId, int size) {
         return organizationBoardRepository.findAllWithOrganizationByTypeLessThanOrderByIdDescLimit(null, type, lastOrganizationBoardId, size).stream()
-            .map(boardWithOrganizationDto -> boardWithOrganizationDto.setImageUrls(OrganizationBoardServiceUtils.findOrganizationBoardImage(boardImageRepository, boardWithOrganizationDto.getBoardId())))
+            .map(boardWithOrganizationDto -> OrganizationBoardWithOrganizationResponse.of(boardWithOrganizationDto, OrganizationBoardServiceUtils.findOrganizationBoardImage(boardImageRepository, boardWithOrganizationDto.getBoardId())))
             .collect(Collectors.toList());
     }
 
@@ -75,9 +75,9 @@ public class OrganizationBoardRetrieveService {
     }
 
     @Transactional(readOnly = true)
-    public List<BoardWithOrganizationDto> getBoardsInOrganization(String subDomain, OrganizationBoardCategory type, long lastOrganizationBoardId, int size) {
+    public List<OrganizationBoardWithOrganizationResponse> getBoardsInOrganization(String subDomain, OrganizationBoardCategory type, long lastOrganizationBoardId, int size) {
         return organizationBoardRepository.findAllWithOrganizationByTypeLessThanOrderByIdDescLimit(subDomain, type, lastOrganizationBoardId, size).stream()
-            .map(boardWithOrganizationDto -> boardWithOrganizationDto.setImageUrls(OrganizationBoardServiceUtils.findOrganizationBoardImage(boardImageRepository, boardWithOrganizationDto.getBoardId())))
+            .map(boardWithOrganizationDto -> OrganizationBoardWithOrganizationResponse.of(boardWithOrganizationDto, OrganizationBoardServiceUtils.findOrganizationBoardImage(boardImageRepository, boardWithOrganizationDto.getBoardId())))
             .collect(Collectors.toList());
     }
 

@@ -19,4 +19,9 @@ public class BaseTimeResponse {
         this.lastModifiedDateTime = entity.getLastModifiedDateTime();
     }
 
+    protected void setBaseTime(LocalDateTime createdDateTime, LocalDateTime lastModifiedDateTime) {
+        this.createdDateTime = createdDateTime;
+        this.lastModifiedDateTime = lastModifiedDateTime;
+    }
+
 }

@@ -3,7 +3,7 @@ package com.potato.domain.domain.board.organization.repository;
 import com.potato.domain.domain.board.organization.OrganizationBoard;
 import com.potato.domain.domain.board.organization.OrganizationBoardCategory;
 import com.potato.domain.domain.board.organization.repository.dto.BoardWithOrganizationDto;
-import com.querydsl.core.types.Projections;
+import com.potato.domain.domain.board.organization.repository.dto.QBoardWithOrganizationDto;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -41,22 +41,22 @@ public class OrganizationBoardRepositoryCustomImpl implements OrganizationBoardR
 
     @Override
     public List<BoardWithOrganizationDto> findAllWithOrganizationByTypeLessThanOrderByIdDescLimit(String subDomain, OrganizationBoardCategory category, long lastOrganizationBoardId, int size) {
-        return queryFactory.select(Projections.fields(BoardWithOrganizationDto.class,
-            organizationBoard.subDomain.as("orgSubDomain"),
-            organization.name.as("orgName"),
-            organization.category.as("orgCategory"),
-            organization.profileUrl.as("orgProfileUrl"),
-            organization.description.as("orgDescription"),
-            organization.membersCount.as("orgMembersCount"),
-            organization.followersCount.as("orgFollowersCount"),
-            organizationBoard.id.as("boardId"),
-            organizationBoard.boardInfo.title.as("boardTitle"),
-            organizationBoard.boardInfo.content.as("boardContent"),
-            organizationBoard.category.as("boardCategory"),
-            organizationBoard.dateTimeInterval.startDateTime.as("boardStartDateTime"),
-            organizationBoard.dateTimeInterval.endDateTime.as("boardEndDateTime"),
-            organizationBoard.createdDateTime,
-            organizationBoard.lastModifiedDateTime
+        return queryFactory.select(new QBoardWithOrganizationDto(
+            organization.subDomain,
+            organization.name,
+            organization.category,
+            organization.profileUrl,
+            organization.description,
+            organization.membersCount,
+            organization.followersCount,
+            organizationBoard.id,
+            organizationBoard.boardInfo.title,
+            organizationBoard.boardInfo.content,
+            organizationBoard.category,
+            organizationBoard.dateTimeInterval.startDateTime,
+            organizationBoard.dateTimeInterval.endDateTime,
+            organization.createdDateTime,
+            organization.lastModifiedDateTime
         ))
             .from(organizationBoard)
             .innerJoin(organization).on(organizationBoard.subDomain.eq(organization.subDomain))
