@@ -2,42 +2,52 @@ package com.potato.domain.domain.board.organization.repository.dto;
 
 import com.potato.domain.domain.board.organization.OrganizationBoardCategory;
 import com.potato.domain.domain.organization.OrganizationCategory;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class BoardWithOrganizationDto {
 
-    private String orgSubDomain;
-    private String orgName;
-    private OrganizationCategory orgCategory;
-    private String orgProfileUrl;
-    private String orgDescription;
-    private int orgMembersCount;
-    private int orgFollowersCount;
+    private final String orgSubDomain;
+    private final String orgName;
+    private final OrganizationCategory orgCategory;
+    private final String orgProfileUrl;
+    private final String orgDescription;
+    private final int orgMembersCount;
+    private final int orgFollowersCount;
 
-    private Long boardId;
-    private String boardTitle;
-    private String boardContent;
-    private OrganizationBoardCategory boardCategory;
-    private LocalDateTime boardStartDateTime;
-    private LocalDateTime boardEndDateTime;
-    private LocalDateTime createdDateTime;
-    private LocalDateTime lastModifiedDateTime;
+    private final Long boardId;
+    private final String boardTitle;
+    private final String boardContent;
+    private final OrganizationBoardCategory boardCategory;
+    private final LocalDateTime boardStartDateTime;
+    private final LocalDateTime boardEndDateTime;
+    private final LocalDateTime createdDateTime;
+    private final LocalDateTime lastModifiedDateTime;
 
-    private final List<String> imageUrls = new ArrayList<>();
-
-    public BoardWithOrganizationDto setImageUrls(List<String> imageUrls) {
-        this.imageUrls.addAll(imageUrls);
-        return this;
+    @QueryProjection
+    public BoardWithOrganizationDto(String orgSubDomain, String orgName, OrganizationCategory orgCategory, String orgProfileUrl,
+                                    String orgDescription, int orgMembersCount, int orgFollowersCount,
+                                    Long boardId, String boardTitle, String boardContent, OrganizationBoardCategory boardCategory,
+                                    LocalDateTime boardStartDateTime, LocalDateTime boardEndDateTime,
+                                    LocalDateTime createdDateTime, LocalDateTime lastModifiedDateTime) {
+        this.orgSubDomain = orgSubDomain;
+        this.orgName = orgName;
+        this.orgCategory = orgCategory;
+        this.orgProfileUrl = orgProfileUrl;
+        this.orgDescription = orgDescription;
+        this.orgMembersCount = orgMembersCount;
+        this.orgFollowersCount = orgFollowersCount;
+        this.boardId = boardId;
+        this.boardTitle = boardTitle;
+        this.boardContent = boardContent;
+        this.boardCategory = boardCategory;
+        this.boardStartDateTime = boardStartDateTime;
+        this.boardEndDateTime = boardEndDateTime;
+        this.createdDateTime = createdDateTime;
+        this.lastModifiedDateTime = lastModifiedDateTime;
     }
 
 }

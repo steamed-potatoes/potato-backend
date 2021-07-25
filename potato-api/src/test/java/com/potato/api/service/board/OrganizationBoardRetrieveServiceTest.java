@@ -1,10 +1,10 @@
 package com.potato.api.service.board;
 
+import com.potato.api.service.board.organization.dto.response.OrganizationBoardWithOrganizationResponse;
 import com.potato.domain.domain.board.organization.OrganizationBoard;
 import com.potato.domain.domain.board.organization.OrganizationBoardCategory;
 import com.potato.domain.domain.board.organization.OrganizationBoardCreator;
 import com.potato.domain.domain.board.organization.OrganizationBoardRepository;
-import com.potato.domain.domain.board.organization.repository.dto.BoardWithOrganizationDto;
 import com.potato.api.service.OrganizationMemberSetUpTest;
 import com.potato.api.service.board.organization.OrganizationBoardRetrieveService;
 import com.potato.api.service.board.organization.dto.response.OrganizationBoardInfoResponse;
@@ -45,13 +45,13 @@ class OrganizationBoardRetrieveServiceTest extends OrganizationMemberSetUpTest {
         organizationBoardRepository.saveAll(Arrays.asList(organizationBoard1, organizationBoard2, organizationBoard3));
 
         //when
-        List<BoardWithOrganizationDto> responses = organizationBoardService.retrieveBoardsWithPagination(null, 0, 3);
+        List<OrganizationBoardWithOrganizationResponse> responses = organizationBoardService.retrieveBoardsWithPagination(null, 0, 3);
 
         //then
         assertThat(responses).hasSize(3);
-        assertOrganizationBoardWithCreatorInfo(responses.get(0), organizationBoard3);
-        assertOrganizationBoardWithCreatorInfo(responses.get(1), organizationBoard2);
-        assertOrganizationBoardWithCreatorInfo(responses.get(2), organizationBoard1);
+        assertOrganizationBoardWithOrganizationResponse(responses.get(0), organizationBoard3);
+        assertOrganizationBoardWithOrganizationResponse(responses.get(1), organizationBoard2);
+        assertOrganizationBoardWithOrganizationResponse(responses.get(2), organizationBoard1);
     }
 
     @DisplayName("게시물 조회시 마지막 게시물의 id가 따로 지정되지 않으면, 가장 최신의 게시물 N개가 조회된다.")
@@ -64,17 +64,17 @@ class OrganizationBoardRetrieveServiceTest extends OrganizationMemberSetUpTest {
         organizationBoardRepository.saveAll(Arrays.asList(organizationBoard1, organizationBoard2));
 
         //when
-        List<BoardWithOrganizationDto> responses = organizationBoardService.retrieveBoardsWithPagination(null, 0, 1);
+        List<OrganizationBoardWithOrganizationResponse> responses = organizationBoardService.retrieveBoardsWithPagination(null, 0, 1);
 
         //then
         assertThat(responses).hasSize(1);
-        assertOrganizationBoardWithCreatorInfo(responses.get(0), organizationBoard2);
+        assertOrganizationBoardWithOrganizationResponse(responses.get(0), organizationBoard2);
     }
 
     @Test
     void 게시물_조회시_없을_경우_NULL이_아닌_빈리스트를_반환() {
         //given
-        List<BoardWithOrganizationDto> responses = organizationBoardService.retrieveBoardsWithPagination(null, 0, 3);
+        List<OrganizationBoardWithOrganizationResponse> responses = organizationBoardService.retrieveBoardsWithPagination(null, 0, 3);
 
         //then
         assertThat(responses).isEmpty();
@@ -91,11 +91,11 @@ class OrganizationBoardRetrieveServiceTest extends OrganizationMemberSetUpTest {
         organizationBoardRepository.saveAll(Arrays.asList(organizationBoard1, organizationBoard2, organizationBoard3));
 
         //when
-        List<BoardWithOrganizationDto> responses = organizationBoardService.retrieveBoardsWithPagination(null, organizationBoard3.getId(), 1);
+        List<OrganizationBoardWithOrganizationResponse> responses = organizationBoardService.retrieveBoardsWithPagination(null, organizationBoard3.getId(), 1);
 
         //then
         assertThat(responses).hasSize(1);
-        assertOrganizationBoardWithCreatorInfo(responses.get(0), organizationBoard2);
+        assertOrganizationBoardWithOrganizationResponse(responses.get(0), organizationBoard2);
     }
 
     @Test
@@ -108,11 +108,11 @@ class OrganizationBoardRetrieveServiceTest extends OrganizationMemberSetUpTest {
         organizationBoardRepository.saveAll(Arrays.asList(organizationBoard1, organizationBoard2, organizationBoard3));
 
         //when
-        List<BoardWithOrganizationDto> responses = organizationBoardService.retrieveBoardsWithPagination(OrganizationBoardCategory.RECRUIT, organizationBoard3.getId(), 1);
+        List<OrganizationBoardWithOrganizationResponse> responses = organizationBoardService.retrieveBoardsWithPagination(OrganizationBoardCategory.RECRUIT, organizationBoard3.getId(), 1);
 
         //then
         assertThat(responses).hasSize(1);
-        assertOrganizationBoardWithCreatorInfo(responses.get(0), organizationBoard1);
+        assertOrganizationBoardWithOrganizationResponse(responses.get(0), organizationBoard1);
     }
 
     @Test
@@ -122,7 +122,7 @@ class OrganizationBoardRetrieveServiceTest extends OrganizationMemberSetUpTest {
         organizationBoardRepository.save(organizationBoard1);
 
         //when
-        List<BoardWithOrganizationDto> responses = organizationBoardService.retrieveBoardsWithPagination(null, organizationBoard1.getId(), 3);
+        List<OrganizationBoardWithOrganizationResponse> responses = organizationBoardService.retrieveBoardsWithPagination(null, organizationBoard1.getId(), 3);
 
         //then
         assertThat(responses).isEmpty();
@@ -181,7 +181,7 @@ class OrganizationBoardRetrieveServiceTest extends OrganizationMemberSetUpTest {
         assertOrganizationBoardInfo(responses.get(1), organizationBoard2);
     }
 
-    private void assertOrganizationBoardWithCreatorInfo(BoardWithOrganizationDto boardWithOrganizationDto, OrganizationBoard organizationBoard) {
+    private void assertOrganizationBoardWithOrganizationResponse(OrganizationBoardWithOrganizationResponse boardWithOrganizationDto, OrganizationBoard organizationBoard) {
         assertThat(boardWithOrganizationDto.getBoardId()).isEqualTo(organizationBoard.getId());
         assertThat(boardWithOrganizationDto.getOrgSubDomain()).isEqualTo(organizationBoard.getSubDomain());
         assertThat(boardWithOrganizationDto.getBoardTitle()).isEqualTo(organizationBoard.getTitle());

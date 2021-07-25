@@ -3,7 +3,7 @@ package com.potato.api.controller.board.organization;
 import com.potato.api.config.argumentResolver.MemberId;
 import com.potato.api.config.interceptor.auth.Auth;
 import com.potato.api.controller.ApiResponse;
-import com.potato.domain.domain.board.organization.repository.dto.BoardWithOrganizationDto;
+import com.potato.api.service.board.organization.dto.response.OrganizationBoardWithOrganizationResponse;
 import com.potato.api.service.board.organization.OrganizationBoardRetrieveService;
 import com.potato.api.service.board.organization.dto.request.*;
 import com.potato.api.service.board.organization.dto.response.OrganizationBoardInfoResponse;
@@ -34,7 +34,7 @@ public class OrganizationBoardRetrieveController {
 
     @Operation(summary = "전체 그룹 게시물을 스크롤 페이지네이션 기반으로 조회하는 API")
     @GetMapping("/api/v2/organization/board/list")
-    public ApiResponse<List<BoardWithOrganizationDto>> retrieveLatestOrganizationBoardList(@Valid RetrieveLatestBoardsRequest request) {
+    public ApiResponse<List<OrganizationBoardWithOrganizationResponse>> retrieveLatestOrganizationBoardList(@Valid RetrieveLatestBoardsRequest request) {
         return ApiResponse.success(organizationBoardRetrieveService.retrieveBoardsWithPagination(request.getType(), request.getLastOrganizationBoardId(), request.getSize()));
     }
 
@@ -52,7 +52,7 @@ public class OrganizationBoardRetrieveController {
 
     @Operation(summary = "특정 그룹의 게시물을 스크롤 페이지네이션 기반으로 조회하는 API")
     @GetMapping("/api/v2/organization/board/list/in/{subDomain}")
-    public ApiResponse<List<BoardWithOrganizationDto>> getBoardsInOrganization(@PathVariable String subDomain, @Valid RetrieveLatestBoardsRequest request) {
+    public ApiResponse<List<OrganizationBoardWithOrganizationResponse>> getBoardsInOrganization(@PathVariable String subDomain, @Valid RetrieveLatestBoardsRequest request) {
         return ApiResponse.success(organizationBoardRetrieveService.getBoardsInOrganization(subDomain, request.getType(), request.getLastOrganizationBoardId(), request.getSize()));
     }
 
