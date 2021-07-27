@@ -61,8 +61,8 @@ public class OrganizationRepositoryCustomImpl implements OrganizationRepositoryC
     public List<Organization> findAllByCategoryAndLessThanIdOrderByIdDescWithLimit(OrganizationCategory category, Long lastOrganizationId, int size) {
         return queryFactory.selectFrom(organization)
             .where(
-                eqCategory(category),
-                lessThanId(lastOrganizationId)
+                lessThanId(lastOrganizationId),
+                eqCategory(category)
             )
             .orderBy(organization.id.desc())
             .limit(size)

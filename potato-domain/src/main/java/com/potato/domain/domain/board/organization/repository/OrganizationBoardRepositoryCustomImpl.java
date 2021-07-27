@@ -61,9 +61,9 @@ public class OrganizationBoardRepositoryCustomImpl implements OrganizationBoardR
             .from(organizationBoard)
             .innerJoin(organization).on(organizationBoard.subDomain.eq(organization.subDomain))
             .where(
+                lessThanId(lastOrganizationBoardId),
                 eqSubDomain(subDomain),
-                eqCategory(category),
-                lessThanId(lastOrganizationBoardId)
+                eqCategory(category)
             )
             .orderBy(organizationBoard.id.desc())
             .limit(size)
