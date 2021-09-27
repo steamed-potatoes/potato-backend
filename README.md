@@ -4,18 +4,6 @@
 [![codecov](https://codecov.io/gh/steamed-potatoes/potato-backend/branch/develop/graph/badge.svg?token=ACoWRzqGBl)](https://codecov.io/gh/steamed-potatoes/potato-backend)
 
 ---
-## Development Server
-
-[API Server](https://api.pmarket.space/ping)
-
-![API Server](https://img.shields.io/website?down_message=OFF&style=flat-square&up_message=ON&url=https%3A%2F%2Fapi.pmarket.space%2Fping)
-
-[Admin Server](https://test.pmarket.space/ping)
-
-![Admin Server](https://img.shields.io/website?down_message=OFF&style=flat-square&up_message=ON&url=https%3A%2F%2Ftest.pmarket.space%2Fping)
-
----
-
 
 ## Introduction
 ### 동아리의 다양한 일정들을 한 곳에서 관리하는 웹 서비스
