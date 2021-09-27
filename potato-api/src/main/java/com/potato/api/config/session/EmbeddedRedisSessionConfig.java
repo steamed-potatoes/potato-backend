@@ -22,7 +22,7 @@ import java.io.InputStreamReader;
  * 로컬 및 테스트에서 사용하기 위한 임베디드 Redis Server 설정.
  */
 @Slf4j
-@Profile("local")
+@Profile({"local", "local-will"})
 @RequiredArgsConstructor
 @Configuration
 @EnableRedisHttpSession(maxInactiveIntervalInSeconds = 60 * 60 * 24 * 30)

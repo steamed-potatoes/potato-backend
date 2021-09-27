@@ -1,6 +1,6 @@
 ---
 spring:
-  profiles: local
+  profiles: local,local-will
   redis:
     host: localhost
     port: 6379
@@ -11,7 +11,7 @@ spring:
   redis:
     host: redis
     port: 6379
-    
+
 ---
 spring:
   profiles: prod

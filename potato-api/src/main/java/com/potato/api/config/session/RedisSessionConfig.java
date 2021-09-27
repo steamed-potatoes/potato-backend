@@ -9,7 +9,7 @@ import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactor
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
-@Profile("!local")
+@Profile({"dev", "prod"})
 @RequiredArgsConstructor
 @Configuration
 @EnableRedisHttpSession(maxInactiveIntervalInSeconds = 60 * 60 * 24 * 30)
